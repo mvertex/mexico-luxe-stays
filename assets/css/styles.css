@@ -344,8 +344,25 @@ button { font: inherit; cursor: pointer; }
 .stat-row { display: flex; gap: 3rem; margin-top: 2.4rem; }
 .stat .stat-num { font-family: var(--font-display); font-size: 2.6rem; line-height: 1; color: var(--sage); }
 .stat .stat-label { font-size: .7rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); margin-top: .4rem; }
+.stat-row--standalone { justify-content: center; margin-top: clamp(3rem, 6vw, 4.5rem); }
 
 @media (max-width: 820px) { .intro-grid { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .stat-row--standalone { gap: 2rem; flex-wrap: wrap; justify-content: flex-start; } }
+
+/* ---------- Story split (large image + short copy, e.g. About Us) ---------- */
+.story-split {
+  display: grid; grid-template-columns: 1.35fr 1fr;
+  gap: clamp(2.5rem, 6vw, 5.5rem); align-items: center;
+}
+.story-split-media img {
+  width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; border-radius: 4px;
+}
+.story-split-body { max-width: 32ch; }
+.story-split-body p {
+  margin-top: 1.2rem; font-size: .98rem; font-weight: 300; line-height: 1.75; color: var(--stone);
+}
+
+@media (max-width: 820px) { .story-split { grid-template-columns: 1fr; } }
 
 /* Intro — 3-column variant: stacked heading / center photo / copy */
 .intro-split {
