@@ -1,0 +1,12 @@
+# Raw/unprocessed brand source images (76MB) — not used directly by the site;
+# optimized versions already live in assets/img/. Keep the repo lean.
+Componentes marca/
+
+# Tooling-specific local state (Claude Code / agents), not part of the site
+.claude/
+.agents/
+.impeccable/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
