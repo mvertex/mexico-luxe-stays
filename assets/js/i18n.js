@@ -206,9 +206,8 @@ const MLS_I18N = {
     "detail.kefi.mapAlt": "Map showing Kasa Kefi's location in the Valle de Guadalupe, Baja California, near Viñedos Guadalupe and Finca Altozano",
 
     /* ---------- Our Services (services.html) ---------- */
-    "services.hero.eyebrow": "Concierge &amp; beyond",
     "services.hero.title": "Our <em>services</em>",
-    "services.hero.lead": "The villa is only half the stay. The other half is a team that makes every day feel arranged — because it was.",
+    "services.hero.lead": "The villa is only half the stay",
     "services.intro.eyebrow": "From inquiry to departure",
     "services.intro.title": "Consider it <em>handled</em>",
     "services.intro.body": "Every reservation includes a dedicated concierge who plans before you arrive and stays a message away until you leave. The services below aren't add-ons from a brochure — they're how our guests actually live in our villas.",
@@ -527,9 +526,8 @@ const MLS_I18N = {
     "detail.kefi.mapAlt": "Mapa con la ubicación de Kasa Kefi en el Valle de Guadalupe, Baja California, cerca de Viñedos Guadalupe y Finca Altozano",
 
     /* ---------- Our Services (services.html) ---------- */
-    "services.hero.eyebrow": "Concierge y mucho más",
     "services.hero.title": "Nuestros <em>servicios</em>",
-    "services.hero.lead": "La villa es solo la mitad de la estancia. La otra mitad es un equipo que hace que cada día se sienta organizado — porque lo estuvo.",
+    "services.hero.lead": "La villa es solo la mitad de la estancia",
     "services.intro.eyebrow": "Desde la consulta hasta la salida",
     "services.intro.title": "Considéralo <em>resuelto</em>",
     "services.intro.body": "Cada reservación incluye un concierge dedicado que planea todo antes de tu llegada y sigue a un mensaje de distancia hasta que te vas. Los servicios de abajo no son extras de un folleto — es como nuestros huéspedes realmente viven nuestras villas.",
