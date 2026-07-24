@@ -279,6 +279,7 @@ button { font: inherit; cursor: pointer; }
 .hero > .container { position: relative; }
 
 .hero .display { margin-inline: auto; max-width: 15ch; }
+.hero-title--oneline { max-width: none; white-space: nowrap; font-size: clamp(1.9rem, 6.4vw, 5.6rem); }
 .hero .lead { max-width: 44ch; margin: 1.6rem auto 0; color: var(--cream-80); }
 
 .hero-scroll-hint {

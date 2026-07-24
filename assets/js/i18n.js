@@ -270,7 +270,6 @@ const MLS_I18N = {
 
     /* ---------- FAQ (faq.html) ---------- */
     "faq.hero.title": "Questions, <em>answered</em>",
-    "faq.hero.lead": "A collection of answers to help you plan your stay with confidence.",
     "faq.q1": "How does the booking process work?",
     "faq.a1": "Send us your dates, group size, and preferred villa — by form, email, or WhatsApp. We confirm availability within hours, hold the villa while you decide, and secure the reservation with a signed agreement and deposit. From that moment, your concierge takes over planning: transfers, chef menus, grocery lists, and any occasion we should know about.",
     "faq.q2": "What is the cancellation policy?",
@@ -591,7 +590,6 @@ const MLS_I18N = {
 
     /* ---------- FAQ (faq.html) ---------- */
     "faq.hero.title": "Preguntas, <em>resueltas</em>",
-    "faq.hero.lead": "Una recopilación de respuestas para ayudarte a planear tu estancia con confianza.",
     "faq.q1": "¿Cómo funciona el proceso de reservación?",
     "faq.a1": "Envíanos tus fechas, tamaño del grupo y villa de preferencia — por formulario, correo o WhatsApp. Confirmamos disponibilidad en cuestión de horas, apartamos la villa mientras decides, y aseguramos la reservación con un contrato firmado y un depósito. Desde ese momento, tu concierge se encarga de la planeación: traslados, menús del chef, listas de despensa, y cualquier ocasión especial que debamos saber.",
     "faq.q2": "¿Cuál es la política de cancelación?",
