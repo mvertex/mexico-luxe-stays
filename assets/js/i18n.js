@@ -243,6 +243,7 @@ const MLS_I18N = {
     /* ---------- About Us (about.html) ---------- */
     "about.hero.title": "About <em>us</em>",
     "about.hero.lead": "A small, passionate team that has spent twenty years learning exactly what extraordinary feels like — and how to deliver it twice.",
+    "about.hero.scroll": "Scroll for more",
     "about.story.eyebrow": "Our story",
     "about.story.title": "Twenty years of opening <em>doors</em>",
     "about.story.lead": "Mexico Luxe Stays began with a single beachfront property and a stubborn belief: a villa should be hosted, not just rented.",
@@ -563,6 +564,7 @@ const MLS_I18N = {
     /* ---------- About Us (about.html) ---------- */
     "about.hero.title": "Sobre <em>nosotros</em>",
     "about.hero.lead": "Un equipo pequeño y apasionado que ha pasado veinte años aprendiendo exactamente cómo se siente lo extraordinario — y cómo entregarlo dos veces.",
+    "about.hero.scroll": "Desliza para ver más",
     "about.story.eyebrow": "Nuestra historia",
     "about.story.title": "Veinte años abriendo <em>puertas</em>",
     "about.story.lead": "Mexico Luxe Stays comenzó con una sola propiedad frente al mar y una convicción firme: una villa debe ser recibida por un anfitrión, no solo rentada.",
