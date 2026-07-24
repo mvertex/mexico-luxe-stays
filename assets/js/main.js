@@ -552,5 +552,56 @@
     });
   });
 
+  /* ---------- Services carousel: bleed-scroll track + prev/next + dots ---------- */
+  document.querySelectorAll("[data-svc-carousel]").forEach((root) => {
+    const track = root.querySelector("[data-svc-track]");
+    const prevBtn = root.querySelector("[data-svc-prev]");
+    const nextBtn = root.querySelector("[data-svc-next]");
+    const dotsWrap = root.querySelector("[data-svc-dots]");
+    if (!track) return;
+
+    const cards = [...track.children];
+    if (dotsWrap) {
+      dotsWrap.innerHTML = cards
+        .map((_, i) => `<button type="button" class="carousel-dot${i === 0 ? " is-active" : ""}" data-svc-dot="${i}" aria-label="${i + 1}"></button>`)
+        .join("");
+    }
+    const dots = dotsWrap ? [...dotsWrap.children] : [];
+
+    const cardStep = () => {
+      const card = track.querySelector(".svc-card");
+      if (!card) return 0;
+      const gap = parseFloat(getComputedStyle(track).columnGap || "0");
+      return card.getBoundingClientRect().width + gap;
+    };
+
+    const updateNav = () => {
+      const maxScroll = track.scrollWidth - track.clientWidth;
+      if (prevBtn) prevBtn.disabled = track.scrollLeft <= 2;
+      if (nextBtn) nextBtn.disabled = track.scrollLeft >= maxScroll - 2;
+      if (dots.length) {
+        const idx = Math.min(Math.round(track.scrollLeft / cardStep()), dots.length - 1);
+        dots.forEach((d, i) => d.classList.toggle("is-active", i === idx));
+      }
+    };
+
+    prevBtn?.addEventListener("click", () => track.scrollBy({ left: -cardStep(), behavior: "smooth" }));
+    nextBtn?.addEventListener("click", () => track.scrollBy({ left: cardStep(), behavior: "smooth" }));
+    dotsWrap?.addEventListener("click", (e) => {
+      const dotBtn = e.target.closest("[data-svc-dot]");
+      if (!dotBtn) return;
+      track.scrollTo({ left: parseInt(dotBtn.dataset.svcDot, 10) * cardStep(), behavior: "smooth" });
+    });
+
+    let ticking = false;
+    track.addEventListener("scroll", () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { updateNav(); ticking = false; });
+    });
+    window.addEventListener("resize", updateNav);
+    updateNav();
+  });
+
   initReveal();
 })();

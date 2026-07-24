@@ -68,98 +68,131 @@
       </div>
     </section>
 
-    <!-- ============ Services grid ============ -->
-    <section class="section" aria-label="Concierge services">
-      <div class="container services-grid">
+    <!-- ============ Services carousel ============ -->
+    <section class="section" aria-label="Concierge services" data-svc-carousel>
+      <div class="container">
+        <div class="svc-nav">
+          <button type="button" class="svc-nav-btn" data-svc-prev aria-label="Previous" data-i18n-aria-label="services.gallery.prev">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="svc-nav-btn" data-svc-next aria-label="Next" data-i18n-aria-label="services.gallery.next">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
 
-        <article class="service-card reveal">
-          <figure>
-            <!-- PLACEHOLDER IMAGE -->
-            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=80"
-                 alt="A chef's plate finished tableside" loading="lazy" width="900" height="1035">
-          </figure>
-          <p class="service-tag" data-i18n-html="services.chef.tag">In villa</p>
-          <h3 class="h3" data-i18n="services.chef.title">Private Chef</h3>
-          <p data-i18n="services.chef.body">Breakfast before the beach, ceviche at the pool, a tasting menu at eight. Your chef shops, cooks, and disappears — the kitchen stays spotless.</p>
-        </article>
+      <div class="svc-track-wrap">
+        <div class="svc-track" data-svc-track>
 
-        <article class="service-card reveal" data-delay="1">
-          <figure>
-            <!-- PLACEHOLDER IMAGE -->
-            <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=900&q=80"
-                 alt="Your driver, already waiting" loading="lazy" width="900" height="1035">
-          </figure>
-          <p class="service-tag" data-i18n-html="services.transfer.tag">Arrival &amp; around town</p>
-          <h3 class="h3" data-i18n-html="services.transfer.title">Airport Transfers &amp; Drivers</h3>
-          <p data-i18n="services.transfer.body">A driver meets you at arrivals, name on card, cooler in the trunk. Keep him for the week — nobody in your group needs to think about keys.</p>
-        </article>
+          <a class="svc-card reveal" href="contact.html">
+            <figure class="svc-card-media" style="margin:0">
+              <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=80"
+                   alt="A chef's plate finished tableside" loading="lazy" width="900" height="1035">
+              <div class="svc-card-overlay"></div>
+              <div class="svc-card-body">
+                <p class="service-tag" data-i18n-html="services.chef.tag">In villa</p>
+                <h3 class="h3" data-i18n="services.chef.title">Private Chef</h3>
+                <p data-i18n="services.chef.body">Breakfast before the beach, ceviche at the pool, a tasting menu at eight. Your chef shops, cooks, and disappears — the kitchen stays spotless.</p>
+              </div>
+            </figure>
+          </a>
 
-        <article class="service-card reveal" data-delay="2">
-          <figure>
-            <!-- PLACEHOLDER IMAGE -->
-            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=900&q=80"
-                 alt="A suite reset to perfect while you were at lunch" loading="lazy" width="900" height="1035">
-          </figure>
-          <p class="service-tag" data-i18n-html="services.housekeeping.tag">In villa</p>
-          <h3 class="h3" data-i18n="services.housekeeping.title">Housekeeping</h3>
-          <p data-i18n="services.housekeeping.body">Daily service timed around your plans, not ours. Fresh linens, towels by the pool, and the villa reset to perfect every afternoon.</p>
-        </article>
+          <a class="svc-card reveal" data-delay="1" href="contact.html">
+            <figure class="svc-card-media" style="margin:0">
+              <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=900&q=80"
+                   alt="Your driver, already waiting" loading="lazy" width="900" height="1035">
+              <div class="svc-card-overlay"></div>
+              <div class="svc-card-body">
+                <p class="service-tag" data-i18n-html="services.transfer.tag">Arrival &amp; around town</p>
+                <h3 class="h3" data-i18n-html="services.transfer.title">Airport Transfers &amp; Drivers</h3>
+                <p data-i18n="services.transfer.body">A driver meets you at arrivals, name on card, cooler in the trunk. Keep him for the week — nobody in your group needs to think about keys.</p>
+              </div>
+            </figure>
+          </a>
 
-        <article class="service-card reveal" data-delay="3">
-          <figure>
-            <!-- PLACEHOLDER IMAGE -->
-            <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=900&q=80"
-                 alt="A massage table set poolside, oils warmed" loading="lazy" width="900" height="1035">
-          </figure>
-          <p class="service-tag" data-i18n-html="services.spa.tag">In villa</p>
-          <h3 class="h3" data-i18n-html="services.spa.title">Spa &amp; Massage</h3>
-          <p data-i18n="services.spa.body">Therapists come to you — massages on the terrace, facials before dinner, yoga at sunrise. The soundtrack is the ocean or the vines.</p>
-        </article>
+          <a class="svc-card reveal" data-delay="2" href="contact.html">
+            <figure class="svc-card-media" style="margin:0">
+              <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=900&q=80"
+                   alt="A suite reset to perfect while you were at lunch" loading="lazy" width="900" height="1035">
+              <div class="svc-card-overlay"></div>
+              <div class="svc-card-body">
+                <p class="service-tag" data-i18n-html="services.housekeeping.tag">In villa</p>
+                <h3 class="h3" data-i18n="services.housekeeping.title">Housekeeping</h3>
+                <p data-i18n="services.housekeeping.body">Daily service timed around your plans, not ours. Fresh linens, towels by the pool, and the villa reset to perfect every afternoon.</p>
+              </div>
+            </figure>
+          </a>
 
-        <article class="service-card reveal">
-          <figure>
-            <!-- PLACEHOLDER IMAGE -->
-            <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=900&q=80"
-                 alt="The kitchen stocked to your list before you land" loading="lazy" width="900" height="1035">
-          </figure>
-          <p class="service-tag" data-i18n-html="services.grocery.tag">Before you arrive</p>
-          <h3 class="h3" data-i18n="services.grocery.title">Grocery Pre-Stocking</h3>
-          <p data-i18n="services.grocery.body">Send a list — or just tell us how you eat. The fridge, the bar, and the fruit bowl are full before your plane touches down.</p>
-        </article>
+          <a class="svc-card reveal" data-delay="3" href="contact.html">
+            <figure class="svc-card-media" style="margin:0">
+              <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=900&q=80"
+                   alt="A massage table set poolside, oils warmed" loading="lazy" width="900" height="1035">
+              <div class="svc-card-overlay"></div>
+              <div class="svc-card-body">
+                <p class="service-tag" data-i18n-html="services.spa.tag">In villa</p>
+                <h3 class="h3" data-i18n-html="services.spa.title">Spa &amp; Massage</h3>
+                <p data-i18n="services.spa.body">Therapists come to you — massages on the terrace, facials before dinner, yoga at sunrise. The soundtrack is the ocean or the vines.</p>
+              </div>
+            </figure>
+          </a>
 
-        <article class="service-card reveal" data-delay="1">
-          <figure>
-            <!-- PLACEHOLDER IMAGE -->
-            <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=900&q=80"
-                 alt="An arch of flowers, an aisle of sand" loading="lazy" width="900" height="1035">
-          </figure>
-          <p class="service-tag" data-i18n-html="services.events.tag">Occasions</p>
-          <h3 class="h3" data-i18n-html="services.events.title">Events &amp; Weddings</h3>
-          <p data-i18n="services.events.body">Birthdays, proposals, vow renewals, the wedding itself — we coordinate florals, music, photography, and the moment nobody forgets.</p>
-        </article>
+          <a class="svc-card reveal" href="contact.html">
+            <figure class="svc-card-media" style="margin:0">
+              <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=900&q=80"
+                   alt="The kitchen stocked to your list before you land" loading="lazy" width="900" height="1035">
+              <div class="svc-card-overlay"></div>
+              <div class="svc-card-body">
+                <p class="service-tag" data-i18n-html="services.grocery.tag">Before you arrive</p>
+                <h3 class="h3" data-i18n="services.grocery.title">Grocery Pre-Stocking</h3>
+                <p data-i18n="services.grocery.body">Send a list — or just tell us how you eat. The fridge, the bar, and the fruit bowl are full before your plane touches down.</p>
+              </div>
+            </figure>
+          </a>
 
-        <article class="service-card reveal" data-delay="2">
-          <figure>
-            <!-- PLACEHOLDER IMAGE -->
-            <img src="https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?auto=format&fit=crop&w=900&q=80"
-                 alt="A private tasting poured straight from the barrel" loading="lazy" width="900" height="1035">
-          </figure>
-          <p class="service-tag" data-i18n-html="services.wine.tag">Valle de Guadalupe</p>
-          <h3 class="h3" data-i18n="services.wine.title">Wine Tours</h3>
-          <p data-i18n="services.wine.body">Cellars that don't take walk-ins, winemakers who pour their own bottles, and a driver for the ride home. The valley, done properly.</p>
-        </article>
+          <a class="svc-card reveal" data-delay="1" href="contact.html">
+            <figure class="svc-card-media" style="margin:0">
+              <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=900&q=80"
+                   alt="An arch of flowers, an aisle of sand" loading="lazy" width="900" height="1035">
+              <div class="svc-card-overlay"></div>
+              <div class="svc-card-body">
+                <p class="service-tag" data-i18n-html="services.events.tag">Occasions</p>
+                <h3 class="h3" data-i18n-html="services.events.title">Events &amp; Weddings</h3>
+                <p data-i18n="services.events.body">Birthdays, proposals, vow renewals, the wedding itself — we coordinate florals, music, photography, and the moment nobody forgets.</p>
+              </div>
+            </figure>
+          </a>
 
-        <article class="service-card reveal" data-delay="3">
-          <figure>
-            <!-- PLACEHOLDER IMAGE -->
-            <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
-                 alt="Snorkeling the reef before the crowds arrive" loading="lazy" width="900" height="1035">
-          </figure>
-          <p class="service-tag" data-i18n-html="services.excursions.tag">Playa del Carmen</p>
-          <h3 class="h3" data-i18n="services.excursions.title">Excursions</h3>
-          <p data-i18n="services.excursions.body">Private cenotes, reef dives, Mayan ruins before the tour buses, catamarans at golden hour. Skip every line; we already called ahead.</p>
-        </article>
+          <a class="svc-card reveal" data-delay="2" href="contact.html">
+            <figure class="svc-card-media" style="margin:0">
+              <img src="https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?auto=format&fit=crop&w=900&q=80"
+                   alt="A private tasting poured straight from the barrel" loading="lazy" width="900" height="1035">
+              <div class="svc-card-overlay"></div>
+              <div class="svc-card-body">
+                <p class="service-tag" data-i18n-html="services.wine.tag">Valle de Guadalupe</p>
+                <h3 class="h3" data-i18n="services.wine.title">Wine Tours</h3>
+                <p data-i18n="services.wine.body">Cellars that don't take walk-ins, winemakers who pour their own bottles, and a driver for the ride home. The valley, done properly.</p>
+              </div>
+            </figure>
+          </a>
 
+          <a class="svc-card reveal" data-delay="3" href="contact.html">
+            <figure class="svc-card-media" style="margin:0">
+              <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
+                   alt="Snorkeling the reef before the crowds arrive" loading="lazy" width="900" height="1035">
+              <div class="svc-card-overlay"></div>
+              <div class="svc-card-body">
+                <p class="service-tag" data-i18n-html="services.excursions.tag">Playa del Carmen</p>
+                <h3 class="h3" data-i18n="services.excursions.title">Excursions</h3>
+                <p data-i18n="services.excursions.body">Private cenotes, reef dives, Mayan ruins before the tour buses, catamarans at golden hour. Skip every line; we already called ahead.</p>
+              </div>
+            </figure>
+          </a>
+
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="svc-dots" data-svc-dots></div>
       </div>
     </section>
 

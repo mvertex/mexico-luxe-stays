@@ -239,6 +239,8 @@ const MLS_I18N = {
     "services.cta.title": "If it can be arranged in Mexico, we <em>arrange</em> it.",
     "services.cta.tell": "Tell us what you need",
     "services.cta.whatsapp": "WhatsApp us",
+    "services.gallery.prev": "Previous service",
+    "services.gallery.next": "Next service",
 
     /* ---------- About Us (about.html) ---------- */
     "about.hero.title": "About <em>us</em>",
@@ -559,6 +561,8 @@ const MLS_I18N = {
     "services.cta.title": "Si se puede organizar en México, lo <em>organizamos</em>.",
     "services.cta.tell": "Cuéntanos qué necesitas",
     "services.cta.whatsapp": "Escríbenos por WhatsApp",
+    "services.gallery.prev": "Servicio anterior",
+    "services.gallery.next": "Servicio siguiente",
 
     /* ---------- About Us (about.html) ---------- */
     "about.hero.title": "Sobre <em>nosotros</em>",
