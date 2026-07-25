@@ -1120,7 +1120,7 @@ button { font: inherit; cursor: pointer; }
   text-decoration: none; color: inherit; display: block;
 }
 @media (min-width: 900px) { .svc-card { width: 340px; } }
-.svc-card-media { position: relative; overflow: hidden; border-radius: var(--arch); aspect-ratio: 4 / 5; }
+.svc-card-media { position: relative; overflow: hidden; border-radius: var(--radius); aspect-ratio: 4 / 5; }
 .svc-card-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 1.2s var(--ease-out); }
 .svc-card:hover .svc-card-media img { transform: scale(1.05); }
 .svc-card-overlay {
