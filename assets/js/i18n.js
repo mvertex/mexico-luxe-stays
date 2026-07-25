@@ -208,9 +208,6 @@ const MLS_I18N = {
     /* ---------- Our Services (services.html) ---------- */
     "services.hero.title": "Our <em>services</em>",
     "services.hero.lead": "The villa is only half the stay",
-    "services.intro.eyebrow": "From inquiry to departure",
-    "services.intro.title": "Consider it <em>handled</em>",
-    "services.intro.body": "Every reservation includes a dedicated concierge who plans before you arrive and stays a message away until you leave. The services below aren't add-ons from a brochure — they're how our guests actually live in our villas.",
     "services.chef.tag": "In villa",
     "services.chef.title": "Private Chef",
     "services.chef.body": "Breakfast before the beach, ceviche at the pool, a tasting menu at eight. Your chef shops, cooks, and disappears — the kitchen stays spotless.",
@@ -530,9 +527,6 @@ const MLS_I18N = {
     /* ---------- Our Services (services.html) ---------- */
     "services.hero.title": "Nuestros <em>servicios</em>",
     "services.hero.lead": "La villa es solo la mitad de la estancia",
-    "services.intro.eyebrow": "Desde la consulta hasta la salida",
-    "services.intro.title": "Considéralo <em>resuelto</em>",
-    "services.intro.body": "Cada reservación incluye un concierge dedicado que planea todo antes de tu llegada y sigue a un mensaje de distancia hasta que te vas. Los servicios de abajo no son extras de un folleto — es como nuestros huéspedes realmente viven nuestras villas.",
     "services.chef.tag": "En la villa",
     "services.chef.title": "Chef Privado",
     "services.chef.body": "Desayuno antes de la playa, ceviche junto a la alberca, un menú de degustación a las ocho. Tu chef compra, cocina y desaparece — la cocina queda impecable.",
