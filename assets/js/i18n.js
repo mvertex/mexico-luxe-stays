@@ -240,6 +240,7 @@ const MLS_I18N = {
     "services.cta.whatsapp": "WhatsApp us",
     "services.gallery.prev": "Previous service",
     "services.gallery.next": "Next service",
+    "services.between.body": "We elevate your stay with personalized services designed for comfort, luxury, and effortless living. Every detail is thoughtfully arranged to create an exceptional experience from arrival to departure.",
 
     /* ---------- About Us (about.html) ---------- */
     "about.hero.title": "About <em>us</em>",
@@ -561,6 +562,7 @@ const MLS_I18N = {
     "services.cta.whatsapp": "Escríbenos por WhatsApp",
     "services.gallery.prev": "Servicio anterior",
     "services.gallery.next": "Servicio siguiente",
+    "services.between.body": "Elevamos tu estancia con servicios personalizados, diseñados para el confort, el lujo y una vida sin esfuerzo. Cada detalle está cuidadosamente organizado para crear una experiencia excepcional, desde la llegada hasta la partida.",
 
     /* ---------- About Us (about.html) ---------- */
     "about.hero.title": "Sobre <em>nosotros</em>",
