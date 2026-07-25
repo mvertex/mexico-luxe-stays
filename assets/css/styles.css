@@ -1106,7 +1106,7 @@ button { font: inherit; cursor: pointer; }
 
 .svc-track-wrap {
   margin-inline: calc(50% - 50vw);
-  padding-left: max(var(--pad-x), calc((100vw - var(--container)) / 2 + var(--pad-x)));
+  padding-left: var(--pad-x);
   padding-right: var(--pad-x);
 }
 .svc-track {
