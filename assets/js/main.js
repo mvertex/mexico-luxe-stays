@@ -333,6 +333,61 @@
     });
   }
 
+  /* ---------- Amenity icons: keyword-matched against the English label ---------- */
+  const MLS_AMENITY_ICON_DEFS = {
+    pool: '<path d="M2 8c1.5 1.5 3 1.5 4.5 0s3-1.5 4.5 0 3 1.5 4.5 0 3-1.5 4.5 0"/><path d="M2 14c1.5 1.5 3 1.5 4.5 0s3-1.5 4.5 0 3 1.5 4.5 0 3-1.5 4.5 0"/><path d="M2 20c1.5 1.5 3 1.5 4.5 0s3-1.5 4.5 0 3 1.5 4.5 0 3-1.5 4.5 0"/>',
+    squash: '<circle cx="9" cy="8" r="5"/><line x1="9" y1="13" x2="9" y2="21"/><line x1="6" y1="21" x2="12" y2="21"/>',
+    gym: '<circle cx="5" cy="12" r="3"/><circle cx="19" cy="12" r="3"/><line x1="8" y1="12" x2="16" y2="12" stroke-width="3"/>',
+    grill: '<path d="M12 3c-1 2.5-4 4-4 7.5a4 4 0 0 0 8 0c0-1.2-.5-2-1-2.7.1 1-.4 2-1.3 2.3-1 .3-1.9-.4-1.7-1.4C12.3 7 13 5 12 3z"/>',
+    chef: '<path d="M8 21h8v-6H8v6z"/><path d="M7 15a4 4 0 0 1-1-7.9A4.5 4.5 0 0 1 12 4a4.5 4.5 0 0 1 6 3.1A4 4 0 0 1 17 15H7z"/>',
+    sparkle: '<path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/><path d="M19 15l.7 2.1L22 18l-2.3.9L19 21l-.7-2.1L16 18l2.3-.9L19 15z"/>',
+    bell: '<path d="M12 3a5 5 0 0 0-5 5v3c0 1.5-.6 2.9-1.6 4h13.2c-1-1.1-1.6-2.5-1.6-4V8a5 5 0 0 0-5-5z"/><path d="M10 19a2 2 0 0 0 4 0"/>',
+    bar: '<path d="M4 4h16"/><path d="M4 4l8 9 8-9"/><line x1="12" y1="13" x2="12" y2="20"/><line x1="8" y1="20" x2="16" y2="20"/>',
+    sound: '<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9a4 4 0 0 1 0 6"/><path d="M19.5 6.5a8 8 0 0 1 0 11"/>',
+    beach: '<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/>',
+    view: '<path d="M3 18l5-7 4 5 3-4 6 6H3z"/><circle cx="8" cy="7" r="1.6"/>',
+    wine: '<path d="M10 2h4v3l1.5 2.5V20a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2V7.5L10 5V2z"/><line x1="10" y1="2" x2="14" y2="2"/>',
+    kitchen: '<path d="M4 11h16v3a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-3z"/><line x1="2" y1="11" x2="22" y2="11"/><path d="M8 11V8M16 11V8"/>',
+    wifi: '<path d="M2 8.5a15 15 0 0 1 20 0"/><path d="M5.5 12a10 10 0 0 1 13 0"/><path d="M9 15.5a5 5 0 0 1 6 0"/><circle cx="12" cy="19" r="1"/>',
+    bath: '<path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3z"/><path d="M6 12V6a2 2 0 0 1 4 0"/><line x1="2" y1="19" x2="22" y2="19"/>',
+    cinema: '<rect x="3" y="5" width="18" height="12" rx="1"/><path d="M9 5v12M15 5v12M3 9h6M3 13h6M15 9h6M15 13h6"/>',
+    game: '<rect x="3" y="8" width="18" height="9" rx="4"/><line x1="7" y1="11" x2="7" y2="14"/><line x1="5.5" y1="12.5" x2="8.5" y2="12.5"/><circle cx="16" cy="11" r="1"/><circle cx="18.5" cy="13.5" r="1"/>',
+    transfer: '<path d="M3 16v-3l2-4h10l2 4v3"/><rect x="3" y="16" width="14" height="3" rx="1"/><circle cx="6.5" cy="19" r="1.3"/><circle cx="14.5" cy="19" r="1.3"/>',
+    jacuzzi: '<path d="M3 15c1.2 1.2 2.5 1.2 3.7 0s2.5-1.2 3.7 0 2.5 1.2 3.7 0 2.5-1.2 3.7 0"/><circle cx="7" cy="7" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="17" cy="8" r="1"/><rect x="2" y="15" width="20" height="4" rx="1"/>',
+    door: '<rect x="6" y="3" width="12" height="18" rx="1"/><circle cx="14.5" cy="12" r="1"/>',
+    spa: '<path d="M4 20c0-9 6-15 15-15 0 9-6 15-15 15z"/><path d="M4 20c4-4 8-8 15-15"/>',
+    default: '<circle cx="12" cy="12" r="8"/><path d="M9 12l2 2 4-4"/>'
+  };
+  const MLS_AMENITY_ICON_RULES = [
+    ["pool", "pool"],
+    ["squash", "squash"],
+    ["gym", "gym"],
+    ["grill", "grill"], ["oven", "grill"], ["bbq", "grill"], ["al fresco", "grill"],
+    ["chef", "chef"],
+    ["housekeeping", "sparkle"],
+    ["concierge", "bell"],
+    ["honor bar", "bar"],
+    ["sonos", "sound"], ["bose", "sound"], ["sound", "sound"],
+    ["beach", "beach"], ["quinta avenida", "beach"],
+    ["view", "view"],
+    ["fire-pit", "grill"], ["fireplace", "grill"],
+    ["wine cellar", "wine"],
+    ["kitchen", "kitchen"],
+    ["wi-fi", "wifi"], ["wifi", "wifi"], ["starlink", "wifi"],
+    ["ensuite", "bath"], ["bathroom", "bath"],
+    ["cinema", "cinema"],
+    ["game room", "game"],
+    ["airport transfer", "transfer"],
+    ["jacuzzi", "jacuzzi"], ["hot tub", "jacuzzi"],
+    ["entrance", "door"], ["studio", "door"],
+    ["spa", "spa"]
+  ];
+  const mlsAmenityIcon = (enText) => {
+    const lower = (enText || "").toLowerCase();
+    const hit = MLS_AMENITY_ICON_RULES.find(([kw]) => lower.includes(kw));
+    return MLS_AMENITY_ICON_DEFS[hit ? hit[1] : "default"];
+  };
+
   /* ---------- Villa detail: specs + amenities + related, driven by data ---------- */
   const detailRoot = document.querySelector("[data-villa-slug]");
   let renderVillaDetail = null;
@@ -368,7 +423,11 @@
         const amenitiesEl = detailRoot.querySelector("[data-villa-amenities]");
         if (amenitiesEl) {
           amenitiesEl.innerHTML =
-            (villa.amenities || []).map((a) => `<li>${pick(a)}</li>`).join("") +
+            (villa.amenities || [])
+              .map(
+                (a) => `<li><span class="amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(a.en)}</svg></span><span class="amenity-text">${pick(a)}</span></li>`
+              )
+              .join("") +
             (villa.amenitiesMore || []).map((a) => `<li class="amenity-more">${pick(a)}</li>`).join("");
           amenitiesEl.classList.toggle("is-expanded", amenitiesExpanded);
           if (amenitiesToggle) {

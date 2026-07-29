@@ -1006,6 +1006,12 @@ button { font: inherit; cursor: pointer; }
 .amenities-list li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex: none; transform: translateY(-2px); }
 @media (max-width: 560px) { .amenities-list { grid-template-columns: 1fr; } }
 
+/* Featured amenities (visible by default) get an icon above the label */
+.amenities-list li:not(.amenity-more) { flex-direction: column; align-items: flex-start; gap: .7rem; }
+.amenities-list li:not(.amenity-more)::before { content: none; }
+.amenity-icon { width: 30px; height: 30px; color: var(--gold); flex: none; }
+.amenity-icon svg { width: 100%; height: 100%; display: block; }
+
 /* Extra amenities stay hidden until "Show all amenities" is toggled */
 .amenities-list li.amenity-more { display: none; }
 .amenities-list.is-expanded li.amenity-more { display: flex; }
