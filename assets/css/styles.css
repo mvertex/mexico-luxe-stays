@@ -850,6 +850,7 @@ button { font: inherit; cursor: pointer; }
 .spec { text-align: center; }
 .spec .spec-num { font-family: var(--font-display); font-size: 1.9rem; line-height: 1; color: var(--sage); }
 .spec .spec-label { font-size: .66rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); margin-top: .35rem; }
+.spec .spec-alt { font-size: .66rem; color: var(--stone); opacity: .75; margin-top: .2rem; }
 
 .detail-layout {
   padding-block: clamp(1.5rem, 3vw, 2.5rem) var(--section-y);

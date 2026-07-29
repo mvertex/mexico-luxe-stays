@@ -414,7 +414,7 @@ function mlsVillaShowcaseRow(villa, index, basePath = "") {
         <h3 class="h2"><a href="${basePath}villas/${villa.slug}.html">${villa.name}</a></h3>
         <p class="villa-row-desc">${short}</p>
         <div class="villa-row-specs">
-          <span>${villa.area} m&sup2;</span>
+          <span>${villa.area} m&sup2; (${Math.round(villa.area * 10.7639).toLocaleString("en-US")} ${t("card.sqft", lang)})</span>
           <span>${villa.bedrooms} ${t("card.bedrooms", lang)}</span>
           <span>${villa.guests} ${t("card.guests", lang)}</span>
         </div>

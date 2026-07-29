@@ -362,7 +362,7 @@
             <div class="spec"><div class="spec-num">${villa.bedrooms}</div><div class="spec-label">${t("detail.specs.bedrooms")}</div></div>
             <div class="spec"><div class="spec-num">${villa.beds}</div><div class="spec-label">${t("detail.specs.beds")}</div></div>
             <div class="spec"><div class="spec-num">${baths}</div><div class="spec-label">${t("detail.specs.bathrooms")}</div></div>
-            <div class="spec"><div class="spec-num">${villa.area}</div><div class="spec-label">${t("detail.specs.area")}</div></div>
+            <div class="spec"><div class="spec-num">${villa.area}</div><div class="spec-label">${t("detail.specs.area")}</div><div class="spec-alt">${Math.round(villa.area * 10.7639).toLocaleString("en-US")} ${t("card.sqft")}</div></div>
             <div class="spec"><div class="spec-num">${villa.destination === "playa-del-carmen" ? t("detail.specs.beach") : t("detail.specs.vines")}</div><div class="spec-label">${destinationLabel}</div></div>`;
         }
         const amenitiesEl = detailRoot.querySelector("[data-villa-amenities]");

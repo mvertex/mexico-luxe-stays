@@ -116,6 +116,7 @@ const MLS_I18N = {
     /* ---------- Villa cards (rendered by villas-data.js) ---------- */
     "card.guests": "guests",
     "card.bedrooms": "bedrooms",
+    "card.sqft": "sq ft",
 
     /* ---------- Villa detail pages (shared strings) ---------- */
     "detail.breadcrumb.home": "Home",
@@ -436,6 +437,7 @@ const MLS_I18N = {
     /* ---------- Villa cards (rendered by villas-data.js) ---------- */
     "card.guests": "huéspedes",
     "card.bedrooms": "recámaras",
+    "card.sqft": "pies²",
 
     /* ---------- Villa detail pages (shared strings) ---------- */
     "detail.breadcrumb.home": "Inicio",
