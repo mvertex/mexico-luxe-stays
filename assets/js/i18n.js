@@ -291,7 +291,8 @@ const MLS_I18N = {
     "faq.cta.title": "Ask a human — we answer <em>fast</em>.",
     "faq.cta.whatsappWeb": "WhatsApp Web",
     "faq.cta.whatsappPhone": "WhatsApp on the phone",
-    "faq.cta.phoneNumber": "Phone number",
+    "faq.cta.phoneNumber": "Phone number (MX)",
+    "faq.cta.phoneNumberUs": "Phone number (USA)",
 
     /* ---------- Contact Us (contact.html) ---------- */
     "contact.hero.eyebrow": "We reply fast",
@@ -610,7 +611,8 @@ const MLS_I18N = {
     "faq.cta.title": "Pregúntale a una persona real — respondemos <em>rápido</em>.",
     "faq.cta.whatsappWeb": "WhatsApp Web",
     "faq.cta.whatsappPhone": "WhatsApp en el teléfono",
-    "faq.cta.phoneNumber": "Número de teléfono",
+    "faq.cta.phoneNumber": "Número de teléfono (MX)",
+    "faq.cta.phoneNumberUs": "Número de teléfono (USA)",
 
     /* ---------- Contact Us (contact.html) ---------- */
     "contact.hero.eyebrow": "Respondemos rápido",

@@ -573,14 +573,23 @@ button { font: inherit; cursor: pointer; }
 .cta-banner .container { position: relative; }
 .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2.4rem; }
 
-.cta-actions--triple { flex-wrap: nowrap; gap: .8rem; }
+.cta-actions--triple,
+.cta-actions--quad { flex-wrap: nowrap; gap: .8rem; }
 .cta-actions--triple > .btn,
-.cta-actions--triple > .cta-phone-qr { flex: 1 1 0; min-width: 0; }
-.cta-actions--triple .btn {
+.cta-actions--triple > .cta-phone-qr,
+.cta-actions--quad > .btn,
+.cta-actions--quad > .cta-phone-qr { flex: 1 1 0; min-width: 0; }
+.cta-actions--triple .btn,
+.cta-actions--quad .btn {
   padding: .8rem 1rem; font-size: .66rem; letter-spacing: .1em;
 }
 .cta-phone-qr { position: relative; }
 .cta-phone-qr .btn { width: 100%; }
+@media (max-width: 780px) {
+  .cta-actions--quad { flex-wrap: wrap; }
+  .cta-actions--quad > .btn,
+  .cta-actions--quad > .cta-phone-qr { flex: 1 1 auto; }
+}
 @media (max-width: 560px) {
   .cta-actions--triple { flex-wrap: wrap; }
   .cta-actions--triple > .btn,
