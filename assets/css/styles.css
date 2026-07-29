@@ -583,6 +583,7 @@ button { font: inherit; cursor: pointer; }
 .cta-actions--quad .btn {
   padding: .8rem 1rem; font-size: .66rem; letter-spacing: .1em;
 }
+.cta-actions--quad .btn { white-space: nowrap; padding-inline: .6rem; }
 .cta-phone-qr { position: relative; }
 .cta-phone-qr .btn { width: 100%; }
 @media (max-width: 780px) {
