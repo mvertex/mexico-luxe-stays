@@ -704,6 +704,7 @@ button { font: inherit; cursor: pointer; }
 .qa-pill-icon svg { width: 15px; height: 15px; fill: currentColor; }
 .qa-panel--pill a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem; }
 .qa-panel--pill a:hover { color: var(--sage); }
+.qa-pill-links { display: flex; flex-direction: column; gap: .25rem; }
 
 .qa-panel--card {
   /* This panel's content (WhatsApp Web / scan / QR) can grow taller than the
