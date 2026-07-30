@@ -835,7 +835,7 @@ button { font: inherit; cursor: pointer; }
   gap: 1rem; margin-top: 2.4rem; transform: translateY(clamp(2rem, 6vw, 4.5rem));
 }
 .detail-gallery img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); }
-.detail-gallery .gallery-main { grid-row: 1 / -1; border-radius: var(--arch); aspect-ratio: 4 / 3.4; }
+.detail-gallery .gallery-main { grid-row: 1 / -1; border-radius: var(--radius); aspect-ratio: 4 / 3.4; }
 .detail-hero-spacer { height: clamp(2rem, 6vw, 4.5rem); background: var(--cream); }
 @media (max-width: 720px) {
   .detail-gallery { grid-template-columns: 1fr; grid-template-rows: auto; }
