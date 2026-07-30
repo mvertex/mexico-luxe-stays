@@ -1281,6 +1281,19 @@ button { font: inherit; cursor: pointer; }
   font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; padding: 1rem;
 }
 
+/* Availability & rates: reserved space for the future Hostaway widget (via Vercel) */
+.availability-grid {
+  display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(1.5rem, 3vw, 2.5rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+.availability-placeholder, .rates-placeholder {
+  border-radius: var(--radius); border: 1px dashed var(--stone); background: var(--sage-tint);
+  display: grid; place-items: center; text-align: center; color: var(--stone);
+  font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; padding: 1.5rem;
+  min-height: 320px; line-height: 1.6;
+}
+@media (max-width: 720px) { .availability-grid { grid-template-columns: 1fr; } }
+
 /* ---------- Scroll reveal ---------- */
 .reveal { opacity: 0; transform: translateY(24px); }
 .reveal.is-visible {
