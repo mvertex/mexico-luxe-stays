@@ -406,11 +406,27 @@
     ["living room", "sofa"],
     ["family friendly", "family"]
   ];
-  const mlsAmenityIcon = (enText) => {
+  const mlsAmenityIconKey = (enText) => {
     const lower = (enText || "").toLowerCase();
     const hit = MLS_AMENITY_ICON_RULES.find(([kw]) => lower.includes(kw));
-    return MLS_AMENITY_ICON_DEFS[hit ? hit[1] : "default"];
+    return hit ? hit[1] : "default";
   };
+  const mlsAmenityIcon = (enText) => MLS_AMENITY_ICON_DEFS[mlsAmenityIconKey(enText)];
+
+  /* ---------- Amenity categories: grouped by icon concept for the categorized showcase ---------- */
+  const MLS_AMENITY_CATEGORY_BY_ICON = {
+    pool: "wellness", squash: "wellness", gym: "wellness", jacuzzi: "wellness",
+    spa: "wellness", sports: "wellness", beach: "wellness", view: "wellness", bath: "wellness",
+    grill: "dining", chef: "dining", bar: "dining", wine: "dining", kitchen: "dining",
+    coffee: "dining", basket: "dining",
+    sparkle: "services", bell: "services", safe: "services", parking: "services",
+    laundry: "services", transfer: "services", door: "services", baby: "services",
+    ac: "services", ev: "services",
+    sound: "entertainment", cinema: "entertainment", game: "entertainment",
+    tv: "entertainment", wifi: "entertainment", family: "entertainment", sofa: "entertainment"
+  };
+  const MLS_AMENITY_CATEGORY_ORDER = ["wellness", "dining", "services", "entertainment", "other"];
+  const mlsAmenityCategory = (enText) => MLS_AMENITY_CATEGORY_BY_ICON[mlsAmenityIconKey(enText)] || "other";
 
   /* ---------- Villa detail: specs + amenities + related, driven by data ---------- */
   const detailRoot = document.querySelector("[data-villa-slug]");
@@ -448,11 +464,31 @@
         if (amenitiesEl) {
           const allAmenities = [...(villa.amenities || []), ...(villa.amenitiesMore || [])];
           const half = Math.ceil(allAmenities.length / 2);
-          amenitiesEl.innerHTML = allAmenities
-            .map(
-              (a, i) => `<li${i >= half ? ' class="amenity-more"' : ""}><span class="amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(a.en)}</svg></span><span class="amenity-text">${pick(a)}</span></li>`
-            )
+
+          /* Group into fixed categories (wellness/dining/services/entertainment),
+             falling back to "other" — while keeping each item's original index so
+             the existing "show all" split (first half visible) still applies. */
+          const groups = {};
+          allAmenities.forEach((a, i) => {
+            const cat = mlsAmenityCategory(a.en);
+            (groups[cat] = groups[cat] || []).push({ item: a, more: i >= half });
+          });
+
+          amenitiesEl.innerHTML = MLS_AMENITY_CATEGORY_ORDER.filter((cat) => groups[cat] && groups[cat].length)
+            .map((cat) => {
+              const rows = groups[cat]
+                .map(
+                  ({ item, more }) => `<li${more ? ' class="amenity-more"' : ""} tabindex="0"><span class="amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(item.en)}</svg></span><span class="amenity-text">${pick(item)}</span></li>`
+                )
+                .join("");
+              return `<div class="amenity-category">
+                <h3 class="amenity-category-title">${t("detail.amenities.category." + cat)}</h3>
+                <span class="amenity-category-rule" aria-hidden="true"></span>
+                <ul class="amenity-category-list">${rows}</ul>
+              </div>`;
+            })
             .join("");
+
           amenitiesEl.classList.toggle("is-expanded", amenitiesExpanded);
           if (amenitiesToggle) {
             amenitiesToggle.hidden = allAmenities.length <= half;
