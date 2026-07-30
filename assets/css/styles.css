@@ -1008,12 +1008,18 @@ button { font: inherit; cursor: pointer; }
 .property-map-link:hover .property-map-badge,
 .property-map-link:focus-visible .property-map-badge { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* Amenities showcase: categorized editorial grid — two category columns,
-   each a self-contained block with its own subgrid of icon+label rows. */
+/* Amenities showcase: categorized editorial layout — two independent flex
+   columns (not a shared grid row), so a tall category never strands a
+   short one next to it with a mismatched gap underneath. */
 .amenities-categories {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 3rem 4rem;
+  display: flex; align-items: flex-start; gap: 4rem;
   margin: 2.6rem auto 0; max-width: 1080px; text-align: left;
 }
+.amenities-col {
+  display: flex; flex-direction: column; gap: 2.8rem;
+  flex: 1 1 0; min-width: 0;
+}
+@media (max-width: 880px) { .amenities-categories { flex-direction: column; gap: 2.8rem; } }
 .amenity-category-title {
   font-family: var(--font-sans); font-size: .78rem; font-weight: 600;
   letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--cream);
@@ -1048,7 +1054,6 @@ button { font: inherit; cursor: pointer; }
   transition: background-color .25s ease, color .25s ease;
 }
 .amenity-icon svg { width: 21px; height: 21px; color: var(--gold); display: block; }
-@media (max-width: 880px) { .amenities-categories { grid-template-columns: 1fr; gap: 2.6rem; } }
 @media (max-width: 560px) { .amenity-category-list { grid-template-columns: 1fr; } }
 
 /* Second half stays hidden until "Show all amenities" is toggled */

@@ -474,20 +474,24 @@
             (groups[cat] = groups[cat] || []).push({ item: a, more: i >= half });
           });
 
-          amenitiesEl.innerHTML = MLS_AMENITY_CATEGORY_ORDER.filter((cat) => groups[cat] && groups[cat].length)
-            .map((cat) => {
-              const rows = groups[cat]
-                .map(
-                  ({ item, more }) => `<li${more ? ' class="amenity-more"' : ""} tabindex="0"><span class="amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(item.en)}</svg></span><span class="amenity-text">${pick(item)}</span></li>`
-                )
-                .join("");
-              return `<div class="amenity-category">
-                <h3 class="amenity-category-title">${t("detail.amenities.category." + cat)}</h3>
-                <span class="amenity-category-rule" aria-hidden="true"></span>
-                <ul class="amenity-category-list">${rows}</ul>
-              </div>`;
-            })
-            .join("");
+          const activeCategories = MLS_AMENITY_CATEGORY_ORDER.filter((cat) => groups[cat] && groups[cat].length);
+          const renderCategory = (cat) => {
+            const rows = groups[cat]
+              .map(
+                ({ item, more }) => `<li${more ? ' class="amenity-more"' : ""} tabindex="0"><span class="amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(item.en)}</svg></span><span class="amenity-text">${pick(item)}</span></li>`
+              )
+              .join("");
+            return `<div class="amenity-category">
+              <h3 class="amenity-category-title">${t("detail.amenities.category." + cat)}</h3>
+              <span class="amenity-category-rule" aria-hidden="true"></span>
+              <ul class="amenity-category-list">${rows}</ul>
+            </div>`;
+          };
+          /* Two independent flex columns (not a shared grid row) so a tall
+             category never leaves a mismatched gap next to a short one. */
+          const leftCol = activeCategories.filter((_, i) => i % 2 === 0).map(renderCategory).join("");
+          const rightCol = activeCategories.filter((_, i) => i % 2 === 1).map(renderCategory).join("");
+          amenitiesEl.innerHTML = `<div class="amenities-col">${leftCol}</div><div class="amenities-col">${rightCol}</div>`;
 
           amenitiesEl.classList.toggle("is-expanded", amenitiesExpanded);
           if (amenitiesToggle) {
