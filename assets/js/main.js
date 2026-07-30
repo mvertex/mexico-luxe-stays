@@ -607,7 +607,10 @@
         f.get("phone") ? `Phone: ${f.get("phone")}` : "",
         f.get("villa") ? `Villa of interest: ${villaSel.options[villaSel.selectedIndex].text}` : "",
         f.get("checkin") || f.get("checkout") ? `Dates: ${f.get("checkin") || "?"} to ${f.get("checkout") || "?"}` : "",
-        f.get("message") ? `Message: ${f.get("message")}` : ""
+        f.get("adults") ? `Adults: ${f.get("adults")}` : "",
+        f.get("children") ? `Children under 12: ${f.get("children")}` : "",
+        f.get("rooms") ? `Rooms needed: ${f.get("rooms")}` : "",
+        f.get("message") ? `Comments: ${f.get("message")}` : ""
       ].filter(Boolean);
       window.open("https://wa.me/5219848079475?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener");
       const status = contactForm.querySelector(".form-status");

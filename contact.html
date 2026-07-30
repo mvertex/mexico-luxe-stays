@@ -148,6 +148,18 @@
                 <label for="cf-checkout" data-i18n="contact.form.checkout">Check-out</label>
                 <input id="cf-checkout" name="checkout" type="date">
               </div>
+              <div class="form-field">
+                <label for="cf-adults" data-i18n="contact.form.adults">Number of adults</label>
+                <input id="cf-adults" name="adults" type="number" min="1" inputmode="numeric" placeholder="2" data-i18n-placeholder="contact.form.adultsPh">
+              </div>
+              <div class="form-field">
+                <label for="cf-children" data-i18n="contact.form.children">Children under 12</label>
+                <input id="cf-children" name="children" type="number" min="0" inputmode="numeric" placeholder="0" data-i18n-placeholder="contact.form.childrenPh">
+              </div>
+              <div class="form-field">
+                <label for="cf-rooms" data-i18n="contact.form.rooms">Rooms needed</label>
+                <input id="cf-rooms" name="rooms" type="number" min="1" inputmode="numeric" placeholder="1" data-i18n-placeholder="contact.form.roomsPh">
+              </div>
               <div class="form-field form-field--full">
                 <label for="cf-message" data-i18n="contact.form.message">Your message</label>
                 <textarea id="cf-message" name="message" rows="4" placeholder="Group size, the occasion, anything we should know..." data-i18n-placeholder="contact.form.messagePh"></textarea>
