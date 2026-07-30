@@ -418,6 +418,17 @@
   if (detailRoot && typeof MLS_VILLAS !== "undefined") {
     const villa = MLS_VILLAS.find((v) => v.slug === detailRoot.dataset.villaSlug);
     if (villa) {
+      let amenitiesExpanded = false;
+      const amenitiesToggle = document.querySelector("[data-amenities-toggle]");
+
+      const updateAmenitiesToggleLabel = () => {
+        if (!amenitiesToggle) return;
+        const key = amenitiesExpanded ? "detail.amenities.showLess" : "detail.amenities.showAll";
+        /* keep data-i18n in sync so a language switch re-applies the right label */
+        amenitiesToggle.setAttribute("data-i18n", key);
+        amenitiesToggle.textContent = t(key);
+      };
+
       renderVillaDetail = () => {
         const lang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
         const pick = (item) => (lang === "es" && item.es) || item.en;
@@ -435,11 +446,18 @@
         }
         const amenitiesEl = detailRoot.querySelector("[data-villa-amenities]");
         if (amenitiesEl) {
-          amenitiesEl.innerHTML = [...(villa.amenities || []), ...(villa.amenitiesMore || [])]
+          const allAmenities = [...(villa.amenities || []), ...(villa.amenitiesMore || [])];
+          const half = Math.ceil(allAmenities.length / 2);
+          amenitiesEl.innerHTML = allAmenities
             .map(
-              (a) => `<li><span class="amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(a.en)}</svg></span><span class="amenity-text">${pick(a)}</span></li>`
+              (a, i) => `<li${i >= half ? ' class="amenity-more"' : ""}><span class="amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(a.en)}</svg></span><span class="amenity-text">${pick(a)}</span></li>`
             )
             .join("");
+          amenitiesEl.classList.toggle("is-expanded", amenitiesExpanded);
+          if (amenitiesToggle) {
+            amenitiesToggle.hidden = allAmenities.length <= half;
+            updateAmenitiesToggleLabel();
+          }
         }
 
         /* Gallery showcase: hover (or focus) a category to preview it on the right;
@@ -500,6 +518,13 @@
           });
         }
       };
+
+      amenitiesToggle?.addEventListener("click", () => {
+        amenitiesExpanded = !amenitiesExpanded;
+        detailRoot.querySelector("[data-villa-amenities]")?.classList.toggle("is-expanded", amenitiesExpanded);
+        amenitiesToggle.setAttribute("aria-expanded", String(amenitiesExpanded));
+        updateAmenitiesToggleLabel();
+      });
 
       renderVillaDetail();
     }
