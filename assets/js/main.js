@@ -356,31 +356,55 @@
     jacuzzi: '<path d="M3 15c1.2 1.2 2.5 1.2 3.7 0s2.5-1.2 3.7 0 2.5 1.2 3.7 0 2.5-1.2 3.7 0"/><circle cx="7" cy="7" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="17" cy="8" r="1"/><rect x="2" y="15" width="20" height="4" rx="1"/>',
     door: '<rect x="6" y="3" width="12" height="18" rx="1"/><circle cx="14.5" cy="12" r="1"/>',
     spa: '<path d="M4 20c0-9 6-15 15-15 0 9-6 15-15 15z"/><path d="M4 20c4-4 8-8 15-15"/>',
+    basket: '<path d="M5 8h14l-1.5 11a2 2 0 0 1-2 1.8H8.5a2 2 0 0 1-2-1.8L5 8z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/>',
+    sports: '<circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16M6.3 6.3c2 2 2 9.4 0 11.4M17.7 6.3c-2 2-2 9.4 0 11.4"/>',
+    ac: '<path d="M12 2v20M4.5 6l15 12M19.5 6l-15 12"/>',
+    baby: '<rect x="4" y="10" width="16" height="8" rx="2"/><path d="M4 10V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3"/><circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/>',
+    ev: '<circle cx="12" cy="12" r="9"/><path d="M13 7l-4 6h3l-1 4 4-6h-3l1-4z"/>',
+    safe: '<rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M12 9v1.5M12 13.5V15M9 12h1.5M13.5 12H15"/>',
+    parking: '<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 16V8h3.5a2.5 2.5 0 0 1 0 5H9"/>',
+    laundry: '<rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13" r="5"/><circle cx="12" cy="13" r="2"/><circle cx="7" cy="6" r=".8"/><circle cx="10" cy="6" r=".8"/>',
+    coffee: '<path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 4c0 1-1 1-1 2M12 4c0 1-1 1-1 2"/>',
+    tv: '<rect x="3" y="5" width="18" height="12" rx="1"/><path d="M8 21h8M12 17v4"/>',
+    sofa: '<path d="M5 12V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/><path d="M3 12h18v5a1 1 0 0 1-1 1h-1v2h-2v-2H7v2H5v-2H4a1 1 0 0 1-1-1v-5z"/>',
+    family: '<circle cx="8" cy="8" r="2.5"/><circle cx="16" cy="8" r="2.5"/><path d="M3 20c0-3 2-5 5-5s5 2 5 5M11 20c0-3 2-5 5-5s5 2 5 5"/>',
     default: '<circle cx="12" cy="12" r="8"/><path d="M9 12l2 2 4-4"/>'
   };
   const MLS_AMENITY_ICON_RULES = [
     ["pool", "pool"],
-    ["squash", "squash"],
+    ["squash", "squash"], ["tennis", "squash"],
     ["gym", "gym"],
     ["grill", "grill"], ["oven", "grill"], ["bbq", "grill"], ["al fresco", "grill"],
     ["chef", "chef"],
-    ["housekeeping", "sparkle"],
+    ["housekeeping", "sparkle"], ["event", "sparkle"], ["celebrat", "sparkle"],
     ["concierge", "bell"],
-    ["honor bar", "bar"],
+    ["bartender", "bar"], ["honor bar", "bar"],
     ["sonos", "sound"], ["bose", "sound"], ["sound", "sound"],
-    ["beach", "beach"], ["quinta avenida", "beach"],
+    ["beach", "beach"], ["quinta avenida", "beach"], ["sun bed", "beach"], ["hammock", "beach"],
     ["view", "view"],
     ["fire-pit", "grill"], ["fireplace", "grill"],
-    ["wine cellar", "wine"],
-    ["kitchen", "kitchen"],
+    ["winer", "wine"], ["wine cellar", "wine"],
+    ["dining", "kitchen"], ["kitchen", "kitchen"],
     ["wi-fi", "wifi"], ["wifi", "wifi"], ["starlink", "wifi"],
-    ["ensuite", "bath"], ["bathroom", "bath"],
+    ["ensuite", "bath"], ["bathroom", "bath"], ["hair dryer", "bath"],
     ["cinema", "cinema"],
-    ["game room", "game"],
+    ["ping pong", "game"], ["foosball", "game"], ["board game", "game"], ["game room", "game"],
     ["airport transfer", "transfer"],
     ["jacuzzi", "jacuzzi"], ["hot tub", "jacuzzi"],
     ["entrance", "door"], ["studio", "door"],
-    ["spa", "spa"]
+    ["sauna", "spa"], ["spa", "spa"],
+    ["grocery", "basket"],
+    ["basketball", "sports"],
+    ["air conditioning", "ac"], ["heating", "ac"],
+    ["crib", "baby"], ["high chair", "baby"],
+    ["electric vehicle", "ev"],
+    ["safe", "safe"],
+    ["parking", "parking"], ["garage", "parking"],
+    ["washer", "laundry"],
+    ["nespresso", "coffee"],
+    ["smart tv", "tv"],
+    ["living room", "sofa"],
+    ["family friendly", "family"]
   ];
   const mlsAmenityIcon = (enText) => {
     const lower = (enText || "").toLowerCase();
@@ -394,17 +418,6 @@
   if (detailRoot && typeof MLS_VILLAS !== "undefined") {
     const villa = MLS_VILLAS.find((v) => v.slug === detailRoot.dataset.villaSlug);
     if (villa) {
-      let amenitiesExpanded = false;
-      const amenitiesToggle = document.querySelector("[data-amenities-toggle]");
-
-      const updateAmenitiesToggleLabel = () => {
-        if (!amenitiesToggle) return;
-        const key = amenitiesExpanded ? "detail.amenities.showLess" : "detail.amenities.showAll";
-        /* keep data-i18n in sync so a language switch re-applies the right label */
-        amenitiesToggle.setAttribute("data-i18n", key);
-        amenitiesToggle.textContent = t(key);
-      };
-
       renderVillaDetail = () => {
         const lang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
         const pick = (item) => (lang === "es" && item.es) || item.en;
@@ -422,20 +435,11 @@
         }
         const amenitiesEl = detailRoot.querySelector("[data-villa-amenities]");
         if (amenitiesEl) {
-          amenitiesEl.innerHTML = (villa.amenities || [])
+          amenitiesEl.innerHTML = [...(villa.amenities || []), ...(villa.amenitiesMore || [])]
             .map(
               (a) => `<li><span class="amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(a.en)}</svg></span><span class="amenity-text">${pick(a)}</span></li>`
             )
             .join("");
-        }
-        const amenitiesMoreEl = detailRoot.querySelector("[data-villa-amenities-more]");
-        if (amenitiesMoreEl) {
-          amenitiesMoreEl.innerHTML = (villa.amenitiesMore || []).map((a) => `<li>${pick(a)}</li>`).join("");
-          amenitiesMoreEl.classList.toggle("is-expanded", amenitiesExpanded);
-          if (amenitiesToggle) {
-            amenitiesToggle.hidden = !(villa.amenitiesMore && villa.amenitiesMore.length);
-            updateAmenitiesToggleLabel();
-          }
         }
 
         /* Gallery showcase: hover (or focus) a category to preview it on the right;
@@ -496,13 +500,6 @@
           });
         }
       };
-
-      amenitiesToggle?.addEventListener("click", () => {
-        amenitiesExpanded = !amenitiesExpanded;
-        detailRoot.querySelector("[data-villa-amenities-more]")?.classList.toggle("is-expanded", amenitiesExpanded);
-        amenitiesToggle.setAttribute("aria-expanded", String(amenitiesExpanded));
-        updateAmenitiesToggleLabel();
-      });
 
       renderVillaDetail();
     }
