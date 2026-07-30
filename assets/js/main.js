@@ -422,14 +422,16 @@
         }
         const amenitiesEl = detailRoot.querySelector("[data-villa-amenities]");
         if (amenitiesEl) {
-          amenitiesEl.innerHTML =
-            (villa.amenities || [])
-              .map(
-                (a) => `<li><span class="amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(a.en)}</svg></span><span class="amenity-text">${pick(a)}</span></li>`
-              )
-              .join("") +
-            (villa.amenitiesMore || []).map((a) => `<li class="amenity-more">${pick(a)}</li>`).join("");
-          amenitiesEl.classList.toggle("is-expanded", amenitiesExpanded);
+          amenitiesEl.innerHTML = (villa.amenities || [])
+            .map(
+              (a) => `<li><span class="amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(a.en)}</svg></span><span class="amenity-text">${pick(a)}</span></li>`
+            )
+            .join("");
+        }
+        const amenitiesMoreEl = detailRoot.querySelector("[data-villa-amenities-more]");
+        if (amenitiesMoreEl) {
+          amenitiesMoreEl.innerHTML = (villa.amenitiesMore || []).map((a) => `<li>${pick(a)}</li>`).join("");
+          amenitiesMoreEl.classList.toggle("is-expanded", amenitiesExpanded);
           if (amenitiesToggle) {
             amenitiesToggle.hidden = !(villa.amenitiesMore && villa.amenitiesMore.length);
             updateAmenitiesToggleLabel();
@@ -497,7 +499,7 @@
 
       amenitiesToggle?.addEventListener("click", () => {
         amenitiesExpanded = !amenitiesExpanded;
-        detailRoot.querySelector("[data-villa-amenities]")?.classList.toggle("is-expanded", amenitiesExpanded);
+        detailRoot.querySelector("[data-villa-amenities-more]")?.classList.toggle("is-expanded", amenitiesExpanded);
         amenitiesToggle.setAttribute("aria-expanded", String(amenitiesExpanded));
         updateAmenitiesToggleLabel();
       });
