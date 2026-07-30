@@ -983,8 +983,10 @@ button { font: inherit; cursor: pointer; }
   position: relative; width: 100%; max-width: 1100px;
   margin: clamp(2.5rem, 5vw, 3.5rem) auto 0;
 }
+.property-map-link { display: block; position: relative; }
 .property-map-image {
   display: block; width: 100%; height: auto;
+  transition: opacity .3s ease;
   -webkit-mask-image:
     linear-gradient(to right, transparent 0%, #000 7%, #000 93%, transparent 100%),
     linear-gradient(to bottom, transparent 0%, #000 8%, #000 92%, transparent 100%);
@@ -994,6 +996,17 @@ button { font: inherit; cursor: pointer; }
     linear-gradient(to bottom, transparent 0%, #000 8%, #000 92%, transparent 100%);
   mask-composite: intersect;
 }
+.property-map-link:hover .property-map-image { opacity: .9; }
+.property-map-badge {
+  position: absolute; bottom: 1.4rem; left: 50%; transform: translateX(-50%) translateY(6px);
+  background: var(--green); color: var(--cream);
+  font-size: .68rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase;
+  padding: .6rem 1.2rem; border-radius: 999px; white-space: nowrap;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.property-map-link:hover .property-map-badge,
+.property-map-link:focus-visible .property-map-badge { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* Featured amenities (visible by default): centered icon-over-label grid, 5 per row */
 .amenities-list {
