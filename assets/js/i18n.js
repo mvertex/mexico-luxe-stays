@@ -91,7 +91,6 @@ const MLS_I18N = {
     "home.cta.whatsapp": "WhatsApp us",
 
     /* ---------- Our Villas (villas.html) ---------- */
-    "villas.hero.eyebrow": "The collection",
     "villas.hero.title": "Our <em>villas</em>",
     "villas.hero.lead": "Every residence is handpicked, privately managed, and staffed to the standard we'd demand ourselves.",
     "villas.filter.destination": "Destination",
@@ -426,7 +425,6 @@ const MLS_I18N = {
     "home.cta.whatsapp": "Escríbenos por WhatsApp",
 
     /* ---------- Our Villas (villas.html) ---------- */
-    "villas.hero.eyebrow": "La colección",
     "villas.hero.title": "Nuestras <em>villas</em>",
     "villas.hero.lead": "Cada residencia es seleccionada a mano, administrada de forma privada, y atendida con el estándar que exigiríamos para nosotros mismos.",
     "villas.filter.destination": "Destino",
