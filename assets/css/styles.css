@@ -804,6 +804,24 @@ button { font: inherit; cursor: pointer; }
   margin-bottom: clamp(2.5rem, 4vw, 3.5rem);
   background: var(--cream); border-radius: var(--radius); box-shadow: var(--shadow-lift);
 }
+
+/* Liquid-glass variant: floats up over the hero image's bottom edge */
+.filter-bar--glass {
+  position: relative; z-index: 5;
+  margin-top: clamp(-6.5rem, -9vw, -4.5rem);
+  border-radius: 22px;
+  background: rgba(246, 244, 239, .45);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, .4);
+  box-shadow: 0 30px 60px -18px rgba(20, 26, 19, .4), inset 0 1px 0 rgba(255, 255, 255, .5);
+}
+.filter-bar--glass .filter-field { border-right-color: rgba(255, 255, 255, .3); }
+.filter-bar--glass .filter-clear:hover { background: rgba(255, 255, 255, .35); }
+@media (max-width: 720px) {
+  .filter-bar--glass { margin-top: clamp(-3.5rem, -8vw, -2.5rem); }
+  .filter-bar--glass .filter-field { border-right: 0; border-bottom-color: rgba(255, 255, 255, .3); }
+}
 .filter-field {
   min-width: 180px; flex: 1; padding: 1.3rem 1.7rem;
   border-right: 1px solid rgba(20, 20, 20, .08);

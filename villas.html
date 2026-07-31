@@ -47,12 +47,11 @@
 
   <main id="main">
 
-    <!-- ============ Page hero ============ -->
-    <section class="hero hero--page" aria-label="Our villas">
+    <!-- ============ Page hero (full-viewport) ============ -->
+    <section class="hero" aria-label="Our villas">
       <div class="hero-media">
-        <!-- PLACEHOLDER IMAGE -->
-        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2000&q=80"
-             alt="Turquoise Caribbean water meeting white Riviera Maya sand" fetchpriority="high">
+        <img src="assets/img/hero-villas.webp"
+             alt="A palapa-roofed beachfront villa framed by palm trees on the Riviera Maya" fetchpriority="high">
       </div>
       <div class="container">
         <p class="eyebrow eyebrow--center" data-hero-reveal="1" data-i18n="villas.hero.eyebrow">The collection</p>
@@ -64,7 +63,7 @@
     <!-- ============ Filters + grid ============ -->
     <section class="section" aria-label="Villa collection">
       <div class="container">
-        <form class="filter-bar" aria-label="Filter villas" onsubmit="return false">
+        <form class="filter-bar filter-bar--glass reveal" aria-label="Filter villas" onsubmit="return false">
           <div class="filter-field">
             <label for="filter-destination" data-i18n="villas.filter.destination">Destination</label>
             <select id="filter-destination">
