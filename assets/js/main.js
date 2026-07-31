@@ -598,6 +598,13 @@
     renderFeaturedShowcase && renderFeaturedShowcase();
     renderVillaGrid && renderVillaGrid();
     renderVillaDetail && renderVillaDetail();
+    /* i18n.js applies the page's initial language from a DOMContentLoaded
+       listener, which fires after this script's own initReveal() call —
+       so any .reveal markup rebuilt just now (villa rows, service cards)
+       was never handed to that first IntersectionObserver. Re-run it so
+       freshly-created elements still fade in instead of staying at
+       opacity:0 forever. */
+    initReveal();
   });
 
   /* ---------- Testimonials rotator ---------- */
