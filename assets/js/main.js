@@ -768,7 +768,11 @@
       (e) => {
         if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
           e.preventDefault();
-          window.scrollBy(0, e.deltaY);
+          /* The page has `scroll-behavior: smooth` in CSS; scrollBy()'s default
+             "auto" behavior inherits that, so rapid wheel ticks each kick off a
+             competing smooth-scroll animation and the page stutters/judders.
+             Force "instant" so it just tracks the wheel 1:1, like native scroll. */
+          window.scrollBy({ top: e.deltaY, left: 0, behavior: "instant" });
         }
       },
       { passive: false }
