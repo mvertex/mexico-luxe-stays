@@ -73,6 +73,7 @@ const MLS_VILLAS = [
       { en: "Washer & dryer", es: "Lavadora y secadora" },
       { en: "Complimentary airport transfer (4+ nights)", es: "Traslado al aeropuerto de cortesía (4+ noches)" }
     ],
+    services: ["chef", "transfer", "housekeeping", "spa", "grocery", "excursions"],
     gallery: [
       { key: "outdoor", images: [
         { src: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1400&q=80",
@@ -156,6 +157,7 @@ const MLS_VILLAS = [
       { en: "Minutes from top wineries & Michelin-starred dining", es: "A minutos de las mejores bodegas y restaurantes con estrella Michelin" },
       { en: "Free parking", es: "Estacionamiento gratuito" }
     ],
+    services: ["chef", "transfer", "housekeeping", "spa", "grocery", "wine"],
     gallery: [
       { key: "outdoor", images: [
         { src: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1400&q=80",
@@ -242,6 +244,7 @@ const MLS_VILLAS = [
       { en: "Garage & free parking", es: "Cochera y estacionamiento gratuito" },
       { en: "Washer & dryer", es: "Lavadora y secadora" }
     ],
+    services: ["chef", "transfer", "housekeeping", "spa", "grocery", "events", "excursions"],
     gallery: [
       { key: "outdoor", images: [
         { src: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1400&q=80",
@@ -326,6 +329,7 @@ const MLS_VILLAS = [
       { en: "Board games", es: "Juegos de mesa" },
       { en: "Free parking", es: "Estacionamiento gratuito" }
     ],
+    services: ["chef", "transfer", "housekeeping", "spa", "grocery", "excursions"],
     gallery: [
       { key: "outdoor", images: [
         { src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=80",
@@ -363,6 +367,44 @@ const MLS_VILLAS = [
   }
 ];
 
+/* Shared service definitions (image + alt) for the per-villa services carousel.
+   Copy/title/tag text reuses the same i18n keys as the Our Services page
+   (services.<id>.tag / .title / .body), so translations stay in one place.
+   Each villa lists which of these it offers via its `services` array above. */
+const MLS_SERVICE_DEFS = {
+  chef: {
+    image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=80",
+    alt: "A chef's plate finished tableside"
+  },
+  transfer: {
+    image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=900&q=80",
+    alt: "Your driver, already waiting"
+  },
+  housekeeping: {
+    image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=900&q=80",
+    alt: "A suite reset to perfect while you were at lunch"
+  },
+  spa: {
+    image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=900&q=80",
+    alt: "A massage table set poolside, oils warmed"
+  },
+  grocery: {
+    image: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=900&q=80",
+    alt: "The kitchen stocked to your list before you land"
+  },
+  events: {
+    image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=900&q=80",
+    alt: "An arch of flowers, an aisle of sand"
+  },
+  wine: {
+    image: "https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?auto=format&fit=crop&w=900&q=80",
+    alt: "A private tasting poured straight from the barrel"
+  },
+  excursions: {
+    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80",
+    alt: "Snorkeling the reef before the crowds arrive"
+  }
+};
 
 /* Renders one alternating showcase row (Our Villas page) — a photo carousel
    on one side, name/description/specs/CTA on the other. `index` decides

@@ -500,6 +500,29 @@
           }
         }
 
+        /* Services carousel: which concierge services this specific villa offers,
+           reusing the same svc-card markup/behavior as the Our Services page. */
+        const servicesTrack = detailRoot.querySelector("[data-villa-services]");
+        if (servicesTrack && villa.services && villa.services.length && typeof MLS_SERVICE_DEFS !== "undefined") {
+          servicesTrack.innerHTML = villa.services
+            .map((id) => {
+              const def = MLS_SERVICE_DEFS[id];
+              if (!def) return "";
+              return `<a class="svc-card reveal" href="../contact.html?villa=${villa.slug}">
+                <figure class="svc-card-media" style="margin:0">
+                  <img src="${def.image}" alt="${def.alt}" loading="lazy" width="900" height="1035">
+                  <div class="svc-card-overlay"></div>
+                  <div class="svc-card-body">
+                    <p class="service-tag" data-i18n-html="services.${id}.tag">${t("services." + id + ".tag")}</p>
+                    <h3 class="h3">${t("services." + id + ".title")}</h3>
+                    <p>${t("services." + id + ".body")}</p>
+                  </div>
+                </figure>
+              </a>`;
+            })
+            .join("");
+        }
+
         /* Gallery showcase: hover (or focus) a category to preview it on the right;
            "View Gallery" opens the full set for that category in the lightbox. */
         const galleryShowcase = document.querySelector("[data-gallery-showcase]");

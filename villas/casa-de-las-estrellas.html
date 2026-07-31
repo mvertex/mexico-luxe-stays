@@ -111,6 +111,28 @@
       </button>
     </div>
 
+    <!-- ============ Services offered at this villa ============ -->
+    <section class="section" style="padding-bottom:0" aria-label="Services available at Casa de las Estrellas" data-svc-carousel>
+      <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+        <h3 class="h3" style="margin-top:0" data-i18n="detail.services.title">Services</h3>
+        <div class="svc-nav">
+          <button type="button" class="svc-nav-btn" data-svc-prev aria-label="Previous" data-i18n-aria-label="services.gallery.prev">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="svc-nav-btn" data-svc-next aria-label="Next" data-i18n-aria-label="services.gallery.next">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="svc-track-wrap">
+        <!-- Rendered from assets/js/villas-data.js (MLS_SERVICE_DEFS + villa.services) -->
+        <div class="svc-track" data-svc-track data-villa-services></div>
+      </div>
+      <div class="container">
+        <div class="svc-dots" data-svc-dots></div>
+      </div>
+    </section>
+
     <!-- ============ Property location map ============ -->
     <section class="section property-map-section" aria-label="Where Casa de las Estrellas is located">
       <div class="container center">
