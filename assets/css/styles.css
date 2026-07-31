@@ -1223,21 +1223,21 @@ button { font: inherit; cursor: pointer; }
 }
 .svc-track::-webkit-scrollbar { display: none; }
 .svc-card {
-  flex: 0 0 auto; width: min(300px, 78vw); scroll-snap-align: start;
+  flex: 0 0 auto; width: min(230px, 62vw); scroll-snap-align: start;
   text-decoration: none; color: inherit; display: block;
 }
-@media (min-width: 900px) { .svc-card { width: 340px; } }
-.svc-card-media { position: relative; overflow: hidden; border-radius: var(--radius); aspect-ratio: 4 / 5; }
+@media (min-width: 900px) { .svc-card { width: 250px; } }
+.svc-card-media { position: relative; overflow: hidden; border-radius: var(--radius); aspect-ratio: 3 / 4; }
 .svc-card-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 1.2s var(--ease-out); }
 .svc-card:hover .svc-card-media img { transform: scale(1.05); }
 .svc-card-overlay {
   position: absolute; inset: 0;
   background: linear-gradient(rgba(20, 26, 19, 0) 38%, rgba(20, 26, 19, .55) 70%, rgba(20, 26, 19, .88));
 }
-.svc-card-body { position: absolute; inset-inline: 0; bottom: 0; padding: 1.5rem; color: var(--cream); }
-.svc-card-body .service-tag { color: var(--gold); }
-.svc-card-body .h3 { color: var(--cream); margin-top: .45rem; font-size: 1.28rem; }
-.svc-card-body p { color: var(--cream-80); margin-top: .55rem; font-size: .88rem; font-weight: 300; line-height: 1.6; }
+.svc-card-body { position: absolute; inset-inline: 0; bottom: 0; padding: 1.1rem; color: var(--cream); }
+.svc-card-body .service-tag { color: var(--gold); font-size: .6rem; }
+.svc-card-body .h3 { color: var(--cream); margin-top: .35rem; font-size: 1.05rem; }
+.svc-card-body p { color: var(--cream-80); margin-top: .4rem; font-size: .78rem; font-weight: 300; line-height: 1.5; }
 
 .svc-dots { display: flex; gap: .5rem; justify-content: center; margin-top: clamp(1.6rem, 3vw, 2.2rem); }
 
