@@ -756,6 +756,24 @@
       requestAnimationFrame(() => { updateNav(); ticking = false; });
     });
     window.addEventListener("resize", updateNav);
+
+    /* Browsers redirect a plain vertical mouse-wheel scroll into horizontal
+       scroll for any element that can only scroll on the x-axis (like this
+       track) — which traps page scrolling the moment the cursor is over the
+       carousel. Reclaim predominantly-vertical wheel gestures for the page;
+       let genuinely horizontal ones (trackpad swipes, shift+wheel) move the
+       carousel as expected. */
+    track.addEventListener(
+      "wheel",
+      (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          e.preventDefault();
+          window.scrollBy(0, e.deltaY);
+        }
+      },
+      { passive: false }
+    );
+
     updateNav();
   });
 
