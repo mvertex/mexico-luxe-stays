@@ -333,6 +333,43 @@
     });
   }
 
+  /* ---------- Destination landing pages (Playa del Carmen / Valle de Guadalupe) ---------- */
+  const destinationGrid = document.querySelector("[data-destination-grid]");
+  let renderDestinationGrid = null;
+  if (destinationGrid && typeof MLS_VILLAS !== "undefined") {
+    const dest = destinationGrid.dataset.destinationGrid;
+
+    renderDestinationGrid = () => {
+      const list = MLS_VILLAS.filter((v) => v.destination === dest);
+      destinationGrid.innerHTML = list.map((v, i) => mlsVillaShowcaseRow(v, i)).join("");
+      destinationGrid.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-visible"));
+    };
+    renderDestinationGrid();
+
+    /* Per-row photo carousel (prev/next + dots) — same delegated pattern as the
+       main villa grid above, so rows keep working after a language re-render. */
+    destinationGrid.addEventListener("click", (e) => {
+      const prevBtn = e.target.closest("[data-carousel-prev]");
+      const nextBtn = e.target.closest("[data-carousel-next]");
+      const dotBtn = e.target.closest("[data-carousel-dot]");
+      if (!prevBtn && !nextBtn && !dotBtn) return;
+      const row = e.target.closest("[data-villa-row]");
+      if (!row) return;
+      const slides = [...row.querySelectorAll(".villa-row-slide")];
+      const dots = [...row.querySelectorAll(".carousel-dot")];
+      const current = slides.findIndex((s) => s.classList.contains("is-active"));
+      let next = current;
+      if (prevBtn) next = (current - 1 + slides.length) % slides.length;
+      if (nextBtn) next = (current + 1) % slides.length;
+      if (dotBtn) next = parseInt(dotBtn.dataset.carouselDot, 10);
+      if (next === current) return;
+      slides[current]?.classList.remove("is-active");
+      slides[next]?.classList.add("is-active");
+      dots[current]?.classList.remove("is-active");
+      dots[next]?.classList.add("is-active");
+    });
+  }
+
   /* ---------- Amenity icons: keyword-matched against the English label ---------- */
   const MLS_AMENITY_ICON_DEFS = {
     pool: '<path d="M2 8c1.5 1.5 3 1.5 4.5 0s3-1.5 4.5 0 3 1.5 4.5 0 3-1.5 4.5 0"/><path d="M2 14c1.5 1.5 3 1.5 4.5 0s3-1.5 4.5 0 3 1.5 4.5 0 3-1.5 4.5 0"/><path d="M2 20c1.5 1.5 3 1.5 4.5 0s3-1.5 4.5 0 3 1.5 4.5 0 3-1.5 4.5 0"/>',
@@ -634,6 +671,7 @@
   document.addEventListener("mls:languagechange", () => {
     renderFeaturedShowcase && renderFeaturedShowcase();
     renderVillaGrid && renderVillaGrid();
+    renderDestinationGrid && renderDestinationGrid();
     renderVillaDetail && renderVillaDetail();
     /* i18n.js applies the page's initial language from a DOMContentLoaded
        listener, which fires after this script's own initReveal() call —

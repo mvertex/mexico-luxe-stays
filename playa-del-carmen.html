@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Our Villas — Luxury Villa Collection | Mexico Luxe Stays</title>
-  <meta name="description" content="Browse our handpicked collection of luxury villas in Playa del Carmen and Valle de Guadalupe. Beachfront estates, wine country retreats — filter by destination, guests, and bedrooms.">
-  <link rel="canonical" href="https://www.mexicoluxestays.com/villas.html">
+  <title>Villas in Playa del Carmen — Riviera Maya | Mexico Luxe Stays</title>
+  <meta name="description" content="Handpicked luxury villas in Playa del Carmen, Riviera Maya — beachfront estates with private pools, full staff, and concierge service from Mexico Luxe Stays.">
+  <link rel="canonical" href="https://www.mexicoluxestays.com/playa-del-carmen.html">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Our Villas — Mexico Luxe Stays">
-  <meta property="og:description" content="Handpicked luxury villas in Playa del Carmen and Valle de Guadalupe.">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80">
+  <meta property="og:title" content="Villas in Playa del Carmen — Mexico Luxe Stays">
+  <meta property="og:description" content="Handpicked beachfront villas in Playa del Carmen, Riviera Maya.">
+  <meta property="og:image" content="assets/img/hero-dest-playa.webp">
   <link rel="icon" type="image/png" href="assets/img/brand/avatar-green.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +31,7 @@
       </button>
       <nav class="main-nav" aria-label="Main navigation">
         <a href="index.html" data-i18n="nav.home">Home</a>
-        <a href="villas.html" aria-current="page" data-i18n="nav.villas">Our Villas</a>
+        <a href="villas.html" data-i18n="nav.villas">Our Villas</a>
         <a href="services.html" data-i18n="nav.services">Our Services</a>
         <a href="about.html" data-i18n="nav.about">About Us</a>
         <a href="faq.html" data-i18n="nav.faq">FAQ</a>
@@ -48,79 +48,44 @@
   <main id="main">
 
     <!-- ============ Page hero (full-viewport) ============ -->
-    <section class="hero" aria-label="Our villas">
+    <section class="hero" aria-label="Playa del Carmen">
       <div class="hero-media">
-        <img src="assets/img/hero-villas.webp"
-             alt="A palapa-roofed beachfront villa framed by palm trees on the Riviera Maya" fetchpriority="high">
+        <img src="assets/img/hero-dest-playa.webp"
+             alt="Palm fronds over the sparkling turquoise water of the Riviera Maya" fetchpriority="high">
       </div>
       <div class="container">
-        <h1 class="display" data-hero-reveal="2" data-i18n-html="villas.hero.title">Our <em>villas</em></h1>
-        <p class="lead" data-hero-reveal="3" data-i18n="villas.hero.lead">Every residence is handpicked, privately managed, and staffed to the standard we'd demand ourselves.</p>
+        <h1 class="display" data-hero-reveal="2" data-i18n-html="destPlaya.hero.title">Playa del <em>Carmen</em></h1>
+        <p class="lead" data-hero-reveal="3" data-i18n="destPlaya.hero.lead">White-sand beaches, turquoise water, and the vibrant pulse of the Riviera Maya — handpicked villas, steps from the sea.</p>
       </div>
+      <a class="hero-scroll-hint" href="#villas" data-i18n="home.scroll">Scroll</a>
     </section>
 
-    <!-- ============ Filters + grid ============ -->
-    <section class="section" aria-label="Villa collection">
+    <!-- ============ Villas in this destination ============ -->
+    <section class="section" id="villas" aria-label="Villas in Playa del Carmen">
       <div class="container">
-        <form class="filter-bar filter-bar--glass reveal" aria-label="Filter villas" onsubmit="return false">
-          <div class="filter-field">
-            <label for="filter-destination" data-i18n="villas.filter.destination">Destination</label>
-            <select id="filter-destination">
-              <option value="" data-i18n="villas.filter.allDestinations">All destinations</option>
-              <option value="playa-del-carmen">Playa del Carmen</option>
-              <option value="valle-de-guadalupe">Valle de Guadalupe</option>
-            </select>
-          </div>
-          <div class="filter-field">
-            <label for="filter-guests" data-i18n="villas.filter.guests">Guests</label>
-            <select id="filter-guests">
-              <option value="" data-i18n="villas.filter.any">Any</option>
-              <option value="10">10+</option>
-              <option value="12">12+</option>
-              <option value="18">18+</option>
-              <option value="22">22+</option>
-            </select>
-          </div>
-          <div class="filter-field">
-            <label for="filter-bedrooms" data-i18n="villas.filter.bedrooms">Bedrooms</label>
-            <select id="filter-bedrooms">
-              <option value="" data-i18n="villas.filter.any">Any</option>
-              <option value="4">4+</option>
-              <option value="6">6+</option>
-              <option value="11">11+</option>
-            </select>
-          </div>
-          <button class="filter-clear" type="button" data-filter-clear data-i18n="villas.filter.clear">Clear all</button>
-        </form>
-
-        <p class="filter-count" data-filter-count aria-live="polite"></p>
-
-        <!-- ┌─────────────────────────────────────────────────────────────┐
-             │ HOSTAWAY INTEGRATION POINT                                  │
-             │ Rows render from MLS_VILLAS (assets/js/villas-data.js).     │
-             │ Swap that array for the Hostaway Listings API response.     │
-             │ Date params from the home search (?checkin/?checkout) are   │
-             │ parsed in main.js, ready for the availability endpoint.     │
-             └─────────────────────────────────────────────────────────────┘ -->
-        <div class="villa-showcase" data-villa-grid></div>
-
-        <noscript>
-          <ul>
-            <li><a href="villas/villa-aqua.html">Villa Aqua — Playa del Carmen</a></li>
-            <li><a href="villas/casa-de-las-estrellas.html">Casa de las Estrellas — Playa del Carmen</a></li>
-            <li><a href="villas/casa-corazon-luxe.html">Casa Corazon Luxe — Playa del Carmen</a></li>
-            <li><a href="villas/kasa-kefi.html">Kasa Kefi — Valle de Guadalupe</a></li>
-          </ul>
-        </noscript>
+        <div class="section-head reveal">
+          <p class="eyebrow" data-i18n="destPlaya.villas.eyebrow">Riviera Maya</p>
+          <h2 class="h2" data-i18n-html="destPlaya.villas.title">Villas in <em>Playa del Carmen</em></h2>
+        </div>
       </div>
+
+      <!-- Rendered from assets/js/villas-data.js, filtered to this destination —
+           HOSTAWAY swap point. Same alternating showcase row used on Our Villas. -->
+      <div class="villa-showcase" data-destination-grid="playa-del-carmen"></div>
+
+      <noscript>
+        <ul class="container">
+          <li><a href="villas/villa-aqua.html">Villa Aqua — Playa del Carmen</a></li>
+          <li><a href="villas/casa-de-las-estrellas.html">Casa de las Estrellas — Playa del Carmen</a></li>
+          <li><a href="villas/casa-corazon-luxe.html">Casa Corazon Luxe — Playa del Carmen</a></li>
+        </ul>
+      </noscript>
     </section>
 
     <!-- ============ CTA banner ============ -->
     <section class="section cta-banner" aria-labelledby="cta-title">
       <div class="cta-media">
-        <!-- PLACEHOLDER IMAGE -->
-        <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=2000&q=80"
-             alt="A villa pool from above, framed by palms" loading="lazy">
+        <img src="assets/img/villas/bg-playa-turtles.webp" alt="" loading="lazy">
       </div>
       <div class="container reveal">
         <p class="eyebrow eyebrow--center" data-i18n="villas.cta.eyebrow">Not seeing the one?</p>
