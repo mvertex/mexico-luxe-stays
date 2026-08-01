@@ -911,16 +911,6 @@ button { font: inherit; cursor: pointer; }
   margin: 0 0 1.3rem;
 }
 .residence-split-copy strong { font-weight: 600; color: var(--ink); }
-.residence-cta {
-  display: inline-block; margin-top: .6rem;
-  font-family: var(--font-sans); font-size: .74rem; font-weight: 600;
-  letter-spacing: var(--track-caps); text-transform: uppercase;
-  color: var(--ink); text-decoration: none;
-  border-bottom: 1px solid var(--ink); padding-bottom: 3px;
-  transition: color .2s ease, border-color .2s ease;
-}
-.residence-cta:hover { color: var(--sage); border-color: var(--sage); }
-
 @media (max-width: 720px) { .residence-split { grid-template-columns: 1fr; } }
 
 /* Villa gallery showcase: category list on the left, preview photo bleeding to the right edge */
