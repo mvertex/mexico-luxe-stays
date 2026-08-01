@@ -608,7 +608,7 @@ button { font: inherit; cursor: pointer; }
 .cta-actions--quad .btn {
   padding: .8rem 1rem; font-size: .66rem; letter-spacing: .1em;
 }
-.cta-actions--quad .btn { white-space: nowrap; padding-inline: .6rem; }
+.cta-actions--quad .btn { white-space: nowrap; padding-inline: .5rem; font-size: .58rem; letter-spacing: .05em; }
 .cta-phone-qr { position: relative; }
 .cta-phone-qr .btn { width: 100%; }
 @media (max-width: 780px) {
@@ -970,38 +970,38 @@ button { font: inherit; cursor: pointer; }
 /* Villa FAQ showcase: question list on the left, answer card on the right —
    same interaction language as the gallery showcase above (hover/focus a
    question to preview it), but the "preview" is text instead of a photo. */
-.faq-showcase {
+.villa-faq-showcase {
   display: grid; grid-template-columns: minmax(220px, 380px) 1fr; gap: clamp(2rem, 5vw, 3.5rem);
   align-items: stretch; margin-top: clamp(1.5rem, 3vw, 2.5rem);
 }
-.faq-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; justify-content: center; gap: clamp(1rem, 2.5vw, 1.4rem); }
-.faq-item {
+.villa-faq-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; justify-content: center; gap: clamp(1rem, 2.5vw, 1.4rem); }
+.villa-faq-item {
   display: flex; align-items: center; gap: 1rem; width: 100%;
   background: none; border: 0; padding: .2rem 0; text-align: left; cursor: pointer;
   font-family: var(--font-display); font-size: clamp(1.05rem, 1.6vw, 1.3rem); color: var(--stone);
   transition: color .3s ease;
 }
-.faq-item-line {
+.villa-faq-item-line {
   width: 3rem; height: 1px; background: currentColor; flex: none;
   transform: scaleX(0); transform-origin: left; opacity: 0;
   transition: transform .45s var(--ease-out), opacity .3s ease;
 }
-.faq-item.is-active, .faq-item:hover, .faq-item:focus-visible { color: var(--ink); }
-.faq-item.is-active .faq-item-line,
-.faq-item:hover .faq-item-line,
-.faq-item:focus-visible .faq-item-line { transform: scaleX(1); opacity: 1; }
-.faq-card {
+.villa-faq-item.is-active, .villa-faq-item:hover, .villa-faq-item:focus-visible { color: var(--ink); }
+.villa-faq-item.is-active .villa-faq-item-line,
+.villa-faq-item:hover .villa-faq-item-line,
+.villa-faq-item:focus-visible .villa-faq-item-line { transform: scaleX(1); opacity: 1; }
+.villa-faq-card {
   background: var(--sage-tint); border-radius: var(--radius); box-shadow: var(--shadow-card);
   padding: clamp(2rem, 4vw, 3rem); display: flex; align-items: center;
   min-height: clamp(220px, 26vw, 300px);
 }
-.faq-card-answer {
+.villa-faq-card-answer {
   font-size: clamp(1rem, 1.3vw, 1.15rem); font-weight: 300; line-height: 1.75;
   color: var(--ink); transition: opacity .25s ease;
 }
 @media (max-width: 720px) {
-  .faq-showcase { grid-template-columns: 1fr; }
-  .faq-card { min-height: 0; }
+  .villa-faq-showcase { grid-template-columns: 1fr; }
+  .villa-faq-card { min-height: 0; }
 }
 
 /* ---------- Lightbox (villa gallery viewer) ---------- */

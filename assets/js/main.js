@@ -536,14 +536,14 @@
 
           faqList.innerHTML = faqs
             .map(
-              (f, i) => `<li><button type="button" class="faq-item${i === 0 ? " is-active" : ""}" data-faq-index="${i}">
-                <span>${pick(f.q)}</span><span class="faq-item-line" aria-hidden="true"></span>
+              (f, i) => `<li><button type="button" class="villa-faq-item${i === 0 ? " is-active" : ""}" data-faq-index="${i}">
+                <span>${pick(f.q)}</span><span class="villa-faq-item-line" aria-hidden="true"></span>
               </button></li>`
             )
             .join("");
           faqAnswerEl.textContent = pick(faqs[0].a);
 
-          const faqItems = [...faqList.querySelectorAll(".faq-item")];
+          const faqItems = [...faqList.querySelectorAll(".villa-faq-item")];
           faqItems.forEach((item, i) => {
             const activate = () => {
               faqItems.forEach((other) => other.classList.remove("is-active"));
