@@ -107,6 +107,28 @@ const MLS_VILLAS = [
         { src: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1400&q=80",
           alt: "A flexible lounge, ready for its next use", altEs: "Un salón flexible, listo para su próximo uso" }
       ] }
+    ],
+    faqs: [
+      {
+        q: { en: "How many guests can Villa Aqua accommodate?", es: "¿Cuántos huéspedes puede alojar Villa Aqua?" },
+        a: { en: "Up to eighteen guests across six bedrooms, with flexible configurations for smaller groups — the entire property remains exclusively yours no matter how many rooms you book.", es: "Hasta dieciocho huéspedes en seis recámaras, con configuraciones flexibles para grupos más pequeños — la propiedad completa es exclusivamente tuya sin importar cuántas habitaciones reserves." }
+      },
+      {
+        q: { en: "Is airport transfer included?", es: "¿El traslado del aeropuerto está incluido?" },
+        a: { en: "Yes — round-trip airport transfer is complimentary for stays of four nights or more; shorter stays can add it for a flat fee.", es: "Sí — el traslado redondo al aeropuerto es de cortesía en estancias de cuatro noches o más; en estancias más cortas se puede agregar por una tarifa fija." }
+      },
+      {
+        q: { en: "Is the private chef available every day?", es: "¿El chef privado está disponible todos los días?" },
+        a: { en: "Yes, your private chef and butler are included with every stay, available daily from breakfast through dinner.", es: "Sí, tu chef y mayordomo privados están incluidos en cada estancia, disponibles todos los días desde el desayuno hasta la cena." }
+      },
+      {
+        q: { en: "Is the squash court and gym private?", es: "¿La cancha de squash y el gimnasio son privados?" },
+        a: { en: "Completely — they're part of the villa and reserved solely for your group, with no shared access with other guests.", es: "Totalmente — son parte de la villa y están reservados solo para tu grupo, sin acceso compartido con otros huéspedes." }
+      },
+      {
+        q: { en: "Is Villa Aqua suitable for families with children?", es: "¿Villa Aqua es adecuada para familias con niños?" },
+        a: { en: "Yes — the flexible bedroom configurations and the pool and jacuzzi work well for multigenerational groups, and cribs or high chairs are available on request through our concierge.", es: "Sí — las configuraciones flexibles de recámaras y la alberca con jacuzzi funcionan bien para grupos multigeneracionales, y las cunas o sillas altas están disponibles bajo solicitud con nuestro concierge." }
+      }
     ]
   },
   {
@@ -191,6 +213,28 @@ const MLS_VILLAS = [
         { src: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1400&q=80",
           alt: "The dining table, set for a tasting", altEs: "La mesa, puesta para una cata" }
       ] }
+    ],
+    faqs: [
+      {
+        q: { en: "Is Kasa Kefi good for a wine-tasting trip?", es: "¿Kasa Kefi es buena para un viaje de cata de vinos?" },
+        a: { en: "It's built for it — the villa sits minutes from the Valle's top wineries, with a private wine cellar on-site and a driver available for tastings, so no one has to skip a pour.", es: "Está pensada para eso — la villa está a minutos de las mejores bodegas del Valle, con una cava de vinos propia y un chofer disponible para las catas, para que nadie tenga que dejar de disfrutar una copa." }
+      },
+      {
+        q: { en: "Does every suite have its own fire pit?", es: "¿Cada suite tiene su propia fogata?" },
+        a: { en: "Yes, every suite has a private fire-pit terrace overlooking the vineyard, perfect for stargazing after dinner.", es: "Sí, cada suite tiene su propia terraza con fogata y vista al viñedo, perfecta para ver las estrellas después de la cena." }
+      },
+      {
+        q: { en: "Is there reliable internet for remote work?", es: "¿Hay internet confiable para trabajar de forma remota?" },
+        a: { en: "Yes — Starlink high-speed Wi-Fi covers the whole property, which is uncommon for this rural part of the valley.", es: "Sí — Wi-Fi de alta velocidad Starlink cubre toda la propiedad, algo poco común en esta zona rural del valle." }
+      },
+      {
+        q: { en: "Can meals be arranged in the villa?", es: "¿Se pueden organizar comidas en la villa?" },
+        a: { en: "The gourmet kitchen is fully equipped, and our chef service can prepare meals sourced from local Valle de Guadalupe producers on request.", es: "La cocina gourmet está completamente equipada, y nuestro servicio de chef puede preparar comidas con productores locales del Valle de Guadalupe bajo solicitud." }
+      },
+      {
+        q: { en: "How far is Kasa Kefi from the wineries?", es: "¿Qué tan lejos está Kasa Kefi de las bodegas?" },
+        a: { en: "Most of the region's acclaimed wineries and Michelin-starred restaurants are just minutes away by car.", es: "La mayoría de las bodegas reconocidas y restaurantes con estrella Michelin de la región están a solo minutos en coche." }
+      }
     ]
   },
   {
@@ -278,6 +322,28 @@ const MLS_VILLAS = [
         { src: "https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?auto=format&fit=crop&w=1400&q=80",
           alt: "The game room, ready for the evening", altEs: "El salón de juegos, listo para la noche" }
       ] }
+    ],
+    faqs: [
+      {
+        q: { en: "Is Casa Corazon Luxe suitable for weddings or large celebrations?", es: "¿Casa Corazón Luxe es adecuada para bodas o celebraciones grandes?" },
+        a: { en: "Yes — it's our largest property and one of the few in the collection built to comfortably host events, from milestone birthdays to full wedding weekends.", es: "Sí — es nuestra propiedad más grande y una de las pocas de la colección pensada para recibir eventos con comodidad, desde cumpleaños importantes hasta fines de semana de boda completos." }
+      },
+      {
+        q: { en: "How many people can stay overnight?", es: "¿Cuántas personas pueden quedarse a dormir?" },
+        a: { en: "Eleven bedrooms with ensuite bathrooms sleep the majority of large groups comfortably, with additional lounges available for overflow.", es: "Once recámaras con baño propio alojan cómodamente a la mayoría de los grupos grandes, con salas adicionales disponibles para huéspedes extra." }
+      },
+      {
+        q: { en: "Is there entertainment for kids and teens?", es: "¿Hay entretenimiento para niños y adolescentes?" },
+        a: { en: "The home cinema and game room keep younger guests entertained, and the beachfront pool area works well for family downtime.", es: "El cine en casa y el salón de juegos mantienen entretenidos a los huéspedes más jóvenes, y la alberca frente al mar es ideal para el tiempo en familia." }
+      },
+      {
+        q: { en: "Does the villa have private beach access?", es: "¿La villa tiene acceso privado a la playa?" },
+        a: { en: "Yes, Casa Corazon Luxe has private beachfront access directly from the property.", es: "Sí, Casa Corazón Luxe tiene acceso privado a la playa directamente desde la propiedad." }
+      },
+      {
+        q: { en: "Is security provided during events?", es: "¿Se ofrece seguridad durante los eventos?" },
+        a: { en: "Yes, 24/7 concierge and security are included, which is especially useful when hosting larger gatherings.", es: "Sí, el concierge y la seguridad 24/7 están incluidos, algo especialmente útil cuando se organizan reuniones grandes." }
+      }
     ]
   },
   {
@@ -363,6 +429,28 @@ const MLS_VILLAS = [
         { src: "https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?auto=format&fit=crop&w=1400&q=80",
           alt: "A glass poured before sunset", altEs: "Una copa servida antes del atardecer" }
       ] }
+    ],
+    faqs: [
+      {
+        q: { en: "Is Casa de las Estrellas good for a couple's getaway?", es: "¿Casa de las Estrellas es buena para una escapada en pareja?" },
+        a: { en: "It's one of our most intimate properties — a rooftop terrace with a private jacuzzi, ocean views, and thirty seconds from the beach make it especially suited to couples.", es: "Es una de nuestras propiedades más íntimas — una terraza en la azotea con jacuzzi privado, vista al mar y a treinta segundos de la playa la hacen ideal para parejas." }
+      },
+      {
+        q: { en: "What is the \"independent studio\"?", es: "¿Qué es el \"estudio independiente\"?" },
+        a: { en: "A separate suite with its own private entrance, ideal for guests who want extra privacy within the same property.", es: "Una suite aparte con su propia entrada privada, ideal para huéspedes que quieren privacidad extra dentro de la misma propiedad." }
+      },
+      {
+        q: { en: "Is the beach really that close?", es: "¿La playa está realmente tan cerca?" },
+        a: { en: "Yes, the villa sits about thirty seconds' walk from the sand.", es: "Sí, la villa está aproximadamente a treinta segundos caminando de la arena." }
+      },
+      {
+        q: { en: "Can we request spa treatments in the villa?", es: "¿Podemos solicitar tratamientos de spa en la villa?" },
+        a: { en: "Yes, in-villa spa treatments can be arranged on request through our concierge.", es: "Sí, los tratamientos de spa en la villa se pueden organizar bajo solicitud con nuestro concierge." }
+      },
+      {
+        q: { en: "Is a private chef available?", es: "¿Hay chef privado disponible?" },
+        a: { en: "A private chef is available on request, in addition to the daily housekeeping and 24/7 concierge included with every stay.", es: "Un chef privado está disponible bajo solicitud, además de la limpieza diaria y el concierge 24/7 incluidos en cada estancia." }
+      }
     ]
   }
 ];

@@ -452,12 +452,14 @@
         if (specsEl) {
           const baths = villa.baths % 1 === 0 ? villa.baths : villa.baths.toFixed(1);
           const destinationLabel = (lang === "es" && villa.destinationLabelEs) || villa.destinationLabel;
+          const sqft = Math.round(villa.area * 10.7639).toLocaleString("en-US");
           specsEl.innerHTML = `
             <div class="spec"><div class="spec-num">${villa.guests}</div><div class="spec-label">${t("detail.specs.guests")}</div></div>
             <div class="spec"><div class="spec-num">${villa.bedrooms}</div><div class="spec-label">${t("detail.specs.bedrooms")}</div></div>
             <div class="spec"><div class="spec-num">${villa.beds}</div><div class="spec-label">${t("detail.specs.beds")}</div></div>
             <div class="spec"><div class="spec-num">${baths}</div><div class="spec-label">${t("detail.specs.bathrooms")}</div></div>
-            <div class="spec"><div class="spec-num">${villa.area}</div><div class="spec-label">${t("detail.specs.area")}</div><div class="spec-alt">${Math.round(villa.area * 10.7639).toLocaleString("en-US")} ${t("card.sqft")}</div></div>
+            <div class="spec"><div class="spec-num">${villa.area}</div><div class="spec-label">${t("detail.specs.area")}</div></div>
+            <div class="spec"><div class="spec-num">${sqft}</div><div class="spec-label">${t("detail.specs.sqft")}</div></div>
             <div class="spec"><div class="spec-num">${villa.destination === "playa-del-carmen" ? t("detail.specs.beach") : t("detail.specs.vines")}</div><div class="spec-label">${destinationLabel}</div></div>`;
         }
         const amenitiesEl = detailRoot.querySelector("[data-villa-amenities]");
@@ -521,6 +523,41 @@
               </a>`;
             })
             .join("");
+        }
+
+        /* FAQ showcase: hover (or focus, or tap) a question to preview its
+           answer on the right — same interaction as the gallery showcase,
+           but the "photo" is text. Questions/answers are villa-specific. */
+        const faqShowcase = detailRoot.querySelector("[data-faq-showcase]");
+        if (faqShowcase && villa.faqs && villa.faqs.length) {
+          const faqList = faqShowcase.querySelector("[data-faq-list]");
+          const faqAnswerEl = faqShowcase.querySelector("[data-faq-answer]");
+          const faqs = villa.faqs;
+
+          faqList.innerHTML = faqs
+            .map(
+              (f, i) => `<li><button type="button" class="faq-item${i === 0 ? " is-active" : ""}" data-faq-index="${i}">
+                <span>${pick(f.q)}</span><span class="faq-item-line" aria-hidden="true"></span>
+              </button></li>`
+            )
+            .join("");
+          faqAnswerEl.textContent = pick(faqs[0].a);
+
+          const faqItems = [...faqList.querySelectorAll(".faq-item")];
+          faqItems.forEach((item, i) => {
+            const activate = () => {
+              faqItems.forEach((other) => other.classList.remove("is-active"));
+              item.classList.add("is-active");
+              faqAnswerEl.style.opacity = "0";
+              setTimeout(() => {
+                faqAnswerEl.textContent = pick(faqs[i].a);
+                faqAnswerEl.style.opacity = "1";
+              }, prefersReducedMotion ? 0 : 180);
+            };
+            item.addEventListener("mouseenter", activate);
+            item.addEventListener("focus", activate);
+            item.addEventListener("click", activate);
+          });
         }
 
         /* Gallery showcase: hover (or focus) a category to preview it on the right;
