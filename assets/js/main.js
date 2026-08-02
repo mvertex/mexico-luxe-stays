@@ -9,6 +9,123 @@
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ---------- Custom select: replaces the native dropdown's OS-styled option
+     list with a listbox that matches the filter bar's own look. The original
+     <select> stays in the DOM (visually hidden) as the single source of
+     truth, so existing filter logic (.value reads, "change" listeners, URL
+     prefill) keeps working untouched. ---------- */
+  function mlsEnhanceSelect(select) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "custom-select";
+
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "custom-select-trigger";
+    trigger.setAttribute("aria-haspopup", "listbox");
+    trigger.setAttribute("aria-expanded", "false");
+    const label = document.createElement("span");
+    label.className = "custom-select-label";
+    trigger.appendChild(label);
+
+    const list = document.createElement("ul");
+    list.className = "custom-select-list";
+    list.setAttribute("role", "listbox");
+    list.hidden = true;
+
+    [...select.options].forEach((opt) => {
+      const li = document.createElement("li");
+      li.setAttribute("role", "option");
+      li.tabIndex = -1;
+      li.dataset.value = opt.value;
+      li.textContent = opt.textContent;
+      list.appendChild(li);
+    });
+
+    wrapper.appendChild(trigger);
+    wrapper.appendChild(list);
+    select.insertAdjacentElement("afterend", wrapper);
+    select.classList.add("visually-hidden-select");
+    select.setAttribute("aria-hidden", "true");
+    select.tabIndex = -1;
+
+    const syncFromSelect = () => {
+      const selectedOpt = select.options[select.selectedIndex];
+      label.textContent = selectedOpt ? selectedOpt.textContent : "";
+      list.querySelectorAll("li").forEach((li) => {
+        li.setAttribute("aria-selected", li.dataset.value === select.value ? "true" : "false");
+      });
+    };
+
+    const closeList = () => {
+      list.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+    };
+    const openList = () => {
+      document.querySelectorAll(".custom-select-list").forEach((l) => { l.hidden = true; });
+      document.querySelectorAll(".custom-select-trigger").forEach((t) => t.setAttribute("aria-expanded", "false"));
+      list.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+    };
+
+    trigger.addEventListener("click", () => {
+      if (list.hidden) openList(); else closeList();
+    });
+
+    list.addEventListener("click", (e) => {
+      const li = e.target.closest("li[role='option']");
+      if (!li) return;
+      select.value = li.dataset.value;
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+      syncFromSelect();
+      closeList();
+      trigger.focus();
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!wrapper.contains(e.target)) closeList();
+    });
+
+    trigger.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openList();
+        (list.querySelector("li[aria-selected='true']") || list.querySelector("li"))?.focus();
+      } else if (e.key === "Escape") {
+        closeList();
+      }
+    });
+
+    list.addEventListener("keydown", (e) => {
+      const items = [...list.querySelectorAll("li")];
+      const idx = items.indexOf(document.activeElement);
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        (items[idx + 1] || items[0]).focus();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        (items[idx - 1] || items[items.length - 1]).focus();
+      } else if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        document.activeElement.click();
+      } else if (e.key === "Escape") {
+        closeList();
+        trigger.focus();
+      }
+    });
+
+    syncFromSelect();
+
+    return {
+      syncFromSelect,
+      rebuildLabels: () => {
+        [...select.options].forEach((opt, i) => {
+          if (list.children[i]) list.children[i].textContent = opt.textContent;
+        });
+        syncFromSelect();
+      },
+    };
+  }
+
   /* ---------- Lightbox: full-image viewer for the villa gallery showcase ---------- */
   let mlsOpenLightbox = null;
   const lightbox = document.querySelector("[data-lightbox]");
@@ -261,6 +378,7 @@
   /* ---------- Villa grid + filters (Our Villas) ---------- */
   const villaGrid = document.querySelector("[data-villa-grid]");
   let renderVillaGrid = null;
+  let filterCustomSelects = [];
   if (villaGrid && typeof MLS_VILLAS !== "undefined") {
     const selDest = document.querySelector("#filter-destination");
     const selGuests = document.querySelector("#filter-guests");
@@ -277,6 +395,8 @@
       const opt = [...selGuests.options].reverse().find((o) => o.value && parseInt(o.value, 10) <= g);
       if (g && opt) selGuests.value = [...selGuests.options].find((o) => parseInt(o.value, 10) >= g)?.value || opt.value;
     }
+
+    filterCustomSelects = [selDest, selGuests, selBeds].map(mlsEnhanceSelect);
 
     renderVillaGrid = () => {
       const dest = selDest.value;
@@ -304,6 +424,7 @@
     [selDest, selGuests, selBeds].forEach((s) => s.addEventListener("change", renderVillaGrid));
     document.querySelector("[data-filter-clear]")?.addEventListener("click", () => {
       selDest.value = ""; selGuests.value = ""; selBeds.value = "";
+      filterCustomSelects.forEach((cs) => cs.syncFromSelect());
       history.replaceState(null, "", window.location.pathname);
       renderVillaGrid();
     });
@@ -673,6 +794,7 @@
     renderVillaGrid && renderVillaGrid();
     renderDestinationGrid && renderDestinationGrid();
     renderVillaDetail && renderVillaDetail();
+    filterCustomSelects.forEach((cs) => cs.rebuildLabels());
     /* i18n.js applies the page's initial language from a DOMContentLoaded
        listener, which fires after this script's own initReveal() call —
        so any .reveal markup rebuilt just now (villa rows, service cards)
