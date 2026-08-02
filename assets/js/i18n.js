@@ -224,7 +224,7 @@ const MLS_I18N = {
     "detail.kefi.mapTitle": "Kasa Kefi in the <em>Valle</em>",
     "detail.kefi.mapAlt": "Map showing Kasa Kefi's location in the Valle de Guadalupe, Baja California, near Viñedos Guadalupe and Finca Altozano",
 
-    /* ---------- Our Services (services.html) ---------- */
+    /* ---------- Services (shared: per-villa services carousel) ---------- */
     "services.hero.title": "Our <em>services</em>",
     "services.hero.lead": "The villa is only half the stay",
     "services.chef.tag": "In villa",
@@ -569,7 +569,7 @@ const MLS_I18N = {
     "detail.kefi.mapTitle": "Kasa Kefi en el <em>Valle</em>",
     "detail.kefi.mapAlt": "Mapa con la ubicación de Kasa Kefi en el Valle de Guadalupe, Baja California, cerca de Viñedos Guadalupe y Finca Altozano",
 
-    /* ---------- Our Services (services.html) ---------- */
+    /* ---------- Services (shared: per-villa services carousel) ---------- */
     "services.hero.title": "Nuestros <em>servicios</em>",
     "services.hero.lead": "La villa es solo la mitad de la estancia",
     "services.chef.tag": "En la villa",
