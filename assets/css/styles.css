@@ -437,19 +437,19 @@ button { font: inherit; cursor: pointer; }
   min-height: 100svh; display: flex; flex-direction: column; justify-content: center;
 }
 .destinations-eyebrow-text {
-  font-family: var(--font-display); font-weight: 500; font-size: clamp(3rem, 5.6vw, 4.6rem);
+  font-family: var(--font-display); font-weight: 500; font-size: clamp(2.25rem, 4.2vw, 3.45rem);
   color: var(--ink); margin: 0;
 }
 .destinations-giant {
   font-family: var(--font-display); font-weight: 500; line-height: .86;
-  font-size: clamp(6rem, 32vw, 26rem); color: var(--ink);
+  font-size: clamp(5.5rem, 24vw, 19.5rem); color: var(--ink);
   margin: clamp(1rem, 3vw, 2rem) 0 0; position: relative; z-index: 1;
 }
 .destinations-grid {
   position: relative; z-index: 2;
   display: flex; justify-content: center; align-items: center; flex-wrap: wrap;
   gap: clamp(1.4rem, 4vw, 3rem);
-  margin-top: clamp(-2rem, -3vw, -1rem);
+  margin-top: clamp(-8.5rem, -8vw, -4.5rem);
 }
 .destination-card {
   position: relative; display: block; text-decoration: none; color: var(--cream);
