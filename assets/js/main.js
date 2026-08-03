@@ -681,24 +681,26 @@
           }
         }
 
-        /* Services carousel: which concierge services this specific villa offers,
-           reusing the same svc-card markup/behavior as the Our Services page. */
-        const servicesTrack = detailRoot.querySelector("[data-villa-services]");
-        if (servicesTrack && villa.services && villa.services.length && typeof MLS_SERVICE_DEFS !== "undefined") {
-          servicesTrack.innerHTML = villa.services
+        /* Services grid: which concierge services this specific villa offers.
+           Default state shows only the name; hover/focus/tap reveals the
+           photo with the tag/title/body written over it. */
+        const servicesGrid = detailRoot.querySelector("[data-villa-services]");
+        if (servicesGrid && villa.services && villa.services.length && typeof MLS_SERVICE_DEFS !== "undefined") {
+          servicesGrid.innerHTML = villa.services
             .map((id) => {
               const def = MLS_SERVICE_DEFS[id];
               if (!def) return "";
-              return `<a class="svc-card reveal" href="../contact.html?villa=${villa.slug}">
-                <figure class="svc-card-media" style="margin:0">
-                  <img src="${def.image}" alt="${def.alt}" loading="lazy" width="900" height="1035">
-                  <div class="svc-card-overlay"></div>
-                  <div class="svc-card-body">
-                    <p class="service-tag" data-i18n-html="services.${id}.tag">${t("services." + id + ".tag")}</p>
+              return `<a class="service-tile reveal" href="../contact.html?villa=${villa.slug}">
+                <span class="service-tile-name">${t("services." + id + ".title")}</span>
+                <div class="service-tile-media">
+                  <img src="${def.image}" alt="${def.alt}" loading="lazy" width="900" height="600">
+                  <div class="service-tile-overlay"></div>
+                  <div class="service-tile-info">
+                    <p class="service-tag">${t("services." + id + ".tag")}</p>
                     <h3 class="h3">${t("services." + id + ".title")}</h3>
                     <p>${t("services." + id + ".body")}</p>
                   </div>
-                </figure>
+                </div>
               </a>`;
             })
             .join("");
@@ -926,77 +928,18 @@
     });
   });
 
-  /* ---------- Services carousel: bleed-scroll track + prev/next + dots ---------- */
-  document.querySelectorAll("[data-svc-carousel]").forEach((root) => {
-    const track = root.querySelector("[data-svc-track]");
-    const prevBtn = root.querySelector("[data-svc-prev]");
-    const nextBtn = root.querySelector("[data-svc-next]");
-    const dotsWrap = root.querySelector("[data-svc-dots]");
-    if (!track) return;
-
-    const cards = [...track.children];
-    if (dotsWrap) {
-      dotsWrap.innerHTML = cards
-        .map((_, i) => `<button type="button" class="carousel-dot${i === 0 ? " is-active" : ""}" data-svc-dot="${i}" aria-label="${i + 1}"></button>`)
-        .join("");
+  /* ---------- Service tiles: touch devices have no hover, so the first tap
+     reveals the photo/info instead of navigating away; a second tap on an
+     already-revealed tile follows the link as normal. Mouse/keyboard users
+     get the reveal from CSS :hover/:focus-visible and are unaffected. */
+  document.addEventListener("click", (e) => {
+    const tile = e.target.closest(".service-tile");
+    if (!tile || !window.matchMedia("(hover: none)").matches) return;
+    if (!tile.classList.contains("is-active")) {
+      e.preventDefault();
+      document.querySelectorAll(".service-tile.is-active").forEach((t) => t.classList.remove("is-active"));
+      tile.classList.add("is-active");
     }
-    const dots = dotsWrap ? [...dotsWrap.children] : [];
-
-    const cardStep = () => {
-      const card = track.querySelector(".svc-card");
-      if (!card) return 0;
-      const gap = parseFloat(getComputedStyle(track).columnGap || "0");
-      return card.getBoundingClientRect().width + gap;
-    };
-
-    const updateNav = () => {
-      const maxScroll = track.scrollWidth - track.clientWidth;
-      if (prevBtn) prevBtn.disabled = track.scrollLeft <= 2;
-      if (nextBtn) nextBtn.disabled = track.scrollLeft >= maxScroll - 2;
-      if (dots.length) {
-        const idx = Math.min(Math.round(track.scrollLeft / cardStep()), dots.length - 1);
-        dots.forEach((d, i) => d.classList.toggle("is-active", i === idx));
-      }
-    };
-
-    prevBtn?.addEventListener("click", () => track.scrollBy({ left: -cardStep(), behavior: "smooth" }));
-    nextBtn?.addEventListener("click", () => track.scrollBy({ left: cardStep(), behavior: "smooth" }));
-    dotsWrap?.addEventListener("click", (e) => {
-      const dotBtn = e.target.closest("[data-svc-dot]");
-      if (!dotBtn) return;
-      track.scrollTo({ left: parseInt(dotBtn.dataset.svcDot, 10) * cardStep(), behavior: "smooth" });
-    });
-
-    let ticking = false;
-    track.addEventListener("scroll", () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => { updateNav(); ticking = false; });
-    });
-    window.addEventListener("resize", updateNav);
-
-    /* Browsers redirect a plain vertical mouse-wheel scroll into horizontal
-       scroll for any element that can only scroll on the x-axis (like this
-       track) — which traps page scrolling the moment the cursor is over the
-       carousel. Reclaim predominantly-vertical wheel gestures for the page;
-       let genuinely horizontal ones (trackpad swipes, shift+wheel) move the
-       carousel as expected. */
-    track.addEventListener(
-      "wheel",
-      (e) => {
-        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-          e.preventDefault();
-          /* The page has `scroll-behavior: smooth` in CSS; scrollBy()'s default
-             "auto" behavior inherits that, so rapid wheel ticks each kick off a
-             competing smooth-scroll animation and the page stutters/judders.
-             Force "instant" so it just tracks the wheel 1:1, like native scroll. */
-          window.scrollBy({ top: e.deltaY, left: 0, behavior: "instant" });
-        }
-      },
-      { passive: false }
-    );
-
-    updateNav();
   });
 
   initReveal();
