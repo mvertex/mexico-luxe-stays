@@ -1354,6 +1354,11 @@ button { font: inherit; cursor: pointer; }
 
 /* ---------- FAQ ---------- */
 .faq-list { max-width: 780px; margin-inline: auto; }
+.faq-villa-note {
+  max-width: 780px; margin: clamp(2rem, 4vw, 2.8rem) auto 0; text-align: center;
+  font-size: .92rem; line-height: 1.6;
+}
+.faq-villa-note a { color: var(--sage); text-decoration: underline; text-underline-offset: 3px; }
 .faq-item { border-bottom: 1px solid rgba(20,20,20,.12); }
 .faq-item:first-child { border-top: 1px solid rgba(20,20,20,.12); }
 .faq-question {
