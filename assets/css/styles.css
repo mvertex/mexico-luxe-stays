@@ -276,6 +276,9 @@ button { font: inherit; cursor: pointer; }
 }
 .hero-media { position: absolute; inset: 0; overflow: hidden; }
 .hero-media img { width: 100%; height: 100%; object-fit: cover; }
+.hero-media video { width: 100%; height: 100%; object-fit: cover; display: none; }
+.hero-media.has-video video { display: block; }
+.hero-media.has-video .hero-video-poster { display: none; }
 .hero-media::after {
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(var(--scrim-top), var(--scrim-mid) 45%, var(--scrim-bottom));

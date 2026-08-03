@@ -299,6 +299,27 @@
   const hero = document.querySelector(".hero");
   if (hero) requestAnimationFrame(() => hero.classList.add("is-ready"));
 
+  /* ---------- Hero background video ----------
+     Only wired up on wide viewports, without prefers-reduced-motion, and off
+     Data Saver — everyone else (most phones, slow connections) just gets the
+     poster image and never downloads a single video byte. */
+  const wantsHeroVideo =
+    !prefersReducedMotion &&
+    window.matchMedia("(min-width: 768px)").matches &&
+    !(navigator.connection && navigator.connection.saveData);
+  document.querySelectorAll("[data-hero-video]").forEach((video) => {
+    if (!wantsHeroVideo) return;
+    video.querySelectorAll("source").forEach((source) => {
+      source.src = source.dataset.src;
+    });
+    video.load();
+    video.closest(".hero-media")?.classList.add("has-video");
+    video.play().catch(() => {
+      /* Autoplay blocked (rare with muted video) — poster stays put. */
+      video.closest(".hero-media")?.classList.remove("has-video");
+    });
+  });
+
   /* ---------- Scroll reveal (single observer, animates once) ---------- */
   const initReveal = () => {
     const revealEls = document.querySelectorAll(".reveal");
