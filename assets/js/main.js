@@ -126,23 +126,29 @@
     };
   }
 
-  /* ---------- Fit each service tile's name to its own tile: scaled up (or
-     down) so it always reads as close to the full width of its box as
-     possible — the "about to spill out of the box" look — instead of one
-     shared, more conservative size across the whole set. */
+  /* ---------- Fit service tile names: each word renders on its own line, so
+     the width constraint is the single widest WORD in the whole set (not
+     the whole phrase), and the height constraint is however many lines the
+     wordiest title needs. Scale every line in the carousel by that one
+     shared factor, so every title reads at the exact same size. */
   function mlsFitServiceTileNames(scope) {
-    const MAX_SCALE = 2.6;
-    const FILL_RATIO = 0.94;
-    scope.querySelectorAll(".service-tile-name").forEach((nameEl) => {
-      nameEl.style.transform = "";
-      const tile = nameEl.closest(".service-tile");
-      const styles = getComputedStyle(tile);
-      const available = tile.clientWidth - parseFloat(styles.paddingLeft) - parseFloat(styles.paddingRight);
-      const needed = nameEl.scrollWidth;
-      if (!needed) return;
-      const scale = Math.min((available * FILL_RATIO) / needed, MAX_SCALE);
-      nameEl.style.transform = `scale(${scale})`;
-    });
+    const tiles = [...scope.querySelectorAll(".service-tile")];
+    const lines = [...scope.querySelectorAll(".service-tile-name-line")];
+    lines.forEach((el) => { el.style.transform = ""; });
+    if (!tiles.length || !lines.length) return;
+
+    const tileStyles = getComputedStyle(tiles[0]);
+    const availableWidth = tiles[0].clientWidth - parseFloat(tileStyles.paddingLeft) - parseFloat(tileStyles.paddingRight);
+    const widestWord = Math.max(...lines.map((el) => el.scrollWidth));
+    const widthScale = widestWord ? (availableWidth * 0.94) / widestWord : 1;
+
+    const lineHeight = lines[0].getBoundingClientRect().height;
+    const maxLineCount = Math.max(...tiles.map((tile) => tile.querySelectorAll(".service-tile-name-line").length));
+    const availableHeight = tiles[0].clientHeight - parseFloat(tileStyles.paddingTop) - parseFloat(tileStyles.paddingBottom);
+    const heightScale = lineHeight && maxLineCount ? availableHeight / (lineHeight * maxLineCount) : 1;
+
+    const scale = Math.min(widthScale, heightScale);
+    lines.forEach((el) => { el.style.transform = `scale(${scale})`; });
   }
 
   /* ---------- Lightbox: full-image viewer for the villa gallery showcase ---------- */
@@ -709,9 +715,13 @@
             .map((id, i) => {
               const def = MLS_SERVICE_DEFS[id];
               if (!def) return "";
+              const nameLines = t("services." + id + ".title")
+                .split(" ")
+                .map((word) => `<span class="service-tile-name-line">${word}</span>`)
+                .join("");
               return `<a class="service-tile reveal" href="../contact.html?villa=${villa.slug}">
                 <span class="service-tile-index" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
-                <span class="service-tile-name">${t("services." + id + ".title")}</span>
+                <span class="service-tile-name">${nameLines}</span>
                 <div class="service-tile-media">
                   <img src="${def.image}" alt="${def.alt}" loading="lazy" width="900" height="600">
                   <div class="service-tile-overlay"></div>

@@ -1300,24 +1300,28 @@ button { font: inherit; cursor: pointer; }
 .service-tile {
   position: relative; overflow: hidden; display: flex; align-items: flex-start; justify-content: flex-end;
   flex-direction: column;
-  flex: 0 0 auto; width: min(360px, 27vw); height: clamp(190px, 15vw, 240px);
-  scroll-snap-align: start; padding: 1.4rem 1.6rem; text-align: left;
+  flex: 0 0 auto; width: min(360px, 27vw); height: clamp(240px, 20vw, 320px);
+  scroll-snap-align: start; padding: 1.3rem 1.4rem 1.3rem 1.2rem; text-align: left;
   border: 1px solid rgba(20, 20, 20, .3); border-radius: var(--radius);
   text-decoration: none; color: var(--ink);
 }
 @media (max-width: 900px) {
-  .service-tile { width: min(320px, 78vw); height: clamp(190px, 44vw, 230px); }
+  .service-tile { width: min(320px, 78vw); height: clamp(230px, 56vw, 300px); }
 }
 .service-tile-index {
-  position: absolute; top: 1.2rem; right: 1.4rem; z-index: 2;
+  position: absolute; top: 1.1rem; right: 1.2rem; z-index: 2;
   font-size: .68rem; font-weight: 600; letter-spacing: var(--track-caps);
   color: var(--gold); transition: opacity .3s ease;
 }
 .service-tile-name {
-  position: relative; z-index: 2; display: block; white-space: nowrap;
-  font-family: var(--font-display); font-size: 1.6rem; color: var(--ink);
-  transform-origin: left bottom;
+  position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start;
   transition: opacity .3s ease;
+}
+.service-tile-name-line {
+  display: block; white-space: nowrap;
+  font-family: var(--font-display); font-weight: 500; font-size: 1.4rem; line-height: .96;
+  color: var(--ink); text-transform: uppercase;
+  transform-origin: left top;
 }
 .service-tile-media { position: absolute; inset: 0; opacity: 0; transition: opacity .4s var(--ease-out); }
 .service-tile-media img { width: 100%; height: 100%; object-fit: cover; }
