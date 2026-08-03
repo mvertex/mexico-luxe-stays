@@ -449,7 +449,7 @@ button { font: inherit; cursor: pointer; }
   position: relative; z-index: 2;
   display: flex; justify-content: center; align-items: center; flex-wrap: wrap;
   gap: clamp(1.4rem, 4vw, 3rem);
-  margin-top: clamp(-8.5rem, -8vw, -4.5rem);
+  margin-top: clamp(-4.9rem, -4.6vw, -2.6rem);
 }
 .destination-card {
   position: relative; display: block; text-decoration: none; color: var(--cream);
