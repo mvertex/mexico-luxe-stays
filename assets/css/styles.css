@@ -1319,9 +1319,8 @@ button { font: inherit; cursor: pointer; }
 }
 .service-tile-name-line {
   display: block; white-space: nowrap;
-  font-family: var(--font-display); font-weight: 500; font-size: 1.4rem; line-height: .96;
+  font-family: var(--font-display); font-weight: 500; font-size: 1.4rem; line-height: 1.08;
   color: var(--ink); text-transform: uppercase;
-  transform-origin: left top;
 }
 .service-tile-media { position: absolute; inset: 0; opacity: 0; transition: opacity .4s var(--ease-out); }
 .service-tile-media img { width: 100%; height: 100%; object-fit: cover; }

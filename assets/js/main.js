@@ -129,26 +129,30 @@
   /* ---------- Fit service tile names: each word renders on its own line, so
      the width constraint is the single widest WORD in the whole set (not
      the whole phrase), and the height constraint is however many lines the
-     wordiest title needs. Scale every line in the carousel by that one
-     shared factor, so every title reads at the exact same size. */
+     wordiest title needs. Sets a real font-size (not a CSS transform:scale)
+     so line-height/spacing reflow properly and stacked words never overlap
+     each other; every title still ends up at the same final size. */
   function mlsFitServiceTileNames(scope) {
     const tiles = [...scope.querySelectorAll(".service-tile")];
     const lines = [...scope.querySelectorAll(".service-tile-name-line")];
-    lines.forEach((el) => { el.style.transform = ""; });
+    lines.forEach((el) => { el.style.fontSize = ""; });
     if (!tiles.length || !lines.length) return;
+
+    const baseFontSize = parseFloat(getComputedStyle(lines[0]).fontSize);
+    const baseLineHeight = lines[0].getBoundingClientRect().height;
 
     const tileStyles = getComputedStyle(tiles[0]);
     const availableWidth = tiles[0].clientWidth - parseFloat(tileStyles.paddingLeft) - parseFloat(tileStyles.paddingRight);
     const widestWord = Math.max(...lines.map((el) => el.scrollWidth));
     const widthScale = widestWord ? (availableWidth * 0.94) / widestWord : 1;
 
-    const lineHeight = lines[0].getBoundingClientRect().height;
     const maxLineCount = Math.max(...tiles.map((tile) => tile.querySelectorAll(".service-tile-name-line").length));
     const availableHeight = tiles[0].clientHeight - parseFloat(tileStyles.paddingTop) - parseFloat(tileStyles.paddingBottom);
-    const heightScale = lineHeight && maxLineCount ? availableHeight / (lineHeight * maxLineCount) : 1;
+    const heightScale = baseLineHeight && maxLineCount ? availableHeight / (baseLineHeight * maxLineCount) : 1;
 
     const scale = Math.min(widthScale, heightScale);
-    lines.forEach((el) => { el.style.transform = `scale(${scale})`; });
+    const fontSize = baseFontSize * scale;
+    lines.forEach((el) => { el.style.fontSize = `${fontSize}px`; });
   }
 
   /* ---------- Lightbox: full-image viewer for the villa gallery showcase ---------- */
