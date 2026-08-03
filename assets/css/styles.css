@@ -818,22 +818,18 @@ button { font: inherit; cursor: pointer; }
   background: var(--cream); border-radius: var(--radius); box-shadow: var(--shadow-lift);
 }
 
-/* Liquid-glass variant: floats up over the hero image's bottom edge */
+/* Booking-bar variant: solid, opaque, floats up over the hero image's
+   bottom edge — a distinct block per field plus a solid CTA block, like a
+   hotel booking widget. */
 .filter-bar--glass {
   position: relative; z-index: 5;
-  margin-top: clamp(-6.5rem, -9vw, -4.5rem);
-  border-radius: 22px;
-  background: rgba(246, 244, 239, .45);
-  backdrop-filter: blur(22px) saturate(160%);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, .4);
-  box-shadow: 0 30px 60px -18px rgba(20, 26, 19, .4), inset 0 1px 0 rgba(255, 255, 255, .5);
+  margin-top: clamp(-13.5rem, -17vw, -10.5rem);
+  border-radius: 4px;
+  background: var(--cream);
+  box-shadow: 0 30px 60px -18px rgba(20, 26, 19, .45);
 }
-.filter-bar--glass .filter-field { border-right-color: rgba(255, 255, 255, .3); }
-.filter-bar--glass .filter-clear:hover { background: rgba(255, 255, 255, .35); }
 @media (max-width: 720px) {
-  .filter-bar--glass { margin-top: clamp(-3.5rem, -8vw, -2.5rem); }
-  .filter-bar--glass .filter-field { border-right: 0; border-bottom-color: rgba(255, 255, 255, .3); }
+  .filter-bar--glass { margin-top: clamp(-8.5rem, -24vw, -7rem); }
 }
 .filter-field {
   min-width: 180px; flex: 1; padding: 1.3rem 1.7rem;
@@ -889,25 +885,19 @@ button { font: inherit; cursor: pointer; }
   background: var(--sage-tint); outline: none;
 }
 .custom-select-list li[aria-selected="true"] { color: var(--gold); font-style: italic; }
-.filter-bar--glass .custom-select-list {
-  background: rgba(246, 244, 239, .92);
-  backdrop-filter: blur(22px) saturate(160%);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, .5);
-}
 .filter-clear {
-  flex: none; display: flex; align-items: center; padding: 0 1.8rem;
-  background: none; border: 0; color: var(--sage); font-size: .72rem; font-weight: 600;
-  letter-spacing: var(--track-caps); text-transform: uppercase;
-  text-decoration: underline; text-underline-offset: 4px;
-  transition: color .2s ease, background-color .2s ease;
+  flex: none; display: flex; align-items: center; justify-content: center;
+  padding: 0 2.6rem; background: var(--green); border: 0; color: var(--cream);
+  font-size: .76rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase;
+  text-decoration: none; border-radius: 0 4px 4px 0;
+  transition: background-color .2s ease;
 }
-.filter-clear:hover { color: var(--ink); background: var(--sage-tint); }
+.filter-clear:hover { background: var(--green-deep); }
 .filter-count { font-family: var(--font-display); font-style: italic; font-size: 1rem; color: var(--stone); margin-bottom: 1.6rem; }
 @media (max-width: 720px) {
   .filter-bar { flex-direction: column; }
   .filter-field { border-right: 0; border-bottom: 1px solid rgba(20, 20, 20, .08); }
-  .filter-clear { padding: 1.1rem 1.7rem; }
+  .filter-clear { padding: 1.1rem 1.7rem; border-radius: 0 0 4px 4px; }
 }
 .empty-state {
   text-align: center; padding: 4rem 1rem; border: 1px dashed var(--stone);
