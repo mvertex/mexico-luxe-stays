@@ -437,12 +437,12 @@ button { font: inherit; cursor: pointer; }
   min-height: 100svh; display: flex; flex-direction: column; justify-content: center;
 }
 .destinations-eyebrow-text {
-  font-family: var(--font-display); font-weight: 500; font-size: clamp(1.5rem, 2.8vw, 2.3rem);
+  font-family: var(--font-display); font-weight: 500; font-size: clamp(3rem, 5.6vw, 4.6rem);
   color: var(--ink); margin: 0;
 }
 .destinations-giant {
   font-family: var(--font-display); font-weight: 500; line-height: .86;
-  font-size: clamp(5rem, 16vw, 13rem); color: var(--ink);
+  font-size: clamp(6rem, 32vw, 26rem); color: var(--ink);
   margin: clamp(1rem, 3vw, 2rem) 0 0; position: relative; z-index: 1;
 }
 .destinations-grid {
