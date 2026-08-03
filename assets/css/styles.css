@@ -1282,7 +1282,11 @@ button { font: inherit; cursor: pointer; }
 
 .services-track-wrap {
   margin-inline: calc(50% - 50vw);
-  padding-left: var(--pad-x);
+  /* Left edge lines up with .container's own content edge (so the first
+     tile aligns with the "Services" heading above it) even past the
+     viewport width where .container starts centering with side margins;
+     the right side still bleeds to the viewport edge for the peek-scroll. */
+  padding-left: max(var(--pad-x), calc((100vw - var(--container)) / 2 + var(--pad-x)));
   padding-right: var(--pad-x);
 }
 .services-track {
@@ -1304,10 +1308,15 @@ button { font: inherit; cursor: pointer; }
 @media (max-width: 900px) {
   .service-tile { width: min(320px, 78vw); height: clamp(190px, 44vw, 230px); }
 }
+.service-tile-index {
+  position: absolute; top: 1.2rem; right: 1.4rem; z-index: 2;
+  font-size: .68rem; font-weight: 600; letter-spacing: var(--track-caps);
+  color: var(--gold); transition: opacity .3s ease;
+}
 .service-tile-name {
   position: relative; z-index: 2; display: block; white-space: nowrap;
   font-family: var(--font-display); font-size: 1.6rem; color: var(--ink);
-  transform-origin: left center;
+  transform-origin: left bottom;
   transition: opacity .3s ease;
 }
 .service-tile-media { position: absolute; inset: 0; opacity: 0; transition: opacity .4s var(--ease-out); }
@@ -1328,7 +1337,10 @@ button { font: inherit; cursor: pointer; }
 
 .service-tile:hover .service-tile-name,
 .service-tile:focus-visible .service-tile-name,
-.service-tile.is-active .service-tile-name { opacity: 0; }
+.service-tile.is-active .service-tile-name,
+.service-tile:hover .service-tile-index,
+.service-tile:focus-visible .service-tile-index,
+.service-tile.is-active .service-tile-index { opacity: 0; }
 .service-tile:hover .service-tile-media,
 .service-tile:focus-visible .service-tile-media,
 .service-tile.is-active .service-tile-media { opacity: 1; }

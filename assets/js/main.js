@@ -126,26 +126,23 @@
     };
   }
 
-  /* ---------- Fit service tile names to one line: the CSS font-size fits
-     most names, but a longer one ("Traslados al Aeropuerto y Choferes")
-     can still overflow a given tile width. Find the single tightest-fitting
-     name in the set and scale every name in that set down by the same
-     factor, so they all stay the same size instead of each shrinking
-     independently. */
+  /* ---------- Fit each service tile's name to its own tile: scaled up (or
+     down) so it always reads as close to the full width of its box as
+     possible — the "about to spill out of the box" look — instead of one
+     shared, more conservative size across the whole set. */
   function mlsFitServiceTileNames(scope) {
-    const names = [...scope.querySelectorAll(".service-tile-name")];
-    names.forEach((nameEl) => { nameEl.style.transform = ""; });
-    let tightest = 1;
-    names.forEach((nameEl) => {
+    const MAX_SCALE = 2.6;
+    const FILL_RATIO = 0.94;
+    scope.querySelectorAll(".service-tile-name").forEach((nameEl) => {
+      nameEl.style.transform = "";
       const tile = nameEl.closest(".service-tile");
       const styles = getComputedStyle(tile);
       const available = tile.clientWidth - parseFloat(styles.paddingLeft) - parseFloat(styles.paddingRight);
       const needed = nameEl.scrollWidth;
-      if (needed > available) tightest = Math.min(tightest, available / needed);
+      if (!needed) return;
+      const scale = Math.min((available * FILL_RATIO) / needed, MAX_SCALE);
+      nameEl.style.transform = `scale(${scale})`;
     });
-    if (tightest < 1) {
-      names.forEach((nameEl) => { nameEl.style.transform = `scale(${tightest})`; });
-    }
   }
 
   /* ---------- Lightbox: full-image viewer for the villa gallery showcase ---------- */
@@ -709,10 +706,11 @@
         const servicesTrack = detailRoot.querySelector("[data-villa-services]");
         if (servicesTrack && villa.services && villa.services.length && typeof MLS_SERVICE_DEFS !== "undefined") {
           servicesTrack.innerHTML = villa.services
-            .map((id) => {
+            .map((id, i) => {
               const def = MLS_SERVICE_DEFS[id];
               if (!def) return "";
               return `<a class="service-tile reveal" href="../contact.html?villa=${villa.slug}">
+                <span class="service-tile-index" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
                 <span class="service-tile-name">${t("services." + id + ".title")}</span>
                 <div class="service-tile-media">
                   <img src="${def.image}" alt="${def.alt}" loading="lazy" width="900" height="600">
