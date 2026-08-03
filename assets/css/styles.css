@@ -103,6 +103,14 @@ button { font: inherit; cursor: pointer; }
 .section--green { background: var(--green); color: var(--cream); }
 .section--green ::selection { background: var(--gold); color: var(--ink); }
 
+.brand-statement { padding-block: 0 clamp(1rem, 4vw, 2rem); text-align: center; }
+.brand-statement-text {
+  margin: 0; font-family: var(--font-display); font-weight: 500; line-height: .95;
+  letter-spacing: -.02em; color: var(--ink);
+  font-size: clamp(3rem, 10vw, 8.5rem);
+}
+.brand-statement-text em { font-style: italic; font-weight: 400; color: var(--sage); }
+
 /* ---------- Typography helpers ---------- */
 .eyebrow {
   display: inline-flex; align-items: center; gap: .9rem;
