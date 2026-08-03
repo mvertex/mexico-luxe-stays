@@ -234,15 +234,16 @@ button { font: inherit; cursor: pointer; }
 
 .lang-toggle { display: flex; gap: .4rem; margin-left: .6rem; }
 .lang-toggle button {
-  border: 1px solid var(--cream-60); background: transparent; color: var(--cream);
-  font-size: .68rem; font-weight: 600; letter-spacing: .05em;
-  padding: .35rem .6rem; border-radius: 2px; line-height: 1; opacity: .7;
-  transition: background-color .2s ease, color .2s ease, border-color .2s ease, opacity .2s ease;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  border: 1px solid var(--cream-60); background: transparent;
+  padding: .3rem; border-radius: 3px; line-height: 0; opacity: .55;
+  transition: border-color .2s ease, opacity .2s ease;
 }
-.lang-toggle button:hover { opacity: 1; }
-.lang-toggle button.is-active { opacity: 1; background: var(--cream); color: var(--green); border-color: var(--cream); }
-.site-header.is-solid .lang-toggle button { border-color: rgba(20, 20, 20, .2); color: var(--ink); }
-.site-header.is-solid .lang-toggle button.is-active { background: var(--green); color: var(--cream); border-color: var(--green); }
+.lang-toggle button svg { display: block; border-radius: 1px; }
+.lang-toggle button:hover { opacity: .85; }
+.lang-toggle button.is-active { opacity: 1; border-color: var(--cream); }
+.site-header.is-solid .lang-toggle button { border-color: rgba(20, 20, 20, .2); }
+.site-header.is-solid .lang-toggle button.is-active { border-color: var(--green); }
 
 .nav-toggle {
   display: none; background: none; border: 0; padding: .5rem;
@@ -271,8 +272,8 @@ button { font: inherit; cursor: pointer; }
   .site-header.nav-open .logo-negative { display: none; }
   .site-header.nav-open .logo-positive { display: block; }
   .lang-toggle { margin: .4rem 0 0; }
-  .lang-toggle button { border-color: rgba(20, 20, 20, .2); color: var(--ink); opacity: .8; }
-  .lang-toggle button.is-active { background: var(--green); color: var(--cream); border-color: var(--green); opacity: 1; }
+  .lang-toggle button { border-color: rgba(20, 20, 20, .2); opacity: .7; }
+  .lang-toggle button.is-active { border-color: var(--green); opacity: 1; }
 }
 
 /* ---------- Hero ---------- */
