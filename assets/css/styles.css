@@ -1304,18 +1304,20 @@ button { font: inherit; cursor: pointer; }
 .services-dots { display: flex; gap: .5rem; justify-content: center; margin-top: clamp(1.6rem, 3vw, 2.2rem); }
 
 .service-tile {
-  position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
-  flex: 0 0 auto; width: min(400px, 29vw); height: clamp(230px, 19vw, 300px);
-  scroll-snap-align: start; padding: 1.6rem; text-align: center;
-  border: 1px solid rgba(20, 20, 20, .1); border-radius: var(--radius);
+  position: relative; overflow: hidden; display: flex; align-items: flex-start; justify-content: flex-end;
+  flex-direction: column;
+  flex: 0 0 auto; width: min(360px, 27vw); height: clamp(190px, 15vw, 240px);
+  scroll-snap-align: start; padding: 1.4rem 1.6rem; text-align: left;
+  border: 1px solid rgba(20, 20, 20, .3); border-radius: var(--radius);
   text-decoration: none; color: var(--ink);
 }
 @media (max-width: 900px) {
-  .service-tile { width: min(320px, 78vw); height: clamp(220px, 52vw, 280px); }
+  .service-tile { width: min(320px, 78vw); height: clamp(190px, 44vw, 230px); }
 }
 .service-tile-name {
-  position: relative; z-index: 2; display: inline-block; white-space: nowrap;
-  font-family: var(--font-display); font-size: clamp(1.9rem, 4.4vw, 3.1rem);
+  position: relative; z-index: 2; display: block; white-space: nowrap;
+  font-family: var(--font-display); font-size: 1.6rem; color: var(--ink);
+  transform-origin: left center;
   transition: opacity .3s ease;
 }
 .service-tile-media { position: absolute; inset: 0; opacity: 0; transition: opacity .4s var(--ease-out); }
@@ -1325,14 +1327,14 @@ button { font: inherit; cursor: pointer; }
   background: linear-gradient(rgba(20, 26, 19, .3), rgba(20, 26, 19, .8));
 }
 .service-tile-info {
-  position: absolute; inset: 0; z-index: 2; padding: 2rem;
+  position: absolute; inset: 0; z-index: 2; padding: 1.5rem 1.6rem;
   display: flex; flex-direction: column; justify-content: center;
   color: var(--cream); opacity: 0; transform: translateY(8px);
   transition: opacity .35s ease, transform .35s ease;
 }
 .service-tile-info .service-tag { color: var(--gold); }
-.service-tile-info .h3 { color: var(--cream); margin-top: .5rem; font-size: 1.5rem; }
-.service-tile-info p:not(.service-tag) { color: var(--cream-80); margin-top: .7rem; font-size: .95rem; font-weight: 300; line-height: 1.6; }
+.service-tile-info .h3 { color: var(--cream); margin-top: .5rem; font-size: 1.3rem; }
+.service-tile-info p:not(.service-tag) { color: var(--cream-80); margin-top: .6rem; font-size: .88rem; font-weight: 300; line-height: 1.55; }
 
 .service-tile:hover .service-tile-name,
 .service-tile:focus-visible .service-tile-name,

@@ -126,21 +126,26 @@
     };
   }
 
-  /* ---------- Fit service tile names to one line: the CSS font-size is
-     already as large as the tile can generally take, but longer names
-     ("Airport Transfers & Drivers") can still overflow a given tile width.
-     Scale each name down just enough to fit rather than letting it wrap. */
+  /* ---------- Fit service tile names to one line: the CSS font-size fits
+     most names, but a longer one ("Traslados al Aeropuerto y Choferes")
+     can still overflow a given tile width. Find the single tightest-fitting
+     name in the set and scale every name in that set down by the same
+     factor, so they all stay the same size instead of each shrinking
+     independently. */
   function mlsFitServiceTileNames(scope) {
-    scope.querySelectorAll(".service-tile-name").forEach((nameEl) => {
-      nameEl.style.transform = "";
+    const names = [...scope.querySelectorAll(".service-tile-name")];
+    names.forEach((nameEl) => { nameEl.style.transform = ""; });
+    let tightest = 1;
+    names.forEach((nameEl) => {
       const tile = nameEl.closest(".service-tile");
       const styles = getComputedStyle(tile);
       const available = tile.clientWidth - parseFloat(styles.paddingLeft) - parseFloat(styles.paddingRight);
       const needed = nameEl.scrollWidth;
-      if (needed > available) {
-        nameEl.style.transform = `scale(${available / needed})`;
-      }
+      if (needed > available) tightest = Math.min(tightest, available / needed);
     });
+    if (tightest < 1) {
+      names.forEach((nameEl) => { nameEl.style.transform = `scale(${tightest})`; });
+    }
   }
 
   /* ---------- Lightbox: full-image viewer for the villa gallery showcase ---------- */
