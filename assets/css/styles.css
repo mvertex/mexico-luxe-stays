@@ -1275,21 +1275,44 @@ button { font: inherit; cursor: pointer; }
 /* ---------- Services ---------- */
 .service-tag { font-size: .64rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--gold); }
 
-/* ---------- Services grid (per villa): plain name by default, hover/focus/tap
-   reveals the photo with the tag/title/body written over it ---------- */
-.services-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  margin-top: clamp(1.5rem, 3vw, 2.2rem);
-  border-top: 1px solid rgba(20, 20, 20, .1); border-left: 1px solid rgba(20, 20, 20, .1);
+/* ---------- Services carousel (per villa): plain giant name by default,
+   hover/focus/tap reveals the photo with the tag/title/body written over it.
+   Bleeds to the viewport's right edge, same technique as the old svc-track. ---------- */
+.services-nav { display: flex; gap: .6rem; margin-bottom: clamp(1.5rem, 3vw, 2.2rem); }
+.services-nav-btn {
+  width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--ink); border: 1px solid rgba(20, 20, 20, .18);
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
 }
+.services-nav-btn svg { width: 18px; height: 18px; }
+.services-nav-btn:hover:not(:disabled) { background: var(--green); color: var(--cream); border-color: var(--green); }
+.services-nav-btn:disabled { opacity: .3; cursor: default; }
+@media (max-width: 767px) { .services-nav { display: none; } }
+
+.services-track-wrap {
+  margin-inline: calc(50% - 50vw);
+  padding-left: var(--pad-x);
+  padding-right: var(--pad-x);
+}
+.services-track {
+  display: flex; gap: clamp(1.2rem, 2.5vw, 1.8rem);
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+  scrollbar-width: none; -ms-overflow-style: none; padding-bottom: .3rem;
+}
+.services-track::-webkit-scrollbar { display: none; }
+.services-dots { display: flex; gap: .5rem; justify-content: center; margin-top: clamp(1.6rem, 3vw, 2.2rem); }
+
 .service-tile {
   position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
-  min-height: 170px; padding: 1.5rem; text-align: center;
-  border-right: 1px solid rgba(20, 20, 20, .1); border-bottom: 1px solid rgba(20, 20, 20, .1);
+  flex: 0 0 auto; width: min(560px, 84vw); height: clamp(320px, 32vw, 420px);
+  scroll-snap-align: start; padding: 2rem; text-align: center;
+  border: 1px solid rgba(20, 20, 20, .1); border-radius: var(--radius);
   text-decoration: none; color: var(--ink);
 }
 .service-tile-name {
-  position: relative; z-index: 2; font-family: var(--font-display); font-size: 1.25rem;
+  position: relative; z-index: 2; display: inline-block; white-space: nowrap;
+  font-family: var(--font-display); font-size: clamp(2.4rem, 5.5vw, 4rem);
   transition: opacity .3s ease;
 }
 .service-tile-media { position: absolute; inset: 0; opacity: 0; transition: opacity .4s var(--ease-out); }
@@ -1299,14 +1322,14 @@ button { font: inherit; cursor: pointer; }
   background: linear-gradient(rgba(20, 26, 19, .3), rgba(20, 26, 19, .8));
 }
 .service-tile-info {
-  position: absolute; inset: 0; z-index: 2; padding: 1.4rem;
+  position: absolute; inset: 0; z-index: 2; padding: 2rem;
   display: flex; flex-direction: column; justify-content: center;
   color: var(--cream); opacity: 0; transform: translateY(8px);
   transition: opacity .35s ease, transform .35s ease;
 }
 .service-tile-info .service-tag { color: var(--gold); }
-.service-tile-info .h3 { color: var(--cream); margin-top: .35rem; font-size: 1.1rem; }
-.service-tile-info p:not(.service-tag) { color: var(--cream-80); margin-top: .5rem; font-size: .82rem; font-weight: 300; line-height: 1.5; }
+.service-tile-info .h3 { color: var(--cream); margin-top: .5rem; font-size: 1.5rem; }
+.service-tile-info p:not(.service-tag) { color: var(--cream-80); margin-top: .7rem; font-size: .95rem; font-weight: 300; line-height: 1.6; }
 
 .service-tile:hover .service-tile-name,
 .service-tile:focus-visible .service-tile-name,
@@ -1317,9 +1340,6 @@ button { font: inherit; cursor: pointer; }
 .service-tile:hover .service-tile-info,
 .service-tile:focus-visible .service-tile-info,
 .service-tile.is-active .service-tile-info { opacity: 1; transform: none; }
-
-@media (max-width: 900px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 560px) { .services-grid { grid-template-columns: 1fr; } }
 
 /* ---------- About ---------- */
 .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.5rem, 3vw, 2.5rem); }

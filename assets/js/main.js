@@ -126,6 +126,23 @@
     };
   }
 
+  /* ---------- Fit service tile names to one line: the CSS font-size is
+     already as large as the tile can generally take, but longer names
+     ("Airport Transfers & Drivers") can still overflow a given tile width.
+     Scale each name down just enough to fit rather than letting it wrap. */
+  function mlsFitServiceTileNames(scope) {
+    scope.querySelectorAll(".service-tile-name").forEach((nameEl) => {
+      nameEl.style.transform = "";
+      const tile = nameEl.closest(".service-tile");
+      const styles = getComputedStyle(tile);
+      const available = tile.clientWidth - parseFloat(styles.paddingLeft) - parseFloat(styles.paddingRight);
+      const needed = nameEl.scrollWidth;
+      if (needed > available) {
+        nameEl.style.transform = `scale(${available / needed})`;
+      }
+    });
+  }
+
   /* ---------- Lightbox: full-image viewer for the villa gallery showcase ---------- */
   let mlsOpenLightbox = null;
   const lightbox = document.querySelector("[data-lightbox]");
@@ -681,12 +698,12 @@
           }
         }
 
-        /* Services grid: which concierge services this specific villa offers.
-           Default state shows only the name; hover/focus/tap reveals the
-           photo with the tag/title/body written over it. */
-        const servicesGrid = detailRoot.querySelector("[data-villa-services]");
-        if (servicesGrid && villa.services && villa.services.length && typeof MLS_SERVICE_DEFS !== "undefined") {
-          servicesGrid.innerHTML = villa.services
+        /* Services carousel: which concierge services this specific villa offers.
+           Default state shows only the giant, single-line name; hover/focus/tap
+           reveals the photo with the tag/title/body written over it. */
+        const servicesTrack = detailRoot.querySelector("[data-villa-services]");
+        if (servicesTrack && villa.services && villa.services.length && typeof MLS_SERVICE_DEFS !== "undefined") {
+          servicesTrack.innerHTML = villa.services
             .map((id) => {
               const def = MLS_SERVICE_DEFS[id];
               if (!def) return "";
@@ -704,6 +721,7 @@
               </a>`;
             })
             .join("");
+          mlsFitServiceTileNames(servicesTrack);
         }
 
         /* FAQ showcase: hover (or focus, or tap) a question to preview its
@@ -926,6 +944,81 @@
       const status = form.querySelector("[data-form-status]");
       if (status) status.textContent = t("detail.bookingCta.status");
     });
+  });
+
+  /* ---------- Services carousel: bleed-scroll track + prev/next + dots ---------- */
+  document.querySelectorAll("[data-services-carousel]").forEach((root) => {
+    const track = root.querySelector("[data-services-track]");
+    const prevBtn = root.querySelector("[data-services-prev]");
+    const nextBtn = root.querySelector("[data-services-next]");
+    const dotsWrap = root.querySelector("[data-services-dots]");
+    if (!track) return;
+
+    const cardStep = () => {
+      const card = track.querySelector(".service-tile");
+      if (!card) return 0;
+      const gap = parseFloat(getComputedStyle(track).columnGap || "0");
+      return card.getBoundingClientRect().width + gap;
+    };
+
+    const updateNav = () => {
+      const cards = [...track.children];
+      if (dotsWrap && dotsWrap.children.length !== cards.length) {
+        dotsWrap.innerHTML = cards
+          .map((_, i) => `<button type="button" class="carousel-dot${i === 0 ? " is-active" : ""}" data-services-dot="${i}" aria-label="${i + 1}"></button>`)
+          .join("");
+      }
+      const dots = dotsWrap ? [...dotsWrap.children] : [];
+      const maxScroll = track.scrollWidth - track.clientWidth;
+      if (prevBtn) prevBtn.disabled = track.scrollLeft <= 2;
+      if (nextBtn) nextBtn.disabled = track.scrollLeft >= maxScroll - 2;
+      if (dots.length) {
+        const idx = Math.min(Math.round(track.scrollLeft / cardStep()), dots.length - 1);
+        dots.forEach((d, i) => d.classList.toggle("is-active", i === idx));
+      }
+    };
+
+    prevBtn?.addEventListener("click", () => track.scrollBy({ left: -cardStep(), behavior: "smooth" }));
+    nextBtn?.addEventListener("click", () => track.scrollBy({ left: cardStep(), behavior: "smooth" }));
+    dotsWrap?.addEventListener("click", (e) => {
+      const dotBtn = e.target.closest("[data-services-dot]");
+      if (!dotBtn) return;
+      track.scrollTo({ left: parseInt(dotBtn.dataset.servicesDot, 10) * cardStep(), behavior: "smooth" });
+    });
+
+    let ticking = false;
+    track.addEventListener("scroll", () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { updateNav(); ticking = false; });
+    });
+    window.addEventListener("resize", () => {
+      updateNav();
+      mlsFitServiceTileNames(track);
+    });
+
+    /* Browsers redirect a plain vertical mouse-wheel scroll into horizontal
+       scroll for any element that can only scroll on the x-axis (like this
+       track) — which traps page scrolling the moment the cursor is over the
+       carousel. Reclaim predominantly-vertical wheel gestures for the page;
+       let genuinely horizontal ones (trackpad swipes, shift+wheel) move the
+       carousel as expected. */
+    track.addEventListener(
+      "wheel",
+      (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          e.preventDefault();
+          window.scrollBy({ top: e.deltaY, left: 0, behavior: "instant" });
+        }
+      },
+      { passive: false }
+    );
+
+    /* Runs again once renderVillaDetail has actually populated the track
+       (this observer fires once on setup, and the MutationObserver below
+       keeps nav/dots in sync whenever the villa's service list re-renders). */
+    updateNav();
+    new MutationObserver(updateNav).observe(track, { childList: true });
   });
 
   /* ---------- Service tiles: touch devices have no hover, so the first tap
