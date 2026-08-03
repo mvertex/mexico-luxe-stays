@@ -454,7 +454,7 @@ button { font: inherit; cursor: pointer; }
 .destination-card {
   position: relative; display: block; text-decoration: none; color: var(--cream);
   border-radius: var(--radius); overflow: hidden; aspect-ratio: 1 / 1;
-  width: min(300px, 38vw); flex: none;
+  width: min(500px, 42vw); flex: none;
   box-shadow: 0 20px 44px -14px rgba(20, 26, 19, .4);
 }
 .destination-card img {
