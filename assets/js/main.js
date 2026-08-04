@@ -723,7 +723,7 @@
                 .split(" ")
                 .map((word) => `<span class="service-tile-name-line">${word}</span>`)
                 .join("");
-              return `<a class="service-tile reveal" href="../contact.html?villa=${villa.slug}">
+              return `<div class="service-tile reveal" tabindex="0">
                 <span class="service-tile-index" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
                 <span class="service-tile-name">${nameLines}</span>
                 <div class="service-tile-media">
@@ -735,7 +735,7 @@
                     <p>${t("services." + id + ".body")}</p>
                   </div>
                 </div>
-              </a>`;
+              </div>`;
             })
             .join("");
           mlsFitServiceTileNames(servicesTrack);
@@ -1038,18 +1038,15 @@
     new MutationObserver(updateNav).observe(track, { childList: true });
   });
 
-  /* ---------- Service tiles: touch devices have no hover, so the first tap
-     reveals the photo/info instead of navigating away; a second tap on an
-     already-revealed tile follows the link as normal. Mouse/keyboard users
-     get the reveal from CSS :hover/:focus-visible and are unaffected. */
+  /* ---------- Service tiles: not links, just an info reveal. Touch devices
+     have no hover, so a tap toggles the photo/info instead. Mouse/keyboard
+     users get the reveal from CSS :hover/:focus-visible. */
   document.addEventListener("click", (e) => {
     const tile = e.target.closest(".service-tile");
     if (!tile || !window.matchMedia("(hover: none)").matches) return;
-    if (!tile.classList.contains("is-active")) {
-      e.preventDefault();
-      document.querySelectorAll(".service-tile.is-active").forEach((t) => t.classList.remove("is-active"));
-      tile.classList.add("is-active");
-    }
+    const wasActive = tile.classList.contains("is-active");
+    document.querySelectorAll(".service-tile.is-active").forEach((t) => t.classList.remove("is-active"));
+    if (!wasActive) tile.classList.add("is-active");
   });
 
   initReveal();

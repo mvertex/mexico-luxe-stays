@@ -1347,7 +1347,7 @@ button { font: inherit; cursor: pointer; }
   flex: 0 0 auto; width: min(360px, 27vw); height: clamp(240px, 20vw, 320px);
   scroll-snap-align: start; padding: 1.3rem 1.4rem 1.3rem 1.2rem; text-align: left;
   border: 1px solid rgba(20, 20, 20, .3); border-radius: var(--radius);
-  text-decoration: none; color: var(--ink);
+  color: var(--ink); cursor: default; outline: none;
 }
 @media (max-width: 900px) {
   .service-tile { width: min(320px, 78vw); height: clamp(230px, 56vw, 300px); }
