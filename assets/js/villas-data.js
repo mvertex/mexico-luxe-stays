@@ -291,6 +291,8 @@ const MLS_VILLAS = [
     services: ["chef", "transfer", "housekeeping", "spa", "grocery", "events", "excursions"],
     gallery: [
       { key: "outdoor", images: [
+        { src: "../assets/img/villas/casa-corazon-luxe-outdoor-01.webp",
+          alt: "The entrance facade and carport at Casa Corazon Luxe, framed by palapa roofing and tropical landscaping", altEs: "La fachada de entrada y el garage de Casa Corazon Luxe, enmarcados por techos de palapa y vegetación tropical" },
         { src: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1400&q=80",
           alt: "The infinity pool at golden hour", altEs: "La alberca infinita a la hora dorada" },
         { src: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1400&q=80",
