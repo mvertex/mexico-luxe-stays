@@ -451,7 +451,7 @@ button { font: inherit; cursor: pointer; }
 }
 .destinations-giant {
   font-family: var(--font-display); font-weight: 500; line-height: .86;
-  font-size: clamp(5.5rem, 24vw, 19.5rem); color: var(--ink);
+  font-size: clamp(4rem, 17vw, 13rem); color: var(--ink); text-transform: uppercase;
   margin: clamp(1rem, 3vw, 2rem) 0 0; position: relative; z-index: 1;
 }
 .destinations-grid {
@@ -474,7 +474,7 @@ button { font: inherit; cursor: pointer; }
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(rgba(20,26,19,.05) 35%, rgba(20,26,19,.72));
 }
-.destination-card:hover img { transform: scale(1.045); }
+.destination-card:hover img { opacity: 1; transform: scale(1.045); }
 .destination-body {
   position: absolute; inset: auto 0 0 0; z-index: 1; padding: 1.4rem;
   text-align: center;
