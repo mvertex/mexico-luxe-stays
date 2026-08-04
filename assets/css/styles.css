@@ -303,6 +303,17 @@ button { font: inherit; cursor: pointer; }
   text-transform: uppercase; text-decoration: none;
 }
 
+.hero-back-link {
+  position: absolute; top: 7rem; left: 2rem; z-index: 3;
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  color: var(--gold); border: 1px solid var(--gold);
+  transition: background-color .2s ease, color .2s ease;
+}
+.hero-back-link svg { width: 20px; height: 20px; }
+.hero-back-link:hover { background: var(--gold); color: var(--ink); }
+@media (max-width: 600px) { .hero-back-link { top: 6rem; left: 1.25rem; } }
+
 /* Page hero (inner pages — shorter) */
 .hero--page { min-height: 62svh; }
 
