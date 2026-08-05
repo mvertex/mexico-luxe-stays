@@ -421,8 +421,7 @@ button { font: inherit; cursor: pointer; }
 }
 .villa-story-media { position: relative; min-height: clamp(360px, 46vw, 620px); }
 .villa-story-media-main {
-  margin: 0 0 0 auto; width: 90%; height: 100%; border-radius: var(--radius); overflow: hidden;
-  box-shadow: var(--shadow-card);
+  margin: 0 0 0 auto; width: 90%; height: 100%;
 }
 .villa-story-media-main img {
   width: 100%; height: 100%; object-fit: cover; display: block;
