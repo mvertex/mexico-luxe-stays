@@ -400,7 +400,7 @@ button { font: inherit; cursor: pointer; }
   font-size: clamp(2.2rem, 3.4vw, 3.1rem); line-height: 1.12; letter-spacing: -.01em;
   color: var(--ink); margin: 0;
 }
-.stacked-heading span { display: block; }
+.stacked-heading-line { display: block; }
 .stacked-heading .italic { font-style: italic; font-weight: 400; }
 
 /* ---------- Villa story: editorial two-column intro (small heading + copy
