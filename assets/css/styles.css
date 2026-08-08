@@ -424,7 +424,10 @@ button { font: inherit; cursor: pointer; }
   margin: 0 0 0 auto; width: 90%; height: 100%;
 }
 .villa-story-media-main img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
+  /* This image is a square artistic cutout with its own transparent
+     margins, not a full-bleed photo — "cover" would crop its left/right
+     edges to fill the taller box. "contain" shows it whole. */
+  width: 100%; height: 100%; object-fit: contain; display: block;
 }
 /* Accent photo now sits under the copy, not layered on the tall photo. */
 .villa-story-media-accent {
