@@ -355,6 +355,12 @@
   const heroSearchSelects = document.querySelector(".hero-search")
     ? [...document.querySelectorAll(".hero-search select")].map(mlsEnhanceSelect)
     : [];
+  document.querySelectorAll(".hero-search input[type='date']").forEach((input) => {
+    const sync = () => input.classList.toggle("has-value", !!input.value);
+    input.addEventListener("input", sync);
+    input.addEventListener("change", sync);
+    sync();
+  });
 
   /* ---------- Scroll reveal (single observer, animates once) ---------- */
   const initReveal = () => {

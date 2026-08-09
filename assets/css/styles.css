@@ -375,6 +375,9 @@ button { font: inherit; cursor: pointer; }
 }
 .hero-search-field select:focus, .hero-search-field input:focus { outline: none; }
 .hero-search-field input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: .7; }
+/* Hide the native "dd/mm/aaaa" placeholder text until the field is
+   focused or actually has a date — the label above is enough at rest. */
+.hero-search-field input[type="date"]:not(.has-value):not(:focus)::-webkit-datetime-edit { color: transparent; }
 .hero-search-btn {
   flex: none; display: flex; align-items: center; justify-content: center;
   width: 68px; margin: 0; border-radius: 0 4px 4px 0; border: 0;
