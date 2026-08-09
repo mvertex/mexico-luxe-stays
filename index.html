@@ -80,15 +80,15 @@
             </select>
           </div>
           <div class="hero-search-field">
-            <label for="hs-checkin" data-i18n="home.search.checkin">Check-in</label>
+            <label for="hs-checkin" data-i18n="home.search.checkin">Check in</label>
             <input id="hs-checkin" name="checkin" type="date">
           </div>
           <div class="hero-search-field">
-            <label for="hs-checkout" data-i18n="home.search.checkout">Check-out</label>
+            <label for="hs-checkout" data-i18n="home.search.checkout">Check out</label>
             <input id="hs-checkout" name="checkout" type="date">
           </div>
           <div class="hero-search-field">
-            <label for="hs-guests" data-i18n="villas.filter.guests">Guests</label>
+            <label for="hs-guests" data-i18n="home.search.guests">Add guest</label>
             <select id="hs-guests" name="guests">
               <option value="" data-i18n="villas.filter.any">Any</option>
               <option value="10">10+</option>
@@ -97,7 +97,9 @@
               <option value="22">22+</option>
             </select>
           </div>
-          <button type="submit" class="hero-search-btn" data-i18n="home.search.submit">Search</button>
+          <button type="submit" class="hero-search-btn" aria-label="Search" data-i18n-aria-label="home.search.submit">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.2" y2="16.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
         </form>
       </div>
     </section>
