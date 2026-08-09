@@ -54,6 +54,10 @@ const MLS_I18N = {
     /* ---------- Home ---------- */
     "home.hero.title": "Welcome to<br><em>Mexico Luxe Stays</em>",
     "home.hero.reserveButton": "Reserve Your Stay",
+    "home.search.destination": "Destination",
+    "home.search.checkin": "Check-in",
+    "home.search.checkout": "Check-out",
+    "home.search.submit": "Search",
     "home.scroll": "Scroll",
     "home.destinations.eyebrow": "Choose your",
     "home.destinations.giant": "Mexico",
@@ -401,6 +405,10 @@ const MLS_I18N = {
     /* ---------- Home ---------- */
     "home.hero.title": "Bienvenido a<br><em>Mexico Luxe Stays</em>",
     "home.hero.reserveButton": "Reserva tu Estancia",
+    "home.search.destination": "Destino",
+    "home.search.checkin": "Llegada",
+    "home.search.checkout": "Salida",
+    "home.search.submit": "Buscar",
     "home.scroll": "Desliza",
     "home.destinations.eyebrow": "Elige tu",
     "home.destinations.giant": "México",

@@ -69,6 +69,36 @@
         <h1 class="display" data-hero-reveal="2" style="max-width:20ch" data-i18n-html="home.hero.title">Welcome to<br><em>Mexico Luxe Stays</em></h1>
 
         <a class="hero-reserve-btn" href="villas.html" data-hero-reveal="4" data-i18n="home.hero.reserveButton">Reserve Your Stay</a>
+
+        <form class="hero-search" action="villas.html" method="get" aria-label="Search villas" data-hero-reveal="5">
+          <div class="hero-search-field">
+            <label for="hs-destination" data-i18n="home.search.destination">Destination</label>
+            <select id="hs-destination" name="destination">
+              <option value="" data-i18n="villas.filter.allDestinations">All destinations</option>
+              <option value="playa-del-carmen">Playa del Carmen</option>
+              <option value="valle-de-guadalupe">Valle de Guadalupe</option>
+            </select>
+          </div>
+          <div class="hero-search-field">
+            <label for="hs-checkin" data-i18n="home.search.checkin">Check-in</label>
+            <input id="hs-checkin" name="checkin" type="date">
+          </div>
+          <div class="hero-search-field">
+            <label for="hs-checkout" data-i18n="home.search.checkout">Check-out</label>
+            <input id="hs-checkout" name="checkout" type="date">
+          </div>
+          <div class="hero-search-field">
+            <label for="hs-guests" data-i18n="villas.filter.guests">Guests</label>
+            <select id="hs-guests" name="guests">
+              <option value="" data-i18n="villas.filter.any">Any</option>
+              <option value="10">10+</option>
+              <option value="12">12+</option>
+              <option value="18">18+</option>
+              <option value="22">22+</option>
+            </select>
+          </div>
+          <button type="submit" class="hero-search-btn" data-i18n="home.search.submit">Search</button>
+        </form>
       </div>
       <a class="hero-scroll-hint" href="#intro" data-i18n="home.scroll">Scroll</a>
     </section>

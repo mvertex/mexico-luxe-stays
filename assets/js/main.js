@@ -349,6 +349,13 @@
     });
   });
 
+  /* ---------- Home hero search: submits a plain GET to villas.html, which
+     already reads ?destination/?guests to pre-fill its own filters (see the
+     villa grid block below); ?checkin/?checkout ride along for later. */
+  const heroSearchSelects = document.querySelector(".hero-search")
+    ? [...document.querySelectorAll(".hero-search select")].map(mlsEnhanceSelect)
+    : [];
+
   /* ---------- Scroll reveal (single observer, animates once) ---------- */
   const initReveal = () => {
     const revealEls = document.querySelectorAll(".reveal");
@@ -853,6 +860,7 @@
     renderDestinationGrid && renderDestinationGrid();
     renderVillaDetail && renderVillaDetail();
     filterCustomSelects.forEach((cs) => cs.rebuildLabels());
+    heroSearchSelects.forEach((cs) => cs.rebuildLabels());
     /* i18n.js applies the page's initial language from a DOMContentLoaded
        listener, which fires after this script's own initReveal() call —
        so any .reveal markup rebuilt just now (villa rows, service cards)
