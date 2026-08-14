@@ -55,7 +55,7 @@
       </div>
       <div class="container">
         <p class="eyebrow eyebrow--center" data-hero-reveal="1" data-i18n="contact.hero.eyebrow">We reply fast</p>
-        <h1 class="display" data-hero-reveal="2" data-i18n-html="contact.hero.title">Contact <em>us</em></h1>
+        <h1 class="display no-italic" data-hero-reveal="2" data-i18n-html="contact.hero.title">Contact <em>us</em></h1>
         <p class="lead" data-hero-reveal="3" data-i18n="contact.hero.lead">Tell us your dates and your dream. We'll handle everything between.</p>
       </div>
       <a class="hero-scroll-hint" href="#contact-options" data-i18n="home.scroll">Scroll</a>
@@ -63,112 +63,154 @@
 
     <!-- ============ Channels + form ============ -->
     <section class="section" id="contact-options" aria-label="Contact options">
-      <div class="container contact-layout">
+      <div class="container contact-layout" data-contact-layout>
 
-        <div class="reveal">
-          <p class="eyebrow" data-i18n="contact.channels.eyebrow">Direct lines</p>
-          <h2 class="h2" data-i18n-html="contact.channels.title">Reach a <em>person</em>, not a portal</h2>
-          <p class="text-muted" style="margin-top:1rem" data-i18n="contact.channels.lead">Call, text, WhatsApp, or write — the same small team answers every channel, usually within the hour.</p>
-          <ul class="contact-channels">
-            <li>
-              <span class="channel-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>
-              </span>
-              <span>
-                <span class="channel-label" data-i18n="contact.channels.call">Call or text</span><br>
-                <a class="channel-value" href="tel:+529848079475">+52 (984) 807 94 75</a>
-              </span>
-            </li>
-            <li>
-              <span class="channel-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-.9-.3-.1-.5-.2-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.5-.1-.1-.3-.2-.6-.3M12 21.8a9.7 9.7 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4a9.8 9.8 0 1 1 8.3 4.6M12 .5A11.5 11.5 0 0 0 2.1 17.8L.5 23.5l5.9-1.5A11.5 11.5 0 1 0 12 .5"/></svg>
-              </span>
-              <span>
-                <span class="channel-label" data-i18n="contact.channels.whatsapp">WhatsApp</span><br>
-                <a class="channel-value" href="https://wa.me/5219848079475" target="_blank" rel="noopener" data-i18n="contact.channels.whatsappCta">Chat with us now</a>
-              </span>
-            </li>
-            <li>
-              <span class="channel-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
-              </span>
-              <span>
-                <span class="channel-label" data-i18n="contact.channels.email">Email</span><br>
-                <a class="channel-value" href="mailto:info@mexicoluxestays.com">info@mexicoluxestays.com</a>
-              </span>
-            </li>
-            <li>
-              <span class="channel-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2m0 1.8c-3.1 0-3.5 0-4.8.1-1.1.1-1.5.2-1.9.3-.5.2-.8.4-1.1.7-.3.3-.6.7-.7 1.1-.1.4-.3.8-.3 1.9-.1 1.2-.1 1.6-.1 4.8s0 3.5.1 4.8c.1 1.1.2 1.5.3 1.9.2.5.4.8.7 1.1.3.3.7.6 1.1.7.4.1.8.3 1.9.3 1.2.1 1.6.1 4.8.1s3.5 0 4.8-.1c1.1-.1 1.5-.2 1.9-.3.5-.2.8-.4 1.1-.7.3-.3.6-.7.7-1.1.1-.4.3-.8.3-1.9.1-1.2.1-1.6.1-4.8s0-3.5-.1-4.8c-.1-1.1-.2-1.5-.3-1.9-.2-.5-.4-.8-.7-1.1-.3-.3-.7-.6-1.1-.7-.4-.1-.8-.3-1.9-.3-1.2-.1-1.6-.1-4.8-.1M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 1.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4m5.2-3.1a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4"/></svg>
-              </span>
-              <span>
-                <span class="channel-label" data-i18n="contact.channels.social">Social</span><br>
-                <a class="channel-value" href="https://www.instagram.com/mexicoluxestays" target="_blank" rel="noopener">Instagram</a> ·
-                <a class="channel-value" href="https://www.facebook.com/mexicoluxestays" target="_blank" rel="noopener">Facebook</a>
-              </span>
-            </li>
-          </ul>
+        <!-- Shown once a specific villa is chosen in "Plan your trip" below;
+             built from MLS_VILLAS (see villas-data.js — HOSTAWAY swap point). -->
+        <div class="trip-showcase" data-trip-showcase hidden>
+          <div class="trip-showcase-carousel">
+            <img class="trip-showcase-img" data-showcase-img src="" alt="">
+            <button type="button" class="trip-showcase-nav trip-showcase-nav--prev" data-showcase-prev aria-label="Previous photo">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
+            </button>
+            <button type="button" class="trip-showcase-nav trip-showcase-nav--next" data-showcase-next aria-label="Next photo">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
+            </button>
+            <div class="trip-showcase-dots" data-showcase-dots></div>
+          </div>
+          <div class="trip-showcase-info">
+            <p class="trip-showcase-location" data-showcase-location></p>
+            <h3 class="trip-showcase-name" data-showcase-name></h3>
+            <div class="trip-showcase-specs" data-showcase-specs></div>
+            <p class="trip-showcase-desc" data-showcase-desc></p>
+          </div>
         </div>
 
-        <div class="contact-form-panel reveal" data-delay="1">
-          <p class="eyebrow" data-i18n="contact.form.eyebrow">Plan my stay</p>
-          <h2 class="h3" style="color:var(--cream)" data-i18n="contact.form.title">Send an inquiry</h2>
+        <div class="trip-panel reveal" data-delay="1">
+          <h2 class="trip-title" data-i18n="contact.form.title">Plan your trip</h2>
 
           <!-- Form handled in main.js — see FORM BACKEND INTEGRATION POINT there.
-               Currently opens WhatsApp with the message prefilled. -->
+               Currently opens WhatsApp with the message prefilled.
+               HOSTAWAY INTEGRATION POINT: once connected, the price shown
+               in [data-trip-price-value] should come from the live pricing
+               API for the selected villa + dates instead of villa.priceFromPerNight. -->
           <form data-contact-form novalidate>
-            <div class="form-grid">
-              <div class="form-field">
-                <label for="cf-name" data-i18n="contact.form.name">Full name *</label>
-                <input id="cf-name" name="name" type="text" autocomplete="name" required placeholder="Your name" data-i18n-placeholder="contact.form.namePh">
+            <div class="trip-villa-field" data-trip-villa-field>
+              <span id="cf-villa-label" class="visually-hidden" data-i18n="contact.form.villa">Which villa?</span>
+              <button type="button" class="trip-villa-trigger" data-villa-trigger aria-haspopup="listbox" aria-expanded="false" aria-labelledby="cf-villa-label">
+                <span data-villa-trigger-text data-i18n="contact.form.villaAdvise">Not sure yet — advise me</span>
+                <svg class="trip-villa-chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
+              </button>
+              <ul class="trip-villa-listbox" role="listbox" tabindex="-1" data-villa-listbox aria-labelledby="cf-villa-label" hidden>
+                <li role="option" data-value="" aria-selected="true" data-i18n="contact.form.villaAdvise">Not sure yet — advise me</li>
+                <li role="option" data-value="villa-aqua" aria-selected="false">Villa Aqua — Playa del Carmen</li>
+                <li role="option" data-value="casa-de-las-estrellas" aria-selected="false">Casa de las Estrellas — Playa del Carmen</li>
+                <li role="option" data-value="casa-corazon-luxe" aria-selected="false">Casa Corazon Luxe — Playa del Carmen</li>
+                <li role="option" data-value="kasa-kefi" aria-selected="false">Kasa Kefi — Valle de Guadalupe</li>
+              </ul>
+              <input type="hidden" id="cf-villa" name="villa" value="" data-villa-value>
+            </div>
+
+            <div class="trip-dates">
+              <div class="trip-date-field" data-trip-date-field="checkin">
+                <button type="button" class="trip-date-pill" data-date-trigger="checkin" aria-haspopup="dialog" aria-expanded="false">
+                  <span class="trip-date-text" data-trip-date-text="checkin" data-i18n="contact.form.checkin">Check-In</span>
+                  <svg class="trip-date-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M7 3v3M17 3v3M4 9h16M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z"/></svg>
+                </button>
+                <div class="trip-calendar" data-trip-calendar="checkin" hidden>
+                  <div class="trip-calendar-header">
+                    <button type="button" class="trip-calendar-nav" data-cal-prev aria-label="Previous month">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
+                    </button>
+                    <span class="trip-calendar-month" data-cal-month></span>
+                    <button type="button" class="trip-calendar-nav" data-cal-next aria-label="Next month">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
+                    </button>
+                  </div>
+                  <div class="trip-calendar-weekdays" data-cal-weekdays></div>
+                  <div class="trip-calendar-days" data-cal-days></div>
+                </div>
+                <input type="hidden" name="checkin" data-date-value>
               </div>
-              <div class="form-field">
-                <label for="cf-email" data-i18n="contact.form.email">Email *</label>
-                <input id="cf-email" name="email" type="email" autocomplete="email" required placeholder="you@email.com" data-i18n-placeholder="contact.form.emailPh">
-              </div>
-              <div class="form-field">
-                <label for="cf-phone" data-i18n="contact.form.phone">Phone / WhatsApp</label>
-                <input id="cf-phone" name="phone" type="tel" autocomplete="tel" placeholder="+1 ..." data-i18n-placeholder="contact.form.phonePh">
-              </div>
-              <div class="form-field">
-                <label for="cf-villa" data-i18n="contact.form.villa">Preferred villa</label>
-                <select id="cf-villa" name="villa">
-                  <option value="" data-i18n="contact.form.villaAdvise">Not sure yet — advise me</option>
-                  <option value="villa-aqua">Villa Aqua — Playa del Carmen</option>
-                  <option value="casa-de-las-estrellas">Casa de las Estrellas — Playa del Carmen</option>
-                  <option value="casa-corazon-luxe">Casa Corazon Luxe — Playa del Carmen</option>
-                  <option value="kasa-kefi">Kasa Kefi — Valle de Guadalupe</option>
-                </select>
-              </div>
-              <div class="form-field">
-                <label for="cf-checkin" data-i18n="contact.form.checkin">Check-in</label>
-                <input id="cf-checkin" name="checkin" type="date">
-              </div>
-              <div class="form-field">
-                <label for="cf-checkout" data-i18n="contact.form.checkout">Check-out</label>
-                <input id="cf-checkout" name="checkout" type="date">
-              </div>
-              <div class="form-field">
-                <label for="cf-adults" data-i18n="contact.form.adults">Number of adults</label>
-                <input id="cf-adults" name="adults" type="number" min="1" inputmode="numeric" placeholder="2" data-i18n-placeholder="contact.form.adultsPh">
-              </div>
-              <div class="form-field">
-                <label for="cf-children" data-i18n="contact.form.children">Children under 12</label>
-                <input id="cf-children" name="children" type="number" min="0" inputmode="numeric" placeholder="0" data-i18n-placeholder="contact.form.childrenPh">
-              </div>
-              <div class="form-field">
-                <label for="cf-rooms" data-i18n="contact.form.rooms">Rooms needed</label>
-                <input id="cf-rooms" name="rooms" type="number" min="1" inputmode="numeric" placeholder="1" data-i18n-placeholder="contact.form.roomsPh">
-              </div>
-              <div class="form-field form-field--full">
-                <label for="cf-message" data-i18n="contact.form.message">Your message</label>
-                <textarea id="cf-message" name="message" rows="4" placeholder="Group size, the occasion, anything we should know..." data-i18n-placeholder="contact.form.messagePh"></textarea>
+              <div class="trip-date-field" data-trip-date-field="checkout">
+                <button type="button" class="trip-date-pill" data-date-trigger="checkout" aria-haspopup="dialog" aria-expanded="false">
+                  <span class="trip-date-text" data-trip-date-text="checkout" data-i18n="contact.form.checkout">Check-Out</span>
+                  <svg class="trip-date-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M7 3v3M17 3v3M4 9h16M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z"/></svg>
+                </button>
+                <div class="trip-calendar" data-trip-calendar="checkout" hidden>
+                  <div class="trip-calendar-header">
+                    <button type="button" class="trip-calendar-nav" data-cal-prev aria-label="Previous month">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
+                    </button>
+                    <span class="trip-calendar-month" data-cal-month></span>
+                    <button type="button" class="trip-calendar-nav" data-cal-next aria-label="Next month">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
+                    </button>
+                  </div>
+                  <div class="trip-calendar-weekdays" data-cal-weekdays></div>
+                  <div class="trip-calendar-days" data-cal-days></div>
+                </div>
+                <input type="hidden" name="checkout" data-date-value>
               </div>
             </div>
-            <button class="btn btn-solid" type="submit" style="margin-top:1.6rem;width:100%" data-i18n="contact.form.submit">Send inquiry</button>
+
+            <div class="trip-steppers">
+              <div class="trip-stepper" data-trip-stepper data-name="bedrooms" data-min="1" data-value="1">
+                <span class="trip-stepper-label" data-i18n="contact.form.bedrooms">Bedrooms</span>
+                <div class="trip-stepper-controls">
+                  <button type="button" class="trip-stepper-btn" data-stepper-dec aria-label="Decrease bedrooms">&minus;</button>
+                  <span class="trip-stepper-value" data-stepper-value>1</span>
+                  <button type="button" class="trip-stepper-btn" data-stepper-inc aria-label="Increase bedrooms">+</button>
+                </div>
+                <input type="hidden" name="bedrooms" value="1" data-stepper-input>
+              </div>
+              <div class="trip-stepper" data-trip-stepper data-name="adults" data-min="1" data-value="1">
+                <span class="trip-stepper-label" data-i18n="contact.form.adults">Adults</span>
+                <div class="trip-stepper-controls">
+                  <button type="button" class="trip-stepper-btn" data-stepper-dec aria-label="Decrease adults">&minus;</button>
+                  <span class="trip-stepper-value" data-stepper-value>1</span>
+                  <button type="button" class="trip-stepper-btn" data-stepper-inc aria-label="Increase adults">+</button>
+                </div>
+                <input type="hidden" name="adults" value="1" data-stepper-input>
+              </div>
+              <div class="trip-stepper" data-trip-stepper data-name="children" data-min="0" data-value="0">
+                <span class="trip-stepper-label">
+                  <span data-i18n="contact.form.children">Children</span>
+                  <small class="trip-stepper-sub" data-i18n="contact.form.childrenAges">Ages 2 – 12</small>
+                </span>
+                <div class="trip-stepper-controls">
+                  <button type="button" class="trip-stepper-btn" data-stepper-dec aria-label="Decrease children">&minus;</button>
+                  <span class="trip-stepper-value" data-stepper-value>0</span>
+                  <button type="button" class="trip-stepper-btn" data-stepper-inc aria-label="Increase children">+</button>
+                </div>
+                <input type="hidden" name="children" value="0" data-stepper-input>
+              </div>
+              <div class="trip-stepper" data-trip-stepper data-name="infants" data-min="0" data-value="0">
+                <span class="trip-stepper-label" data-i18n="contact.form.infants">Infants</span>
+                <div class="trip-stepper-controls">
+                  <button type="button" class="trip-stepper-btn" data-stepper-dec aria-label="Decrease infants">&minus;</button>
+                  <span class="trip-stepper-value" data-stepper-value>0</span>
+                  <button type="button" class="trip-stepper-btn" data-stepper-inc aria-label="Increase infants">+</button>
+                </div>
+                <input type="hidden" name="infants" value="0" data-stepper-input>
+              </div>
+            </div>
+
+            <div class="trip-price" data-trip-price>
+              <p class="trip-price-value"><span data-trip-price-value>—</span> <span class="trip-price-unit" data-i18n="contact.form.priceUnit">usd/night</span></p>
+              <p class="trip-price-note" data-i18n="contact.form.priceNote">(taxes &amp; fees not included)</p>
+            </div>
+
+            <div class="trip-actions">
+              <button class="trip-book-btn" type="submit" data-trip-intent="book" data-i18n="contact.form.book">Book Now</button>
+              <button class="trip-inquire-btn" type="submit" data-trip-intent="inquire" data-i18n="contact.form.inquire">Inquire for more info</button>
+            </div>
             <p class="form-status" role="status" aria-live="polite"></p>
-            <p class="form-note" data-i18n-html="contact.form.note">Submitting opens WhatsApp with your message ready to send — our fastest channel. Prefer email? Write to <a href="mailto:info@mexicoluxestays.com" style="color:var(--gold)">info@mexicoluxestays.com</a>.</p>
           </form>
+
+          <div class="trip-phone-cta">
+            <p data-i18n-html="contact.form.curator">We are the local experts. Speak to an Experience Curator today: <a class="trip-phone-link" href="tel:+529848079475">+52 (984) 807 94 75</a></p>
+          </div>
         </div>
       </div>
     </section>

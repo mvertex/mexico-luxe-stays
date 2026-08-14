@@ -46,67 +46,49 @@
 
   <main id="main" data-villa-slug="casa-de-las-estrellas">
 
-    <!-- ============ Villa hero ============ -->
+    <!-- ============ Villa hero + gallery ============ -->
     <section class="detail-hero" aria-label="Casa de las Estrellas overview">
       <div class="container">
         <nav class="breadcrumb" aria-label="Breadcrumb">
           <a href="../index.html" data-i18n="detail.breadcrumb.home">Home</a> / <a href="../villas.html" data-i18n="detail.breadcrumb.villas">Our Villas</a> / Casa de las Estrellas
         </nav>
-        <h1 class="display">Casa de las <em>Estrellas</em></h1>
 
-        <!-- PLACEHOLDER IMAGES — replace with real villa photography / Hostaway media -->
-        <div class="detail-gallery">
-          <img class="gallery-main" src="../assets/img/villas/casa-de-las-estrellas-2.webp"
-               alt="A suite at Casa de las Estrellas with a wood headboard and garden view" data-i18n-alt="detail.estrellas.gallery1" width="1200" height="900">
-          <img src="../assets/img/villas/casa-de-las-estrellas-1.webp"
-               alt="Casa de las Estrellas' dining and lounge area opening to the pool" data-i18n-alt="detail.estrellas.gallery2" loading="lazy" width="1200" height="900">
-          <img src="../assets/img/villas/casa-de-las-estrellas-3.webp"
-               alt="The covered terrace and plunge pool at Casa de las Estrellas" data-i18n-alt="detail.estrellas.gallery3" loading="lazy" width="1200" height="900">
+        <!-- Photo grid rendered from assets/js/villas-data.js (villa.gallery) — see main.js -->
+        <div class="villa-gallery" data-villa-gallery>
+          <div class="villa-gallery-text">
+            <h1 class="display">Casa de las <em>Estrellas</em></h1>
+            <a class="detail-faq-jump" href="#villa-faq" data-i18n="detail.faqJump">Have a question? Jump to FAQ</a>
+          </div>
+          <div class="villa-gallery-tiles" data-villa-gallery-tiles></div>
         </div>
       </div>
     </section>
-    <div class="detail-hero-spacer" aria-hidden="true"></div>
 
-    <!-- ============ Specs (rendered from villas-data.js) ============ -->
-    <div class="container">
-      <div class="specs-bar" data-villa-specs></div>
-    </div>
-
-    <!-- ============ Description + booking ============ -->
+    <!-- ============ Specs + description (left) / availability calendar (right) — rendered from villas-data.js ============ -->
     <div class="container detail-layout">
-      <div>
-        <div class="residence-split">
-          <div class="residence-split-heading">
-            <h2 class="h2" data-i18n-html="detail.estrellas.heading">Evenings under the <em>stars</em></h2>
-          </div>
+      <div class="detail-intro-grid">
+        <div class="detail-intro-copy">
+          <div class="specs-bar" data-villa-specs></div>
           <div class="residence-split-copy">
-            <p data-i18n-html="detail.estrellas.lead2"><strong>Three ensuite suites</strong>, an independent studio, and a rooftop terrace with a private jacuzzi. The beach a thirty-second walk away.</p>
-            <p data-i18n-html="detail.estrellas.body1">Casa de las Estrellas balances comfort, privacy, and curated luxury in Playacar Phase I. The main house holds three beautifully appointed suites; a <strong>self-contained ground-floor studio</strong> with its own entrance joins the villa when your group grows. Between the <strong>heated plunge pool</strong> below and the <strong>ocean-view jacuzzi</strong> above, the day arranges itself.</p>
-            <p data-i18n-html="detail.estrellas.body2"><strong>Daily housekeeping</strong> and a <strong>24/7 concierge</strong> carry the stay — a private chef, in-villa spa treatments, or a Riviera Maya adventure are one message away. And when the villa lets you go, Quinta Avenida is a short walk down the beach.</p>
+            <p data-i18n-html="detail.estrellas.lead2">Casa de las Estrellas features <strong>three ensuite suites plus a private studio</strong>, just <strong>30 seconds from the beach</strong> in Playacar Phase I.</p>
+            <p data-i18n-html="detail.estrellas.body1">Enjoy a <strong>heated plunge pool, rooftop terrace with ocean-view jacuzzi</strong>, plus <strong>daily housekeeping and 24/7 concierge</strong>. Private chef, spa treatments, and Riviera Maya experiences can also be arranged.</p>
           </div>
         </div>
 
-        <div class="amenities-panel">
-          <div class="container">
-            <h3 class="h3" data-i18n="detail.amenities.title">Amenities</h3>
-            <!-- Rendered from assets/js/villas-data.js — HOSTAWAY swap point -->
-            <div class="amenities-categories" data-villa-amenities></div>
-            <button class="amenities-toggle" type="button" data-amenities-toggle aria-expanded="false" data-i18n="detail.amenities.showAll">Show all amenities</button>
-          </div>
+        <!-- Calendar rendered from villa.availability (villas-data.js) — see renderCalendar in
+             main.js. HOSTAWAY INTEGRATION POINT (via Vercel): swap villa.availability.blockedRanges
+             for a live fetch to the Hostaway Calendar API. Docs: https://api.hostaway.com/documentation -->
+        <div class="villa-calendar" data-villa-calendar></div>
+      </div>
+
+      <div class="amenities-panel">
+        <div class="container">
+          <h3 class="h3" data-i18n="detail.amenities.title">Amenities</h3>
+          <!-- Rendered from assets/js/villas-data.js — HOSTAWAY swap point -->
+          <div class="amenities-categories" data-villa-amenities></div>
+          <button class="amenities-toggle" type="button" data-amenities-toggle aria-expanded="false" data-i18n="detail.amenities.showAll">Show all amenities</button>
         </div>
       </div>
-    </div>
-
-    <!-- ============ Villa gallery showcase ============ -->
-    <div class="container">
-      <h3 class="h3" data-i18n="detail.gallery.title">Explore the villa</h3>
-    </div>
-    <div class="gallery-showcase" data-gallery-showcase>
-      <ul class="gallery-list" data-gallery-list></ul>
-      <button type="button" class="gallery-image" data-gallery-view aria-haspopup="dialog" aria-label="View Gallery" data-i18n-aria-label="detail.gallery.viewGallery">
-        <img data-gallery-img src="" alt="">
-        <span class="gallery-view-btn" aria-hidden="true" data-i18n="detail.gallery.viewGallery">View Gallery</span>
-      </button>
     </div>
 
     <!-- ============ Services offered at this villa ============ -->
@@ -135,30 +117,33 @@
     <!-- ============ Property location map ============ -->
     <section class="section property-map-section" aria-label="Where Casa de las Estrellas is located">
       <div class="container center">
-        <p class="eyebrow eyebrow--center reveal" data-i18n="detail.map.eyebrow">Where you'll stay</p>
-        <h2 class="h2 reveal" data-i18n-html="detail.estrellas.mapTitle">Casa de las Estrellas in <em>Playacar</em></h2>
+        <h3 class="h3 reveal" data-i18n="detail.map.eyebrow">Where you'll stay</h3>
       </div>
       <div class="property-map reveal" data-delay="1">
-        <a class="property-map-link" href="https://www.google.com/maps/place/Casa+Estrella+%C2%B7+4BR+Jungle+Villa+-+Playacar+Fase+1+-+50+mts.+from+Ocean/@20.6124583,-87.0863972,17z/data=!4m14!1m2!2m1!1scasa+estrella!3m10!1s0x8f4e436a707e6d09:0x91821cb3095dfa18!5m2!4m1!1i2!8m2!3d20.6124935!4d-87.0828781!15sCg1jYXNhIGVzdHJlbGxhkgEPdmFjYXRpb25fcmVudGFs4AEA!16s%2Fg%2F11npr1yjxy!17BQ0FF?entry=ttu&amp;g_ep=EgoyMDI2MDcyOC4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener" aria-label="Open Casa de las Estrellas' location in Google Maps">
-          <img class="property-map-image" src="../assets/img/location-casa-de-las-estrellas.png"
-               alt="Map showing Casa de las Estrellas' location in Playacar, Playa del Carmen, near Quinta Avenida and Cancún International Airport"
-               data-i18n-alt="detail.estrellas.mapAlt" loading="lazy" width="1536" height="1024">
-          <span class="property-map-badge" data-i18n="detail.map.badge">Open in Google Maps</span>
-        </a>
+        <div class="property-map-frame">
+          <iframe class="property-map-embed" src="https://www.google.com/maps/embed?pb=!1m3!3m2!1m1!4s10484974437753813528" title="Map showing Casa de las Estrellas' location" loading="lazy"></iframe>
+        </div>
       </div>
     </section>
 
-    <!-- ============ Availability & rates ============ -->
-    <!-- HOSTAWAY INTEGRATION POINT (via Vercel): replace .availability-placeholder
-         with the Hostaway availability calendar embed for this listing, and
-         .rates-placeholder with live nightly/weekly rates from the Hostaway
-         pricing API. Docs: https://api.hostaway.com/documentation -->
-    <section class="section" aria-label="Availability and rates for Casa de las Estrellas">
+    <!-- ============ Guest testimonials ============ -->
+    <!-- Rendered from assets/js/villas-data.js (villa.testimonials) — HOSTAWAY
+         INTEGRATION POINT: swap for the Hostaway Reviews API once live. -->
+    <section class="section section--green testimonials" aria-labelledby="testimonials-title">
       <div class="container">
-        <div class="availability-grid reveal">
-          <div class="availability-placeholder" data-i18n-html="detail.availability.calendarPlaceholder">Availability calendar<br>Hostaway widget — coming soon</div>
-          <div class="rates-placeholder" data-i18n-html="detail.availability.ratesPlaceholder">Rates<br>Hostaway pricing — coming soon</div>
-        </div>
+        <p class="eyebrow eyebrow--center reveal" data-i18n="detail.testimonials.eyebrow">Guest stories</p>
+        <h2 class="visually-hidden" id="testimonials-title" data-i18n="detail.testimonials.hidden">What guests say</h2>
+        <div class="reveal" data-delay="1" data-villa-testimonials></div>
+      </div>
+    </section>
+
+    <!-- ============ Rates ============ -->
+    <!-- HOSTAWAY INTEGRATION POINT (via Vercel): swap .rates-placeholder for live
+         nightly/weekly rates from the Hostaway pricing API.
+         Docs: https://api.hostaway.com/documentation -->
+    <section class="section" aria-label="Rates for Casa de las Estrellas">
+      <div class="container">
+        <div class="rates-placeholder reveal" data-i18n-html="detail.availability.ratesPlaceholder">Rates<br>Hostaway pricing — coming soon</div>
       </div>
     </section>
 
@@ -201,7 +186,7 @@
     </div>
 
     <!-- ============ FAQ for this villa ============ -->
-    <section class="section" aria-label="Frequently asked questions about Casa de las Estrellas">
+    <section id="villa-faq" class="section" aria-label="Frequently asked questions about Casa de las Estrellas">
       <div class="container">
         <h3 class="h3" data-i18n="detail.faq.title">Frequently asked questions</h3>
       </div>

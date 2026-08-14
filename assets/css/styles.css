@@ -17,6 +17,7 @@
   --green-deep: #2C362B;
   --sage-tint: #E9ECE6;
   --gold: #C2A878;
+  --error: #9C4B3E;
   --cream-60: rgba(246, 244, 239, .6);
   --cream-80: rgba(246, 244, 239, .8);
   --scrim-top: rgba(20, 26, 19, .45);
@@ -122,8 +123,6 @@ button { font: inherit; cursor: pointer; }
 .eyebrow--center { justify-content: center; }
 .eyebrow--center::after { content: ""; width: 2.4rem; height: 1px; background: var(--gold); }
 .eyebrow--plain::before, .eyebrow--plain::after { content: none; }
-.property-map-section .eyebrow::before,
-.property-map-section .eyebrow::after { content: none; }
 
 .display {
   font-family: var(--font-display);
@@ -133,7 +132,9 @@ button { font: inherit; cursor: pointer; }
   letter-spacing: -.02em;
 }
 .display em, .h2 em { font-style: italic; font-weight: 400; }
-.hero-title--home { font-size: clamp(2.4rem, 6vw, 4.48rem); } /* 20% smaller than .display, home hero only */
+.detail-hero .display em, .no-italic em { font-style: normal; font-weight: 400; }
+.hero-title--home { font-size: clamp(2rem, 5vw, 3.6rem); } /* smaller than .display, home hero only */
+.hero-logo { display: block; width: auto; height: clamp(36px, 5.5vw, 60px); margin: .8rem auto 0; }
 
 .h2 {
   font-family: var(--font-display);
@@ -180,6 +181,16 @@ button { font: inherit; cursor: pointer; }
 .on-dark .btn-ghost { color: var(--cream); }
 .section--green .btn-ghost:hover,
 .on-dark .btn-ghost:hover { background: var(--cream); border-color: var(--cream); color: var(--green); }
+
+.btn-liquid {
+  background: rgba(246, 244, 239, .14);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border-color: rgba(255, 255, 255, .35);
+  color: var(--cream);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25);
+}
+.btn-liquid:hover { background: var(--cream); border-color: var(--cream); color: var(--green); }
 
 .link-arrow {
   display: inline-flex; align-items: center; gap: .5rem;
@@ -329,31 +340,10 @@ button { font: inherit; cursor: pointer; }
 .hero.is-ready [data-hero-reveal="4"] { transition-delay: .45s; }
 .hero.is-ready [data-hero-reveal="5"] { transition-delay: .6s; }
 
-/* ---------- Hero reserve button ---------- */
-.hero-reserve-btn {
-  display: inline-flex; align-items: center; gap: .9rem;
-  margin: 3.5rem auto 0;
-  padding: 1.15rem 3rem;
-  font-family: var(--font-sans); font-size: .78rem; font-weight: 600;
-  letter-spacing: var(--track-caps); text-transform: uppercase;
-  color: var(--cream); text-decoration: none;
-  border: 1px solid var(--gold);
-  border-radius: 2px;
-  background: rgba(255, 255, 255, .06);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  transition: background-color .3s var(--ease-out), color .3s var(--ease-out),
-              border-color .3s var(--ease-out), transform var(--dur) var(--ease-out);
-}
-.hero-reserve-btn:hover {
-  background: var(--gold); color: var(--ink); border-color: var(--gold);
-  transform: translateY(-2px);
-}
-.hero-reserve-btn:active { transform: translateY(0); }
-
 /* ---------- Hero search (liquid glass) ---------- */
 .hero-search {
   display: flex; align-items: stretch; flex-wrap: wrap;
-  width: min(920px, 92vw); margin: 3rem auto 0;
+  width: min(920px, 92vw); margin: 8.5rem auto 0;
   border-radius: 4px;
   background: rgba(246, 244, 239, .16);
   backdrop-filter: blur(20px) saturate(160%);
@@ -362,21 +352,31 @@ button { font: inherit; cursor: pointer; }
   box-shadow: 0 30px 60px -18px rgba(20, 26, 19, .5), inset 0 1px 0 rgba(255, 255, 255, .35);
 }
 .hero-search-field {
-  flex: 1 1 0; min-width: 130px; padding: 1rem 1.3rem; text-align: left;
+  flex: 1 1 0; min-width: 130px; padding: 1.3rem; text-align: center;
+  display: grid; align-items: center; justify-items: center;
+}
+.hero-search-field > label, .hero-search-field > input, .hero-search-field > .custom-select {
+  grid-area: 1 / 1;
+  width: 100%;
 }
 .hero-search-field label {
-  display: block; font-size: .6rem; font-weight: 600; letter-spacing: var(--track-caps);
-  text-transform: uppercase; color: var(--cream-60); margin-bottom: .4rem;
+  font-family: var(--font-display); font-size: 1.05rem; font-weight: 400;
+  color: var(--cream-60); margin: 0; pointer-events: none;
+  transition: opacity .2s var(--ease-out);
 }
+.hero-search-field.has-value label,
+.hero-search-field:focus-within label { opacity: 0; }
 .hero-search-field select, .hero-search-field input {
   width: 100%; background: transparent; border: 0; padding: 0; margin: 0;
-  font-family: var(--font-display); font-size: .98rem; color: var(--cream);
-  color-scheme: dark; appearance: none;
+  font-family: var(--font-display); font-size: 1.05rem; color: var(--cream);
+  color-scheme: dark; appearance: none; text-align: center; cursor: pointer;
 }
 .hero-search-field select:focus, .hero-search-field input:focus { outline: none; }
-.hero-search-field input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: .7; }
+/* Calendar icon removed — clicking anywhere on the field opens the native
+   date picker instead (see the hero-search date input handling in main.js). */
+.hero-search-field input[type="date"]::-webkit-calendar-picker-indicator { display: none; }
 /* Hide the native "dd/mm/aaaa" placeholder text until the field is
-   focused or actually has a date — the label above is enough at rest. */
+   focused or actually has a date — the field label is enough at rest. */
 .hero-search-field input[type="date"]:not(.has-value):not(:focus)::-webkit-datetime-edit { color: transparent; }
 .hero-search-btn {
   flex: none; display: flex; align-items: center; justify-content: center;
@@ -386,11 +386,21 @@ button { font: inherit; cursor: pointer; }
 }
 .hero-search-btn svg { width: 20px; height: 20px; }
 .hero-search-btn:hover { background: var(--cream); }
-.hero-search .custom-select-trigger { color: var(--cream); font-size: .98rem; }
+.hero-search .custom-select-trigger { color: var(--cream); font-size: 1.05rem; justify-content: center; gap: .5rem; }
 @media (max-width: 780px) {
   .hero-search { flex-direction: column; border-radius: 4px; }
   .hero-search-btn { width: 100%; margin: 0; border-radius: 0 0 4px 4px; padding: 1rem; }
 }
+.hero-search-hint {
+  margin: 1.1rem auto 0; text-align: center;
+  font-family: var(--font-sans); font-size: .8rem; color: var(--cream-60);
+}
+.hero-search-hint a {
+  color: var(--cream); text-decoration: underline; text-underline-offset: 3px;
+  text-decoration-color: rgba(246, 244, 239, .5);
+  transition: text-decoration-color .2s var(--ease-out);
+}
+.hero-search-hint a:hover { text-decoration-color: var(--cream); }
 
 /* ---------- Section headers ---------- */
 .section-head { margin-bottom: clamp(2.5rem, 5vw, 4rem); }
@@ -610,6 +620,53 @@ button { font: inherit; cursor: pointer; }
   font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--stone);
 }
 
+/* ---------- Destination intro text (sits between hero and map) ---------- */
+.destination-intro { padding-block: clamp(3rem, 6vw, 5rem) clamp(2rem, 4vw, 3rem); }
+.destination-intro .lead { max-width: 62ch; margin: 0 auto; text-align: center; color: var(--ink); }
+
+/* ---------- Destination villa map ---------- */
+.destination-map {
+  position: relative; width: 100%; height: clamp(360px, 46vw, 520px);
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-card);
+  background: var(--sage-tint);
+}
+.destination-map-loading {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  margin: 0; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--stone);
+}
+.destination-map .leaflet-container { width: 100%; height: 100%; font-family: var(--font-sans); background: var(--sage-tint); }
+.destination-map .leaflet-control-attribution { font-size: .68rem; }
+
+/* Brand pin: a teardrop in Verde de Marca holding the mark icon, so it reads
+   as ours rather than a stock map marker. */
+.mls-map-pin { background: none; border: 0; }
+.mls-map-pin-dot {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg); background: var(--green);
+  box-shadow: 0 6px 14px -4px rgba(20, 26, 19, .55);
+  border: 2px solid var(--cream);
+}
+.mls-map-pin-dot img { width: 16px; height: 13px; transform: rotate(45deg); display: block; }
+
+.mls-map-popup .leaflet-popup-content-wrapper { padding: 0; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-card); }
+.mls-map-popup .leaflet-popup-content { margin: 0; width: 240px !important; }
+.mls-map-popup .leaflet-popup-tip { box-shadow: none; }
+.map-popup { display: block; text-decoration: none; color: var(--ink); }
+.map-popup-img { display: block; width: 100%; height: 130px; object-fit: cover; }
+.map-popup-body { display: block; padding: .85rem 1rem 1rem; }
+.map-popup-name { display: block; font-family: var(--font-display); font-size: 1.15rem; font-weight: 500; }
+.map-popup-specs { display: block; margin-top: .3rem; font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; color: var(--stone); }
+.map-popup-cta {
+  display: inline-block; margin-top: .7rem; font-size: .74rem; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--sage);
+}
+.map-popup:hover .map-popup-cta { color: var(--gold); }
+
+@media (max-width: 640px) {
+  .destination-map { height: clamp(320px, 90vw, 400px); }
+}
+
 @media (max-width: 820px) {
   .villa-row { grid-template-columns: 1fr; }
   .villa-row-media, .villa-row-body { order: initial !important; }
@@ -632,7 +689,7 @@ button { font: inherit; cursor: pointer; }
 .featured-item {
   display: flex; align-items: center; gap: 1.2rem;
   text-decoration: none; color: var(--stone);
-  font-family: var(--font-display); font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-family: var(--font-sans); font-size: clamp(1.2rem, 2vw, 1.6rem);
   padding-block: .2rem;
   transition: color .3s ease;
 }
@@ -665,6 +722,9 @@ button { font: inherit; cursor: pointer; }
 
 /* ---------- Testimonials ---------- */
 .testimonials { position: relative; text-align: center; }
+.testimonial-rating { display: flex; justify-content: center; gap: .25rem; margin-bottom: 1.2rem; }
+.testimonial-rating .star { width: 16px; height: 16px; fill: rgba(246,244,239,.25); }
+.testimonial-rating .star.is-filled { fill: var(--gold); }
 .testimonial-quote {
   font-family: var(--font-display); font-style: italic; font-weight: 400;
   font-size: clamp(1.6rem, 3.2vw, 2.5rem); line-height: 1.3; letter-spacing: -.01em;
@@ -931,18 +991,40 @@ button { font: inherit; cursor: pointer; }
   text-transform: uppercase; color: var(--stone); margin-bottom: .45rem;
 }
 .filter-field select {
-  width: 100%; font-family: var(--font-display); font-size: 1.05rem; color: var(--ink);
+  width: 100%; font-family: var(--font-sans); font-size: 1.05rem; color: var(--ink);
   border: 0; background: transparent; padding: 0 1.5rem 0 0; margin: 0; appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5L6 8l3.5-3.5' stroke='%238E8B84' stroke-width='1.3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: right center; background-size: 11px; cursor: pointer;
 }
 .filter-field select:focus { outline: none; }
+.filter-field input[type="text"] {
+  width: 100%; font-family: var(--font-sans); font-size: 1.05rem; color: var(--ink);
+  border: 0; background: transparent; padding: 0; margin: 0;
+}
+.filter-field input[type="text"]::placeholder { color: var(--ink); opacity: 1; }
+.filter-field input[type="text"]:focus { outline: none; }
 .filter-field::after {
   content: ""; position: absolute; left: 1.7rem; right: 1.7rem; bottom: 0; height: 2px;
   background: var(--gold); transform: scaleX(0); transform-origin: left;
   transition: transform .35s var(--ease-out);
 }
 .filter-field:focus-within::after { transform: scaleX(1); }
+.filter-field--guests.has-error::after { background: var(--error); transform: scaleX(1); }
+.filter-field-error {
+  position: absolute; top: 100%; left: 1.7rem; right: 1.7rem; z-index: 6; width: max-content; max-width: 260px;
+  margin: .7rem 0 0; padding: .9rem 1.1rem;
+  background: var(--cream); border: 1px solid var(--error); border-radius: 4px;
+  box-shadow: var(--shadow-lift);
+  font-family: var(--font-sans); font-size: .82rem; line-height: 1.5; color: var(--ink);
+  text-align: left;
+}
+.filter-field-error a {
+  display: inline-block; margin-top: .5rem;
+  color: var(--sage); font-weight: 600; text-decoration: underline; text-underline-offset: 3px;
+}
+@media (max-width: 720px) {
+  .filter-field-error { left: 0; right: 0; }
+}
 
 /* Custom select: replaces the native OS dropdown list so opened options
    match the filter bar's own look instead of the browser's default styling. */
@@ -950,7 +1032,7 @@ button { font: inherit; cursor: pointer; }
 .custom-select { position: relative; }
 .custom-select-trigger {
   width: 100%; display: flex; align-items: center; justify-content: space-between; gap: .6rem;
-  font-family: var(--font-display); font-size: 1.05rem; color: var(--ink);
+  font-family: var(--font-sans); font-size: 1.05rem; color: var(--ink);
   background: transparent; border: 0; padding: 0; margin: 0; cursor: pointer; text-align: left;
 }
 .custom-select-trigger::after {
@@ -968,7 +1050,7 @@ button { font: inherit; cursor: pointer; }
 }
 .custom-select-list li {
   padding: .7rem 1rem; border-radius: 10px;
-  font-family: var(--font-display); font-size: 1rem; color: var(--ink);
+  font-family: var(--font-sans); font-size: 1rem; color: var(--ink);
   cursor: pointer; transition: background-color .18s ease, color .18s ease;
 }
 .custom-select-list li:hover, .custom-select-list li:focus {
@@ -995,106 +1077,164 @@ button { font: inherit; cursor: pointer; }
 }
 
 /* ---------- Villa detail ---------- */
-.detail-hero { position: relative; color: var(--ink); padding-top: 7.5rem; background: var(--cream); }
-.detail-hero .container { position: relative; padding-block: 3rem 0; text-align: center; }
-.detail-hero .lead.measure { margin: 1.6rem auto 0; }
-.breadcrumb { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--stone); margin-bottom: 1.2rem; }
+.detail-hero {
+  position: relative; color: var(--ink); padding-top: 7.5rem; padding-bottom: clamp(1rem, 2vw, 1.5rem); background: var(--cream);
+  min-height: 100vh; display: flex; align-items: center; box-sizing: border-box;
+}
+.detail-hero .container { width: 100%; max-width: 1560px; padding-inline: clamp(1rem, 3vw, 2rem); }
+.detail-hero .container { position: relative; }
+.detail-hero .breadcrumb { display: block; margin-bottom: clamp(.6rem, 1.2vw, 1rem); }
+.breadcrumb { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--stone); }
 .breadcrumb a { color: inherit; text-decoration: none; }
 .breadcrumb a:hover { color: var(--sage); }
 
-.detail-gallery {
-  display: grid; grid-template-columns: 1.6fr 1fr; grid-template-rows: 1fr 1fr;
-  gap: 1rem; margin-top: 2.4rem; transform: translateY(clamp(2rem, 6vw, 4.5rem));
+.detail-faq-jump {
+  display: inline-block; margin-top: clamp(1.2rem, 2.5vw, 1.8rem);
+  font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--sage); text-decoration: underline; text-underline-offset: .25em; text-decoration-thickness: 1px;
+  transition: color .2s ease;
 }
-.detail-gallery img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); }
-.detail-gallery .gallery-main { grid-row: 1 / -1; border-radius: var(--radius); aspect-ratio: 4 / 3.4; }
-.detail-hero-spacer { height: clamp(2rem, 6vw, 4.5rem); background: var(--cream); }
+.detail-faq-jump:hover { color: var(--ink); }
+#villa-faq { scroll-margin-top: 6.5rem; }
+
+/* Villa gallery: a bento-style photo grid with the villa's name/intro
+   standing in as one of the tiles; photo tiles are rendered from the
+   villa's `gallery` categories (villas-data.js) — see main.js. */
+.villa-gallery {
+  display: grid; grid-template-columns: 1fr 1.15fr 1fr; grid-template-rows: 1.15fr .95fr .95fr;
+  grid-template-areas:
+    "text tall small1"
+    "img1 tall small2"
+    "img1 bottom small3";
+  gap: clamp(.6rem, 1.4vw, 1rem);
+  height: clamp(420px, calc(100vh - 12rem), 760px);
+  margin-top: clamp(.8rem, 1.5vw, 1.2rem);
+}
+.villa-gallery--5 {
+  grid-template-areas:
+    "text tall small1"
+    "img1 tall small2"
+    "img1 bottom small2";
+}
+.villa-gallery-text { grid-area: text; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+.villa-gallery-text .eyebrow { margin-bottom: .9rem; }
+.villa-gallery-text .display {
+  font-size: clamp(2.6rem, 4.2vw, 4rem); line-height: 1.08; margin: 0;
+}
+.villa-gallery-desc {
+  font-family: var(--font-sans); font-weight: 300; font-size: clamp(.9rem, 1.05vw, 1rem);
+  line-height: 1.6; color: rgba(20, 20, 20, .7); margin: .9rem 0 0;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.villa-gallery-tiles { display: contents; }
+.villa-gallery-tile[data-slot="tall"] { grid-area: tall; }
+.villa-gallery-tile[data-slot="img1"] { grid-area: img1; }
+.villa-gallery-tile[data-slot="bottom"] { grid-area: bottom; }
+.villa-gallery-tile[data-slot="small1"] { grid-area: small1; }
+.villa-gallery-tile[data-slot="small2"] { grid-area: small2; }
+.villa-gallery-tile[data-slot="small3"] { grid-area: small3; }
+.villa-gallery-tile {
+  position: relative; overflow: hidden; display: block; width: 100%; height: 100%;
+  border: 0; padding: 0; background: var(--sage-tint); cursor: pointer; font: inherit;
+  border-radius: var(--radius); min-height: 0;
+}
+.villa-gallery-tile img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  transition: transform .6s var(--ease-out);
+}
+.villa-gallery-tile:hover img, .villa-gallery-tile:focus-visible img { transform: scale(1.045); }
+.villa-gallery-tile-scrim {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(20, 26, 19, .62) 0%, rgba(20, 26, 19, .08) 42%, rgba(20, 26, 19, 0) 62%);
+  transition: background-color .3s ease;
+}
+.villa-gallery-tile:hover .villa-gallery-tile-scrim,
+.villa-gallery-tile:focus-visible .villa-gallery-tile-scrim { background: rgba(20, 26, 19, .48); }
+.villa-gallery-tile-label {
+  position: absolute; left: 1.1rem; right: 1.1rem; bottom: 1rem; z-index: 1;
+  display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+  color: var(--cream);
+}
+.villa-gallery-tile-name {
+  font-family: var(--font-sans); font-weight: 500; font-size: clamp(.85rem, 1.05vw, 1rem);
+  letter-spacing: .01em;
+}
+.villa-gallery-tile-view {
+  opacity: 0; transform: translateY(4px); pointer-events: none;
+  background: var(--cream); color: var(--green); border-radius: 2px;
+  padding: .6rem 1.1rem; font-size: .66rem; font-weight: 600;
+  letter-spacing: var(--track-caps); text-transform: uppercase; white-space: nowrap;
+  box-shadow: var(--shadow-lift);
+  transition: opacity .25s ease, transform .25s ease;
+}
+.villa-gallery-tile:hover .villa-gallery-tile-view,
+.villa-gallery-tile:focus-visible .villa-gallery-tile-view { opacity: 1; transform: translateY(0); pointer-events: auto; }
+@media (max-width: 860px) {
+  .villa-gallery-tile-view { display: none; }
+}
 @media (max-width: 720px) {
-  .detail-gallery { grid-template-columns: 1fr; grid-template-rows: auto; }
-  .detail-gallery .gallery-main { grid-row: auto; }
-  .detail-gallery img:nth-child(3) { display: none; }
+  .villa-gallery, .villa-gallery--5 {
+    display: flex; flex-direction: column; aspect-ratio: auto; height: auto;
+  }
+  .villa-gallery-text { order: -1; padding-bottom: .5rem; }
+  .villa-gallery-tile { aspect-ratio: 4 / 3; height: auto; }
 }
 
 .specs-bar {
   display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(1.5rem, 4vw, 3.5rem);
   padding: 1.8rem 0; margin-top: clamp(1rem, 2.5vw, 1.8rem);
 }
-.spec { text-align: center; }
-.spec .spec-num { font-family: var(--font-display); font-size: 1.9rem; line-height: 1; color: var(--sage); }
-.spec .spec-label { font-size: .66rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); margin-top: .35rem; }
+.spec {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .5rem; text-align: center; width: 7rem; aspect-ratio: 1 / 1; padding: 1rem;
+  border: 1px solid rgba(78, 93, 75, .28); border-radius: var(--radius);
+}
+.spec .spec-text { display: flex; flex-direction: column; align-items: center; }
+.spec .spec-icon { display: block; width: 1.35rem; height: 1.35rem; margin-bottom: .55rem; color: var(--gold); opacity: .85; }
+.spec .spec-icon svg { width: 100%; height: 100%; display: block; }
+.spec .spec-num { font-family: var(--font-sans); font-size: 1.7rem; line-height: 1; color: var(--sage); }
+.spec .spec-label { font-size: .62rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); margin-top: .35rem; }
+.spec.spec--wide .spec-num { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; line-height: 1.2; }
 
 .detail-layout {
   padding-block: clamp(1.5rem, 3vw, 2.5rem) var(--section-y);
 }
 
-/* Residence description: heading on the left, italic copy + CTA on the right */
-.residence-split {
-  display: grid; grid-template-columns: .82fr 1.3fr; gap: clamp(2rem, 5vw, 3.5rem);
-  align-items: start;
+/* Residence description: italic copy + CTA */
+.residence-split-copy {
+  max-width: 760px; margin-inline: auto; text-align: center;
 }
-.residence-split-heading .eyebrow { margin-bottom: 1rem; }
-.residence-split-heading .h2 { font-size: clamp(2.6rem, 5vw, 4.1rem); }
 .residence-split-copy p {
-  font-family: var(--font-display); font-style: italic; font-weight: 400;
+  font-family: var(--font-sans); font-weight: 300;
   font-size: 1.39rem; line-height: 1.62; color: rgba(20, 20, 20, .75);
   margin: 0 0 1.3rem;
 }
 .residence-split-copy strong { font-weight: 600; color: var(--ink); }
-@media (max-width: 720px) { .residence-split { grid-template-columns: 1fr; } }
 
-/* Villa gallery showcase: category list on the left, preview photo bleeding to the right edge */
-.gallery-showcase {
-  display: grid; grid-template-columns: minmax(200px, 320px) 1fr; gap: clamp(2rem, 5vw, 3.5rem);
-  align-items: stretch; margin-top: clamp(1.5rem, 3vw, 2.5rem);
-  padding-left: max(var(--pad-x), calc((100vw - var(--container)) / 2 + var(--pad-x)));
+/* Villa intro: specs + description on the left, availability calendar on the right */
+.detail-intro-grid {
+  display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: stretch;
 }
-.gallery-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; justify-content: center; gap: clamp(1rem, 2.5vw, 1.5rem); }
-.gallery-item {
-  display: flex; align-items: center; gap: 1rem; width: 100%;
-  background: none; border: 0; padding: .2rem 0; text-align: left; cursor: pointer;
-  font-family: var(--font-display); font-size: clamp(1.1rem, 1.8vw, 1.4rem); color: var(--stone);
-  transition: color .3s ease;
+.detail-intro-copy { display: flex; flex-direction: column; height: 100%; }
+.detail-intro-copy .residence-split-copy { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+@media (max-width: 900px) { .detail-intro-copy { height: auto; } }
+.detail-intro-grid .specs-bar { justify-content: flex-start; flex-wrap: nowrap; gap: clamp(.55rem, 1vw, 1rem); padding-top: 0; margin-top: 0; }
+.detail-intro-grid .spec { width: clamp(4.3rem, 5vw + 1.45rem, 6rem); padding: clamp(.55rem, .8vw + .2rem, .9rem) .3rem; flex: none; }
+.detail-intro-grid .spec .spec-icon { width: clamp(1rem, .6vw + .8rem, 1.2rem); height: clamp(1rem, .6vw + .8rem, 1.2rem); margin-bottom: .4rem; }
+.detail-intro-grid .spec .spec-num { font-size: clamp(1.2rem, 1vw + .55rem, 1.6rem); }
+.detail-intro-grid .spec .spec-label { font-size: clamp(.5rem, .3vw + .4rem, .62rem); letter-spacing: .12em; }
+.detail-intro-grid .spec.spec--wide .spec-num { font-size: clamp(.68rem, .6vw + .4rem, 1rem); }
+@media (max-width: 900px) {
+  .detail-intro-grid .specs-bar { flex-wrap: wrap; gap: clamp(1rem, 3vw, 1.8rem); }
+  .detail-intro-grid .spec { width: 6rem; padding: .8rem; }
+  .detail-intro-grid .spec .spec-icon { width: 1.2rem; height: 1.2rem; }
+  .detail-intro-grid .spec .spec-num { font-size: 1.5rem; }
+  .detail-intro-grid .spec .spec-label { font-size: .58rem; letter-spacing: var(--track-caps); }
+  .detail-intro-grid .spec.spec--wide .spec-num { font-size: .95rem; }
 }
-.gallery-item-line {
-  width: 3rem; height: 1px; background: currentColor; flex: none;
-  transform: scaleX(0); transform-origin: left; opacity: 0;
-  transition: transform .45s var(--ease-out), opacity .3s ease;
-}
-.gallery-item.is-active, .gallery-item:hover, .gallery-item:focus-visible { color: var(--ink); }
-.gallery-item.is-active .gallery-item-line,
-.gallery-item:hover .gallery-item-line,
-.gallery-item:focus-visible .gallery-item-line { transform: scaleX(1); opacity: 1; }
-.gallery-image {
-  position: relative; overflow: hidden; display: block; width: 100%;
-  border: 0; padding: 0; background: none; cursor: pointer; text-align: left; font: inherit;
-  border-radius: var(--radius) 0 0 var(--radius);
-  min-height: clamp(320px, 44vw, 480px); box-shadow: var(--shadow-card);
-}
-.gallery-image img {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-  opacity: 1; transition: opacity .35s ease;
-}
-.gallery-image::after {
-  content: ""; position: absolute; inset: 0; z-index: 1;
-  background: rgba(20, 26, 19, 0); transition: background-color .3s ease; pointer-events: none;
-}
-.gallery-image:hover::after, .gallery-image:focus-within::after { background: rgba(20, 26, 19, .35); }
-.gallery-view-btn {
-  position: absolute; top: 50%; left: 50%; z-index: 2;
-  transform: translate(-50%, -50%) scale(.96); opacity: 0; pointer-events: none;
-  background: var(--cream); color: var(--green); border: 0; border-radius: 2px;
-  padding: .9rem 1.9rem; font-size: .74rem; font-weight: 600;
-  letter-spacing: var(--track-caps); text-transform: uppercase;
-  box-shadow: var(--shadow-lift); white-space: nowrap;
-  transition: opacity .25s ease, transform .25s ease, background-color .2s ease;
-}
-.gallery-view-btn:hover { background: #fff; }
-.gallery-image:hover .gallery-view-btn,
-.gallery-image:focus-within .gallery-view-btn { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
-@media (max-width: 720px) {
-  .gallery-showcase { grid-template-columns: 1fr; padding-left: var(--pad-x); padding-right: var(--pad-x); }
-  .gallery-image { aspect-ratio: 4 / 3; min-height: 0; border-radius: var(--radius); }
-}
+.detail-intro-grid .residence-split-copy { text-align: left; margin-inline: 0; max-width: none; }
+@media (max-width: 900px) { .detail-intro-grid { grid-template-columns: 1fr; } }
 
 /* Villa FAQ showcase: question list on the left, answer card on the right —
    same interaction language as the gallery showcase above (hover/focus a
@@ -1174,37 +1314,20 @@ button { font: inherit; cursor: pointer; }
   .lightbox-next { right: .6rem; }
 }
 
-/* Property location map: a pre-designed location graphic (not a live embed)
-   showing the villa's neighborhood and nearby landmarks. Sits on the same
-   cream background as the section above it (Explore the villa). */
+/* Property location map: a live Google Maps embed pinned to the villa's
+   coordinates. Sits on the same cream background as the section above it
+   (Explore the villa); kept narrower than the page and rounded so it reads
+   as a framed element rather than a full-bleed map. */
 .property-map {
   position: relative; width: 100%; max-width: 1100px;
   margin: clamp(2.5rem, 5vw, 3.5rem) auto 0;
 }
-.property-map-link { display: block; position: relative; }
-.property-map-image {
-  display: block; width: 100%; height: auto;
-  transition: opacity .3s ease;
-  -webkit-mask-image:
-    linear-gradient(to right, transparent 0%, #000 7%, #000 93%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, #000 8%, #000 92%, transparent 100%);
-  -webkit-mask-composite: source-in, source-over;
-  mask-image:
-    linear-gradient(to right, transparent 0%, #000 7%, #000 93%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, #000 8%, #000 92%, transparent 100%);
-  mask-composite: intersect;
+.property-map-frame {
+  position: relative; width: 100%; aspect-ratio: 21 / 9;
+  border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-card);
 }
-.property-map-link:hover .property-map-image { opacity: .9; }
-.property-map-badge {
-  position: absolute; bottom: 1.4rem; left: 50%; transform: translateX(-50%) translateY(6px);
-  background: var(--green); color: var(--cream);
-  font-size: .68rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase;
-  padding: .6rem 1.2rem; border-radius: 999px; white-space: nowrap;
-  opacity: 0; pointer-events: none;
-  transition: opacity .25s ease, transform .25s ease;
-}
-.property-map-link:hover .property-map-badge,
-.property-map-link:focus-visible .property-map-badge { opacity: 1; transform: translateX(-50%) translateY(0); }
+.property-map-embed { display: block; width: 100%; height: 100%; border: 0; }
+@media (max-width: 640px) { .property-map-frame { aspect-ratio: 4 / 3; } }
 
 /* Amenities showcase: categorized editorial layout — two independent flex
    columns (not a shared grid row), so a tall category never strands a
@@ -1243,15 +1366,15 @@ button { font: inherit; cursor: pointer; }
 .amenity-category-list li:focus-within { transform: translateY(-3px); }
 .amenity-category-list li:hover .amenity-icon,
 .amenity-category-list li:focus-within .amenity-icon {
-  background: rgba(191, 164, 111, .3); color: var(--gold);
+  background: var(--gold);
 }
 .amenity-icon {
   width: 44px; height: 44px; flex: none; border-radius: 50%;
-  background: rgba(191, 164, 111, .14);
+  background: var(--cream);
   display: grid; place-items: center;
-  transition: background-color .25s ease, color .25s ease;
+  transition: background-color .25s ease;
 }
-.amenity-icon svg { width: 21px; height: 21px; color: var(--gold); display: block; }
+.amenity-icon svg { width: 21px; height: 21px; color: var(--sage); display: block; }
 @media (max-width: 560px) { .amenity-category-list { grid-template-columns: 1fr; } }
 
 /* Second half stays hidden until "Show all amenities" is toggled */
@@ -1481,44 +1604,194 @@ button { font: inherit; cursor: pointer; }
 .faq-answer-inner { padding: 0 3.5rem 1.8rem .2rem; font-weight: 300; color: rgba(20,20,20,.75); font-size: .95rem; }
 
 /* ---------- Contact ---------- */
-.contact-layout { display: grid; grid-template-columns: 1fr 1.15fr; gap: clamp(2.5rem, 6vw, 5rem); align-items: start; }
-@media (max-width: 880px) { .contact-layout { grid-template-columns: 1fr; } }
+.contact-layout { display: flex; justify-content: center; }
+.contact-layout .trip-panel { width: 100%; max-width: 480px; transition: max-width .3s var(--ease-out); }
 
-.contact-channels { list-style: none; margin: 2rem 0 0; padding: 0; }
-.contact-channels li { display: flex; gap: 1.1rem; align-items: flex-start; padding-block: 1.1rem; border-bottom: 1px solid rgba(20,20,20,.1); }
-.contact-channels .channel-icon {
-  flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--sage);
-  color: var(--sage); display: grid; place-items: center;
+/* Once a specific villa is chosen, the panel gains a showcase companion
+   (carousel + specs) to its left, and the pair centers as a wider pair. */
+.contact-layout.has-showcase {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start; gap: clamp(2rem, 5vw, 3.5rem);
+  max-width: 1080px; margin: 0 auto; width: 100%;
 }
-.contact-channels svg { width: 18px; height: 18px; fill: currentColor; }
-.channel-label { font-size: .64rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); }
-.channel-value { font-size: 1rem; text-decoration: none; }
-.channel-value:hover { color: var(--sage); }
+.contact-layout.has-showcase .trip-panel { max-width: none; }
+@media (max-width: 900px) {
+  .contact-layout.has-showcase { grid-template-columns: 1fr; max-width: 560px; }
+  .contact-layout.has-showcase .trip-panel { order: 1; }
+  .contact-layout.has-showcase .trip-showcase { order: 2; }
+}
 
-.contact-form-panel {
-  background: var(--green); color: var(--cream); border-radius: var(--radius);
-  padding: clamp(1.8rem, 4vw, 3rem); box-shadow: var(--shadow-lift);
+.trip-showcase { display: flex; flex-direction: column; gap: 1.5rem; }
+.trip-showcase[hidden] { display: none; }
+
+.trip-showcase-carousel {
+  position: relative; aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden;
+  background: var(--sage-tint);
 }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.3rem; margin-top: 1.8rem; }
-.form-field { display: flex; flex-direction: column; gap: .45rem; min-width: 0; }
-.form-field--full { grid-column: 1 / -1; }
-.form-field label { font-size: .64rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--cream-60); }
-.form-field input, .form-field select, .form-field textarea {
-  width: 100%; min-width: 0;
-  font: inherit; font-size: .95rem; font-weight: 300; color: var(--cream);
-  background: rgba(246,244,239,.07); border: 1px solid rgba(246,244,239,.25);
-  border-radius: 2px; padding: .85rem 1rem;
-  transition: border-color .25s ease, background-color .25s ease;
+.trip-showcase-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.trip-showcase-nav {
+  position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px;
+  border-radius: 50%; border: none; background: rgba(246,244,239,.85); color: var(--ink);
+  display: grid; place-items: center; cursor: pointer; backdrop-filter: blur(4px);
+  transition: background-color .2s ease;
 }
-.form-field select { appearance: none; }
-.form-field select option { color: var(--ink); background: var(--cream); }
-.form-field input::placeholder, .form-field textarea::placeholder { color: rgba(246,244,239,.4); }
-.form-field input:focus, .form-field select:focus, .form-field textarea:focus {
-  outline: none; border-color: var(--gold); background: rgba(246,244,239,.12);
+.trip-showcase-nav:hover { background: var(--cream); color: var(--sage); }
+.trip-showcase-nav svg { width: 16px; height: 16px; }
+.trip-showcase-nav--prev { left: .7rem; }
+.trip-showcase-nav--next { right: .7rem; }
+.trip-showcase-dots {
+  position: absolute; bottom: .8rem; left: 50%; transform: translateX(-50%);
+  display: flex; gap: .4rem;
 }
-.form-field input[type="date"] { color-scheme: dark; }
-.form-note { font-size: .76rem; color: var(--cream-60); margin-top: 1.2rem; }
-.form-status { margin-top: 1rem; font-size: .85rem; color: var(--gold); min-height: 1.4em; }
+.trip-showcase-dots button {
+  width: 6px; height: 6px; border-radius: 50%; border: none; padding: 0;
+  background: rgba(246,244,239,.55); cursor: pointer; transition: background-color .2s ease, width .2s ease;
+}
+.trip-showcase-dots button[aria-current="true"] { background: var(--cream); width: 16px; border-radius: 3px; }
+
+.trip-showcase-location { font-size: .64rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); margin: 0; }
+.trip-showcase-name { font-family: var(--font-display); font-size: clamp(1.5rem, 2.8vw, 1.9rem); font-weight: 600; color: var(--ink); margin: .3rem 0 0; }
+.trip-showcase-specs { display: flex; flex-wrap: wrap; gap: 1.6rem; margin-top: 1.1rem; }
+.trip-showcase-specs .spec { width: 5rem; padding: .7rem; gap: .35rem; border-color: rgba(78, 93, 75, .28); }
+.trip-showcase-specs .spec-icon { width: 1.1rem; height: 1.1rem; margin-bottom: .3rem; }
+.trip-showcase-specs .spec-num { font-family: var(--font-sans); font-size: 1.3rem; line-height: 1; color: var(--sage); }
+.trip-showcase-specs .spec-label { font-size: .62rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); margin-top: .3rem; }
+.trip-showcase-desc { font-size: .92rem; font-weight: 300; line-height: 1.7; color: rgba(20,20,20,.75); margin-top: 1.1rem; }
+
+.trip-panel {
+  background: var(--cream); color: var(--ink); border: 1px solid rgba(20,20,20,.14);
+  border-radius: 14px; padding: clamp(1.8rem, 4vw, 2.8rem);
+}
+.trip-title { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.5rem, 2.6vw, 1.9rem); text-align: center; margin: 0 0 1.6rem; }
+.trip-panel form { display: flex; flex-direction: column; gap: 1.7rem; }
+
+.trip-villa-field { position: relative; margin-top: -.6rem; }
+.trip-villa-trigger {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+  font: inherit; font-size: .85rem; color: var(--ink); text-align: left;
+  background: var(--cream); border: 1px solid rgba(20,20,20,.18); border-radius: 999px;
+  padding: .85rem 1.2rem; cursor: pointer; transition: border-color .2s ease;
+}
+.trip-villa-trigger:hover { border-color: var(--sage); }
+.trip-villa-trigger:focus-visible { outline: none; border-color: var(--sage); }
+.trip-villa-chevron { width: 16px; height: 16px; color: var(--stone); flex: none; transition: transform .2s ease; }
+.trip-villa-trigger[aria-expanded="true"] .trip-villa-chevron { transform: rotate(180deg); }
+
+.trip-villa-listbox {
+  position: absolute; top: calc(100% + .5rem); left: 0; right: 0; z-index: 20;
+  list-style: none; margin: 0; padding: .4rem; max-height: 260px; overflow-y: auto;
+  background: var(--cream); border: 1px solid rgba(20,20,20,.14); border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(20,20,20,.14);
+}
+.trip-villa-listbox[hidden] { display: none; }
+.trip-villa-listbox li {
+  padding: .7rem .9rem; font-size: .85rem; color: var(--ink); border-radius: 8px;
+  cursor: pointer; transition: background-color .15s ease;
+}
+.trip-villa-listbox li:hover,
+.trip-villa-listbox li[data-active] { background: var(--sage-tint); }
+.trip-villa-listbox li[aria-selected="true"] { color: var(--sage); font-weight: 600; }
+
+.trip-dates { display: flex; gap: 1rem; }
+@media (max-width: 480px) { .trip-dates { flex-direction: column; } }
+.trip-date-field { position: relative; flex: 1; min-width: 0; }
+.trip-date-pill {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  gap: .6rem; font: inherit; color: var(--ink); background: var(--cream);
+  border: 1px solid rgba(20,20,20,.22); border-radius: 999px; padding: .9rem 1.3rem;
+  cursor: pointer; transition: border-color .2s ease;
+}
+.trip-date-pill:hover { border-color: var(--sage); }
+.trip-date-pill[aria-expanded="true"] { border-color: var(--sage); }
+.trip-date-text { font-size: .92rem; color: var(--ink); }
+.trip-date-icon { width: 18px; height: 18px; color: var(--stone); flex: none; }
+
+/* ---------- Custom calendar popover (replaces the native date picker for a
+   consistent, on-brand look) ---------- */
+.trip-calendar {
+  position: absolute; top: calc(100% + .6rem); left: 0; z-index: 20; width: 300px;
+  background: var(--cream); border: 1px solid rgba(20,20,20,.14); border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(20,20,20,.16); padding: 1.3rem 1.2rem 1.1rem;
+  animation: trip-calendar-in .2s var(--ease-out);
+}
+.trip-date-field:last-child .trip-calendar { left: auto; right: 0; }
+@media (max-width: 480px) { .trip-date-field:last-child .trip-calendar { left: 0; right: auto; } }
+@keyframes trip-calendar-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .trip-calendar { animation: none; } }
+.trip-calendar[hidden] { display: none; }
+
+.trip-calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.trip-calendar-month {
+  font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; color: var(--ink);
+  text-transform: capitalize;
+}
+.trip-calendar-nav {
+  width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(20,20,20,.22);
+  background: none; color: var(--ink); display: grid; place-items: center; cursor: pointer;
+  transition: border-color .2s ease, color .2s ease;
+}
+.trip-calendar-nav svg { width: 14px; height: 14px; }
+.trip-calendar-nav:hover { border-color: var(--sage); color: var(--sage); }
+.trip-calendar-nav:disabled { opacity: .3; cursor: not-allowed; }
+.trip-calendar-nav:disabled:hover { border-color: rgba(20,20,20,.22); color: var(--ink); }
+
+.trip-calendar-weekdays, .trip-calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); }
+.trip-calendar-weekdays span {
+  text-align: center; font-size: .62rem; font-weight: 600; letter-spacing: var(--track-caps);
+  text-transform: uppercase; color: var(--stone); padding-bottom: .6rem;
+}
+.trip-calendar-day {
+  width: 34px; height: 34px; margin: 2px auto; border-radius: 50%; border: none; background: none;
+  font: inherit; font-size: .85rem; color: var(--ink); cursor: pointer;
+  display: grid; place-items: center; transition: background-color .15s ease, color .15s ease;
+}
+.trip-calendar-day:hover:not(:disabled):not(.is-selected) { background: var(--sage-tint); }
+.trip-calendar-day.is-today { box-shadow: inset 0 0 0 1px var(--sage); }
+.trip-calendar-day.is-selected { background: var(--sage); color: var(--cream); }
+.trip-calendar-day:disabled { color: rgba(20,20,20,.24); cursor: not-allowed; }
+.trip-calendar-day-empty { width: 34px; height: 34px; }
+
+.trip-steppers { display: flex; flex-direction: column; gap: 1.1rem; max-width: 320px; margin: 0 auto; width: 100%; }
+.trip-stepper { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.trip-stepper-label { font-size: 1rem; color: var(--ink); }
+.trip-stepper-sub { display: block; font-size: .7rem; color: var(--stone); margin-top: .1rem; }
+.trip-stepper-controls { display: flex; align-items: center; gap: .7rem; flex: none; }
+.trip-stepper-btn {
+  width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(20,20,20,.35);
+  background: transparent; color: var(--ink); font-size: 1.1rem; line-height: 1;
+  display: grid; place-items: center; cursor: pointer;
+  transition: border-color .2s ease, color .2s ease;
+}
+.trip-stepper-btn:hover { border-color: var(--sage); color: var(--sage); }
+.trip-stepper-btn:disabled { opacity: .35; cursor: not-allowed; }
+.trip-stepper-btn:disabled:hover { border-color: rgba(20,20,20,.35); color: var(--ink); }
+.trip-stepper-value { min-width: 1.3rem; text-align: center; font-size: 1rem; }
+
+.trip-price { text-align: center; }
+.trip-price-value { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 700; margin: 0; }
+.trip-price-value [data-trip-price-value] { text-decoration: underline; text-decoration-color: var(--sage); text-underline-offset: 4px; }
+.trip-price-unit { font-family: var(--font-sans); font-size: .82rem; font-weight: 400; color: var(--stone); }
+.trip-price-note { font-family: var(--font-display); font-style: italic; font-size: .85rem; color: var(--stone); margin: .4rem 0 0; }
+
+.form-status { text-align: center; font-size: .85rem; color: var(--sage); min-height: 1.4em; margin: -.8rem 0 0; }
+
+.trip-actions { display: flex; align-items: center; justify-content: center; gap: 1.6rem; flex-wrap: wrap; }
+.trip-book-btn {
+  background: var(--sage); color: var(--cream); border: none; border-radius: 8px;
+  padding: .95rem 2.4rem; font: inherit; font-size: .95rem; font-weight: 600; cursor: pointer;
+  transition: background-color .2s ease, transform .2s ease;
+}
+.trip-book-btn:hover { background: var(--green); transform: translateY(-1px); }
+.trip-inquire-btn {
+  background: none; border: none; color: var(--stone); font: inherit; font-size: .9rem;
+  text-align: center; max-width: 150px; cursor: pointer; transition: color .2s ease;
+}
+.trip-inquire-btn:hover { color: var(--ink); }
+
+.trip-phone-cta { border-top: 1px solid rgba(20,20,20,.14); padding-top: 1.5rem; text-align: center; }
+.trip-phone-cta p { font-size: .9rem; color: var(--stone); margin: 0; line-height: 1.6; }
+.trip-phone-link { color: var(--ink); font-weight: 700; text-decoration: none; }
+.trip-phone-link:hover { color: var(--sage); }
 
 .map-placeholder {
   border-radius: var(--arch); overflow: hidden; position: relative; aspect-ratio: 16 / 10;
@@ -1527,18 +1800,58 @@ button { font: inherit; cursor: pointer; }
   font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; padding: 1rem;
 }
 
-/* Availability & rates: reserved space for the future Hostaway widget (via Vercel) */
-.availability-grid {
-  display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(1.5rem, 3vw, 2.5rem);
-  margin-top: clamp(2rem, 4vw, 3rem);
-}
-.availability-placeholder, .rates-placeholder {
+/* Rates: reserved space for the future Hostaway pricing widget (via Vercel) */
+.rates-placeholder {
   border-radius: var(--radius); border: 1px dashed var(--stone); background: var(--sage-tint);
   display: grid; place-items: center; text-align: center; color: var(--stone);
   font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; padding: 1.5rem;
-  min-height: 320px; line-height: 1.6;
+  min-height: 200px; line-height: 1.6;
+  max-width: 480px; margin-inline: auto;
 }
-@media (max-width: 720px) { .availability-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Villa availability calendar (see mlsRenderCalendar in main.js) ---------- */
+.villa-calendar {
+  border-radius: var(--radius); background: var(--cream); box-shadow: var(--shadow-card);
+  padding: clamp(1.25rem, 2.5vw, 1.75rem); min-height: 320px;
+}
+.villa-calendar-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.villa-calendar-title { font-family: var(--font-display); font-size: 1.15rem; margin: 0; color: var(--ink); }
+.villa-calendar-nav { display: flex; align-items: center; gap: .6rem; }
+.villa-calendar-month { font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--stone); min-width: 9ch; text-align: center; }
+.villa-calendar-nav-btn {
+  display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+  border: 1px solid rgba(20, 20, 20, .14); background: transparent; color: var(--ink); cursor: pointer;
+  transition: background-color .25s var(--ease-out), border-color .25s var(--ease-out), color .25s var(--ease-out);
+}
+.villa-calendar-nav-btn svg { width: 16px; height: 16px; }
+.villa-calendar-nav-btn:hover { background: var(--sage); border-color: var(--sage); color: var(--cream); }
+.villa-calendar-weekdays, .villa-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+.villa-calendar-weekdays span {
+  text-align: center; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--stone); padding-bottom: .5rem;
+}
+.villa-calendar-grid { row-gap: .35rem; }
+.villa-calendar-day {
+  display: grid; place-items: center; aspect-ratio: 1; margin-inline: auto; width: 80%;
+  border-radius: 50%; font-size: .82rem; color: var(--ink);
+}
+.villa-calendar-day.is-empty { visibility: hidden; }
+.villa-calendar-day.is-past { color: var(--stone); opacity: .35; }
+.villa-calendar-day.is-available { background: var(--sage-tint); }
+.villa-calendar-day.is-booked { background: var(--ink); color: var(--cream); opacity: .55; text-decoration: line-through; }
+.villa-calendar-legend {
+  display: flex; flex-wrap: wrap; gap: .9rem 1.4rem; margin-top: 1.1rem; padding-top: 1rem;
+  border-top: 1px solid rgba(20, 20, 20, .1);
+}
+.villa-calendar-legend-item {
+  display: inline-flex; align-items: center; gap: .45rem; font-size: .74rem;
+  letter-spacing: .04em; text-transform: uppercase; color: var(--stone);
+}
+.villa-calendar-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+.villa-calendar-legend-dot.is-available { background: var(--sage-tint); border: 1px solid var(--sage); }
+.villa-calendar-legend-dot.is-booked { background: var(--ink); opacity: .55; }
+.villa-calendar-legend-dot.is-minstay { background: var(--gold); }
+.villa-calendar-note { margin: 1rem 0 0; font-size: .74rem; color: var(--stone); line-height: 1.6; }
 
 /* ---------- Scroll reveal ---------- */
 .reveal { opacity: 0; transform: translateY(24px); }

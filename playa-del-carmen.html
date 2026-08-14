@@ -49,17 +49,47 @@
     <!-- ============ Page hero (full-viewport) ============ -->
     <section class="hero" aria-label="Playa del Carmen">
       <div class="hero-media">
-        <img src="assets/img/hero-dest-playa.webp"
+        <img src="assets/img/hero-dest-playa.png"
              alt="Palm fronds over the sparkling turquoise water of the Riviera Maya" fetchpriority="high">
       </div>
       <a class="hero-back-link" href="index.html" aria-label="Back to home">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <div class="container">
-        <h1 class="display" data-hero-reveal="2" data-i18n-html="destPlaya.hero.title">Playa del <em>Carmen</em></h1>
-        <p class="lead" data-hero-reveal="3" data-i18n="destPlaya.hero.lead">White-sand beaches, turquoise water, and the vibrant pulse of the Riviera Maya — handpicked villas, steps from the sea.</p>
+        <h1 class="display" data-hero-reveal="2" data-i18n-html="destPlaya.hero.title">Playa del Carmen</h1>
       </div>
-      <a class="hero-scroll-hint" href="#villas" data-i18n="home.scroll">Scroll</a>
+      <a class="hero-scroll-hint" href="#villa-map" data-i18n="home.scroll">Scroll</a>
+    </section>
+
+    <!-- ============ Destination intro text ============ -->
+    <section class="section destination-intro" aria-label="Playa del Carmen intro">
+      <div class="container">
+        <p class="testimonial-quote reveal" style="text-align:center" data-i18n="destPlaya.intro.lead">White sand beaches, turquoise water, and the vibrant pulse of the Riviera Maya. Handpicked villas, minutes from the sea.</p>
+      </div>
+    </section>
+
+    <!-- ============ Villa map ============ -->
+    <section class="section" id="villa-map" aria-label="Villa map">
+      <div class="container">
+        <div class="section-head reveal" style="text-align:center">
+          <h2 class="h2" data-i18n-html="destPlaya.map.title">Find the on the map</h2>
+        </div>
+
+        <!-- Leaflet is loaded lazily (see main.js) once this container nears the
+             viewport, so it never blocks first paint. Pins/popups are rendered
+             from assets/js/villas-data.js — HOSTAWAY swap point. -->
+        <div class="destination-map reveal" data-destination-map="playa-del-carmen">
+          <p class="destination-map-loading" data-i18n="destPlaya.map.loading">Loading map…</p>
+        </div>
+
+        <noscript>
+          <ul class="container">
+            <li><a href="https://maps.app.goo.gl/A6LuW87UDhajc8tb9" target="_blank" rel="noopener">Villa Aqua — Google Maps</a></li>
+            <li><a href="https://maps.app.goo.gl/fB3C6WZ5AK9Awcyp6" target="_blank" rel="noopener">Casa Corazon Luxe — Google Maps</a></li>
+            <li><a href="https://www.google.com/maps/place/Casa+Estrella+%C2%B7+4BR+Jungle+Villa+-+Playacar+Fase+1+-+50+mts.+from+Ocean/@20.6124935,-87.0828781,17z" target="_blank" rel="noopener">Casa de las Estrellas — Google Maps</a></li>
+          </ul>
+        </noscript>
+      </div>
     </section>
 
     <!-- ============ Villas in this destination ============ -->
@@ -92,8 +122,8 @@
       <div class="container reveal">
         <h2 class="h2" id="cta-title" style="max-width:20ch;margin-inline:auto" data-i18n-html="villas.cta.title">Some doors open only by <em>request</em>.</h2>
         <div class="cta-actions">
-          <a class="btn btn-solid" href="contact.html" data-i18n="villas.cta.ask">Ask our team</a>
-          <a class="btn btn-ghost" href="https://wa.me/5219848079475" target="_blank" rel="noopener" data-i18n="villas.cta.whatsapp">WhatsApp us</a>
+          <a class="btn btn-liquid" href="contact.html" data-i18n="villas.cta.ask">Ask our team</a>
+          <a class="btn btn-liquid" href="https://wa.me/5219848079475" target="_blank" rel="noopener" data-i18n="villas.cta.whatsapp">WhatsApp us</a>
         </div>
       </div>
     </section>

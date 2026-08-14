@@ -53,7 +53,7 @@
              alt="A palapa-roofed beachfront villa framed by palm trees on the Riviera Maya" fetchpriority="high">
       </div>
       <div class="container">
-        <h1 class="display" data-hero-reveal="2" data-i18n-html="villas.hero.title">Our <em>villas</em></h1>
+        <h1 class="display" data-hero-reveal="2" data-i18n-html="villas.hero.title">Our villas</h1>
         <p class="lead" data-hero-reveal="3" data-i18n="villas.hero.lead">Every residence is handpicked, privately managed, and staffed to the standard we'd demand ourselves.</p>
       </div>
       <a class="hero-scroll-hint" href="#villas-grid" data-i18n="home.scroll">Scroll</a>
@@ -71,15 +71,10 @@
               <option value="valle-de-guadalupe">Valle de Guadalupe</option>
             </select>
           </div>
-          <div class="filter-field">
+          <div class="filter-field filter-field--guests">
             <label for="filter-guests" data-i18n="villas.filter.guests">Guests</label>
-            <select id="filter-guests">
-              <option value="" data-i18n="villas.filter.any">Any</option>
-              <option value="10">10+</option>
-              <option value="12">12+</option>
-              <option value="18">18+</option>
-              <option value="22">22+</option>
-            </select>
+            <input type="text" inputmode="numeric" autocomplete="off" id="filter-guests" data-i18n-placeholder="villas.filter.any" placeholder="Any">
+            <p class="filter-field-error" data-guests-error hidden></p>
           </div>
           <div class="filter-field">
             <label for="filter-bedrooms" data-i18n="villas.filter.bedrooms">Bedrooms</label>

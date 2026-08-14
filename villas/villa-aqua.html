@@ -46,67 +46,49 @@
 
   <main id="main" data-villa-slug="villa-aqua">
 
-    <!-- ============ Villa hero ============ -->
+    <!-- ============ Villa hero + gallery ============ -->
     <section class="detail-hero" aria-label="Villa Aqua overview">
       <div class="container">
         <nav class="breadcrumb" aria-label="Breadcrumb">
           <a href="../index.html" data-i18n="detail.breadcrumb.home">Home</a> / <a href="../villas.html" data-i18n="detail.breadcrumb.villas">Our Villas</a> / Villa Aqua
         </nav>
-        <h1 class="display">Villa <em>Aqua</em></h1>
 
-        <!-- PLACEHOLDER IMAGES — replace with real villa photography / Hostaway media -->
-        <div class="detail-gallery">
-          <img class="gallery-main" src="../assets/img/villas/villa-aqua-3.webp"
-               alt="Villa Aqua glowing at night around the reflecting pool" data-i18n-alt="detail.aqua.gallery1" width="1200" height="900">
-          <img src="../assets/img/villas/villa-aqua-1.webp"
-               alt="Villa Aqua's pool deck and jacuzzi framed by palm trees" data-i18n-alt="detail.aqua.gallery2" loading="lazy" width="1200" height="900">
-          <img src="../assets/img/villas/villa-aqua-4.webp"
-               alt="The glass-walled living pavilion at Villa Aqua opening onto the pool" data-i18n-alt="detail.aqua.gallery3" loading="lazy" width="1200" height="900">
+        <!-- Photo grid rendered from assets/js/villas-data.js (villa.gallery) — see main.js -->
+        <div class="villa-gallery" data-villa-gallery>
+          <div class="villa-gallery-text">
+            <h1 class="display">Villa <em>Aqua</em></h1>
+            <a class="detail-faq-jump" href="#villa-faq" data-i18n="detail.faqJump">Have a question? Jump to FAQ</a>
+          </div>
+          <div class="villa-gallery-tiles" data-villa-gallery-tiles></div>
         </div>
       </div>
     </section>
-    <div class="detail-hero-spacer" aria-hidden="true"></div>
 
-    <!-- ============ Specs (rendered from villas-data.js) ============ -->
-    <div class="container">
-      <div class="specs-bar" data-villa-specs></div>
-    </div>
-
-    <!-- ============ Description + booking ============ -->
+    <!-- ============ Specs + description (left) / availability calendar (right) — rendered from villas-data.js ============ -->
     <div class="container detail-layout">
-      <div>
-        <div class="residence-split">
-          <div class="residence-split-heading">
-            <h2 class="h2" data-i18n-html="detail.aqua.heading">Your own<br>private<br><em>resort</em></h2>
-          </div>
+      <div class="detail-intro-grid">
+        <div class="detail-intro-copy">
+          <div class="specs-bar" data-villa-specs></div>
           <div class="residence-split-copy">
-            <p data-i18n-html="detail.aqua.lead2"><strong>Six bedrooms</strong>, resort-style amenities, and a full staff. Minutes from the beach and the pulse of Quinta Avenida.</p>
-            <p data-i18n-html="detail.aqua.body1">Villa Aqua pairs the space of a modern residence with the amenities of a private resort: a <strong>pool and jacuzzi</strong> at the center, a <strong>squash court and gym</strong> for the mornings, and a <strong>wood-fired oven</strong> where dinner becomes an event. However many bedrooms you reserve, the entire property remains exclusively yours.</p>
-            <p data-i18n-html="detail.aqua.body2"><strong>A dedicated team</strong>: chef, butler, and 24/7 concierge. Curates every detail, from in-villa spa treatments to private tours. Sleeping up to <strong>eighteen</strong>, with flexible bedroom configurations for smaller groups, it adapts to family gatherings and private retreats alike. Airport transfer is on the house for stays of four nights or more.</p>
+            <p data-i18n-html="detail.aqua.lead2">Villa Aqua offers <strong>six bedrooms</strong>, resort-style amenities, and a dedicated chef, butler, and 24/7 concierge, just minutes from the beach and Quinta Avenida.</p>
+            <p data-i18n-html="detail.aqua.body1">Enjoy a private <strong>pool and jacuzzi</strong>, <strong>squash court</strong>, <strong>gym</strong>, and <strong>wood-fired oven</strong>, with the entire villa exclusively yours. Accommodating up to <strong>18 guests</strong>, it's ideal for family gatherings and private retreats. Complimentary airport transfer is included for stays of four nights or more.</p>
           </div>
         </div>
 
-        <div class="amenities-panel">
-          <div class="container">
-            <h3 class="h3" data-i18n="detail.amenities.title">Amenities</h3>
-            <!-- Rendered from assets/js/villas-data.js — HOSTAWAY swap point -->
-            <div class="amenities-categories" data-villa-amenities></div>
-            <button class="amenities-toggle" type="button" data-amenities-toggle aria-expanded="false" data-i18n="detail.amenities.showAll">Show all amenities</button>
-          </div>
+        <!-- Calendar rendered from villa.availability (villas-data.js) — see renderCalendar in
+             main.js. HOSTAWAY INTEGRATION POINT (via Vercel): swap villa.availability.blockedRanges
+             for a live fetch to the Hostaway Calendar API. Docs: https://api.hostaway.com/documentation -->
+        <div class="villa-calendar" data-villa-calendar></div>
+      </div>
+
+      <div class="amenities-panel">
+        <div class="container">
+          <h3 class="h3" data-i18n="detail.amenities.title">Amenities</h3>
+          <!-- Rendered from assets/js/villas-data.js — HOSTAWAY swap point -->
+          <div class="amenities-categories" data-villa-amenities></div>
+          <button class="amenities-toggle" type="button" data-amenities-toggle aria-expanded="false" data-i18n="detail.amenities.showAll">Show all amenities</button>
         </div>
       </div>
-    </div>
-
-    <!-- ============ Villa gallery showcase ============ -->
-    <div class="container">
-      <h3 class="h3" data-i18n="detail.gallery.title">Explore the villa</h3>
-    </div>
-    <div class="gallery-showcase" data-gallery-showcase>
-      <ul class="gallery-list" data-gallery-list></ul>
-      <button type="button" class="gallery-image" data-gallery-view aria-haspopup="dialog" aria-label="View Gallery" data-i18n-aria-label="detail.gallery.viewGallery">
-        <img data-gallery-img src="" alt="">
-        <span class="gallery-view-btn" aria-hidden="true" data-i18n="detail.gallery.viewGallery">View Gallery</span>
-      </button>
     </div>
 
     <!-- ============ Services offered at this villa ============ -->
@@ -135,30 +117,33 @@
     <!-- ============ Property location map ============ -->
     <section class="section property-map-section" aria-label="Where Villa Aqua is located">
       <div class="container center">
-        <p class="eyebrow eyebrow--center reveal" data-i18n="detail.map.eyebrow">Where you'll stay</p>
-        <h2 class="h2 reveal" data-i18n-html="detail.aqua.mapTitle">Villa Aqua in <em>Playacar</em></h2>
+        <h3 class="h3 reveal" data-i18n="detail.map.eyebrow">Where you'll stay</h3>
       </div>
       <div class="property-map reveal" data-delay="1">
-        <a class="property-map-link" href="https://maps.app.goo.gl/Y42t3VpXd2wNQdLm6" target="_blank" rel="noopener" aria-label="Open Villa Aqua's location in Google Maps">
-          <img class="property-map-image" src="../assets/img/location-villa-aqua.png"
-               alt="Map showing Villa Aqua's location in Playacar, Playa del Carmen, near Quinta Avenida and Cancún International Airport"
-               data-i18n-alt="detail.aqua.mapAlt" loading="lazy" width="1536" height="1024">
-          <span class="property-map-badge" data-i18n="detail.map.badge">Open in Google Maps</span>
-        </a>
+        <div class="property-map-frame">
+          <iframe class="property-map-embed" src="https://www.google.com/maps/embed?pb=!1m3!3m2!1m1!4s5881936701550157522" title="Map showing Villa Aqua's location" loading="lazy"></iframe>
+        </div>
       </div>
     </section>
 
-    <!-- ============ Availability & rates ============ -->
-    <!-- HOSTAWAY INTEGRATION POINT (via Vercel): replace .availability-placeholder
-         with the Hostaway availability calendar embed for this listing, and
-         .rates-placeholder with live nightly/weekly rates from the Hostaway
-         pricing API. Docs: https://api.hostaway.com/documentation -->
-    <section class="section" aria-label="Availability and rates for Villa Aqua">
+    <!-- ============ Guest testimonials ============ -->
+    <!-- Rendered from assets/js/villas-data.js (villa.testimonials) — HOSTAWAY
+         INTEGRATION POINT: swap for the Hostaway Reviews API once live. -->
+    <section class="section section--green testimonials" aria-labelledby="testimonials-title">
       <div class="container">
-        <div class="availability-grid reveal">
-          <div class="availability-placeholder" data-i18n-html="detail.availability.calendarPlaceholder">Availability calendar<br>Hostaway widget — coming soon</div>
-          <div class="rates-placeholder" data-i18n-html="detail.availability.ratesPlaceholder">Rates<br>Hostaway pricing — coming soon</div>
-        </div>
+        <p class="eyebrow eyebrow--center reveal" data-i18n="detail.testimonials.eyebrow">Guest stories</p>
+        <h2 class="visually-hidden" id="testimonials-title" data-i18n="detail.testimonials.hidden">What guests say</h2>
+        <div class="reveal" data-delay="1" data-villa-testimonials></div>
+      </div>
+    </section>
+
+    <!-- ============ Rates ============ -->
+    <!-- HOSTAWAY INTEGRATION POINT (via Vercel): swap .rates-placeholder for live
+         nightly/weekly rates from the Hostaway pricing API.
+         Docs: https://api.hostaway.com/documentation -->
+    <section class="section" aria-label="Rates for Villa Aqua">
+      <div class="container">
+        <div class="rates-placeholder reveal" data-i18n-html="detail.availability.ratesPlaceholder">Rates<br>Hostaway pricing — coming soon</div>
       </div>
     </section>
 
@@ -201,7 +186,7 @@
     </div>
 
     <!-- ============ FAQ for this villa ============ -->
-    <section class="section" aria-label="Frequently asked questions about Villa Aqua">
+    <section id="villa-faq" class="section" aria-label="Frequently asked questions about Villa Aqua">
       <div class="container">
         <h3 class="h3" data-i18n="detail.faq.title">Frequently asked questions</h3>
       </div>

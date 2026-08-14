@@ -66,9 +66,7 @@
              alt="The lap pool at Casa Corazon Luxe, framed by palapas and the Caribbean" fetchpriority="high">
       </div>
       <div class="container">
-        <h1 class="display hero-title--home" data-hero-reveal="2" style="max-width:20ch" data-i18n-html="home.hero.title">Welcome to<br><em>Mexico Luxe Stays</em></h1>
-
-        <a class="hero-reserve-btn" href="villas.html" data-hero-reveal="4" data-i18n="home.hero.reserveButton">Reserve Your Stay</a>
+        <h1 class="display hero-title--home" data-hero-reveal="2" style="max-width:20ch" data-i18n-html="home.hero.title">Welcome to<br><img class="hero-logo" src="assets/img/brand/wordmark-negative.png" alt="Mexico Luxe Stays" width="387" height="40"></h1>
 
         <form class="hero-search" action="villas.html" method="get" aria-label="Search villas" data-hero-reveal="5">
           <div class="hero-search-field">
@@ -91,16 +89,37 @@
             <label for="hs-guests" data-i18n="home.search.guests">Add guest</label>
             <select id="hs-guests" name="guests">
               <option value=""></option>
-              <option value="10">10+</option>
-              <option value="12">12+</option>
-              <option value="18">18+</option>
-              <option value="22">22+</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
             </select>
           </div>
           <button type="submit" class="hero-search-btn" aria-label="Search" data-i18n-aria-label="home.search.submit">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.2" y2="16.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
           </button>
         </form>
+
+        <p class="hero-search-hint" data-hero-reveal="5">
+          <span data-i18n="home.search.hint">Not sure where to go?</span>
+          <a href="villas.html" data-i18n="home.search.hintLink">Explore our villas</a>
+        </p>
       </div>
     </section>
 
@@ -159,7 +178,7 @@
     <section class="section" aria-labelledby="featured-title">
       <div class="container">
         <div class="section-head reveal">
-          <h2 class="h2" id="featured-title" data-i18n-html="home.featured.title">Featured <em>villas</em></h2>
+          <h2 class="h2" id="featured-title" data-i18n-html="home.featured.title">Featured villas</h2>
         </div>
       </div>
 
@@ -182,49 +201,6 @@
       </noscript>
     </section>
 
-    <!-- ============ Testimonials ============ -->
-    <section class="section section--green testimonials" aria-labelledby="testimonials-title">
-      <div class="container">
-        <p class="eyebrow eyebrow--center reveal" data-i18n="home.testimonials.eyebrow">Guest stories</p>
-        <h2 class="visually-hidden" id="testimonials-title" data-i18n="home.testimonials.hidden">What our guests say</h2>
-
-        <!-- ┌───────────────────────────────────────────────────────────┐
-             │ TESTIMONIALS FEED INTEGRATION POINT                       │
-             │ Replace these placeholder quotes with the live review     │
-             │ feed (Google Reviews / Hostaway reviews API). Keep the    │
-             │ .testimonial-slide markup per review.                     │
-             └───────────────────────────────────────────────────────────┘ -->
-        <div class="reveal" data-delay="1">
-          <blockquote class="testimonial-slide is-active">
-            <p class="testimonial-quote" data-i18n="home.testimonials.1.quote">An incredible villa in an unbeatable location. The staff were endlessly warm and made every single day feel effortless.</p>
-            <footer class="testimonial-attr">
-              <div class="name" data-i18n="home.testimonials.1.name">Keller M.</div>
-              <div class="villa" data-i18n="home.testimonials.1.villa">Villa Aqua · Playa del Carmen</div>
-            </footer>
-          </blockquote>
-          <blockquote class="testimonial-slide">
-            <p class="testimonial-quote" data-i18n="home.testimonials.2.quote">A peaceful retreat from start to finish. Carlos had the jacuzzi warmed before we even asked, and the fire pit lit at sunset. The team thought of everything.</p>
-            <footer class="testimonial-attr">
-              <div class="name" data-i18n="home.testimonials.2.name">Kelly M.</div>
-              <div class="villa" data-i18n="home.testimonials.2.villa">Kasa Kefi · Valle de Guadalupe</div>
-            </footer>
-          </blockquote>
-          <blockquote class="testimonial-slide">
-            <p class="testimonial-quote" data-i18n="home.testimonials.3.quote">We were treated like royalty. Able arranged a private chef and organized my daughter's birthday down to the last candle — better than any restaurant in town.</p>
-            <footer class="testimonial-attr">
-              <div class="name" data-i18n="home.testimonials.3.name">Elizabeth F.</div>
-              <div class="villa" data-i18n="home.testimonials.3.villa">Casa Corazon Luxe · Playa del Carmen</div>
-            </footer>
-          </blockquote>
-          <div class="testimonial-dots" role="tablist" aria-label="Choose testimonial" data-i18n-aria-label="home.testimonials.chooseLabel">
-            <button class="is-active" aria-label="Testimonial 1"></button>
-            <button aria-label="Testimonial 2"></button>
-            <button aria-label="Testimonial 3"></button>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- ============ CTA split ============ -->
     <section class="section cta-split cta-banner" aria-labelledby="cta-title">
       <div class="cta-media">
@@ -235,11 +211,11 @@
       <div class="container">
         <div class="cta-split-grid">
           <div class="cta-split-col reveal">
-            <h2 class="h2" id="cta-title" data-i18n-html="home.cta.title">The villa is <em>waiting</em>.</h2>
+            <h2 class="h2" id="cta-title" data-i18n-html="home.cta.title">The villa is waiting.</h2>
             <a class="btn btn-solid" href="contact.html" data-i18n="home.cta.plan">Make an enquiry</a>
           </div>
           <div class="cta-split-col reveal" data-delay="1">
-            <h2 class="h2" data-i18n-html="home.cta.whatsappTitle">Talk to us on <em>WhatsApp</em></h2>
+            <h2 class="h2" data-i18n-html="home.cta.whatsappTitle">Talk to us on WhatsApp</h2>
             <a class="btn btn-solid" href="https://wa.me/5219848079475" target="_blank" rel="noopener" data-i18n="home.cta.whatsapp">WhatsApp us</a>
           </div>
         </div>
@@ -254,7 +230,7 @@
       <div class="footer-grid">
         <div>
           <a class="logo" href="index.html" aria-label="Mexico Luxe Stays — home">
-            <img src="assets/img/brand/logo-negative.png" alt="Mexico Luxe Stays" width="238" height="40" loading="lazy">
+            <img src="assets/img/brand/wordmark-negative.png" alt="Mexico Luxe Stays" width="387" height="40" loading="lazy">
           </a>
           <p class="footer-tagline" data-i18n="footer.tagline">Where luxury, comfort, and exclusivity meet.</p>
           <div class="social-row">

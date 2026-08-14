@@ -46,67 +46,49 @@
 
   <main id="main" data-villa-slug="kasa-kefi">
 
-    <!-- ============ Villa hero ============ -->
+    <!-- ============ Villa hero + gallery ============ -->
     <section class="detail-hero" aria-label="Kasa Kefi overview">
       <div class="container">
         <nav class="breadcrumb" aria-label="Breadcrumb">
           <a href="../index.html" data-i18n="detail.breadcrumb.home">Home</a> / <a href="../villas.html" data-i18n="detail.breadcrumb.villas">Our Villas</a> / Kasa Kefi
         </nav>
-        <h1 class="display">Kasa <em>Kefi</em></h1>
 
-        <!-- PLACEHOLDER IMAGES — replace with real villa photography / Hostaway media -->
-        <div class="detail-gallery">
-          <img class="gallery-main" src="../assets/img/villas/kasa-kefi-3.webp"
-               alt="Kasa Kefi's rooftop terrace and pool overlooking the Valle de Guadalupe at dusk" data-i18n-alt="detail.kefi.gallery1" width="1200" height="900">
-          <img src="../assets/img/villas/kasa-kefi-1.webp"
-               alt="Kasa Kefi perched above the vineyard, mountains behind" data-i18n-alt="detail.kefi.gallery2" loading="lazy" width="1200" height="900">
-          <img src="../assets/img/villas/kasa-kefi-2.webp"
-               alt="Kasa Kefi's living room with a wine rack and desert view" data-i18n-alt="detail.kefi.gallery3" loading="lazy" width="1200" height="900">
+        <!-- Photo grid rendered from assets/js/villas-data.js (villa.gallery) — see main.js -->
+        <div class="villa-gallery" data-villa-gallery>
+          <div class="villa-gallery-text">
+            <h1 class="display">Kasa <em>Kefi</em></h1>
+            <a class="detail-faq-jump" href="#villa-faq" data-i18n="detail.faqJump">Have a question? Jump to FAQ</a>
+          </div>
+          <div class="villa-gallery-tiles" data-villa-gallery-tiles></div>
         </div>
       </div>
     </section>
-    <div class="detail-hero-spacer" aria-hidden="true"></div>
 
-    <!-- ============ Specs (rendered from villas-data.js) ============ -->
-    <div class="container">
-      <div class="specs-bar" data-villa-specs></div>
-    </div>
-
-    <!-- ============ Description + booking ============ -->
+    <!-- ============ Specs + description (left) / availability calendar (right) — rendered from villas-data.js ============ -->
     <div class="container detail-layout">
-      <div>
-        <div class="residence-split">
-          <div class="residence-split-heading">
-            <h2 class="h2" data-i18n-html="detail.kefi.heading">Between the <em>vines</em></h2>
-          </div>
+      <div class="detail-intro-grid">
+        <div class="detail-intro-copy">
+          <div class="specs-bar" data-villa-specs></div>
           <div class="residence-split-copy">
-            <p data-i18n-html="detail.kefi.lead2"><strong>Four suites</strong> with private fire-pit terraces, an infinity plunge pool above the vines. A wine cellar waiting downstairs.</p>
-            <p data-i18n-html="detail.kefi.body1">Kasa Kefi opens itself to the valley — floor-to-ceiling glass, seamless indoor-outdoor living, a <strong>loft living room</strong> with an ethanol fireplace, and a dining room built around its own <strong>wine cellar</strong>. On the terrace: al fresco dining, a BBQ, sun beds, and fire pits pointed at the sunset.</p>
-            <p data-i18n-html="detail.kefi.body2">Every suite comes with an ensuite bath, plush bedding, and its own lounge terrace; comforts run from <strong>Starlink Wi-Fi</strong> and Sonos sound to Nespresso in the mornings. Acclaimed wineries, Michelin-starred dining, and hiking trails are all a short drive from the gate.</p>
+            <p data-i18n-html="detail.kefi.lead2">Kasa Kefi features <strong>four private suites</strong> with fire-pit terraces and an <strong>infinity plunge pool overlooking the vineyards</strong>.</p>
+            <p data-i18n-html="detail.kefi.body1">Enjoy seamless indoor-outdoor living, a <strong>private wine cellar, fireplace, BBQ, and sunset terraces</strong>, plus <strong>Starlink Wi-Fi and Sonos sound</strong>. Acclaimed wineries, Michelin-starred restaurants, and hiking trails are just a short drive away.</p>
           </div>
         </div>
 
-        <div class="amenities-panel">
-          <div class="container">
-            <h3 class="h3" data-i18n="detail.amenities.title">Amenities</h3>
-            <!-- Rendered from assets/js/villas-data.js — HOSTAWAY swap point -->
-            <div class="amenities-categories" data-villa-amenities></div>
-            <button class="amenities-toggle" type="button" data-amenities-toggle aria-expanded="false" data-i18n="detail.amenities.showAll">Show all amenities</button>
-          </div>
+        <!-- Calendar rendered from villa.availability (villas-data.js) — see renderCalendar in
+             main.js. HOSTAWAY INTEGRATION POINT (via Vercel): swap villa.availability.blockedRanges
+             for a live fetch to the Hostaway Calendar API. Docs: https://api.hostaway.com/documentation -->
+        <div class="villa-calendar" data-villa-calendar></div>
+      </div>
+
+      <div class="amenities-panel">
+        <div class="container">
+          <h3 class="h3" data-i18n="detail.amenities.title">Amenities</h3>
+          <!-- Rendered from assets/js/villas-data.js — HOSTAWAY swap point -->
+          <div class="amenities-categories" data-villa-amenities></div>
+          <button class="amenities-toggle" type="button" data-amenities-toggle aria-expanded="false" data-i18n="detail.amenities.showAll">Show all amenities</button>
         </div>
       </div>
-    </div>
-
-    <!-- ============ Villa gallery showcase ============ -->
-    <div class="container">
-      <h3 class="h3" data-i18n="detail.gallery.title">Explore the villa</h3>
-    </div>
-    <div class="gallery-showcase" data-gallery-showcase>
-      <ul class="gallery-list" data-gallery-list></ul>
-      <button type="button" class="gallery-image" data-gallery-view aria-haspopup="dialog" aria-label="View Gallery" data-i18n-aria-label="detail.gallery.viewGallery">
-        <img data-gallery-img src="" alt="">
-        <span class="gallery-view-btn" aria-hidden="true" data-i18n="detail.gallery.viewGallery">View Gallery</span>
-      </button>
     </div>
 
     <!-- ============ Services offered at this villa ============ -->
@@ -135,30 +117,33 @@
     <!-- ============ Property location map ============ -->
     <section class="section property-map-section" aria-label="Where Kasa Kefi is located">
       <div class="container center">
-        <p class="eyebrow eyebrow--center reveal" data-i18n="detail.map.eyebrow">Where you'll stay</p>
-        <h2 class="h2 reveal" data-i18n-html="detail.kefi.mapTitle">Kasa Kefi in the <em>Valle</em></h2>
+        <h3 class="h3 reveal" data-i18n="detail.map.eyebrow">Where you'll stay</h3>
       </div>
       <div class="property-map reveal" data-delay="1">
-        <a class="property-map-link" href="https://maps.app.goo.gl/651fH5RzPmJJBFqNA" target="_blank" rel="noopener" aria-label="Open Kasa Kefi's location in Google Maps">
-          <img class="property-map-image" src="../assets/img/location-kasa-kefi.png"
-               alt="Map showing Kasa Kefi's location in the Valle de Guadalupe, Baja California, near Viñedos Guadalupe and Finca Altozano"
-               data-i18n-alt="detail.kefi.mapAlt" loading="lazy" width="1536" height="1024">
-          <span class="property-map-badge" data-i18n="detail.map.badge">Open in Google Maps</span>
-        </a>
+        <div class="property-map-frame">
+          <iframe class="property-map-embed" src="https://www.google.com/maps/embed?pb=!1m3!3m2!1m1!4s1707310111700453467" title="Map showing Kasa Kefi's location" loading="lazy"></iframe>
+        </div>
       </div>
     </section>
 
-    <!-- ============ Availability & rates ============ -->
-    <!-- HOSTAWAY INTEGRATION POINT (via Vercel): replace .availability-placeholder
-         with the Hostaway availability calendar embed for this listing, and
-         .rates-placeholder with live nightly/weekly rates from the Hostaway
-         pricing API. Docs: https://api.hostaway.com/documentation -->
-    <section class="section" aria-label="Availability and rates for Kasa Kefi">
+    <!-- ============ Guest testimonials ============ -->
+    <!-- Rendered from assets/js/villas-data.js (villa.testimonials) — HOSTAWAY
+         INTEGRATION POINT: swap for the Hostaway Reviews API once live. -->
+    <section class="section section--green testimonials" aria-labelledby="testimonials-title">
       <div class="container">
-        <div class="availability-grid reveal">
-          <div class="availability-placeholder" data-i18n-html="detail.availability.calendarPlaceholder">Availability calendar<br>Hostaway widget — coming soon</div>
-          <div class="rates-placeholder" data-i18n-html="detail.availability.ratesPlaceholder">Rates<br>Hostaway pricing — coming soon</div>
-        </div>
+        <p class="eyebrow eyebrow--center reveal" data-i18n="detail.testimonials.eyebrow">Guest stories</p>
+        <h2 class="visually-hidden" id="testimonials-title" data-i18n="detail.testimonials.hidden">What guests say</h2>
+        <div class="reveal" data-delay="1" data-villa-testimonials></div>
+      </div>
+    </section>
+
+    <!-- ============ Rates ============ -->
+    <!-- HOSTAWAY INTEGRATION POINT (via Vercel): swap .rates-placeholder for live
+         nightly/weekly rates from the Hostaway pricing API.
+         Docs: https://api.hostaway.com/documentation -->
+    <section class="section" aria-label="Rates for Kasa Kefi">
+      <div class="container">
+        <div class="rates-placeholder reveal" data-i18n-html="detail.availability.ratesPlaceholder">Rates<br>Hostaway pricing — coming soon</div>
       </div>
     </section>
 
@@ -201,7 +186,7 @@
     </div>
 
     <!-- ============ FAQ for this villa ============ -->
-    <section class="section" aria-label="Frequently asked questions about Kasa Kefi">
+    <section id="villa-faq" class="section" aria-label="Frequently asked questions about Kasa Kefi">
       <div class="container">
         <h3 class="h3" data-i18n="detail.faq.title">Frequently asked questions</h3>
       </div>

@@ -46,67 +46,49 @@
 
   <main id="main" data-villa-slug="casa-corazon-luxe">
 
-    <!-- ============ Villa hero ============ -->
+    <!-- ============ Villa hero + gallery ============ -->
     <section class="detail-hero" aria-label="Casa Corazon Luxe overview">
       <div class="container">
         <nav class="breadcrumb" aria-label="Breadcrumb">
           <a href="../index.html" data-i18n="detail.breadcrumb.home">Home</a> / <a href="../villas.html" data-i18n="detail.breadcrumb.villas">Our Villas</a> / Casa Corazon Luxe
         </nav>
-        <h1 class="display">Casa Corazon <em>Luxe</em></h1>
 
-        <!-- PLACEHOLDER IMAGES — replace with real villa photography / Hostaway media -->
-        <div class="detail-gallery">
-          <img class="gallery-main" src="../assets/img/villas/casa-corazon-luxe-2.webp"
-               alt="The tiled lap pool between Casa Corazon Luxe's casitas" data-i18n-alt="detail.corazon.gallery1" width="1200" height="900">
-          <img src="../assets/img/villas/casa-corazon-luxe-1.webp"
-               alt="Casa Corazon Luxe's palapa living room opening to the pool and the Caribbean" data-i18n-alt="detail.corazon.gallery2" loading="lazy" width="1200" height="900">
-          <img src="../assets/img/villas/casa-corazon-luxe-3.webp"
-               alt="A bedroom at Casa Corazon Luxe with a brick dome ceiling and an ocean-view hammock" data-i18n-alt="detail.corazon.gallery3" loading="lazy" width="1200" height="900">
+        <!-- Photo grid rendered from assets/js/villas-data.js (villa.gallery) — see main.js -->
+        <div class="villa-gallery" data-villa-gallery>
+          <div class="villa-gallery-text">
+            <h1 class="display">Casa Corazon <em>Luxe</em></h1>
+            <a class="detail-faq-jump" href="#villa-faq" data-i18n="detail.faqJump">Have a question? Jump to FAQ</a>
+          </div>
+          <div class="villa-gallery-tiles" data-villa-gallery-tiles></div>
         </div>
       </div>
     </section>
-    <div class="detail-hero-spacer" aria-hidden="true"></div>
 
-    <!-- ============ Specs (rendered from villas-data.js) ============ -->
-    <div class="container">
-      <div class="specs-bar" data-villa-specs></div>
-    </div>
-
-    <!-- ============ Description + booking ============ -->
+    <!-- ============ Specs + description (left) / availability calendar (right) — rendered from villas-data.js ============ -->
     <div class="container detail-layout">
-      <div>
-        <div class="residence-split">
-          <div class="residence-split-heading">
-            <h2 class="h2" data-i18n-html="detail.corazon.heading">Made for <em>celebrations</em></h2>
-          </div>
+      <div class="detail-intro-grid">
+        <div class="detail-intro-copy">
+          <div class="specs-bar" data-villa-specs></div>
           <div class="residence-split-copy">
-            <p data-i18n-html="detail.corazon.lead2"><strong>Twenty-two guests</strong>, eleven ensuite bedrooms, three living rooms. A private beach that begins where the terrace ends.</p>
-            <p data-i18n-html="detail.corazon.body1">Casa Corazon Luxe is built on a grand scale: an <strong>infinity pool</strong> facing the Caribbean, a <strong>home cinema</strong> with a popcorn machine, a game room, a gym, and direct access to soft white sand. Three living rooms, two dining areas, and two full kitchens give every generation of a gathering its own corner.</p>
-            <p data-i18n-html="detail.corazon.body2">Service runs on a <strong>5-star rhythm</strong> — private chef and butler from morning to mid-afternoon, daily housekeeping, 24/7 concierge and security, and a <strong>complimentary round-trip airport transfer</strong>. Configurations flex from five to eleven bedrooms, so you only reserve the space your celebration needs.</p>
+            <p data-i18n-html="detail.corazon.lead2">Casa Corazon Luxe accommodates up to <strong>22 guests across 11 ensuite bedrooms</strong>, with <strong>direct access to a private Caribbean beach</strong>.</p>
+            <p data-i18n-html="detail.corazon.body1">Enjoy an <strong>infinity pool, home cinema, game room, gym, multiple living and dining areas</strong>, plus <strong>private chef, butler, daily housekeeping, and 24/7 concierge and security</strong>. <strong>Complimentary round-trip airport transfer</strong> is included.</p>
           </div>
         </div>
 
-        <div class="amenities-panel">
-          <div class="container">
-            <h3 class="h3" data-i18n="detail.amenities.title">Amenities</h3>
-            <!-- Rendered from assets/js/villas-data.js — HOSTAWAY swap point -->
-            <div class="amenities-categories" data-villa-amenities></div>
-            <button class="amenities-toggle" type="button" data-amenities-toggle aria-expanded="false" data-i18n="detail.amenities.showAll">Show all amenities</button>
-          </div>
+        <!-- Calendar rendered from villa.availability (villas-data.js) — see renderCalendar in
+             main.js. HOSTAWAY INTEGRATION POINT (via Vercel): swap villa.availability.blockedRanges
+             for a live fetch to the Hostaway Calendar API. Docs: https://api.hostaway.com/documentation -->
+        <div class="villa-calendar" data-villa-calendar></div>
+      </div>
+
+      <div class="amenities-panel">
+        <div class="container">
+          <h3 class="h3" data-i18n="detail.amenities.title">Amenities</h3>
+          <!-- Rendered from assets/js/villas-data.js — HOSTAWAY swap point -->
+          <div class="amenities-categories" data-villa-amenities></div>
+          <button class="amenities-toggle" type="button" data-amenities-toggle aria-expanded="false" data-i18n="detail.amenities.showAll">Show all amenities</button>
         </div>
       </div>
-    </div>
-
-    <!-- ============ Villa gallery showcase ============ -->
-    <div class="container">
-      <h3 class="h3" data-i18n="detail.gallery.title">Explore the villa</h3>
-    </div>
-    <div class="gallery-showcase" data-gallery-showcase>
-      <ul class="gallery-list" data-gallery-list></ul>
-      <button type="button" class="gallery-image" data-gallery-view aria-haspopup="dialog" aria-label="View Gallery" data-i18n-aria-label="detail.gallery.viewGallery">
-        <img data-gallery-img src="" alt="">
-        <span class="gallery-view-btn" aria-hidden="true" data-i18n="detail.gallery.viewGallery">View Gallery</span>
-      </button>
     </div>
 
     <!-- ============ Services offered at this villa ============ -->
@@ -135,30 +117,33 @@
     <!-- ============ Property location map ============ -->
     <section class="section property-map-section" aria-label="Where Casa Corazon Luxe is located">
       <div class="container center">
-        <p class="eyebrow eyebrow--center reveal" data-i18n="detail.map.eyebrow">Where you'll stay</p>
-        <h2 class="h2 reveal" data-i18n-html="detail.corazon.mapTitle">Casa Corazon Luxe on the <em>Caribbean</em></h2>
+        <h3 class="h3 reveal" data-i18n="detail.map.eyebrow">Where you'll stay</h3>
       </div>
       <div class="property-map reveal" data-delay="1">
-        <a class="property-map-link" href="https://maps.app.goo.gl/ju6KD4y4ioeH5sd78" target="_blank" rel="noopener" aria-label="Open Casa Corazón Luxe's location in Google Maps">
-          <img class="property-map-image" src="../assets/img/location-casa-corazon-luxe.png"
-               alt="Map showing Casa Corazon Luxe's location in Playa del Carmen, near Quinta Avenida and Cancún International Airport"
-               data-i18n-alt="detail.corazon.mapAlt" loading="lazy" width="1536" height="1024">
-          <span class="property-map-badge" data-i18n="detail.map.badge">Open in Google Maps</span>
-        </a>
+        <div class="property-map-frame">
+          <iframe class="property-map-embed" src="https://www.google.com/maps/embed?pb=!1m3!3m2!1m1!4s8712587483589716039" title="Map showing Casa Corazón Luxe's location" loading="lazy"></iframe>
+        </div>
       </div>
     </section>
 
-    <!-- ============ Availability & rates ============ -->
-    <!-- HOSTAWAY INTEGRATION POINT (via Vercel): replace .availability-placeholder
-         with the Hostaway availability calendar embed for this listing, and
-         .rates-placeholder with live nightly/weekly rates from the Hostaway
-         pricing API. Docs: https://api.hostaway.com/documentation -->
-    <section class="section" aria-label="Availability and rates for Casa Corazon Luxe">
+    <!-- ============ Guest testimonials ============ -->
+    <!-- Rendered from assets/js/villas-data.js (villa.testimonials) — HOSTAWAY
+         INTEGRATION POINT: swap for the Hostaway Reviews API once live. -->
+    <section class="section section--green testimonials" aria-labelledby="testimonials-title">
       <div class="container">
-        <div class="availability-grid reveal">
-          <div class="availability-placeholder" data-i18n-html="detail.availability.calendarPlaceholder">Availability calendar<br>Hostaway widget — coming soon</div>
-          <div class="rates-placeholder" data-i18n-html="detail.availability.ratesPlaceholder">Rates<br>Hostaway pricing — coming soon</div>
-        </div>
+        <p class="eyebrow eyebrow--center reveal" data-i18n="detail.testimonials.eyebrow">Guest stories</p>
+        <h2 class="visually-hidden" id="testimonials-title" data-i18n="detail.testimonials.hidden">What guests say</h2>
+        <div class="reveal" data-delay="1" data-villa-testimonials></div>
+      </div>
+    </section>
+
+    <!-- ============ Rates ============ -->
+    <!-- HOSTAWAY INTEGRATION POINT (via Vercel): swap .rates-placeholder for live
+         nightly/weekly rates from the Hostaway pricing API.
+         Docs: https://api.hostaway.com/documentation -->
+    <section class="section" aria-label="Rates for Casa Corazon Luxe">
+      <div class="container">
+        <div class="rates-placeholder reveal" data-i18n-html="detail.availability.ratesPlaceholder">Rates<br>Hostaway pricing — coming soon</div>
       </div>
     </section>
 
@@ -201,7 +186,7 @@
     </div>
 
     <!-- ============ FAQ for this villa ============ -->
-    <section class="section" aria-label="Frequently asked questions about Casa Corazon Luxe">
+    <section id="villa-faq" class="section" aria-label="Frequently asked questions about Casa Corazon Luxe">
       <div class="container">
         <h3 class="h3" data-i18n="detail.faq.title">Frequently asked questions</h3>
       </div>

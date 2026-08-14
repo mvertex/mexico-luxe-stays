@@ -54,6 +54,7 @@
       list.querySelectorAll("li").forEach((li) => {
         li.setAttribute("aria-selected", li.dataset.value === select.value ? "true" : "false");
       });
+      select.closest(".hero-search-field")?.classList.toggle("has-value", !!select.value);
     };
 
     const closeList = () => {
@@ -356,10 +357,16 @@
     ? [...document.querySelectorAll(".hero-search select")].map(mlsEnhanceSelect)
     : [];
   document.querySelectorAll(".hero-search input[type='date']").forEach((input) => {
-    const sync = () => input.classList.toggle("has-value", !!input.value);
+    const sync = () => {
+      input.classList.toggle("has-value", !!input.value);
+      input.closest(".hero-search-field")?.classList.toggle("has-value", !!input.value);
+    };
     input.addEventListener("input", sync);
     input.addEventListener("change", sync);
     sync();
+    /* No calendar icon shown — clicking anywhere on the field opens the
+       native date picker instead. */
+    input.addEventListener("click", () => input.showPicker?.());
   });
 
   /* ---------- Scroll reveal (single observer, animates once) ---------- */
@@ -444,9 +451,39 @@
   let filterCustomSelects = [];
   if (villaGrid && typeof MLS_VILLAS !== "undefined") {
     const selDest = document.querySelector("#filter-destination");
-    const selGuests = document.querySelector("#filter-guests");
+    const inputGuests = document.querySelector("#filter-guests");
+    const guestsField = inputGuests.closest(".filter-field");
+    const guestsErrorEl = document.querySelector("[data-guests-error]");
     const selBeds = document.querySelector("#filter-bedrooms");
     const countEl = document.querySelector("[data-filter-count]");
+
+    /* Guests accepts free-form numeric input instead of preset options —
+       validated against the largest villa in the collection. */
+    const maxGuests = Math.max(...MLS_VILLAS.map((v) => v.guests));
+    let guestsValue = 0;
+
+    const clearGuestsError = () => {
+      guestsErrorEl.hidden = true;
+      guestsErrorEl.innerHTML = "";
+      guestsField.classList.remove("has-error");
+    };
+    const showGuestsError = (overMax) => {
+      const msg = t("villas.filter.guestsError").replace("{max}", maxGuests);
+      guestsErrorEl.innerHTML = overMax
+        ? `${msg}<br><a href="contact.html">${t("villas.filter.guestsContactCta")}</a>`
+        : msg;
+      guestsErrorEl.hidden = false;
+      guestsField.classList.add("has-error");
+    };
+    const validateGuests = () => {
+      const raw = inputGuests.value.trim();
+      if (!raw) { clearGuestsError(); guestsValue = 0; return; }
+      if (!/^\d+$/.test(raw)) { showGuestsError(false); guestsValue = 0; return; }
+      const n = parseInt(raw, 10);
+      if (n > maxGuests) { showGuestsError(true); guestsValue = 0; return; }
+      clearGuestsError();
+      guestsValue = n;
+    };
 
     /* Pre-fill from query string (home search widget lands here).
        HOSTAWAY: checkin/checkout params are captured below — feed them to the
@@ -455,15 +492,15 @@
     if (params.get("destination")) selDest.value = params.get("destination");
     if (params.get("guests")) {
       const g = parseInt(params.get("guests"), 10);
-      const opt = [...selGuests.options].reverse().find((o) => o.value && parseInt(o.value, 10) <= g);
-      if (g && opt) selGuests.value = [...selGuests.options].find((o) => parseInt(o.value, 10) >= g)?.value || opt.value;
+      if (g) inputGuests.value = g;
     }
+    validateGuests();
 
-    filterCustomSelects = [selDest, selGuests, selBeds].map(mlsEnhanceSelect);
+    filterCustomSelects = [selDest, selBeds].map(mlsEnhanceSelect);
 
     renderVillaGrid = () => {
       const dest = selDest.value;
-      const minGuests = parseInt(selGuests.value, 10) || 0;
+      const minGuests = guestsValue;
       const minBeds = parseInt(selBeds.value, 10) || 0;
       const list = MLS_VILLAS.filter(
         (v) =>
@@ -484,9 +521,14 @@
       villaGrid.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-visible"));
     };
 
-    [selDest, selGuests, selBeds].forEach((s) => s.addEventListener("change", renderVillaGrid));
+    [selDest, selBeds].forEach((s) => s.addEventListener("change", renderVillaGrid));
+    inputGuests.addEventListener("input", () => {
+      validateGuests();
+      renderVillaGrid();
+    });
     document.querySelector("[data-filter-clear]")?.addEventListener("click", () => {
-      selDest.value = ""; selGuests.value = ""; selBeds.value = "";
+      selDest.value = ""; inputGuests.value = ""; selBeds.value = "";
+      clearGuestsError(); guestsValue = 0;
       filterCustomSelects.forEach((cs) => cs.syncFromSelect());
       history.replaceState(null, "", window.location.pathname);
       renderVillaGrid();
@@ -554,6 +596,114 @@
     });
   }
 
+  /* ---------- Destination villa map: pins from villas-data.js, lazy-loaded Leaflet
+     (CSS/JS injected only once the map container nears the viewport, so it never
+     costs first paint or blocks SEO-critical content). ---------- */
+  const destinationMapEl = document.querySelector("[data-destination-map]");
+  if (destinationMapEl && typeof MLS_VILLAS !== "undefined") {
+    const mapDest = destinationMapEl.dataset.destinationMap;
+    const mapVillas = MLS_VILLAS.filter(
+      (v) => v.destination === mapDest && typeof v.lat === "number" && typeof v.lng === "number"
+    );
+
+    let leafletMap = null;
+    let mapMarkers = [];
+
+    function mlsBrandPinIcon() {
+      return L.divIcon({
+        className: "mls-map-pin",
+        html: '<span class="mls-map-pin-dot"><img src="assets/img/brand/icon-positive.png" alt="" width="16" height="13" loading="lazy"></span>',
+        iconSize: [34, 44],
+        iconAnchor: [17, 44],
+        popupAnchor: [0, -38]
+      });
+    }
+
+    function mlsMapPopupHtml(villa) {
+      const lang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
+      const t = typeof window.mlsT === "function" ? window.mlsT : (key) => key;
+      const imageAlt = (lang === "es" && villa.imageAltEs) || villa.imageAlt;
+      return `
+        <a class="map-popup" href="villas/${villa.slug}.html">
+          <img class="map-popup-img" src="${villa.image}" alt="${imageAlt}" width="240" height="150" loading="lazy">
+          <span class="map-popup-body">
+            <span class="map-popup-name">${villa.name}</span>
+            <span class="map-popup-specs">${villa.bedrooms} ${t("card.bedrooms", lang)} · ${villa.guests} ${t("card.guests", lang)}</span>
+            <span class="map-popup-cta">${t("destPlaya.map.viewVilla", lang)}</span>
+          </span>
+        </a>`;
+    }
+
+    function renderMapMarkers() {
+      if (!leafletMap) return;
+      mapMarkers.forEach((m) => m.remove());
+      mapMarkers = mapVillas.map((villa) => {
+        const marker = L.marker([villa.lat, villa.lng], { icon: mlsBrandPinIcon() }).addTo(leafletMap);
+        marker.bindPopup(mlsMapPopupHtml(villa), { maxWidth: 260, className: "mls-map-popup" });
+        return marker;
+      });
+    }
+
+    function initDestinationMap() {
+      if (leafletMap || !mapVillas.length) return;
+      destinationMapEl.innerHTML = "";
+      leafletMap = L.map(destinationMapEl, { scrollWheelZoom: false });
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+      }).addTo(leafletMap);
+
+      renderMapMarkers();
+      if (mapVillas.length > 1) {
+        leafletMap.fitBounds(L.latLngBounds(mapVillas.map((v) => [v.lat, v.lng])), { padding: [40, 40], maxZoom: 15 });
+      } else {
+        leafletMap.setView([mapVillas[0].lat, mapVillas[0].lng], 15);
+      }
+    }
+
+    function loadLeafletThenInit() {
+      if (window.L) { initDestinationMap(); return; }
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      link.integrity = "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
+      link.crossOrigin = "";
+      document.head.appendChild(link);
+
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+      script.integrity = "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=";
+      script.crossOrigin = "";
+      script.onload = initDestinationMap;
+      document.head.appendChild(script);
+    }
+
+    if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+      loadLeafletThenInit();
+    } else {
+      const mapObserver = new IntersectionObserver(
+        (entries, obs) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            obs.disconnect();
+            loadLeafletThenInit();
+          }
+        },
+        { rootMargin: "300px" }
+      );
+      mapObserver.observe(destinationMapEl);
+    }
+
+    document.addEventListener("mls:languagechange", () => {
+      if (leafletMap) renderMapMarkers();
+    });
+
+    /* Leaflet sizes its tiles from the container's dimensions at init time;
+       if the map was created while its section was still animating in
+       (or the viewport later resizes across the tablet/desktop breakpoint),
+       nudge it to recompute so tiles don't stay cropped or offset. */
+    window.addEventListener("resize", () => { leafletMap && leafletMap.invalidateSize(); });
+  }
+
   /* ---------- Amenity icons: keyword-matched against the English label ---------- */
   const MLS_AMENITY_ICON_DEFS = {
     pool: '<path d="M2 8c1.5 1.5 3 1.5 4.5 0s3-1.5 4.5 0 3 1.5 4.5 0 3-1.5 4.5 0"/><path d="M2 14c1.5 1.5 3 1.5 4.5 0s3-1.5 4.5 0 3 1.5 4.5 0 3-1.5 4.5 0"/><path d="M2 20c1.5 1.5 3 1.5 4.5 0s3-1.5 4.5 0 3 1.5 4.5 0 3-1.5 4.5 0"/>',
@@ -619,7 +769,7 @@
     ["air conditioning", "ac"], ["heating", "ac"],
     ["crib", "baby"], ["high chair", "baby"],
     ["electric vehicle", "ev"],
-    ["safe", "safe"],
+    ["safe", "safe"], ["gated", "safe"], ["security", "safe"],
     ["parking", "parking"], ["garage", "parking"],
     ["washer", "laundry"],
     ["nespresso", "coffee"],
@@ -649,9 +799,28 @@
   const MLS_AMENITY_CATEGORY_ORDER = ["wellness", "dining", "services", "entertainment", "other"];
   const mlsAmenityCategory = (enText) => MLS_AMENITY_CATEGORY_BY_ICON[mlsAmenityIconKey(enText)] || "other";
 
+  /* ---------- Spec squares: guests/bedrooms/beds/bathrooms/area/destination row ---------- */
+  const MLS_SPEC_ICON = {
+    guests: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="12" cy="7.4" r="3.15"/><path d="M5.4 20c0-4 3-6.8 6.6-6.8s6.6 2.8 6.6 6.8" stroke-linecap="round"/></svg>',
+    bedrooms: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6.4 20.6V4.4L15.6 3v17.6"/><path d="M3.6 20.6h16.8"/><circle cx="13.4" cy="12.4" r=".55" fill="currentColor" stroke="none"/></svg>',
+    beds: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-5.3A2 2 0 0 1 5 10.7h14a2 2 0 0 1 2 2V18"/><path d="M3 18h18"/><path d="M3 15v-8.2A1.4 1.4 0 0 1 4.4 5.4h4a1.4 1.4 0 0 1 1.4 1.4V10"/><path d="M3 20.4V18M21 20.4V18"/></svg>',
+    bathrooms: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 12V6.6A2.4 2.4 0 0 1 6.8 4.2c1 0 1.8.5 2.3 1.3"/><path d="M3 12h18v1.8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V12z"/><path d="M6.4 19v1.8M17.6 19v1.8"/></svg>',
+    area: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4.2 9V4.2H9"/><path d="M19.8 9V4.2H15"/><path d="M4.2 15v4.8H9"/><path d="M19.8 15v4.8H15"/></svg>',
+    destination: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.6s6.6-5.75 6.6-10.9a6.6 6.6 0 1 0-13.2 0c0 5.15 6.6 10.9 6.6 10.9z"/><circle cx="12" cy="9.6" r="2.15"/></svg>'
+  };
+  const mlsSpecHTML = (key, numHtml, labelHtml) =>
+    `<div class="spec${key === "destination" ? " spec--wide" : ""}"><span class="spec-icon" aria-hidden="true">${MLS_SPEC_ICON[key] || ""}</span><div class="spec-text"><div class="spec-num">${numHtml}</div>${labelHtml ? `<div class="spec-label">${labelHtml}</div>` : ""}</div></div>`;
+
   /* ---------- Villa detail: specs + amenities + related, driven by data ---------- */
+  const MLS_VILLA_I18N_KEY = {
+    "villa-aqua": "aqua",
+    "kasa-kefi": "kefi",
+    "casa-corazon-luxe": "corazon",
+    "casa-de-las-estrellas": "estrellas"
+  };
   const detailRoot = document.querySelector("[data-villa-slug]");
   let renderVillaDetail = null;
+  let renderTripShowcase = null;
   if (detailRoot && typeof MLS_VILLAS !== "undefined") {
     const villa = MLS_VILLAS.find((v) => v.slug === detailRoot.dataset.villaSlug);
     if (villa) {
@@ -666,36 +835,143 @@
         amenitiesToggle.textContent = t(key);
       };
 
+      /* Testimonials rotator, scoped to whichever container holds this villa's
+         slides. Re-bound on every render (including a language switch, which
+         rebuilds the slide markup from scratch) rather than queried once at
+         page load, so the dots/interval never point at detached nodes. */
+      let testimonialTimer = null;
+      const initTestimonialRotator = (scope) => {
+        clearInterval(testimonialTimer);
+        const tSlides = scope.querySelectorAll(".testimonial-slide");
+        const tDots = scope.querySelectorAll(".testimonial-dots button");
+        if (!tSlides.length) return;
+        let current = 0;
+        const show = (i) => {
+          tSlides[current].classList.remove("is-active");
+          tDots[current]?.classList.remove("is-active");
+          current = (i + tSlides.length) % tSlides.length;
+          tSlides[current].classList.add("is-active");
+          tDots[current]?.classList.add("is-active");
+        };
+        const play = () => {
+          if (prefersReducedMotion) return;
+          testimonialTimer = setInterval(() => show(current + 1), 7000);
+        };
+        tDots.forEach((dot, i) =>
+          dot.addEventListener("click", () => {
+            clearInterval(testimonialTimer);
+            show(i);
+            play();
+          })
+        );
+        play();
+      };
+
+      /* Availability calendar: month-grid view built from villa.availability
+         .blockedRanges (see the HOSTAWAY INTEGRATION POINT note above that
+         field in villas-data.js — swap for a live Hostaway Calendar API
+         fetch once wired through the /api proxy). Nav only moves the
+         displayed month; there's no date-picker/selection since booking
+         still happens through the inquiry form below. */
+      let calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+      const mlsDateStr = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      const mlsDateIsBlocked = (dateStr, ranges) => ranges.some((r) => dateStr >= r.start && dateStr <= r.end);
+
+      const renderCalendar = () => {
+        const calEl = detailRoot.querySelector("[data-villa-calendar]");
+        if (!calEl || !villa.availability) return;
+        const { blockedRanges = [], minStay } = villa.availability;
+        const months = t("detail.calendar.months").split(",");
+        const weekdays = t("detail.calendar.weekdays").split(",");
+        const todayStr = mlsDateStr(new Date());
+
+        const year = calendarMonth.getFullYear();
+        const month = calendarMonth.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const leadingBlanks = firstDay.getDay();
+
+        let cellsHtml = "";
+        for (let i = 0; i < leadingBlanks; i++) cellsHtml += `<span class="villa-calendar-day is-empty" aria-hidden="true"></span>`;
+        for (let day = 1; day <= daysInMonth; day++) {
+          const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+          const isPast = dateStr < todayStr;
+          const isBlocked = mlsDateIsBlocked(dateStr, blockedRanges);
+          const stateClass = isPast ? "is-past" : isBlocked ? "is-booked" : "is-available";
+          cellsHtml += `<span class="villa-calendar-day ${stateClass}" title="${dateStr}">${day}</span>`;
+        }
+
+        const minStayHtml = minStay ? `<span class="villa-calendar-legend-item"><span class="villa-calendar-legend-dot is-minstay" aria-hidden="true"></span>${t("detail.calendar.legendMinStay").replace("{n}", minStay)}</span>` : "";
+
+        calEl.innerHTML = `
+          <div class="villa-calendar-head">
+            <p class="villa-calendar-title">${t("detail.calendar.title")}</p>
+            <div class="villa-calendar-nav">
+              <button type="button" class="villa-calendar-nav-btn" data-cal-prev aria-label="${t("detail.calendar.prev")}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <span class="villa-calendar-month" aria-live="polite">${months[month]} ${year}</span>
+              <button type="button" class="villa-calendar-nav-btn" data-cal-next aria-label="${t("detail.calendar.next")}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="villa-calendar-weekdays">${weekdays.map((w) => `<span>${w}</span>`).join("")}</div>
+          <div class="villa-calendar-grid">${cellsHtml}</div>
+          <div class="villa-calendar-legend">
+            <span class="villa-calendar-legend-item"><span class="villa-calendar-legend-dot is-available" aria-hidden="true"></span>${t("detail.calendar.legendAvailable")}</span>
+            <span class="villa-calendar-legend-item"><span class="villa-calendar-legend-dot is-booked" aria-hidden="true"></span>${t("detail.calendar.legendBooked")}</span>
+            ${minStayHtml}
+          </div>
+          <p class="villa-calendar-note">${t("detail.calendar.note")}</p>`;
+
+        calEl.querySelector("[data-cal-prev]").addEventListener("click", () => {
+          calendarMonth = new Date(year, month - 1, 1);
+          renderCalendar();
+        });
+        calEl.querySelector("[data-cal-next]").addEventListener("click", () => {
+          calendarMonth = new Date(year, month + 1, 1);
+          renderCalendar();
+        });
+      };
+
       renderVillaDetail = () => {
         const lang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
         const pick = (item) => (lang === "es" && item.es) || item.en;
+        renderCalendar();
         const specsEl = detailRoot.querySelector("[data-villa-specs]");
         if (specsEl) {
           const baths = villa.baths % 1 === 0 ? villa.baths : villa.baths.toFixed(1);
           const destinationLabel = (lang === "es" && villa.destinationLabelEs) || villa.destinationLabel;
           const sqft = Math.round(villa.area * 10.7639).toLocaleString("en-US");
+          const areaSpecHtml = lang === "es"
+            ? mlsSpecHTML("area", villa.area, t("detail.specs.area"))
+            : mlsSpecHTML("area", sqft, t("detail.specs.sqft"));
           specsEl.innerHTML = `
-            <div class="spec"><div class="spec-num">${villa.guests}</div><div class="spec-label">${t("detail.specs.guests")}</div></div>
-            <div class="spec"><div class="spec-num">${villa.bedrooms}</div><div class="spec-label">${t("detail.specs.bedrooms")}</div></div>
-            <div class="spec"><div class="spec-num">${villa.beds}</div><div class="spec-label">${t("detail.specs.beds")}</div></div>
-            <div class="spec"><div class="spec-num">${baths}</div><div class="spec-label">${t("detail.specs.bathrooms")}</div></div>
-            <div class="spec"><div class="spec-num">${villa.area}</div><div class="spec-label">${t("detail.specs.area")}</div></div>
-            <div class="spec"><div class="spec-num">${sqft}</div><div class="spec-label">${t("detail.specs.sqft")}</div></div>
-            <div class="spec"><div class="spec-num">${villa.destination === "playa-del-carmen" ? t("detail.specs.beach") : t("detail.specs.vines")}</div><div class="spec-label">${destinationLabel}</div></div>`;
+            ${mlsSpecHTML("guests", villa.guests, t("detail.specs.guests"))}
+            ${mlsSpecHTML("bedrooms", villa.bedrooms, t("detail.specs.bedrooms"))}
+            ${mlsSpecHTML("beds", villa.beds, t("detail.specs.beds"))}
+            ${mlsSpecHTML("bathrooms", baths, t("detail.specs.bathrooms"))}
+            ${areaSpecHtml}
+            ${mlsSpecHTML("destination", destinationLabel, "")}`;
         }
         const amenitiesEl = detailRoot.querySelector("[data-villa-amenities]");
         if (amenitiesEl) {
           const allAmenities = [...(villa.amenities || []), ...(villa.amenitiesMore || [])];
-          const half = Math.ceil(allAmenities.length / 2);
 
           /* Group into fixed categories (wellness/dining/services/entertainment),
-             falling back to "other" — while keeping each item's original index so
-             the existing "show all" split (first half visible) still applies. */
+             falling back to "other" — each item's position in villa.amenities /
+             amenitiesMore decides priority, so within a category only the first
+             two (the ones listed first, i.e. most important) show by default. */
           const groups = {};
-          allAmenities.forEach((a, i) => {
+          allAmenities.forEach((a) => {
             const cat = mlsAmenityCategory(a.en);
-            (groups[cat] = groups[cat] || []).push({ item: a, more: i >= half });
+            (groups[cat] = groups[cat] || []).push(a);
           });
+          Object.keys(groups).forEach((cat) => {
+            groups[cat] = groups[cat].map((item, i) => ({ item, more: i >= 2 }));
+          });
+          const hasMore = Object.values(groups).some((rows) => rows.some((r) => r.more));
 
           const activeCategories = MLS_AMENITY_CATEGORY_ORDER.filter((cat) => groups[cat] && groups[cat].length);
           const renderCategory = (cat) => {
@@ -718,7 +994,7 @@
 
           amenitiesEl.classList.toggle("is-expanded", amenitiesExpanded);
           if (amenitiesToggle) {
-            amenitiesToggle.hidden = allAmenities.length <= half;
+            amenitiesToggle.hidden = !hasMore;
             updateAmenitiesToggleLabel();
           }
         }
@@ -752,6 +1028,32 @@
             })
             .join("");
           mlsFitServiceTileNames(servicesTrack);
+        }
+
+        /* Guest testimonials: rendered from villa.testimonials (see the
+           HOSTAWAY INTEGRATION POINT note at the top of villas-data.js —
+           swap this array for the Hostaway Reviews API once it's live). */
+        const testimonialsEl = detailRoot.querySelector("[data-villa-testimonials]");
+        if (testimonialsEl && villa.testimonials && villa.testimonials.length) {
+          const starsHtml = (rating) =>
+            Array.from({ length: 5 }, (_, i) => `<svg class="star${i < rating ? " is-filled" : ""}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7-5.4-4.7 7.1-.7z"/></svg>`).join("");
+          const slidesHtml = villa.testimonials
+            .map(
+              (r, i) => `<blockquote class="testimonial-slide${i === 0 ? " is-active" : ""}">
+                <div class="testimonial-rating" role="img" aria-label="${r.rating} out of 5 stars">${starsHtml(r.rating)}</div>
+                <p class="testimonial-quote">${pick(r.quote)}</p>
+                <footer class="testimonial-attr">
+                  <div class="name">${r.name}</div>
+                  <div class="villa">${pick(r.context)}</div>
+                </footer>
+              </blockquote>`
+            )
+            .join("");
+          const dotsHtml = villa.testimonials
+            .map((_, i) => `<button type="button" class="${i === 0 ? "is-active" : ""}" aria-label="Testimonial ${i + 1}"></button>`)
+            .join("");
+          testimonialsEl.innerHTML = `${slidesHtml}<div class="testimonial-dots" role="tablist" aria-label="${t("detail.testimonials.chooseLabel")}">${dotsHtml}</div>`;
+          initTestimonialRotator(testimonialsEl);
         }
 
         /* FAQ showcase: hover (or focus, or tap) a question to preview its
@@ -789,61 +1091,52 @@
           });
         }
 
-        /* Gallery showcase: hover (or focus) a category to preview it on the right;
-           "View Gallery" opens the full set for that category in the lightbox. */
-        const galleryShowcase = document.querySelector("[data-gallery-showcase]");
-        if (galleryShowcase && villa.gallery && villa.gallery.length) {
-          const list = galleryShowcase.querySelector("[data-gallery-list]");
-          const imgEl = galleryShowcase.querySelector("[data-gallery-img]");
-          const viewBtn = galleryShowcase.querySelector("[data-gallery-view]");
-          const categories = villa.gallery;
+        /* Villa gallery: a bento grid of photo tiles, one per category, with
+           the villa's name/intro standing in as one of the tiles. Each tile
+           opens that category's full set in the lightbox. Tiles are placed
+           into fixed grid slots (tall/img1/bottom/small1-3) in a priority
+           order, so the layout stays consistent whether a villa has 5 or 6
+           categories — see .villa-gallery in styles.css. */
+        const villaGallery = document.querySelector("[data-villa-gallery]");
+        if (villaGallery && villa.gallery && villa.gallery.length) {
+          const eyebrowEl = villaGallery.querySelector("[data-villa-eyebrow]");
+          const descEl = villaGallery.querySelector("[data-villa-desc]");
+          const i18nKey = MLS_VILLA_I18N_KEY[villa.slug];
+          if (eyebrowEl && i18nKey) eyebrowEl.textContent = t("detail." + i18nKey + ".eyebrow");
+          if (descEl && i18nKey) descEl.textContent = t("detail." + i18nKey + ".lead");
           const pickImg = (im) => ({ src: im.src, alt: (lang === "es" && im.altEs) || im.alt });
 
-          list.innerHTML = categories
-            .map(
-              (g, i) => `
-            <li>
-              <button type="button" class="gallery-item${i === 0 ? " is-active" : ""}" data-index="${i}">
-                <span class="gallery-item-label">${t("detail.gallery." + g.key)}</span>
-                <span class="gallery-item-line" aria-hidden="true"></span>
-              </button>
-            </li>`
-            )
+          const SLOT_KEYS = ["outdoor", "living", "kitchen", "rooms", "interiors", "multipurpose"];
+          const categories = SLOT_KEYS.map((key) => villa.gallery.find((g) => g.key === key)).filter(Boolean);
+          const isFull = categories.length >= 6;
+          const positions = isFull
+            ? ["tall", "img1", "bottom", "small1", "small2", "small3"]
+            : ["tall", "img1", "bottom", "small1", "small2"];
+          villaGallery.classList.toggle("villa-gallery--5", !isFull);
+
+          const tilesEl = villaGallery.querySelector("[data-villa-gallery-tiles]");
+          tilesEl.innerHTML = categories
+            .map((g, i) => {
+              const cover = pickImg(g.images[0]);
+              return `
+              <button type="button" class="villa-gallery-tile" data-slot="${positions[i]}" data-cat-index="${i}" aria-haspopup="dialog">
+                <img src="${cover.src}" alt="${cover.alt}" loading="${i === 0 ? "eager" : "lazy"}">
+                <span class="villa-gallery-tile-scrim" aria-hidden="true"></span>
+                <span class="villa-gallery-tile-label">
+                  <span class="villa-gallery-tile-name">${t("detail.gallery." + g.key)}</span>
+                  <span class="villa-gallery-tile-view" aria-hidden="true">${t("detail.gallery.viewGallery")}</span>
+                </span>
+              </button>`;
+            })
             .join("");
 
-          let activeCategory = categories[0];
-          imgEl.src = categories[0].images[0].src;
-          imgEl.alt = pickImg(categories[0].images[0]).alt;
-
-          let galleryTimer = null;
-          const previewCategory = (g) => {
-            clearTimeout(galleryTimer);
-            activeCategory = g;
-            const first = pickImg(g.images[0]);
-            if (imgEl.src === g.images[0].src) return;
-            imgEl.style.opacity = "0";
-            galleryTimer = setTimeout(() => {
-              imgEl.src = g.images[0].src;
-              imgEl.alt = first.alt;
-              imgEl.style.opacity = "1";
-            }, prefersReducedMotion ? 0 : 220);
-          };
-
-          const galleryItems = list.querySelectorAll(".gallery-item");
-          galleryItems.forEach((item, i) => {
-            const activate = () => {
-              galleryItems.forEach((other) => other.classList.remove("is-active"));
-              item.classList.add("is-active");
-              previewCategory(categories[i]);
-            };
-            item.addEventListener("mouseenter", activate);
-            item.addEventListener("focus", activate);
-          });
-
-          viewBtn?.addEventListener("click", () => {
-            if (typeof mlsOpenLightbox === "function") {
-              mlsOpenLightbox(activeCategory.images.map(pickImg));
-            }
+          tilesEl.querySelectorAll(".villa-gallery-tile").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const i = Number(btn.dataset.catIndex);
+              if (typeof mlsOpenLightbox === "function") {
+                mlsOpenLightbox(categories[i].images.map(pickImg));
+              }
+            });
           });
         }
       };
@@ -862,9 +1155,12 @@
   /* ---------- Re-render dynamic (data-driven) content when the language toggles ---------- */
   document.addEventListener("mls:languagechange", () => {
     renderFeaturedShowcase && renderFeaturedShowcase();
+    document.querySelector("#filter-guests") && !document.querySelector("[data-guests-error]")?.hidden &&
+      document.querySelector("#filter-guests").dispatchEvent(new Event("input"));
     renderVillaGrid && renderVillaGrid();
     renderDestinationGrid && renderDestinationGrid();
     renderVillaDetail && renderVillaDetail();
+    renderTripShowcase && renderTripShowcase();
     filterCustomSelects.forEach((cs) => cs.rebuildLabels());
     heroSearchSelects.forEach((cs) => cs.rebuildLabels());
     /* i18n.js applies the page's initial language from a DOMContentLoaded
@@ -875,34 +1171,6 @@
        opacity:0 forever. */
     initReveal();
   });
-
-  /* ---------- Testimonials rotator ---------- */
-  const slides = document.querySelectorAll(".testimonial-slide");
-  if (slides.length) {
-    const dots = document.querySelectorAll(".testimonial-dots button");
-    let current = 0;
-    let timer = null;
-    const show = (i) => {
-      slides[current].classList.remove("is-active");
-      dots[current]?.classList.remove("is-active");
-      current = (i + slides.length) % slides.length;
-      slides[current].classList.add("is-active");
-      dots[current]?.classList.add("is-active");
-    };
-    const play = () => {
-      if (prefersReducedMotion) return;
-      timer = setInterval(() => show(current + 1), 7000);
-    };
-    dots.forEach((dot, i) =>
-      dot.addEventListener("click", () => {
-        clearInterval(timer);
-        show(i);
-        play();
-      })
-    );
-    show(0);
-    play();
-  }
 
   /* ---------- FAQ accordion ---------- */
   document.querySelectorAll(".faq-question").forEach((btn) => {
@@ -933,23 +1201,333 @@
   if (contactForm) {
     /* Preselect villa when arriving from a detail page (?villa=slug) */
     const params = new URLSearchParams(window.location.search);
-    const villaSel = contactForm.querySelector("#cf-villa");
-    if (params.get("villa") && villaSel) villaSel.value = params.get("villa");
+    const priceValueEl = contactForm.querySelector("[data-trip-price-value]");
+    const bedroomsStepper = contactForm.querySelector('[data-trip-stepper][data-name="bedrooms"]');
+
+    /* ---------- Guest/room steppers (Bedrooms, Adults, Children, Infants) ---------- */
+    const setStepperValue = (stepper, value) => {
+      const min = Number(stepper.dataset.min || 0);
+      const max = stepper.dataset.max ? Number(stepper.dataset.max) : Infinity;
+      const clamped = Math.min(max, Math.max(min, value));
+      stepper.dataset.value = clamped;
+      stepper.querySelector("[data-stepper-value]").textContent = clamped;
+      stepper.querySelector("[data-stepper-input]").value = clamped;
+      const decBtn = stepper.querySelector("[data-stepper-dec]");
+      const incBtn = stepper.querySelector("[data-stepper-inc]");
+      if (decBtn) decBtn.disabled = clamped <= min;
+      if (incBtn) incBtn.disabled = clamped >= max;
+    };
+    contactForm.querySelectorAll("[data-trip-stepper]").forEach((stepper) => {
+      setStepperValue(stepper, Number(stepper.dataset.value || 0));
+      stepper.querySelector("[data-stepper-dec]")?.addEventListener("click", () => {
+        setStepperValue(stepper, Number(stepper.dataset.value) - 1);
+      });
+      stepper.querySelector("[data-stepper-inc]")?.addEventListener("click", () => {
+        setStepperValue(stepper, Number(stepper.dataset.value) + 1);
+      });
+    });
+
+    /* ---------- Check-in / check-out: custom calendar popovers ----------
+       A native <input type="date"> hands the picker's look to the browser/OS
+       and can't be styled — swapped for an on-brand calendar dropdown (same
+       pattern as the villa listbox below), backed by a hidden input. */
+    const isoDay = (d) => {
+      const y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, "0"), day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    };
+    const sameDay = (a, b) => a && b && isoDay(a) === isoDay(b);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const dateFields = {};
+    contactForm.querySelectorAll("[data-trip-date-field]").forEach((fieldEl) => {
+      const key = fieldEl.dataset.tripDateField;
+      const trigger = fieldEl.querySelector("[data-date-trigger]");
+      const textEl = fieldEl.querySelector(`[data-trip-date-text="${key}"]`);
+      const defaultLabel = textEl.textContent;
+      const panel = fieldEl.querySelector("[data-trip-calendar]");
+      const monthEl = panel.querySelector("[data-cal-month]");
+      const weekdaysEl = panel.querySelector("[data-cal-weekdays]");
+      const daysEl = panel.querySelector("[data-cal-days]");
+      const prevBtn = panel.querySelector("[data-cal-prev]");
+      const nextBtn = panel.querySelector("[data-cal-next]");
+      const hiddenInput = fieldEl.querySelector("[data-date-value]");
+
+      const api = { key, fieldEl, trigger, textEl, defaultLabel, hiddenInput, selected: null, minDate: today, viewDate: new Date(today) };
+
+      const lang = () => (typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en");
+      const locale = () => (lang() === "es" ? "es-MX" : "en-US");
+
+      const renderWeekdays = () => {
+        const base = new Date(2026, 0, 4); // a Sunday
+        weekdaysEl.innerHTML = "";
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(base);
+          d.setDate(base.getDate() + i);
+          const span = document.createElement("span");
+          span.textContent = d.toLocaleDateString(locale(), { weekday: "narrow" });
+          weekdaysEl.appendChild(span);
+        }
+      };
+
+      const render = () => {
+        monthEl.textContent = api.viewDate.toLocaleDateString(locale(), { month: "long", year: "numeric" });
+        daysEl.innerHTML = "";
+        const year = api.viewDate.getFullYear(), month = api.viewDate.getMonth();
+        const firstWeekday = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        for (let i = 0; i < firstWeekday; i++) {
+          const spacer = document.createElement("span");
+          spacer.className = "trip-calendar-day-empty";
+          daysEl.appendChild(spacer);
+        }
+        for (let d = 1; d <= daysInMonth; d++) {
+          const cellDate = new Date(year, month, d);
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "trip-calendar-day";
+          btn.textContent = d;
+          if (cellDate < api.minDate) btn.disabled = true;
+          if (sameDay(cellDate, today)) btn.classList.add("is-today");
+          if (sameDay(cellDate, api.selected)) btn.classList.add("is-selected");
+          btn.addEventListener("click", () => selectDate(cellDate));
+          daysEl.appendChild(btn);
+        }
+        const firstOfMinMonth = new Date(api.minDate.getFullYear(), api.minDate.getMonth(), 1);
+        prevBtn.disabled = api.viewDate <= firstOfMinMonth;
+      };
+
+      const selectDate = (date) => {
+        api.selected = date;
+        api.hiddenInput.value = isoDay(date);
+        api.textEl.textContent = date.toLocaleDateString(locale(), { month: "short", day: "numeric", year: "numeric" });
+        close();
+        onDateSelected(key, date);
+      };
+
+      const open = () => {
+        Object.values(dateFields).forEach((other) => { if (other !== api) other.close(); });
+        renderWeekdays();
+        render();
+        panel.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+      };
+      const close = () => {
+        panel.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+      };
+
+      trigger.addEventListener("click", () => (panel.hidden ? open() : close()));
+      prevBtn.addEventListener("click", () => {
+        api.viewDate.setMonth(api.viewDate.getMonth() - 1);
+        render();
+      });
+      nextBtn.addEventListener("click", () => {
+        api.viewDate.setMonth(api.viewDate.getMonth() + 1);
+        render();
+      });
+
+      api.render = render;
+      api.close = close;
+      api.setMinDate = (date) => {
+        api.minDate = date;
+        if (api.selected && api.selected < date) {
+          api.selected = null;
+          api.hiddenInput.value = "";
+          api.textEl.textContent = api.defaultLabel;
+        }
+        if (api.viewDate < date) api.viewDate = new Date(date.getFullYear(), date.getMonth(), 1);
+        if (!panel.hidden) render();
+      };
+      dateFields[key] = api;
+    });
+
+    function onDateSelected(key, date) {
+      if (key === "checkin" && dateFields.checkout) {
+        const next = new Date(date);
+        next.setDate(next.getDate() + 1);
+        dateFields.checkout.setMinDate(next);
+      }
+    }
+
+    document.addEventListener("click", (e) => {
+      Object.values(dateFields).forEach((api) => {
+        if (!api.fieldEl.contains(e.target)) api.close();
+      });
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") Object.values(dateFields).forEach((api) => api.close());
+    });
+
+    /* ---------- Villa selection (custom listbox, same essence as the rest
+       of the panel — a native <select>'s dropdown can't be themed) ---------- */
+    const villaField = contactForm.querySelector("[data-trip-villa-field]");
+    const villaTrigger = contactForm.querySelector("[data-villa-trigger]");
+    const villaTriggerText = contactForm.querySelector("[data-villa-trigger-text]");
+    const villaListbox = contactForm.querySelector("[data-villa-listbox]");
+    const villaValueInput = contactForm.querySelector("[data-villa-value]");
+    const villaOptions = villaListbox ? [...villaListbox.querySelectorAll("[role=option]")] : [];
+
+    const closeVillaListbox = () => {
+      villaListbox.hidden = true;
+      villaTrigger.setAttribute("aria-expanded", "false");
+    };
+    const openVillaListbox = () => {
+      villaListbox.hidden = false;
+      villaTrigger.setAttribute("aria-expanded", "true");
+      villaOptions.find((o) => o.dataset.value === villaValueInput.value)?.focus();
+    };
+    const selectVilla = (option) => {
+      villaValueInput.value = option.dataset.value;
+      villaTriggerText.textContent = option.textContent.trim();
+      villaOptions.forEach((o) => o.setAttribute("aria-selected", o === option ? "true" : "false"));
+      closeVillaListbox();
+      villaTrigger.focus();
+      syncTripVilla();
+    };
+
+    if (villaTrigger) {
+      villaTrigger.addEventListener("click", () => {
+        villaListbox.hidden ? openVillaListbox() : closeVillaListbox();
+      });
+      villaOptions.forEach((option) => {
+        option.tabIndex = -1;
+        option.addEventListener("click", () => selectVilla(option));
+        option.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectVilla(option); }
+          else if (e.key === "Escape") { closeVillaListbox(); villaTrigger.focus(); }
+          else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            e.preventDefault();
+            const dir = e.key === "ArrowDown" ? 1 : -1;
+            const idx = villaOptions.indexOf(option) + dir;
+            villaOptions[Math.min(villaOptions.length - 1, Math.max(0, idx))]?.focus();
+          }
+        });
+      });
+      document.addEventListener("click", (e) => {
+        if (!villaField.contains(e.target)) closeVillaListbox();
+      });
+    }
+
+    /* ---------- Villa showcase: carousel + specs shown once a specific
+       villa is chosen, so the picker's dates/guests/price form can move
+       alongside it. Photos come from villa.showcaseImages (see MLS_VILLAS
+       in villas-data.js — HOSTAWAY swap point once real listings are wired
+       up). ---------- */
+    const contactLayoutEl = contactForm.closest("[data-contact-layout]");
+    const showcaseEl = contactLayoutEl?.querySelector("[data-trip-showcase]");
+    const showcaseImgEl = showcaseEl?.querySelector("[data-showcase-img]");
+    const showcaseDotsEl = showcaseEl?.querySelector("[data-showcase-dots]");
+    const showcaseLocationEl = showcaseEl?.querySelector("[data-showcase-location]");
+    const showcaseNameEl = showcaseEl?.querySelector("[data-showcase-name]");
+    const showcaseSpecsEl = showcaseEl?.querySelector("[data-showcase-specs]");
+    const showcaseDescEl = showcaseEl?.querySelector("[data-showcase-desc]");
+    let showcaseImages = [];
+    let showcaseIndex = 0;
+
+    const renderShowcaseSlide = () => {
+      if (!showcaseEl || !showcaseImages.length) return;
+      const lang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
+      const img = showcaseImages[showcaseIndex];
+      showcaseImgEl.src = img.src;
+      showcaseImgEl.alt = (lang === "es" && img.altEs) || img.alt || "";
+      showcaseDotsEl.querySelectorAll("button").forEach((dot, i) => {
+        dot.setAttribute("aria-current", String(i === showcaseIndex));
+      });
+    };
+    const goShowcase = (delta) => {
+      if (!showcaseImages.length) return;
+      showcaseIndex = (showcaseIndex + delta + showcaseImages.length) % showcaseImages.length;
+      renderShowcaseSlide();
+    };
+    showcaseEl?.querySelector("[data-showcase-prev]")?.addEventListener("click", () => goShowcase(-1));
+    showcaseEl?.querySelector("[data-showcase-next]")?.addEventListener("click", () => goShowcase(1));
+
+    const applyVillaShowcase = (villa, { resetImages }) => {
+      if (!showcaseEl) return;
+      if (!villa) {
+        contactLayoutEl.classList.remove("has-showcase");
+        showcaseEl.hidden = true;
+        return;
+      }
+      const lang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
+      if (resetImages) {
+        showcaseImages = (villa.showcaseImages && villa.showcaseImages.length)
+          ? villa.showcaseImages
+          : [{ src: villa.image, alt: villa.imageAlt, altEs: villa.imageAltEs }];
+        showcaseIndex = 0;
+        showcaseDotsEl.innerHTML = showcaseImages
+          .map((_, i) => `<button type="button" aria-label="${t("contact.form.showcasePhoto")} ${i + 1}" aria-current="${i === 0}"></button>`)
+          .join("");
+        [...showcaseDotsEl.querySelectorAll("button")].forEach((dot, i) => {
+          dot.addEventListener("click", () => { showcaseIndex = i; renderShowcaseSlide(); });
+        });
+      }
+      renderShowcaseSlide();
+
+      showcaseLocationEl.textContent = (lang === "es" && villa.destinationLabelEs) || villa.destinationLabel;
+      showcaseNameEl.textContent = villa.name;
+      const baths = villa.baths % 1 === 0 ? villa.baths : villa.baths.toFixed(1);
+      showcaseSpecsEl.innerHTML = `
+        ${mlsSpecHTML("guests", villa.guests, t("detail.specs.guests"))}
+        ${mlsSpecHTML("bedrooms", villa.bedrooms, t("detail.specs.bedrooms"))}
+        ${mlsSpecHTML("beds", villa.beds, t("detail.specs.beds"))}
+        ${mlsSpecHTML("bathrooms", baths, t("detail.specs.bathrooms"))}
+      `;
+      showcaseDescEl.textContent = (lang === "es" && villa.shortEs) || villa.short || "";
+
+      contactLayoutEl.classList.add("has-showcase");
+      showcaseEl.hidden = false;
+    };
+
+    renderTripShowcase = () => {
+      const villa = typeof MLS_VILLAS !== "undefined"
+        ? MLS_VILLAS.find((v) => v.slug === villaValueInput.value)
+        : null;
+      applyVillaShowcase(villa, { resetImages: false });
+    };
+
+    /* ---------- Villa selection: sync bedrooms max + nightly rate + showcase ----------
+       HOSTAWAY INTEGRATION POINT: once live pricing is wired up, replace
+       villa.priceFromPerNight with a fetch to the pricing API for the
+       selected villa + chosen dates. */
+    function syncTripVilla() {
+      const villa = typeof MLS_VILLAS !== "undefined"
+        ? MLS_VILLAS.find((v) => v.slug === villaValueInput.value)
+        : null;
+      if (bedroomsStepper) {
+        bedroomsStepper.dataset.max = villa ? villa.bedrooms : "";
+        setStepperValue(bedroomsStepper, villa ? villa.bedrooms : 1);
+      }
+      if (priceValueEl) {
+        priceValueEl.textContent = villa
+          ? `$${villa.priceFromPerNight.toLocaleString("en-US")}`
+          : "—";
+      }
+      applyVillaShowcase(villa, { resetImages: true });
+    }
+    if (params.get("villa") && villaValueInput) {
+      const preselected = villaOptions.find((o) => o.dataset.value === params.get("villa"));
+      if (preselected) selectVilla(preselected);
+    } else {
+      syncTripVilla();
+    }
 
     contactForm.addEventListener("submit", (e) => {
       e.preventDefault();
+      const intent = e.submitter?.dataset.tripIntent || "inquire";
       const f = new FormData(contactForm);
+      const selectedVillaOption = villaOptions.find((o) => o.dataset.value === f.get("villa"));
       const lines = [
-        `Hello Mexico Luxe Stays — I'd like to plan a stay.`,
-        `Name: ${f.get("name")}`,
-        `Email: ${f.get("email")}`,
-        f.get("phone") ? `Phone: ${f.get("phone")}` : "",
-        f.get("villa") ? `Villa of interest: ${villaSel.options[villaSel.selectedIndex].text}` : "",
+        intent === "book"
+          ? `Hello Mexico Luxe Stays — I'd like to book a stay.`
+          : `Hello Mexico Luxe Stays — I'd like more information about a stay.`,
+        f.get("villa") ? `Villa of interest: ${selectedVillaOption?.textContent.trim()}` : "",
         f.get("checkin") || f.get("checkout") ? `Dates: ${f.get("checkin") || "?"} to ${f.get("checkout") || "?"}` : "",
+        f.get("bedrooms") ? `Bedrooms: ${f.get("bedrooms")}` : "",
         f.get("adults") ? `Adults: ${f.get("adults")}` : "",
-        f.get("children") ? `Children under 12: ${f.get("children")}` : "",
-        f.get("rooms") ? `Rooms needed: ${f.get("rooms")}` : "",
-        f.get("message") ? `Comments: ${f.get("message")}` : ""
+        f.get("children") ? `Children (2–12): ${f.get("children")}` : "",
+        f.get("infants") ? `Infants (under 2): ${f.get("infants")}` : ""
       ].filter(Boolean);
       window.open("https://wa.me/5219848079475?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener");
       const status = contactForm.querySelector(".form-status");
