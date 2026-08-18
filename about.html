@@ -55,72 +55,86 @@
       <div class="container">
         <h1 class="display no-italic" data-hero-reveal="2" data-i18n-html="about.hero.title">About <em>us</em></h1>
       </div>
-      <a class="hero-scroll-hint" href="#story" data-i18n="about.hero.scroll">Scroll for more</a>
+      <a class="hero-scroll-hint" href="#story" data-i18n="about.hero.scroll">Scroll</a>
     </section>
 
     <!-- ============ Brand statement ============ -->
     <section class="section brand-statement" aria-label="Mexico Luxe Stays">
       <div class="container">
-        <p class="brand-statement-text reveal">Mexico <em>Luxe</em> Stays</p>
+        <img class="brand-statement-logo reveal" src="assets/img/brand/wordmark-negative.png" alt="Mexico Luxe Stays" width="2696" height="279">
+        <div class="brand-statement-copy reveal" data-delay="1" data-i18n-html="about.brandStatement.text">
+          <p>With over 20 years of experience in luxury vacation property management, Mexico Luxe Stays offers exceptional properties and personalized service in two of Mexico&rsquo;s most distinctive destinations: Playa del Carmen and Valle de Guadalupe. Our focus is simple: creating seamless, memorable stays through outstanding accommodations and genuine hospitality.</p>
+        </div>
       </div>
     </section>
 
-    <!-- ============ Story ============ -->
+    <!-- ============ Story (image + copy) ============ -->
     <section class="section" id="story">
-      <div class="container story-split">
-        <figure class="story-split-media reveal" style="margin:0">
-          <img src="assets/img/about-story.webp"
-               alt="A rooftop lounge terrace overlooking the Valle de Guadalupe hills at dusk" loading="lazy" width="1254" height="1254">
-        </figure>
-        <div class="story-split-body reveal" data-delay="1">
-          <h2 class="h2" data-i18n-html="about.story.title">Twenty years of opening <em>doors</em></h2>
-          <p data-i18n="about.story.lead">Mexico Luxe Stays began with a single beachfront property and a stubborn belief: a villa should be hosted, not just rented.</p>
-        </div>
-      </div>
-      <div class="container stat-row stat-row--standalone reveal" data-delay="2">
-        <div class="stat"><div class="stat-num" data-i18n="about.stats.1.num">20+</div><div class="stat-label" data-i18n="about.stats.1.label">Years of experience</div></div>
-        <div class="stat"><div class="stat-num" data-i18n="about.stats.2.num">1</div><div class="stat-label" data-i18n="about.stats.2.label">Dedicated team</div></div>
-        <div class="stat"><div class="stat-num" data-i18n-html="about.stats.3.num">&infin;</div><div class="stat-label" data-i18n="about.stats.3.label">Returning guests</div></div>
-      </div>
-    </section>
-
-    <!-- ============ Story 2 (image right) ============ -->
-    <section class="section" style="padding-top:0">
-      <div class="container story-split story-split--reverse">
-        <div class="story-split-body reveal">
-          <h2 class="h2" data-i18n-html="about.story2.title">One team, every step of the <em>way</em></h2>
-          <p data-i18n="about.story2.lead">Two decades later, we manage a handpicked collection across two of Mexico's most breathtaking destinations — the Riviera Maya and Valle de Guadalupe.</p>
-        </div>
-        <figure class="story-split-media reveal" data-delay="1" style="margin:0">
-          <img src="assets/img/about-story-2.webp"
-               alt="A contemporary villa entrance with a paved driveway leading toward the desert hills" loading="lazy" width="1254" height="1254">
-        </figure>
-      </div>
-    </section>
-
-    <!-- ============ Mission & values ============ -->
-    <section class="section section--green" aria-labelledby="values-title">
       <div class="container">
-        <div class="section-head center reveal" style="max-width:760px;margin-inline:auto">
-          <p class="eyebrow eyebrow--center" data-i18n-html="about.values.eyebrow">Mission &amp; values</p>
-          <h2 class="h2" id="values-title" data-i18n-html="about.values.title">Luxury is <em>personal</em>, or it isn't luxury</h2>
-          <p class="lead" style="margin-top:1.2rem;color:var(--cream-60)" data-i18n="about.values.lead">Our mission is simple: seamless elegance, total privacy, and hospitality that feels like it was invented for you — from first inquiry to final departure.</p>
+        <div class="story-split story-split--half">
+          <figure class="story-split-media reveal">
+            <img src="assets/img/about-story-2.webp"
+                 alt="A contemporary villa entrance with a paved driveway leading toward the desert hills" loading="lazy" width="1254" height="1254">
+          </figure>
+          <div class="story-split-body reveal" data-delay="1" data-i18n-html="about.story.text">
+            <h3 class="h3">Experience &amp; Destinations</h3>
+            <p>Our portfolio brings together luxury residences in <strong>Playa del Carmen</strong> and <strong>Kasa Kava Residences</strong> in <strong>Valle de Guadalupe</strong>, offering guests the opportunity to experience both the Mexican Caribbean and the heart of Mexico's renowned wine country.</p>
+            <h3 class="h3">Personal Service</h3>
+            <p>As a small, dedicated team, we provide attentive and personalized service from the first inquiry through departure. We take care of the details so every guest can enjoy a comfortable, effortless, and memorable stay.</p>
+          </div>
         </div>
-        <div class="values-grid">
-          <div class="value-card reveal">
-            <div class="value-num">01</div>
-            <h3 class="h3" data-i18n="about.values.1.title">Exclusivity without coldness</h3>
-            <p data-i18n="about.values.1.body">Private doesn't mean distant. Every villa is gated, staffed, and yours alone — and every welcome is warm, by name, with your favorite drink already chilled.</p>
+      </div>
+    </section>
+
+    <!-- ============ Testimonials ============ -->
+    <!-- Static placeholder copy for now — HOSTAWAY INTEGRATION POINT:
+         swap for the Hostaway Reviews API once the live integration phase
+         starts (see project plan). -->
+    <section class="section testimonials" aria-labelledby="about-testimonials-title">
+      <div class="container">
+        <h2 class="visually-hidden" id="about-testimonials-title" data-i18n="about.testimonials.title">What our guests say</h2>
+        <div class="testimonial-grid">
+          <div class="testimonial-card reveal">
+            <div class="testimonial-rating" role="img" aria-label="5 out of 5 stars">
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+            </div>
+            <p class="testimonial-quote" data-i18n="about.testimonials.1.quote">Every detail was taken care of before we even thought to ask. It felt less like a rental and more like being hosted by friends with impeccable taste.</p>
+            <footer class="testimonial-attr">
+              <p class="name" data-i18n="about.testimonials.1.name">Laura M.</p>
+              <p class="villa" data-i18n="about.testimonials.1.villa">Casa de las Estrellas, Playa del Carmen</p>
+            </footer>
           </div>
-          <div class="value-card reveal" data-delay="1">
-            <div class="value-num">02</div>
-            <h3 class="h3" data-i18n="about.values.2.title">End-to-end, one team</h3>
-            <p data-i18n="about.values.2.body">No call centers, no handoffs. The person who plans your stay is the person who hosts it. Twenty years taught us that details survive only when they never change hands.</p>
+          <div class="testimonial-card reveal" data-delay="1">
+            <div class="testimonial-rating" role="img" aria-label="5 out of 5 stars">
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+            </div>
+            <p class="testimonial-quote" data-i18n="about.testimonials.2.quote">From the first WhatsApp message to the moment we left, the team anticipated everything. Kasa Kefi was even more stunning in person.</p>
+            <footer class="testimonial-attr">
+              <p class="name" data-i18n="about.testimonials.2.name">Daniel R.</p>
+              <p class="villa" data-i18n="about.testimonials.2.villa">Kasa Kefi, Valle de Guadalupe</p>
+            </footer>
           </div>
-          <div class="value-card reveal" data-delay="2">
-            <div class="value-num">03</div>
-            <h3 class="h3" data-i18n="about.values.3.title">Two destinations, one standard</h3>
-            <p data-i18n="about.values.3.body">Beachfront or vineyard, the promise is identical: handpicked properties, immaculate upkeep, and service that anticipates rather than reacts.</p>
+          <div class="testimonial-card reveal" data-delay="2">
+            <div class="testimonial-rating" role="img" aria-label="5 out of 5 stars">
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+              <svg class="star is-filled" viewBox="0 0 20 20"><path d="M10 1l2.6 6 6.4.6-4.8 4.4 1.4 6.3L10 15l-5.6 3.3 1.4-6.3L1 6.6 7.4 6z"/></svg>
+            </div>
+            <p class="testimonial-quote" data-i18n="about.testimonials.3.quote">Two trips, two flawless stays. The kind of personal service you assume doesn't exist anymore — until you book with them.</p>
+            <footer class="testimonial-attr">
+              <p class="name" data-i18n="about.testimonials.3.name">Sofía & Mark T.</p>
+              <p class="villa" data-i18n="about.testimonials.3.villa">Villa Aqua, Playa del Carmen</p>
+            </footer>
           </div>
         </div>
       </div>
@@ -134,8 +148,7 @@
              alt="Open water, open calendar" loading="lazy">
       </div>
       <div class="container reveal">
-        <p class="eyebrow eyebrow--center" data-i18n="about.cta.eyebrow">Twenty years in — your stay is next</p>
-        <h2 class="h2" id="cta-title" style="max-width:20ch;margin-inline:auto" data-i18n-html="about.cta.title">Let's plan the trip they'll envy.</h2>
+        <h2 class="visually-hidden" id="cta-title" data-i18n="about.hero.title">About us</h2>
         <div class="cta-actions">
           <a class="btn btn-solid" href="contact.html" data-i18n="about.cta.contact">Contact us</a>
           <a class="btn btn-ghost" href="villas.html" data-i18n="about.cta.browse">Browse the villas</a>
