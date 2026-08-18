@@ -65,9 +65,9 @@ const MLS_VILLAS = [
     featured: true,
     short: "A fully staffed private resort in gated Playacar — pool and jacuzzi, squash court and gym, with a chef and butler who make every day effortless.",
     shortEs: "Un resort privado con personal completo en Playacar — alberca y jacuzzi, cancha de squash y gimnasio, con chef y mayordomo que hacen cada día sin esfuerzo.",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
-    imageAlt: "Villa Aqua's pool terrace in full Caribbean daylight",
-    imageAltEs: "La terraza de la alberca de Villa Aqua bajo la luz del Caribe",
+    image: "assets/img/villas/villa-aqua-1.webp",
+    imageAlt: "Villa Aqua's curved white facade framing the free-form pool",
+    imageAltEs: "La fachada blanca curva de Villa Aqua enmarcando la alberca de forma libre",
     showcaseImages: [
       { src: "assets/img/villas/villa-aqua-1.webp", alt: "Villa Aqua's curved white facade framing the free-form pool", altEs: "La fachada blanca curva de Villa Aqua enmarcando la alberca de forma libre" },
       { src: "assets/img/villas/villa-aqua-2.webp", alt: "Poolside umbrellas and loungers beneath the palms at Villa Aqua", altEs: "Sombrillas y camastros junto a la alberca bajo las palmeras en Villa Aqua" },
@@ -213,19 +213,13 @@ const MLS_VILLAS = [
         { src: "../assets/img/villas/villa-aqua-outdoor-53.webp",
           alt: "The pool and grounds at Villa Aqua — photo 48", altEs: "La alberca y los jardines en Villa Aqua — foto 48" },
         { src: "../assets/img/villas/villa-aqua-outdoor-54.webp",
-          alt: "The pool and grounds at Villa Aqua — photo 49", altEs: "La alberca y los jardines en Villa Aqua — foto 49" },
-        { src: "../assets/img/villas/villa-aqua-outdoor-55.webp",
-          alt: "The pool and grounds at Villa Aqua — photo 50", altEs: "La alberca y los jardines en Villa Aqua — foto 50" },
-        { src: "../assets/img/villas/villa-aqua-outdoor-56.webp",
-          alt: "The pool and grounds at Villa Aqua — photo 51", altEs: "La alberca y los jardines en Villa Aqua — foto 51" },
-        { src: "../assets/img/villas/villa-aqua-outdoor-57.webp",
-          alt: "The pool and grounds at Villa Aqua — photo 52", altEs: "La alberca y los jardines en Villa Aqua — foto 52" }
+          alt: "The pool and grounds at Villa Aqua — photo 49", altEs: "La alberca y los jardines en Villa Aqua — foto 49" }
       ] },
       { key: "living", images: [
-        { src: "../assets/img/villas/villa-aqua-living-01.webp",
-          alt: "The grand double-height living room, anchored by a sculptural spiral staircase", altEs: "La gran sala de doble altura, centrada por una escalera de caracol escultórica" },
         { src: "../assets/img/villas/villa-aqua-living-02.webp",
-          alt: "Another view of the sunken living room beneath the spiral staircase", altEs: "Otra vista de la sala hundida bajo la escalera de caracol" },
+          alt: "The grand double-height living room, anchored by a sculptural spiral staircase", altEs: "La gran sala de doble altura, centrada por una escalera de caracol escultórica" },
+        { src: "../assets/img/villas/villa-aqua-living-01.webp",
+          alt: "A closer view of the sunken living room seating area", altEs: "Una vista más cercana del área de estar de la sala hundida" },
         { src: "../assets/img/villas/villa-aqua-living-03.webp",
           alt: "A poolside lounge nook tucked beneath the curved glass walls", altEs: "Un rincón de descanso junto a la alberca bajo los muros curvos de cristal" },
         { src: "../assets/img/villas/villa-aqua-living-04.webp",
@@ -379,7 +373,7 @@ const MLS_VILLAS = [
         { src: "../assets/img/villas/villa-aqua-rooms-29.webp",
           alt: "A bedroom at Villa Aqua — photo 26", altEs: "Una recámara en Villa Aqua — foto 26" },
         { src: "../assets/img/villas/villa-aqua-rooms-30.webp",
-          alt: "A bedroom at Villa Aqua — photo 27", altEs: "Una recámara en Villa Aqua — foto 27" },
+          alt: "An ensuite bathroom shower at Villa Aqua", altEs: "Una regadera del baño en Villa Aqua" },
         { src: "../assets/img/villas/villa-aqua-rooms-31.webp",
           alt: "A bedroom at Villa Aqua — photo 28", altEs: "Una recámara en Villa Aqua — foto 28" },
         { src: "../assets/img/villas/villa-aqua-rooms-32.webp",
@@ -493,7 +487,7 @@ const MLS_VILLAS = [
         { src: "../assets/img/villas/villa-aqua-multipurpose-01.webp",
           alt: "The private squash court", altEs: "La cancha de squash privada" },
         { src: "../assets/img/villas/villa-aqua-multipurpose-02.webp",
-          alt: "The fully equipped home gym, with cardio machines and free weights", altEs: "El gimnasio totalmente equipado, con máquinas de cardio y pesas libres" },
+          alt: "A second angle of the squash and games room, with a ping-pong table and basketball hoop", altEs: "Otro ángulo de la cancha de squash y sala de juegos, con mesa de ping-pong y aro de básquetbol" },
         { src: "../assets/img/villas/villa-aqua-multipurpose-03.webp",
           alt: "The gym at Villa Aqua — photo 1", altEs: "El gimnasio en Villa Aqua — foto 1" },
         { src: "../assets/img/villas/villa-aqua-multipurpose-04.webp",
@@ -509,13 +503,7 @@ const MLS_VILLAS = [
         { src: "../assets/img/villas/villa-aqua-multipurpose-09.webp",
           alt: "The gym at Villa Aqua — photo 7", altEs: "El gimnasio en Villa Aqua — foto 7" },
         { src: "../assets/img/villas/villa-aqua-multipurpose-10.webp",
-          alt: "The gym at Villa Aqua — photo 8", altEs: "El gimnasio en Villa Aqua — foto 8" },
-        { src: "../assets/img/villas/villa-aqua-multipurpose-11.webp",
-          alt: "The gym at Villa Aqua — photo 9", altEs: "El gimnasio en Villa Aqua — foto 9" },
-        { src: "../assets/img/villas/villa-aqua-multipurpose-12.webp",
-          alt: "The gym at Villa Aqua — photo 10", altEs: "El gimnasio en Villa Aqua — foto 10" },
-        { src: "../assets/img/villas/villa-aqua-multipurpose-13.webp",
-          alt: "The gym at Villa Aqua — photo 11", altEs: "El gimnasio en Villa Aqua — foto 11" }
+          alt: "The gym at Villa Aqua — photo 8", altEs: "El gimnasio en Villa Aqua — foto 8" }
       ] }
     ],
     faqs: [
@@ -573,6 +561,8 @@ const MLS_VILLAS = [
     destination: "valle-de-guadalupe",
     destinationLabel: "Valle de Guadalupe",
     destinationLabelEs: "Valle de Guadalupe",
+    lat: 32.107065,
+    lng: -116.5662757,
     guests: 12,
     bedrooms: 4,
     priceFromPerNight: 1100, // HOSTAWAY INTEGRATION POINT — replace with live pricing API
@@ -592,9 +582,9 @@ const MLS_VILLAS = [
     featured: true,
     short: "A contemporary villa on a private vineyard estate — infinity plunge pool, fire-pit terraces, and Valle de Guadalupe's finest wineries minutes away.",
     shortEs: "Villa contemporánea en una finca vinícola privada — alberca infinita, terrazas con fogata y las mejores bodegas del Valle de Guadalupe a minutos.",
-    image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80",
-    imageAlt: "Kasa Kefi overlooking the Kasa Kava vineyards",
-    imageAltEs: "Kasa Kefi con vista a los viñedos de Kasa Kava",
+    image: "assets/img/villas/kasa-kefi-1.webp",
+    imageAlt: "Kasa Kefi's concrete and corten-steel silhouette above the vineyard rows, mountains behind",
+    imageAltEs: "La silueta de concreto y acero corten de Kasa Kefi sobre las hileras del viñedo, con las montañas detrás",
     showcaseImages: [
       { src: "assets/img/villas/kasa-kefi-1.webp", alt: "Kasa Kefi's concrete and corten-steel silhouette above the vineyard rows, mountains behind", altEs: "La silueta de concreto y acero corten de Kasa Kefi sobre las hileras del viñedo, con las montañas detrás" },
       { src: "assets/img/villas/kasa-kefi-2.webp", alt: "Kasa Kefi glowing at night, perched on the hillside above the valley", altEs: "Kasa Kefi iluminada de noche, asomada en la ladera sobre el valle" },
@@ -687,7 +677,13 @@ const MLS_VILLAS = [
         { src: "../assets/img/villas/kasa-kefi-outdoor-52.webp", alt: "The outdoor terrace at Kasa Kefi — photo 52", altEs: "La terraza exterior en Kasa Kefi — foto 52" },
         { src: "../assets/img/villas/kasa-kefi-outdoor-53.webp", alt: "The outdoor terrace at Kasa Kefi — photo 53", altEs: "La terraza exterior en Kasa Kefi — foto 53" },
         { src: "../assets/img/villas/kasa-kefi-outdoor-54.webp", alt: "The outdoor terrace at Kasa Kefi — photo 54", altEs: "La terraza exterior en Kasa Kefi — foto 54" },
-        { src: "../assets/img/villas/kasa-kefi-outdoor-55.webp", alt: "The outdoor terrace at Kasa Kefi — photo 55", altEs: "La terraza exterior en Kasa Kefi — foto 55" }
+        { src: "../assets/img/villas/kasa-kefi-kitchen-07.webp", alt: "The exterior concrete facade and driveway at Kasa Kefi", altEs: "La fachada exterior de concreto y la entrada de autos en Kasa Kefi" },
+        { src: "../assets/img/villas/kasa-kefi-kitchen-09.webp", alt: "Kasa Kefi from above at sunset — photo 2", altEs: "Kasa Kefi desde el aire al atardecer — foto 2" },
+        { src: "../assets/img/villas/kasa-kefi-rooms-81.webp", alt: "The rooftop pool and terrace at Kasa Kefi", altEs: "La alberca y terraza en la azotea de Kasa Kefi" },
+        { src: "../assets/img/villas/kasa-kefi-rooms-82.webp", alt: "Kasa Kefi from above — photo 1", altEs: "Kasa Kefi desde el aire — foto 1" },
+        { src: "../assets/img/villas/kasa-kefi-rooms-83.webp", alt: "Kasa Kefi from above — photo 2", altEs: "Kasa Kefi desde el aire — foto 2" },
+        { src: "../assets/img/villas/kasa-kefi-rooms-84.webp", alt: "Kasa Kefi from above — photo 3", altEs: "Kasa Kefi desde el aire — foto 3" },
+        { src: "../assets/img/villas/kasa-kefi-multipurpose-03.webp", alt: "Kasa Kefi from above at night, lit against the dark valley", altEs: "Kasa Kefi desde el aire de noche, iluminada contra el valle oscuro" }
       ] },
       { key: "rooms", images: [
         { src: "../assets/img/villas/kasa-kefi-rooms-01.webp",
@@ -773,10 +769,9 @@ const MLS_VILLAS = [
         { src: "../assets/img/villas/kasa-kefi-rooms-78.webp", alt: "A bedroom suite at Kasa Kefi — photo 78", altEs: "Una suite en Kasa Kefi — foto 78" },
         { src: "../assets/img/villas/kasa-kefi-rooms-79.webp", alt: "A bedroom suite at Kasa Kefi — photo 79", altEs: "Una suite en Kasa Kefi — foto 79" },
         { src: "../assets/img/villas/kasa-kefi-rooms-80.webp", alt: "A bedroom suite at Kasa Kefi — photo 80", altEs: "Una suite en Kasa Kefi — foto 80" },
-        { src: "../assets/img/villas/kasa-kefi-rooms-81.webp", alt: "A bedroom suite at Kasa Kefi — photo 81", altEs: "Una suite en Kasa Kefi — foto 81" },
-        { src: "../assets/img/villas/kasa-kefi-rooms-82.webp", alt: "A bedroom suite at Kasa Kefi — photo 82", altEs: "Una suite en Kasa Kefi — foto 82" },
-        { src: "../assets/img/villas/kasa-kefi-rooms-83.webp", alt: "A bedroom suite at Kasa Kefi — photo 83", altEs: "Una suite en Kasa Kefi — foto 83" },
-        { src: "../assets/img/villas/kasa-kefi-rooms-84.webp", alt: "A bedroom suite at Kasa Kefi — photo 84", altEs: "Una suite en Kasa Kefi — foto 84" }
+        { src: "../assets/img/villas/kasa-kefi-living-25.webp", alt: "An ensuite bathroom at Kasa Kefi, with a walk-in shower and travertine finishes", altEs: "Un baño en Kasa Kefi, con regadera y acabados de travertino" },
+        { src: "../assets/img/villas/kasa-kefi-multipurpose-04.webp", alt: "A bedroom suite's ensuite bathroom at Kasa Kefi — photo 1", altEs: "El baño de una suite en Kasa Kefi — foto 1" },
+        { src: "../assets/img/villas/kasa-kefi-multipurpose-05.webp", alt: "A bedroom suite's ensuite bathroom at Kasa Kefi — photo 2", altEs: "El baño de una suite en Kasa Kefi — foto 2" }
       ] },
       { key: "kitchen", images: [
         { src: "../assets/img/villas/kasa-kefi-kitchen-01.webp",
@@ -786,10 +781,7 @@ const MLS_VILLAS = [
         { src: "../assets/img/villas/kasa-kefi-kitchen-03.webp", alt: "The kitchen at Kasa Kefi — photo 3", altEs: "La cocina en Kasa Kefi — foto 3" },
         { src: "../assets/img/villas/kasa-kefi-kitchen-04.webp", alt: "The kitchen at Kasa Kefi — photo 4", altEs: "La cocina en Kasa Kefi — foto 4" },
         { src: "../assets/img/villas/kasa-kefi-kitchen-05.webp", alt: "The kitchen at Kasa Kefi — photo 5", altEs: "La cocina en Kasa Kefi — foto 5" },
-        { src: "../assets/img/villas/kasa-kefi-kitchen-06.webp", alt: "The kitchen at Kasa Kefi — photo 6", altEs: "La cocina en Kasa Kefi — foto 6" },
-        { src: "../assets/img/villas/kasa-kefi-kitchen-07.webp", alt: "The kitchen at Kasa Kefi — photo 7", altEs: "La cocina en Kasa Kefi — foto 7" },
-        { src: "../assets/img/villas/kasa-kefi-kitchen-08.webp", alt: "The kitchen at Kasa Kefi — photo 8", altEs: "La cocina en Kasa Kefi — foto 8" },
-        { src: "../assets/img/villas/kasa-kefi-kitchen-09.webp", alt: "The kitchen at Kasa Kefi — photo 9", altEs: "La cocina en Kasa Kefi — foto 9" }
+        { src: "../assets/img/villas/kasa-kefi-kitchen-06.webp", alt: "The kitchen at Kasa Kefi — photo 6", altEs: "La cocina en Kasa Kefi — foto 6" }
       ] },
       { key: "living", images: [
         { src: "../assets/img/villas/kasa-kefi-living-01.webp",
@@ -851,10 +843,7 @@ const MLS_VILLAS = [
       { key: "multipurpose", images: [
         { src: "../assets/img/villas/kasa-kefi-multipurpose-01.webp",
           alt: "A flexible dining and game nook, with a hand-carved tic-tac-toe display on the wall", altEs: "Un rincón flexible de comedor y juegos, con un tablero de gato tallado a mano en la pared" },
-        { src: "../assets/img/villas/kasa-kefi-multipurpose-02.webp", alt: "A flexible living space at Kasa Kefi — photo 2", altEs: "Un espacio flexible en Kasa Kefi — foto 2" },
-        { src: "../assets/img/villas/kasa-kefi-multipurpose-03.webp", alt: "A flexible living space at Kasa Kefi — photo 3", altEs: "Un espacio flexible en Kasa Kefi — foto 3" },
-        { src: "../assets/img/villas/kasa-kefi-multipurpose-04.webp", alt: "A flexible living space at Kasa Kefi — photo 4", altEs: "Un espacio flexible en Kasa Kefi — foto 4" },
-        { src: "../assets/img/villas/kasa-kefi-multipurpose-05.webp", alt: "A flexible living space at Kasa Kefi — photo 5", altEs: "Un espacio flexible en Kasa Kefi — foto 5" }
+        { src: "../assets/img/villas/kasa-kefi-multipurpose-02.webp", alt: "A flexible living space at Kasa Kefi — photo 2", altEs: "Un espacio flexible en Kasa Kefi — foto 2" }
       ] }
     ],
     faqs: [
@@ -933,9 +922,9 @@ const MLS_VILLAS = [
     featured: true,
     short: "Our grandest beachfront address — eleven ensuite bedrooms, an infinity pool over the Caribbean, home cinema, and staff for twenty-two.",
     shortEs: "Nuestra dirección más grandiosa frente al mar — once recámaras con baño propio, alberca infinita sobre el Caribe, cine privado y personal para veintidós.",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-    imageAlt: "Casa Corazon Luxe's white courtyard architecture in afternoon light",
-    imageAltEs: "La arquitectura blanca del patio de Casa Corazon Luxe en la luz de la tarde",
+    image: "assets/img/villas/casa-corazon-luxe-1.webp",
+    imageAlt: "Casa Corazon Luxe's palapa living room opening to the pool and the Caribbean",
+    imageAltEs: "La sala palapa de Casa Corazon Luxe, abierta hacia la alberca y el Caribe",
     showcaseImages: [
       { src: "assets/img/villas/casa-corazon-luxe-1.webp", alt: "Casa Corazon Luxe's palapa living room opening to the pool and the Caribbean", altEs: "La sala palapa de Casa Corazon Luxe, abierta hacia la alberca y el Caribe" },
       { src: "assets/img/villas/casa-corazon-luxe-2.webp", alt: "The tiled lap pool between Casa Corazon Luxe's casitas", altEs: "La alberca de azulejo entre las casitas de Casa Corazon Luxe" },
@@ -1208,6 +1197,14 @@ const MLS_VILLAS = [
         { src: "../assets/img/villas/casa-corazon-luxe-interiors-32.webp",
           alt: "Living room 2 at Casa Corazon Luxe — photo 9", altEs: "Sala 2 en Casa Corazon Luxe — foto 9" }
       ] },
+      { key: "interiors", images: [
+        { src: "../assets/img/villas/casa-corazon-luxe-interiors-33.webp",
+          alt: "The entrance doors framing the pool and Caribbean beyond", altEs: "Las puertas de entrada enmarcando la alberca y el Caribe al fondo" },
+        { src: "../assets/img/villas/casa-corazon-luxe-interiors-34.webp",
+          alt: "A covered walkway lined with beams, steps from the beach", altEs: "Un pasillo techado con vigas de madera, a pasos de la playa" },
+        { src: "../assets/img/villas/casa-corazon-luxe-interiors-35.webp",
+          alt: "A stone courtyard nook along the entrance walkway", altEs: "Un rincón de piedra junto al pasillo de entrada" }
+      ] },
       { key: "multipurpose", images: [
         { src: "../assets/img/villas/casa-corazon-luxe-multipurpose-01.webp",
           alt: "The home cinema, ready for movie night", altEs: "El cine en casa, listo para noche de película" },
@@ -1231,8 +1228,6 @@ const MLS_VILLAS = [
           alt: "The game room at Casa Corazon Luxe — photo 3", altEs: "El salón de juegos en Casa Corazon Luxe — foto 3" },
         { src: "../assets/img/villas/casa-corazon-luxe-multipurpose-11.webp",
           alt: "The game room at Casa Corazon Luxe — photo 4", altEs: "El salón de juegos en Casa Corazon Luxe — foto 4" },
-        { src: "../assets/img/villas/casa-corazon-luxe-multipurpose-12.webp",
-          alt: "The gym at Casa Corazon Luxe — photo 1", altEs: "El gimnasio en Casa Corazon Luxe — foto 1" },
         { src: "../assets/img/villas/casa-corazon-luxe-multipurpose-13.webp",
           alt: "The gym at Casa Corazon Luxe — photo 2", altEs: "El gimnasio en Casa Corazon Luxe — foto 2" },
         { src: "../assets/img/villas/casa-corazon-luxe-multipurpose-14.webp",
@@ -1319,9 +1314,9 @@ const MLS_VILLAS = [
     featured: true,
     short: "A serene escape in gated Playacar — rooftop jacuzzi, heated plunge pool, and the beach a thirty-second walk from your door.",
     shortEs: "Un escape sereno en la comunidad cerrada de Playacar — jacuzzi en la azotea, alberca climatizada y la playa a treinta segundos de tu puerta.",
-    image: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80",
-    imageAlt: "Casa de las Estrellas' pool terrace framed by palms",
-    imageAltEs: "La terraza de la alberca de Casa de las Estrellas enmarcada por palmeras",
+    image: "assets/img/villas/casa-de-las-estrellas-1.webp",
+    imageAlt: "Casa de las Estrellas' dining and lounge area opening to the pool",
+    imageAltEs: "El comedor y la sala de estar de Casa de las Estrellas, abiertos hacia la alberca",
     showcaseImages: [
       { src: "assets/img/villas/casa-de-las-estrellas-1.webp", alt: "Casa de las Estrellas' dining and lounge area opening to the pool", altEs: "El comedor y la sala de estar de Casa de las Estrellas, abiertos hacia la alberca" },
       { src: "assets/img/villas/casa-de-las-estrellas-2.webp", alt: "A suite at Casa de las Estrellas with a wood headboard and garden view", altEs: "Una suite en Casa de las Estrellas con cabecera de madera y vista al jardín" },
@@ -1360,7 +1355,7 @@ const MLS_VILLAS = [
         { src: "../assets/img/villas/casa-de-las-estrellas-outdoor-01.webp",
           alt: "The open-air dining and lounge terrace, steps from the heated plunge pool", altEs: "La terraza de comedor y sala al aire libre, a pasos de la alberca climatizada" },
         { src: "../assets/img/villas/casa-de-las-estrellas-outdoor-02.webp",
-          alt: "The beach, thirty seconds from the villa's door", altEs: "La playa, a treinta segundos de la puerta de la villa" },
+          alt: "The covered outdoor lounge opening into the dining room, steps from the pool", altEs: "La sala exterior cubierta que se abre hacia el comedor, a pasos de la alberca" },
         { src: "../assets/img/villas/casa-de-las-estrellas-outdoor-03.webp",
           alt: "The tiled plunge pool framed by palms just off the covered terrace", altEs: "La alberca de azulejo enmarcada por palmeras, junto a la terraza cubierta" },
         { src: "../assets/img/villas/casa-de-las-estrellas-outdoor-04.webp",
@@ -1372,7 +1367,9 @@ const MLS_VILLAS = [
         { src: "../assets/img/villas/casa-de-las-estrellas-outdoor-07.webp",
           alt: "The garden entrance at Casa de las Estrellas — photo 2", altEs: "La entrada ajardinada en Casa de las Estrellas — foto 2" },
         { src: "../assets/img/villas/casa-de-las-estrellas-outdoor-08.webp",
-          alt: "The garden entrance at Casa de las Estrellas — photo 3", altEs: "La entrada ajardinada en Casa de las Estrellas — foto 3" }
+          alt: "The garden entrance at Casa de las Estrellas — photo 3", altEs: "La entrada ajardinada en Casa de las Estrellas — foto 3" },
+        { src: "../assets/img/villas/casa-de-las-estrellas-kitchen-09.webp",
+          alt: "The plunge pool framed by palms, seen from the covered terrace", altEs: "La alberca chica enmarcada por palmeras, vista desde la terraza cubierta" }
       ] },
       { key: "living", images: [
         { src: "../assets/img/villas/casa-de-las-estrellas-living-01.webp",

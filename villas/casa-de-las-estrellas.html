@@ -66,9 +66,9 @@
 
     <!-- ============ Specs + description (left) / availability calendar (right) — rendered from villas-data.js ============ -->
     <div class="container detail-layout">
+      <div class="specs-bar" data-villa-specs></div>
       <div class="detail-intro-grid">
         <div class="detail-intro-copy">
-          <div class="specs-bar" data-villa-specs></div>
           <div class="residence-split-copy">
             <p data-i18n-html="detail.estrellas.lead2">Casa de las Estrellas features <strong>three ensuite suites plus a private studio</strong>, just <strong>30 seconds from the beach</strong> in Playacar Phase I.</p>
             <p data-i18n-html="detail.estrellas.body1">Enjoy a <strong>heated plunge pool, rooftop terrace with ocean-view jacuzzi</strong>, plus <strong>daily housekeeping and 24/7 concierge</strong>. Private chef, spa treatments, and Riviera Maya experiences can also be arranged.</p>
@@ -81,12 +81,75 @@
         <div class="villa-calendar" data-villa-calendar></div>
       </div>
 
-      <div class="amenities-panel">
-        <div class="container">
-          <h3 class="h3" data-i18n="detail.amenities.title">Amenities</h3>
-          <!-- Rendered from assets/js/villas-data.js — HOSTAWAY swap point -->
-          <div class="amenities-categories" data-villa-amenities></div>
-          <button class="amenities-toggle" type="button" data-amenities-toggle aria-expanded="false" data-i18n="detail.amenities.showAll">Show all amenities</button>
+      <!-- ============ Price box (left) + Amenities, half-width (right) ============ -->
+      <div class="detail-lower-grid">
+        <!-- Standalone price + check-in/check-out + guests widget — see the
+             price-box block in main.js. HOSTAWAY INTEGRATION POINT (via
+             Vercel): swap villa.priceFromPerNight for a live quote once
+             dates + guests are picked here. -->
+        <div class="villa-price-box" data-price-box>
+          <div class="villa-price-amount-row">
+            <span class="villa-price-amount" data-price-amount>—</span>
+            <span class="villa-price-unit" data-i18n="detail.book.perNight">/ night</span>
+          </div>
+          <div class="villa-price-dates">
+            <div class="villa-price-date-field" data-price-date-field="checkin">
+              <button type="button" class="villa-price-date-trigger" data-price-date-trigger aria-haspopup="dialog" aria-expanded="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M7 3v3M17 3v3M4 9h16M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z"/></svg>
+                <span data-price-date-text data-i18n="detail.book.checkin">Check In</span>
+              </button>
+              <div class="trip-calendar" data-price-calendar hidden>
+                <div class="trip-calendar-header">
+                  <button type="button" class="trip-calendar-nav" data-price-cal-prev aria-label="Previous month">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
+                  </button>
+                  <span class="trip-calendar-month" data-price-cal-month></span>
+                  <button type="button" class="trip-calendar-nav" data-price-cal-next aria-label="Next month">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
+                  </button>
+                </div>
+                <div class="trip-calendar-weekdays" data-price-cal-weekdays></div>
+                <div class="trip-calendar-days" data-price-cal-days></div>
+              </div>
+            </div>
+            <div class="villa-price-date-field" data-price-date-field="checkout">
+              <button type="button" class="villa-price-date-trigger" data-price-date-trigger aria-haspopup="dialog" aria-expanded="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M7 3v3M17 3v3M4 9h16M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z"/></svg>
+                <span data-price-date-text data-i18n="detail.book.checkout">Check Out</span>
+              </button>
+              <div class="trip-calendar" data-price-calendar hidden>
+                <div class="trip-calendar-header">
+                  <button type="button" class="trip-calendar-nav" data-price-cal-prev aria-label="Previous month">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
+                  </button>
+                  <span class="trip-calendar-month" data-price-cal-month></span>
+                  <button type="button" class="trip-calendar-nav" data-price-cal-next aria-label="Next month">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
+                  </button>
+                </div>
+                <div class="trip-calendar-weekdays" data-price-cal-weekdays></div>
+                <div class="trip-calendar-days" data-price-cal-days></div>
+              </div>
+            </div>
+          </div>
+          <div class="villa-price-guests">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span class="villa-price-guests-label"><span data-price-guests-value>1</span> <span data-i18n="detail.book.guests">Guests</span></span>
+            <span class="villa-price-guests-controls">
+              <button type="button" class="villa-price-guests-btn" data-price-guests-dec aria-label="Decrease guests">&minus;</button>
+              <button type="button" class="villa-price-guests-btn" data-price-guests-inc aria-label="Increase guests">+</button>
+            </span>
+          </div>
+          <p class="villa-price-note" data-i18n="detail.book.note">Estimate only — final rate depends on your dates, season, and guest count.</p>
+        </div>
+
+        <div class="amenities-panel amenities-panel--half">
+          <div class="container">
+            <h3 class="h3" data-i18n="detail.amenities.title">Amenities</h3>
+            <!-- Rendered from assets/js/villas-data.js — HOSTAWAY swap point -->
+            <div class="amenities-categories" data-villa-amenities></div>
+            <button class="amenities-toggle" type="button" data-amenities-toggle aria-expanded="false" data-i18n="detail.amenities.showAll">Show all amenities</button>
+          </div>
         </div>
       </div>
     </div>
@@ -121,7 +184,7 @@
       </div>
       <div class="property-map reveal" data-delay="1">
         <div class="property-map-frame">
-          <iframe class="property-map-embed" src="https://www.google.com/maps/embed?pb=!1m3!3m2!1m1!4s10484974437753813528" title="Map showing Casa de las Estrellas' location" loading="lazy"></iframe>
+          <div class="property-map-embed" data-property-map data-villa-slug="casa-de-las-estrellas" role="img" aria-label="Map showing Casa de las Estrellas' location"></div>
         </div>
       </div>
     </section>
@@ -134,16 +197,6 @@
         <p class="eyebrow eyebrow--center reveal" data-i18n="detail.testimonials.eyebrow">Guest stories</p>
         <h2 class="visually-hidden" id="testimonials-title" data-i18n="detail.testimonials.hidden">What guests say</h2>
         <div class="reveal" data-delay="1" data-villa-testimonials></div>
-      </div>
-    </section>
-
-    <!-- ============ Rates ============ -->
-    <!-- HOSTAWAY INTEGRATION POINT (via Vercel): swap .rates-placeholder for live
-         nightly/weekly rates from the Hostaway pricing API.
-         Docs: https://api.hostaway.com/documentation -->
-    <section class="section" aria-label="Rates for Casa de las Estrellas">
-      <div class="container">
-        <div class="rates-placeholder reveal" data-i18n-html="detail.availability.ratesPlaceholder">Rates<br>Hostaway pricing — coming soon</div>
       </div>
     </section>
 

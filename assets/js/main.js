@@ -596,6 +596,13 @@
     });
   }
 
+  /* ---------- Map pin click target: every brand-pin marker on the site opens
+     the exact location on Google Maps in a new tab, rather than an in-page
+     popup. ---------- */
+  function mlsGoogleMapsUrl(lat, lng) {
+    return `https://www.google.com/maps?q=${lat},${lng}`;
+  }
+
   /* ---------- Destination villa map: pins from villas-data.js, lazy-loaded Leaflet
      (CSS/JS injected only once the map container nears the viewport, so it never
      costs first paint or blocks SEO-critical content). ---------- */
@@ -613,33 +620,19 @@
       return L.divIcon({
         className: "mls-map-pin",
         html: '<span class="mls-map-pin-dot"><img src="assets/img/brand/icon-positive.png" alt="" width="16" height="13" loading="lazy"></span>',
-        iconSize: [34, 44],
-        iconAnchor: [17, 44],
-        popupAnchor: [0, -38]
+        iconSize: [44, 62],
+        iconAnchor: [22, 60],
+        popupAnchor: [0, -56]
       });
-    }
-
-    function mlsMapPopupHtml(villa) {
-      const lang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
-      const t = typeof window.mlsT === "function" ? window.mlsT : (key) => key;
-      const imageAlt = (lang === "es" && villa.imageAltEs) || villa.imageAlt;
-      return `
-        <a class="map-popup" href="villas/${villa.slug}.html">
-          <img class="map-popup-img" src="${villa.image}" alt="${imageAlt}" width="240" height="150" loading="lazy">
-          <span class="map-popup-body">
-            <span class="map-popup-name">${villa.name}</span>
-            <span class="map-popup-specs">${villa.bedrooms} ${t("card.bedrooms", lang)} · ${villa.guests} ${t("card.guests", lang)}</span>
-            <span class="map-popup-cta">${t("destPlaya.map.viewVilla", lang)}</span>
-          </span>
-        </a>`;
     }
 
     function renderMapMarkers() {
       if (!leafletMap) return;
       mapMarkers.forEach((m) => m.remove());
       mapMarkers = mapVillas.map((villa) => {
-        const marker = L.marker([villa.lat, villa.lng], { icon: mlsBrandPinIcon() }).addTo(leafletMap);
-        marker.bindPopup(mlsMapPopupHtml(villa), { maxWidth: 260, className: "mls-map-popup" });
+        const marker = L.marker([villa.lat, villa.lng], { icon: mlsBrandPinIcon(), title: villa.name })
+          .addTo(leafletMap);
+        marker.on("click", () => window.open(mlsGoogleMapsUrl(villa.lat, villa.lng), "_blank", "noopener"));
         return marker;
       });
     }
@@ -702,6 +695,76 @@
        (or the viewport later resizes across the tablet/desktop breakpoint),
        nudge it to recompute so tiles don't stay cropped or offset. */
     window.addEventListener("resize", () => { leafletMap && leafletMap.invalidateSize(); });
+  }
+
+  /* ---------- Property page map: single brand-pin marker for that villa,
+     replacing what used to be a Google Maps embed (whose red pin can't be
+     restyled). Reuses the same lazy-loaded Leaflet as the destination map. */
+  const propertyMapEls = document.querySelectorAll("[data-property-map]");
+  if (propertyMapEls.length && typeof MLS_VILLAS !== "undefined") {
+    propertyMapEls.forEach((el) => {
+      const villa = MLS_VILLAS.find((v) => v.slug === el.dataset.villaSlug);
+      if (!villa || typeof villa.lat !== "number" || typeof villa.lng !== "number") return;
+
+      function initPropertyMap() {
+        el.innerHTML = "";
+        const map = L.map(el, {
+          scrollWheelZoom: false,
+          zoomControl: false,
+          attributionControl: true
+        }).setView([villa.lat, villa.lng], 14);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+        }).addTo(map);
+        const marker = L.marker([villa.lat, villa.lng], {
+          icon: L.divIcon({
+            className: "mls-map-pin",
+            html: '<span class="mls-map-pin-dot"><img src="../assets/img/brand/icon-positive.png" alt="" width="16" height="13" loading="lazy"></span>',
+            iconSize: [44, 62],
+            iconAnchor: [22, 60]
+          }),
+          title: villa.name
+        }).addTo(map);
+        marker.on("click", () => window.open(mlsGoogleMapsUrl(villa.lat, villa.lng), "_blank", "noopener"));
+        window.addEventListener("resize", () => map.invalidateSize());
+      }
+
+      function loadLeafletThenInitProperty() {
+        if (window.L) { initPropertyMap(); return; }
+        if (!document.querySelector('link[href*="leaflet.css"]')) {
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+          link.integrity = "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
+          link.crossOrigin = "";
+          document.head.appendChild(link);
+        }
+        const existingScript = document.querySelector('script[src*="leaflet.js"]');
+        if (existingScript) { existingScript.addEventListener("load", initPropertyMap); return; }
+        const script = document.createElement("script");
+        script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+        script.integrity = "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=";
+        script.crossOrigin = "";
+        script.onload = initPropertyMap;
+        document.head.appendChild(script);
+      }
+
+      if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+        loadLeafletThenInitProperty();
+      } else {
+        const observer = new IntersectionObserver(
+          (entries, obs) => {
+            if (entries.some((e) => e.isIntersecting)) {
+              obs.disconnect();
+              loadLeafletThenInitProperty();
+            }
+          },
+          { rootMargin: "300px" }
+        );
+        observer.observe(el);
+      }
+    });
   }
 
   /* ---------- Amenity icons: keyword-matched against the English label ---------- */
@@ -1147,6 +1210,118 @@
         amenitiesToggle.setAttribute("aria-expanded", String(amenitiesExpanded));
         updateAmenitiesToggleLabel();
       });
+
+      /* ---------- Price box: standalone price + check-in/check-out date
+         pickers + guests stepper, next to the (unchanged) Amenities panel.
+         Not wired into the Availability calendar above — its own small
+         popovers, reusing the same calendar look as the contact page's
+         date pickers. HOSTAWAY INTEGRATION POINT (via Vercel): swap
+         villa.priceFromPerNight for a live quote once dates + guests are
+         picked here. */
+      const priceBox = detailRoot.querySelector("[data-price-box]");
+      if (priceBox) {
+        const priceEl = priceBox.querySelector("[data-price-amount]");
+        if (priceEl) priceEl.textContent = `$${villa.priceFromPerNight.toLocaleString("en-US")}`;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const sameDay = (a, b) => a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+        const lang = () => (typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en");
+        const locale = () => (lang() === "es" ? "es-MX" : "en-US");
+
+        priceBox.querySelectorAll("[data-price-date-field]").forEach((fieldEl) => {
+          const trigger = fieldEl.querySelector("[data-price-date-trigger]");
+          const textEl = fieldEl.querySelector("[data-price-date-text]");
+          const panel = fieldEl.querySelector("[data-price-calendar]");
+          const monthEl = panel.querySelector("[data-price-cal-month]");
+          const weekdaysEl = panel.querySelector("[data-price-cal-weekdays]");
+          const daysEl = panel.querySelector("[data-price-cal-days]");
+          const prevBtn = panel.querySelector("[data-price-cal-prev]");
+          const nextBtn = panel.querySelector("[data-price-cal-next]");
+          let selected = null;
+          let viewDate = new Date(today);
+
+          const renderWeekdays = () => {
+            const base = new Date(2026, 0, 4);
+            weekdaysEl.innerHTML = "";
+            for (let i = 0; i < 7; i++) {
+              const d = new Date(base);
+              d.setDate(base.getDate() + i);
+              const span = document.createElement("span");
+              span.textContent = d.toLocaleDateString(locale(), { weekday: "narrow" });
+              weekdaysEl.appendChild(span);
+            }
+          };
+
+          const render = () => {
+            monthEl.textContent = viewDate.toLocaleDateString(locale(), { month: "long", year: "numeric" });
+            daysEl.innerHTML = "";
+            const year = viewDate.getFullYear(), month = viewDate.getMonth();
+            const firstWeekday = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            for (let i = 0; i < firstWeekday; i++) {
+              const spacer = document.createElement("span");
+              spacer.className = "trip-calendar-day-empty";
+              daysEl.appendChild(spacer);
+            }
+            for (let d = 1; d <= daysInMonth; d++) {
+              const cellDate = new Date(year, month, d);
+              const btn = document.createElement("button");
+              btn.type = "button";
+              btn.className = "trip-calendar-day";
+              btn.textContent = d;
+              if (cellDate < today) btn.disabled = true;
+              if (sameDay(cellDate, today)) btn.classList.add("is-today");
+              if (sameDay(cellDate, selected)) btn.classList.add("is-selected");
+              btn.addEventListener("click", () => selectDate(cellDate));
+              daysEl.appendChild(btn);
+            }
+            prevBtn.disabled = viewDate <= new Date(today.getFullYear(), today.getMonth(), 1);
+          };
+
+          const selectDate = (date) => {
+            selected = date;
+            textEl.textContent = date.toLocaleDateString(locale(), { month: "short", day: "numeric" });
+            fieldEl.classList.add("has-value");
+            close();
+          };
+
+          const open = () => {
+            priceBox.querySelectorAll("[data-price-calendar]").forEach((p) => { if (p !== panel) p.hidden = true; });
+            renderWeekdays();
+            render();
+            panel.hidden = false;
+            trigger.setAttribute("aria-expanded", "true");
+          };
+          const close = () => {
+            panel.hidden = true;
+            trigger.setAttribute("aria-expanded", "false");
+          };
+
+          trigger.addEventListener("click", () => (panel.hidden ? open() : close()));
+          prevBtn.addEventListener("click", () => { viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1); render(); });
+          nextBtn.addEventListener("click", () => { viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1); render(); });
+        });
+
+        document.addEventListener("click", (e) => {
+          if (priceBox.contains(e.target)) return;
+          priceBox.querySelectorAll("[data-price-calendar]").forEach((p) => { p.hidden = true; });
+          priceBox.querySelectorAll("[data-price-date-trigger]").forEach((b) => b.setAttribute("aria-expanded", "false"));
+        });
+
+        const guestsValueEl = priceBox.querySelector("[data-price-guests-value]");
+        const guestsDecBtn = priceBox.querySelector("[data-price-guests-dec]");
+        const guestsIncBtn = priceBox.querySelector("[data-price-guests-inc]");
+        let guests = 1;
+        const updateGuests = () => {
+          if (guestsValueEl) guestsValueEl.textContent = guests;
+          if (guestsDecBtn) guestsDecBtn.disabled = guests <= 1;
+          if (guestsIncBtn) guestsIncBtn.disabled = guests >= villa.guests;
+        };
+        guestsDecBtn?.addEventListener("click", () => { guests = Math.max(1, guests - 1); updateGuests(); });
+        guestsIncBtn?.addEventListener("click", () => { guests = Math.min(villa.guests, guests + 1); updateGuests(); });
+        updateGuests();
+      }
 
       renderVillaDetail();
     }
