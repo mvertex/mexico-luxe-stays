@@ -599,8 +599,8 @@
   /* ---------- Map pin click target: every brand-pin marker on the site opens
      the exact location on Google Maps in a new tab, rather than an in-page
      popup. ---------- */
-  function mlsGoogleMapsUrl(lat, lng) {
-    return `https://www.google.com/maps?q=${lat},${lng}`;
+  function mlsGoogleMapsUrl(villa) {
+    return villa.googleMapsUrl || `https://www.google.com/maps?q=${villa.lat},${villa.lng}`;
   }
 
   /* ---------- Destination villa map: pins from villas-data.js, lazy-loaded Leaflet
@@ -632,7 +632,7 @@
       mapMarkers = mapVillas.map((villa) => {
         const marker = L.marker([villa.lat, villa.lng], { icon: mlsBrandPinIcon(), title: villa.name })
           .addTo(leafletMap);
-        marker.on("click", () => window.open(mlsGoogleMapsUrl(villa.lat, villa.lng), "_blank", "noopener"));
+        marker.on("click", () => window.open(mlsGoogleMapsUrl(villa), "_blank", "noopener"));
         return marker;
       });
     }
@@ -726,7 +726,7 @@
           }),
           title: villa.name
         }).addTo(map);
-        marker.on("click", () => window.open(mlsGoogleMapsUrl(villa.lat, villa.lng), "_blank", "noopener"));
+        marker.on("click", () => window.open(mlsGoogleMapsUrl(villa), "_blank", "noopener"));
         window.addEventListener("resize", () => map.invalidateSize());
       }
 

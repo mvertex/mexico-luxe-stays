@@ -111,7 +111,12 @@ button { font: inherit; cursor: pointer; }
   font-size: clamp(3rem, 10vw, 8.5rem);
 }
 .brand-statement-text em { font-style: italic; font-weight: 400; color: var(--sage); }
-.brand-statement-logo { display: block; margin: 0 auto; width: auto; height: clamp(2.25rem, 7.5vw, 6.4rem); filter: invert(1); }
+.brand-statement-logo {
+  display: block; margin: 0 auto; height: clamp(2.25rem, 7.5vw, 6.4rem); aspect-ratio: 2696 / 279;
+  background-color: var(--gold);
+  -webkit-mask: url("../img/brand/wordmark-negative.png") center / contain no-repeat;
+  mask: url("../img/brand/wordmark-negative.png") center / contain no-repeat;
+}
 .brand-statement-copy {
   max-width: 46rem; margin: clamp(1.5rem, 4vw, 2.75rem) auto 0; text-align: center;
   font-weight: 400; color: var(--ink);
@@ -630,10 +635,11 @@ button { font: inherit; cursor: pointer; }
 .destination-intro .lead { max-width: 62ch; margin: 0 auto; text-align: center; color: var(--ink); }
 
 /* ---------- Destination villa map ---------- */
+#villa-map { padding-top: clamp(1.5rem, 3vw, 2.5rem); }
 .destination-map {
   position: relative; width: 100%; height: clamp(360px, 46vw, 520px);
   border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-card);
-  background: var(--sage-tint);
+  background: var(--sage-tint); isolation: isolate;
 }
 .destination-map-loading {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
@@ -1395,7 +1401,7 @@ button { font: inherit; cursor: pointer; }
   position: relative; width: 100%; aspect-ratio: 21 / 9;
   border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-card);
 }
-.property-map-embed { display: block; width: 100%; height: 100%; border: 0; background: var(--sage-tint); }
+.property-map-embed { display: block; width: 100%; height: 100%; border: 0; background: var(--sage-tint); position: relative; isolation: isolate; }
 .property-map-embed .leaflet-container { width: 100%; height: 100%; font-family: var(--font-sans); background: var(--sage-tint); }
 .property-map-embed .leaflet-control-attribution { font-size: .68rem; }
 @media (max-width: 640px) { .property-map-frame { aspect-ratio: 4 / 3; } }

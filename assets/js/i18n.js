@@ -112,7 +112,7 @@ const MLS_I18N = {
     "destPlaya.villas.eyebrow": "Riviera Maya",
     "destPlaya.villas.title": "Villas in <em>Playa del Carmen</em>",
     "destPlaya.intro.lead": "White sand beaches, turquoise water, and the vibrant pulse of the Riviera Maya. Handpicked villas, minutes from the sea.",
-    "destPlaya.map.title": "Find the on the map",
+    "destPlaya.map.title": "Find them on the map",
     "destPlaya.map.loading": "Loading map…",
     "destValle.hero.title": "Valle de Guadalupe",
     "destValle.hero.lead": "Mexico's premier wine region — world-class vineyards, farm-to-table dining, and star-filled desert nights, in a handpicked retreat.",
