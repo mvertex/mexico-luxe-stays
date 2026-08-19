@@ -127,35 +127,6 @@
     };
   }
 
-  /* ---------- Fit service tile names: each word renders on its own line, so
-     the width constraint is the single widest WORD in the whole set (not
-     the whole phrase), and the height constraint is however many lines the
-     wordiest title needs. Sets a real font-size (not a CSS transform:scale)
-     so line-height/spacing reflow properly and stacked words never overlap
-     each other; every title still ends up at the same final size. */
-  function mlsFitServiceTileNames(scope) {
-    const tiles = [...scope.querySelectorAll(".service-tile")];
-    const lines = [...scope.querySelectorAll(".service-tile-name-line")];
-    lines.forEach((el) => { el.style.fontSize = ""; });
-    if (!tiles.length || !lines.length) return;
-
-    const baseFontSize = parseFloat(getComputedStyle(lines[0]).fontSize);
-    const baseLineHeight = lines[0].getBoundingClientRect().height;
-
-    const tileStyles = getComputedStyle(tiles[0]);
-    const availableWidth = tiles[0].clientWidth - parseFloat(tileStyles.paddingLeft) - parseFloat(tileStyles.paddingRight);
-    const widestWord = Math.max(...lines.map((el) => el.scrollWidth));
-    const widthScale = widestWord ? (availableWidth * 0.94) / widestWord : 1;
-
-    const maxLineCount = Math.max(...tiles.map((tile) => tile.querySelectorAll(".service-tile-name-line").length));
-    const availableHeight = tiles[0].clientHeight - parseFloat(tileStyles.paddingTop) - parseFloat(tileStyles.paddingBottom);
-    const heightScale = baseLineHeight && maxLineCount ? availableHeight / (baseLineHeight * maxLineCount) : 1;
-
-    const scale = Math.min(widthScale, heightScale);
-    const fontSize = baseFontSize * scale;
-    lines.forEach((el) => { el.style.fontSize = `${fontSize}px`; });
-  }
-
   /* ---------- Lightbox: full-image viewer for the villa gallery showcase ---------- */
   let mlsOpenLightbox = null;
   const lightbox = document.querySelector("[data-lightbox]");
@@ -1062,35 +1033,20 @@
           }
         }
 
-        /* Services carousel: which concierge services this specific villa offers.
-           Default state shows only the giant, single-line name; hover/focus/tap
-           reveals the photo with the tag/title/body written over it. */
+        /* Services list: which concierge services this specific villa offers,
+           rendered as a plain numbered list (one row per service). */
         const servicesTrack = detailRoot.querySelector("[data-villa-services]");
         if (servicesTrack && villa.services && villa.services.length && typeof MLS_SERVICE_DEFS !== "undefined") {
           servicesTrack.innerHTML = villa.services
             .map((id, i) => {
               const def = MLS_SERVICE_DEFS[id];
               if (!def) return "";
-              const nameLines = t("services." + id + ".title")
-                .split(" ")
-                .map((word) => `<span class="service-tile-name-line">${word}</span>`)
-                .join("");
-              return `<div class="service-tile reveal" tabindex="0">
-                <span class="service-tile-index" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
-                <span class="service-tile-name">${nameLines}</span>
-                <div class="service-tile-media">
-                  <img src="${def.image}" alt="${def.alt}" loading="lazy" width="900" height="600">
-                  <div class="service-tile-overlay"></div>
-                  <div class="service-tile-info">
-                    <p class="service-tag">${t("services." + id + ".tag")}</p>
-                    <h3 class="h3">${t("services." + id + ".title")}</h3>
-                    <p>${t("services." + id + ".body")}</p>
-                  </div>
-                </div>
-              </div>`;
+              return `<li class="services-list-item reveal">
+                <span class="services-list-index" aria-hidden="true">${String(i + 1).padStart(2, "0")}.</span>
+                <span class="services-list-name">${t("services." + id + ".title")}</span>
+              </li>`;
             })
             .join("");
-          mlsFitServiceTileNames(servicesTrack);
         }
 
         /* Guest testimonials: rendered from villa.testimonials (see the
@@ -1100,19 +1056,26 @@
         if (testimonialsEl && villa.testimonials && villa.testimonials.length) {
           const starsHtml = (rating) =>
             Array.from({ length: 5 }, (_, i) => `<svg class="star${i < rating ? " is-filled" : ""}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7-5.4-4.7 7.1-.7z"/></svg>`).join("");
-          const slidesHtml = villa.testimonials
-            .map(
-              (r, i) => `<blockquote class="testimonial-slide${i === 0 ? " is-active" : ""}">
+          const quoteHtml = (r) => `<blockquote class="testimonial-quote-block">
                 <div class="testimonial-rating" role="img" aria-label="${r.rating} out of 5 stars">${starsHtml(r.rating)}</div>
                 <p class="testimonial-quote">${pick(r.quote)}</p>
                 <footer class="testimonial-attr">
                   <div class="name">${r.name}</div>
                   <div class="villa">${pick(r.context)}</div>
                 </footer>
-              </blockquote>`
+              </blockquote>`;
+          const pairs = [];
+          for (let i = 0; i < villa.testimonials.length; i += 2) {
+            pairs.push(villa.testimonials.slice(i, i + 2));
+          }
+          const slidesHtml = pairs
+            .map(
+              (pair, i) => `<div class="testimonial-slide${i === 0 ? " is-active" : ""}">
+                <div class="testimonial-pair">${pair.map(quoteHtml).join("")}</div>
+              </div>`
             )
             .join("");
-          const dotsHtml = villa.testimonials
+          const dotsHtml = pairs
             .map((_, i) => `<button type="button" class="${i === 0 ? "is-active" : ""}" aria-label="Testimonial ${i + 1}"></button>`)
             .join("");
           testimonialsEl.innerHTML = `${slidesHtml}<div class="testimonial-dots" role="tablist" aria-label="${t("detail.testimonials.chooseLabel")}">${dotsHtml}</div>`;
@@ -1728,92 +1691,6 @@
       const status = form.querySelector("[data-form-status]");
       if (status) status.textContent = t("detail.bookingCta.status");
     });
-  });
-
-  /* ---------- Services carousel: bleed-scroll track + prev/next + dots ---------- */
-  document.querySelectorAll("[data-services-carousel]").forEach((root) => {
-    const track = root.querySelector("[data-services-track]");
-    const prevBtn = root.querySelector("[data-services-prev]");
-    const nextBtn = root.querySelector("[data-services-next]");
-    const dotsWrap = root.querySelector("[data-services-dots]");
-    if (!track) return;
-
-    const cardStep = () => {
-      const card = track.querySelector(".service-tile");
-      if (!card) return 0;
-      const gap = parseFloat(getComputedStyle(track).columnGap || "0");
-      return card.getBoundingClientRect().width + gap;
-    };
-
-    const updateNav = () => {
-      const cards = [...track.children];
-      if (dotsWrap && dotsWrap.children.length !== cards.length) {
-        dotsWrap.innerHTML = cards
-          .map((_, i) => `<button type="button" class="carousel-dot${i === 0 ? " is-active" : ""}" data-services-dot="${i}" aria-label="${i + 1}"></button>`)
-          .join("");
-      }
-      const dots = dotsWrap ? [...dotsWrap.children] : [];
-      const maxScroll = track.scrollWidth - track.clientWidth;
-      if (prevBtn) prevBtn.disabled = track.scrollLeft <= 2;
-      if (nextBtn) nextBtn.disabled = track.scrollLeft >= maxScroll - 2;
-      if (dots.length) {
-        const idx = Math.min(Math.round(track.scrollLeft / cardStep()), dots.length - 1);
-        dots.forEach((d, i) => d.classList.toggle("is-active", i === idx));
-      }
-    };
-
-    prevBtn?.addEventListener("click", () => track.scrollBy({ left: -cardStep(), behavior: "smooth" }));
-    nextBtn?.addEventListener("click", () => track.scrollBy({ left: cardStep(), behavior: "smooth" }));
-    dotsWrap?.addEventListener("click", (e) => {
-      const dotBtn = e.target.closest("[data-services-dot]");
-      if (!dotBtn) return;
-      track.scrollTo({ left: parseInt(dotBtn.dataset.servicesDot, 10) * cardStep(), behavior: "smooth" });
-    });
-
-    let ticking = false;
-    track.addEventListener("scroll", () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => { updateNav(); ticking = false; });
-    });
-    window.addEventListener("resize", () => {
-      updateNav();
-      mlsFitServiceTileNames(track);
-    });
-
-    /* Browsers redirect a plain vertical mouse-wheel scroll into horizontal
-       scroll for any element that can only scroll on the x-axis (like this
-       track) — which traps page scrolling the moment the cursor is over the
-       carousel. Reclaim predominantly-vertical wheel gestures for the page;
-       let genuinely horizontal ones (trackpad swipes, shift+wheel) move the
-       carousel as expected. */
-    track.addEventListener(
-      "wheel",
-      (e) => {
-        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-          e.preventDefault();
-          window.scrollBy({ top: e.deltaY, left: 0, behavior: "instant" });
-        }
-      },
-      { passive: false }
-    );
-
-    /* Runs again once renderVillaDetail has actually populated the track
-       (this observer fires once on setup, and the MutationObserver below
-       keeps nav/dots in sync whenever the villa's service list re-renders). */
-    updateNav();
-    new MutationObserver(updateNav).observe(track, { childList: true });
-  });
-
-  /* ---------- Service tiles: not links, just an info reveal. Touch devices
-     have no hover, so a tap toggles the photo/info instead. Mouse/keyboard
-     users get the reveal from CSS :hover/:focus-visible. */
-  document.addEventListener("click", (e) => {
-    const tile = e.target.closest(".service-tile");
-    if (!tile || !window.matchMedia("(hover: none)").matches) return;
-    const wasActive = tile.classList.contains("is-active");
-    document.querySelectorAll(".service-tile.is-active").forEach((t) => t.classList.remove("is-active"));
-    if (!wasActive) tile.classList.add("is-active");
   });
 
   initReveal();

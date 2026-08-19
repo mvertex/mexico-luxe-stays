@@ -57,7 +57,6 @@
       </a>
       <div class="container">
         <h1 class="display" data-hero-reveal="2" data-i18n-html="destValle.hero.title">Valle de Guadalupe</h1>
-        <p class="lead" data-hero-reveal="3" data-i18n="destValle.hero.lead">Mexico's premier wine region — world-class vineyards, farm-to-table dining, and star-filled desert nights, in a handpicked retreat.</p>
       </div>
       <a class="hero-scroll-hint" href="#villas" data-i18n="home.scroll">Scroll</a>
     </section>
@@ -89,14 +88,35 @@
       </noscript>
     </section>
 
+    <!-- ============ Villa map ============ -->
+    <section class="section" id="villa-map" aria-label="Villa map">
+      <div class="container">
+        <div class="section-head reveal" style="text-align:center">
+          <h2 class="h2" data-i18n-html="destValle.map.title">Find them on the map</h2>
+        </div>
+
+        <!-- Leaflet is loaded lazily (see main.js) once this container nears the
+             viewport, so it never blocks first paint. Pins/popups are rendered
+             from assets/js/villas-data.js — HOSTAWAY swap point. -->
+        <div class="destination-map reveal" data-destination-map="valle-de-guadalupe">
+          <p class="destination-map-loading" data-i18n="destValle.map.loading">Loading map…</p>
+        </div>
+
+        <noscript>
+          <ul class="container">
+            <li><a href="https://www.google.com/maps?q=32.107065,-116.5662757" target="_blank" rel="noopener">Kasa Kefi — Google Maps</a></li>
+          </ul>
+        </noscript>
+      </div>
+    </section>
+
     <!-- ============ CTA banner ============ -->
-    <section class="section cta-banner" aria-labelledby="cta-title">
+    <section class="section cta-banner" aria-label="Contact">
       <div class="cta-media">
         <img src="assets/img/villas/bg-desierto.webp" alt="" loading="lazy">
       </div>
       <div class="container reveal">
-        <h2 class="h2" id="cta-title" style="max-width:20ch;margin-inline:auto" data-i18n-html="villas.cta.title">Some doors open only by <em>request</em>.</h2>
-        <div class="cta-actions">
+        <div class="cta-actions cta-actions-lg">
           <a class="btn btn-liquid" href="contact.html" data-i18n="villas.cta.ask">Ask our team</a>
           <a class="btn btn-liquid" href="https://wa.me/5219848079475" target="_blank" rel="noopener" data-i18n="villas.cta.whatsapp">WhatsApp us</a>
         </div>
