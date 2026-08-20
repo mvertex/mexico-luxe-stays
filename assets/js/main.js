@@ -1110,7 +1110,7 @@
             ${minStayHtml}
           </div>
           <p class="villa-calendar-note">${t("detail.calendar.note")}</p>
-          <div class="villa-calendar-confirm" data-cal-confirm hidden>
+          <div class="villa-calendar-confirm" data-cal-confirm>
             <p class="villa-calendar-confirm-text" data-cal-confirm-text></p>
             <a class="villa-calendar-confirm-cta" data-cal-confirm-cta href="#">${t("detail.calendar.confirmCta")}</a>
           </div>`;
@@ -1147,7 +1147,7 @@
             b.classList.toggle("is-in-range", !!(calSelectedCheckin && calSelectedCheckout && ds > calSelectedCheckin && ds < calSelectedCheckout));
           });
           if (!calSelectedCheckin) {
-            if (confirmEl) confirmEl.hidden = true;
+            if (confirmEl) confirmEl.classList.remove("is-active");
             return;
           }
           const villaParam = `villa=${encodeURIComponent(villa.slug)}`;
@@ -1158,7 +1158,7 @@
             if (confirmTextEl) confirmTextEl.textContent = t("detail.calendar.confirmNote").replace("{date}", calDateLabel(calSelectedCheckin));
             if (confirmCtaEl) confirmCtaEl.href = `../contact.html?${villaParam}&checkin=${calSelectedCheckin}`;
           }
-          if (confirmEl) confirmEl.hidden = false;
+          if (confirmEl) confirmEl.classList.add("is-active");
         };
         calEl.querySelectorAll("[data-cal-day]").forEach((dayBtn) => {
           dayBtn.addEventListener("click", () => {
