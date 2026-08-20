@@ -1283,7 +1283,7 @@ button { font: inherit; cursor: pointer; }
   align-items: stretch;
 }
 .detail-intro-copy { display: flex; flex-direction: column; height: 100%; }
-.detail-intro-copy .residence-split-copy { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.detail-intro-copy .residence-split-copy { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; }
 @media (max-width: 900px) { .detail-intro-copy { height: auto; } }
 .detail-intro-grid .residence-split-copy { text-align: left; margin-inline: 0; max-width: none; }
 @media (max-width: 900px) { .detail-intro-grid { grid-template-columns: 1fr; } }
