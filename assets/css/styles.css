@@ -686,6 +686,16 @@ button { font: inherit; cursor: pointer; }
 .mls-map-pin-dot img { width: 22px; height: 18px; display: block; }
 .mls-map-pin.leaflet-div-icon { cursor: pointer; }
 
+/* Property page map: the current villa's pin is enlarged and gold-bordered
+   so it reads as "you are here" against its sibling villas' plain pins. */
+.mls-map-pin-dot--current {
+  width: 52px; height: 60px;
+  border-color: var(--gold);
+  border-width: 2px;
+  box-shadow: 0 12px 22px -8px rgba(20, 26, 19, .5);
+}
+.mls-map-pin-dot--current img { width: 26px; height: 21px; }
+
 @media (max-width: 640px) {
   .destination-map { height: clamp(320px, 90vw, 400px); }
 }

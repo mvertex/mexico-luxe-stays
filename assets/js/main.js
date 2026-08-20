@@ -806,14 +806,29 @@
     window.addEventListener("resize", () => { leafletMap && leafletMap.invalidateSize(); });
   }
 
-  /* ---------- Property page map: single brand-pin marker for that villa,
-     replacing what used to be a Google Maps embed (whose red pin can't be
-     restyled). Reuses the same lazy-loaded Leaflet as the destination map. */
+  /* ---------- Property page map: brand-pin marker for this villa, plus its
+     sibling villas in the same destination (e.g. Playa del Carmen's other two
+     villas), so guests see the whole area at a glance — the current villa's
+     pin is enlarged to stand out. Reuses the same lazy-loaded Leaflet as the
+     destination map. */
   const propertyMapEls = document.querySelectorAll("[data-property-map]");
   if (propertyMapEls.length && typeof MLS_VILLAS !== "undefined") {
     propertyMapEls.forEach((el) => {
       const villa = MLS_VILLAS.find((v) => v.slug === el.dataset.villaSlug);
       if (!villa || typeof villa.lat !== "number" || typeof villa.lng !== "number") return;
+
+      const destVillas = MLS_VILLAS.filter(
+        (v) => v.destination === villa.destination && typeof v.lat === "number" && typeof v.lng === "number"
+      );
+
+      function propertyPinIcon(isCurrent) {
+        return L.divIcon({
+          className: "mls-map-pin",
+          html: `<span class="mls-map-pin-dot${isCurrent ? " mls-map-pin-dot--current" : ""}"><img src="../assets/img/brand/icon-positive.png" alt="" width="16" height="13" loading="lazy"></span>`,
+          iconSize: isCurrent ? [52, 62] : [44, 62],
+          iconAnchor: isCurrent ? [26, 60] : [22, 60]
+        });
+      }
 
       function initPropertyMap() {
         el.innerHTML = "";
@@ -821,21 +836,24 @@
           scrollWheelZoom: false,
           zoomControl: false,
           attributionControl: true
-        }).setView([villa.lat, villa.lng], 14);
+        });
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           maxZoom: 19,
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
         }).addTo(map);
-        const marker = L.marker([villa.lat, villa.lng], {
-          icon: L.divIcon({
-            className: "mls-map-pin",
-            html: '<span class="mls-map-pin-dot"><img src="../assets/img/brand/icon-positive.png" alt="" width="16" height="13" loading="lazy"></span>',
-            iconSize: [44, 62],
-            iconAnchor: [22, 60]
-          }),
-          title: villa.name
-        }).addTo(map);
-        marker.on("click", () => window.open(mlsGoogleMapsUrl(villa), "_blank", "noopener"));
+
+        destVillas.forEach((v) => {
+          const isCurrent = v.slug === villa.slug;
+          const marker = L.marker([v.lat, v.lng], { icon: propertyPinIcon(isCurrent), title: v.name }).addTo(map);
+          marker.on("click", () => window.open(mlsGoogleMapsUrl(v), "_blank", "noopener"));
+        });
+
+        if (destVillas.length > 1) {
+          map.fitBounds(L.latLngBounds(destVillas.map((v) => [v.lat, v.lng])), { padding: [50, 50], maxZoom: 15 });
+        } else {
+          map.setView([villa.lat, villa.lng], 14);
+        }
+
         window.addEventListener("resize", () => map.invalidateSize());
       }
 
