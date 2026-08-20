@@ -81,13 +81,45 @@
               <option value="valle-de-guadalupe">Valle de Guadalupe</option>
             </select>
           </div>
-          <div class="hero-search-field">
-            <label for="hs-checkin" data-i18n="home.search.checkin">Check in</label>
-            <input id="hs-checkin" name="checkin" type="date">
+          <div class="hero-search-field hero-date-field" data-hero-date-field="checkin">
+            <button type="button" class="hero-date-trigger" data-hero-date-trigger="checkin" aria-haspopup="dialog" aria-expanded="false">
+              <span data-hero-date-text data-i18n="home.search.checkin">Check in</span>
+            </button>
+            <div class="trip-calendar hero-calendar" data-hero-calendar="checkin" hidden>
+              <div class="trip-calendar-header">
+                <button type="button" class="trip-calendar-nav" data-cal-prev aria-label="Previous month">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
+                </button>
+                <span class="trip-calendar-month" data-cal-month></span>
+                <button type="button" class="trip-calendar-nav" data-cal-next aria-label="Next month">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
+                </button>
+              </div>
+              <div class="trip-calendar-weekdays" data-cal-weekdays></div>
+              <div class="trip-calendar-days" data-cal-days></div>
+              <p class="hero-calendar-note" data-i18n="home.search.calendarNote">Grayed-out dates are already booked</p>
+            </div>
+            <input type="hidden" name="checkin" data-hero-date-value>
           </div>
-          <div class="hero-search-field">
-            <label for="hs-checkout" data-i18n="home.search.checkout">Check out</label>
-            <input id="hs-checkout" name="checkout" type="date">
+          <div class="hero-search-field hero-date-field" data-hero-date-field="checkout">
+            <button type="button" class="hero-date-trigger" data-hero-date-trigger="checkout" aria-haspopup="dialog" aria-expanded="false">
+              <span data-hero-date-text data-i18n="home.search.checkout">Check out</span>
+            </button>
+            <div class="trip-calendar hero-calendar" data-hero-calendar="checkout" hidden>
+              <div class="trip-calendar-header">
+                <button type="button" class="trip-calendar-nav" data-cal-prev aria-label="Previous month">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
+                </button>
+                <span class="trip-calendar-month" data-cal-month></span>
+                <button type="button" class="trip-calendar-nav" data-cal-next aria-label="Next month">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
+                </button>
+              </div>
+              <div class="trip-calendar-weekdays" data-cal-weekdays></div>
+              <div class="trip-calendar-days" data-cal-days></div>
+              <p class="hero-calendar-note" data-i18n="home.search.calendarNote">Grayed-out dates are already booked</p>
+            </div>
+            <input type="hidden" name="checkout" data-hero-date-value>
           </div>
           <div class="hero-search-field">
             <label for="hs-guests" data-i18n="home.search.guests">Add guest</label>

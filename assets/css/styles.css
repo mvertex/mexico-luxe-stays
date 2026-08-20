@@ -365,10 +365,11 @@ button { font: inherit; cursor: pointer; }
   box-shadow: 0 30px 60px -18px rgba(20, 26, 19, .5), inset 0 1px 0 rgba(255, 255, 255, .35);
 }
 .hero-search-field {
+  position: relative;
   flex: 1 1 0; min-width: 130px; padding: 1.3rem; text-align: center;
   display: grid; align-items: center; justify-items: center;
 }
-.hero-search-field > label, .hero-search-field > input, .hero-search-field > .custom-select {
+.hero-search-field > label, .hero-search-field > .custom-select {
   grid-area: 1 / 1;
   width: 100%;
 }
@@ -379,18 +380,31 @@ button { font: inherit; cursor: pointer; }
 }
 .hero-search-field.has-value label,
 .hero-search-field:focus-within label { opacity: 0; }
-.hero-search-field select, .hero-search-field input {
+.hero-search-field select {
   width: 100%; background: transparent; border: 0; padding: 0; margin: 0;
   font-family: var(--font-display); font-size: 1.05rem; color: var(--cream);
   color-scheme: dark; appearance: none; text-align: center; cursor: pointer;
 }
-.hero-search-field select:focus, .hero-search-field input:focus { outline: none; }
-/* Calendar icon removed — clicking anywhere on the field opens the native
-   date picker instead (see the hero-search date input handling in main.js). */
-.hero-search-field input[type="date"]::-webkit-calendar-picker-indicator { display: none; }
-/* Hide the native "dd/mm/aaaa" placeholder text until the field is
-   focused or actually has a date — the field label is enough at rest. */
-.hero-search-field input[type="date"]:not(.has-value):not(:focus)::-webkit-datetime-edit { color: transparent; }
+.hero-search-field select:focus { outline: none; }
+/* ---------- Check-in / check-out: custom calendar popover, replacing the
+   native <input type="date"> whose own "dd/mm/aaaa" placeholder digits sat
+   on top of the field's floating label. Reuses the .trip-calendar look from
+   the contact page, tinted to sit on the dark hero glass. ---------- */
+.hero-date-trigger {
+  width: 100%; background: transparent; border: 0; padding: 0; margin: 0;
+  font-family: var(--font-display); font-size: 1.05rem; font-weight: 400;
+  color: var(--cream-60); text-align: center; cursor: pointer;
+  transition: color .2s var(--ease-out);
+}
+.hero-date-trigger:focus-visible { outline: 2px solid var(--cream); outline-offset: 4px; }
+.hero-search-field.has-value .hero-date-trigger,
+.hero-date-trigger[aria-expanded="true"] { color: var(--cream); }
+.hero-calendar { left: 50%; right: auto; transform: translateX(-50%); width: min(300px, calc(100vw - 2.4rem)); }
+.hero-calendar-note {
+  margin: .9rem 0 0; padding-top: .8rem; border-top: 1px solid rgba(20,20,20,.1);
+  font-family: var(--font-sans); font-size: .72rem; color: var(--stone); text-align: center;
+}
+.trip-calendar-day.is-unavailable { text-decoration: line-through; }
 .hero-search-btn {
   flex: none; display: flex; align-items: center; justify-content: center;
   width: 68px; margin: 0; border-radius: 0 4px 4px 0; border: 0;

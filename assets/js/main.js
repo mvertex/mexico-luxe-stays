@@ -327,18 +327,156 @@
   const heroSearchSelects = document.querySelector(".hero-search")
     ? [...document.querySelectorAll(".hero-search select")].map(mlsEnhanceSelect)
     : [];
-  document.querySelectorAll(".hero-search input[type='date']").forEach((input) => {
-    const sync = () => {
-      input.classList.toggle("has-value", !!input.value);
-      input.closest(".hero-search-field")?.classList.toggle("has-value", !!input.value);
+  /* ---------- Home hero search: check-in/check-out calendar popovers ----------
+     Same pattern as the contact page's trip-calendar date pickers, wired to
+     each destination's combined villa availability so already-booked dates
+     show disabled with a strikethrough. A date only counts as unavailable
+     when every villa matching the chosen destination (or all villas, if none
+     is chosen yet) is blocked that day — see MLS_VILLAS.availability in
+     villas-data.js (HOSTAWAY INTEGRATION POINT there covers this too). */
+  const heroSearchForm = document.querySelector(".hero-search");
+  if (heroSearchForm && typeof MLS_VILLAS !== "undefined") {
+    const heroDestinationSelect = heroSearchForm.querySelector("#hs-destination");
+    const heroIsoDay = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const heroSameDay = (a, b) => a && b && heroIsoDay(a) === heroIsoDay(b);
+    const heroToday = new Date();
+    heroToday.setHours(0, 0, 0, 0);
+
+    const heroVillasInScope = () => {
+      const dest = heroDestinationSelect ? heroDestinationSelect.value : "";
+      return MLS_VILLAS.filter((v) => !dest || v.destination === dest);
     };
-    input.addEventListener("input", sync);
-    input.addEventListener("change", sync);
-    sync();
-    /* No calendar icon shown — clicking anywhere on the field opens the
-       native date picker instead. */
-    input.addEventListener("click", () => input.showPicker?.());
-  });
+    const heroDateIsUnavailable = (dateStr) => {
+      const villas = heroVillasInScope();
+      return villas.length > 0 && villas.every((v) =>
+        (v.availability?.blockedRanges || []).some((r) => dateStr >= r.start && dateStr <= r.end)
+      );
+    };
+
+    const heroDateFields = {};
+    heroSearchForm.querySelectorAll("[data-hero-date-field]").forEach((fieldEl) => {
+      const key = fieldEl.dataset.heroDateField;
+      const trigger = fieldEl.querySelector("[data-hero-date-trigger]");
+      const textEl = fieldEl.querySelector("[data-hero-date-text]");
+      const defaultLabel = textEl.textContent;
+      const panel = fieldEl.querySelector("[data-hero-calendar]");
+      const monthEl = panel.querySelector("[data-cal-month]");
+      const weekdaysEl = panel.querySelector("[data-cal-weekdays]");
+      const daysEl = panel.querySelector("[data-cal-days]");
+      const prevBtn = panel.querySelector("[data-cal-prev]");
+      const nextBtn = panel.querySelector("[data-cal-next]");
+      const hiddenInput = fieldEl.querySelector("[data-hero-date-value]");
+
+      const api = { key, fieldEl, trigger, textEl, defaultLabel, hiddenInput, selected: null, minDate: heroToday, viewDate: new Date(heroToday) };
+
+      const lang = () => (typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en");
+      const locale = () => (lang() === "es" ? "es-MX" : "en-US");
+
+      const renderWeekdays = () => {
+        const base = new Date(2026, 0, 4); // a Sunday
+        weekdaysEl.innerHTML = "";
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(base);
+          d.setDate(base.getDate() + i);
+          const span = document.createElement("span");
+          span.textContent = d.toLocaleDateString(locale(), { weekday: "narrow" });
+          weekdaysEl.appendChild(span);
+        }
+      };
+
+      const render = () => {
+        monthEl.textContent = api.viewDate.toLocaleDateString(locale(), { month: "long", year: "numeric" });
+        daysEl.innerHTML = "";
+        const year = api.viewDate.getFullYear(), month = api.viewDate.getMonth();
+        const firstWeekday = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        for (let i = 0; i < firstWeekday; i++) {
+          const spacer = document.createElement("span");
+          spacer.className = "trip-calendar-day-empty";
+          daysEl.appendChild(spacer);
+        }
+        for (let d = 1; d <= daysInMonth; d++) {
+          const cellDate = new Date(year, month, d);
+          const unavailable = heroDateIsUnavailable(heroIsoDay(cellDate));
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "trip-calendar-day";
+          btn.textContent = d;
+          if (cellDate < api.minDate || unavailable) btn.disabled = true;
+          if (unavailable) btn.classList.add("is-unavailable");
+          if (heroSameDay(cellDate, heroToday)) btn.classList.add("is-today");
+          if (heroSameDay(cellDate, api.selected)) btn.classList.add("is-selected");
+          btn.addEventListener("click", () => selectDate(cellDate));
+          daysEl.appendChild(btn);
+        }
+        const firstOfMinMonth = new Date(api.minDate.getFullYear(), api.minDate.getMonth(), 1);
+        prevBtn.disabled = api.viewDate <= firstOfMinMonth;
+      };
+
+      const selectDate = (date) => {
+        api.selected = date;
+        api.hiddenInput.value = heroIsoDay(date);
+        api.textEl.textContent = date.toLocaleDateString(locale(), { month: "short", day: "numeric" });
+        fieldEl.classList.add("has-value");
+        close();
+        onHeroDateSelected(key, date);
+      };
+
+      const open = () => {
+        Object.values(heroDateFields).forEach((other) => { if (other !== api) other.close(); });
+        renderWeekdays();
+        render();
+        panel.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+      };
+      const close = () => {
+        panel.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+      };
+
+      trigger.addEventListener("click", () => (panel.hidden ? open() : close()));
+      prevBtn.addEventListener("click", () => { api.viewDate.setMonth(api.viewDate.getMonth() - 1); render(); });
+      nextBtn.addEventListener("click", () => { api.viewDate.setMonth(api.viewDate.getMonth() + 1); render(); });
+
+      api.render = render;
+      api.close = close;
+      api.reset = () => {
+        api.selected = null;
+        api.hiddenInput.value = "";
+        api.textEl.textContent = api.defaultLabel;
+        fieldEl.classList.remove("has-value");
+      };
+      heroDateFields[key] = api;
+    });
+
+    function onHeroDateSelected(key, date) {
+      if (key === "checkin" && heroDateFields.checkout) {
+        const next = new Date(date);
+        next.setDate(next.getDate() + 1);
+        heroDateFields.checkout.minDate = next;
+        if (heroDateFields.checkout.selected && heroDateFields.checkout.selected < next) {
+          heroDateFields.checkout.reset();
+        }
+        if (heroDateFields.checkout.viewDate < next) {
+          heroDateFields.checkout.viewDate = new Date(next.getFullYear(), next.getMonth(), 1);
+        }
+      }
+    }
+
+    /* Switching destination changes which villas' availability applies —
+       re-render so blocked/available shading stays accurate. */
+    heroDestinationSelect?.addEventListener("change", () => {
+      Object.values(heroDateFields).forEach((api) => api.render());
+    });
+
+    document.addEventListener("click", (e) => {
+      if (heroSearchForm.contains(e.target)) return;
+      Object.values(heroDateFields).forEach((api) => api.close());
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") Object.values(heroDateFields).forEach((api) => api.close());
+    });
+  }
 
   /* ---------- Scroll reveal (single observer, animates once) ---------- */
   const initReveal = () => {
