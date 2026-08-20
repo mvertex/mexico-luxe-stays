@@ -1338,6 +1338,8 @@
       const priceBox = detailRoot.querySelector("[data-price-box]");
       if (priceBox) {
         const priceEl = priceBox.querySelector("[data-price-amount]");
+        const priceFromEl = priceBox.querySelector(".villa-price-from");
+        const priceUnitEl = priceBox.querySelector(".villa-price-unit");
         if (priceEl) priceEl.textContent = `$${villa.priceFromPerNight.toLocaleString("en-US")}`;
 
         const today = new Date();
@@ -1345,6 +1347,16 @@
         const sameDay = (a, b) => a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
         const lang = () => (typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en");
         const locale = () => (lang() === "es" ? "es-MX" : "en-US");
+
+        /* Live estimate: nightly rate steps up by guest-count tier (see
+           TIER_RATE_MULTIPLIERS below) and, once both dates are picked,
+           the display switches from a per-night rate to the stay's total.
+           Placeholder math — see HOSTAWAY INTEGRATION POINT above — but
+           wired end-to-end so swapping in a real quote later is a one-line
+           change in updatePriceDisplay. */
+        let selectedCheckin = null;
+        let selectedCheckout = null;
+        let updatePriceDisplay = () => {};
 
         priceBox.querySelectorAll("[data-price-date-field]").forEach((fieldEl) => {
           const trigger = fieldEl.querySelector("[data-price-date-trigger]");
@@ -1402,6 +1414,9 @@
             selected = date;
             textEl.textContent = date.toLocaleDateString(locale(), { month: "short", day: "numeric" });
             fieldEl.classList.add("has-value");
+            if (fieldEl.dataset.priceDateField === "checkin") selectedCheckin = date;
+            else selectedCheckout = date;
+            updatePriceDisplay();
             close();
           };
 
@@ -1430,14 +1445,74 @@
           priceBox.querySelectorAll("[data-price-date-trigger]").forEach((b) => b.setAttribute("aria-expanded", "false"));
         });
 
+        /* Tiered-by-occupancy indicator: split the villa's real guest cap
+           into three ascending bands and highlight whichever band the
+           guests stepper currently lands in. TIER_RATE_MULTIPLIERS below
+           turns that band into an actual rate step-up — placeholder
+           percentages (see HOSTAWAY INTEGRATION POINT above) until real
+           per-occupancy pricing is wired in, at which point they're
+           replaced by whatever the API quotes for that band. */
+        const tierEls = Array.from(priceBox.querySelectorAll("[data-price-tier]"));
+        const tierRangesEl = priceBox.querySelector("[data-price-tiers-ranges]");
+        const tierBounds = (() => {
+          const max = villa.guests;
+          const step = Math.ceil(max / 3);
+          const b1 = Math.min(step, max);
+          const b2 = Math.min(step * 2, max);
+          const b3min = Math.min(b2 + 1, max);
+          return [
+            { min: 1, max: b1 },
+            { min: Math.min(b1 + 1, max), max: b2 },
+            { min: b3min, max },
+          ];
+        })();
+        if (tierRangesEl) {
+          tierRangesEl.innerHTML = tierBounds
+            .map((b) => `<span>${b.min >= b.max ? b.max : `${b.min}–${b.max}`}</span>`)
+            .join("");
+        }
+        const tierRangeEls = tierRangesEl ? Array.from(tierRangesEl.children) : [];
+        const TIER_RATE_MULTIPLIERS = [1, 1.15, 1.3];
+        const activeTierIndex = (guestCount) => {
+          const i = tierBounds.findIndex((b) => guestCount >= b.min && guestCount <= b.max);
+          return i === -1 ? 0 : i;
+        };
+        const updateTiers = (guestCount) => {
+          const activeIndex = activeTierIndex(guestCount);
+          tierEls.forEach((el, i) => el.classList.toggle("is-active", i === activeIndex));
+          tierRangeEls.forEach((el, i) => el.classList.toggle("is-active", i === activeIndex));
+        };
+
         const guestsValueEl = priceBox.querySelector("[data-price-guests-value]");
         const guestsDecBtn = priceBox.querySelector("[data-price-guests-dec]");
         const guestsIncBtn = priceBox.querySelector("[data-price-guests-inc]");
         let guests = 1;
+
+        updatePriceDisplay = () => {
+          if (!priceEl) return;
+          const nightlyRate = villa.priceFromPerNight * TIER_RATE_MULTIPLIERS[activeTierIndex(guests)];
+          const oneDay = 24 * 60 * 60 * 1000;
+          const nights = selectedCheckin && selectedCheckout && selectedCheckout > selectedCheckin
+            ? Math.round((selectedCheckout - selectedCheckin) / oneDay)
+            : 0;
+
+          if (nights > 0) {
+            priceEl.textContent = `$${Math.round(nightlyRate * nights).toLocaleString("en-US")}`;
+            if (priceFromEl) { priceFromEl.setAttribute("data-i18n", "detail.book.total"); priceFromEl.textContent = t("detail.book.total"); }
+            if (priceUnitEl) { priceUnitEl.setAttribute("data-i18n", "detail.book.totalNights"); priceUnitEl.textContent = t("detail.book.totalNights").replace("{n}", nights); }
+          } else {
+            priceEl.textContent = `$${Math.round(nightlyRate).toLocaleString("en-US")}`;
+            if (priceFromEl) { priceFromEl.setAttribute("data-i18n", "detail.book.from"); priceFromEl.textContent = t("detail.book.from"); }
+            if (priceUnitEl) { priceUnitEl.setAttribute("data-i18n", "detail.book.perNight"); priceUnitEl.textContent = t("detail.book.perNight"); }
+          }
+        };
+
         const updateGuests = () => {
           if (guestsValueEl) guestsValueEl.textContent = guests;
           if (guestsDecBtn) guestsDecBtn.disabled = guests <= 1;
           if (guestsIncBtn) guestsIncBtn.disabled = guests >= villa.guests;
+          updateTiers(guests);
+          updatePriceDisplay();
         };
         guestsDecBtn?.addEventListener("click", () => { guests = Math.max(1, guests - 1); updateGuests(); });
         guestsIncBtn?.addEventListener("click", () => { guests = Math.min(villa.guests, guests + 1); updateGuests(); });
