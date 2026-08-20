@@ -1044,10 +1044,16 @@
          field in villas-data.js — swap for a live Hostaway Calendar API
          fetch once wired through the /api proxy). Nav only moves the
          displayed month; there's no date-picker/selection since booking
-         still happens through the inquiry form below. */
+         still happens through the inquiry form below.
+
+         calendarMonth is shared with the price-box date pickers below (see
+         syncCalendarViews) so navigating either one moves both, and the
+         price box disables dates this calendar shows as booked — one
+         source of truth instead of two calendars that can disagree. */
       let calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
       const mlsDateStr = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
       const mlsDateIsBlocked = (dateStr, ranges) => ranges.some((r) => dateStr >= r.start && dateStr <= r.end);
+      const priceCalRenders = [];
 
       const renderCalendar = () => {
         const calEl = detailRoot.querySelector("[data-villa-calendar]");
@@ -1099,12 +1105,20 @@
 
         calEl.querySelector("[data-cal-prev]").addEventListener("click", () => {
           calendarMonth = new Date(year, month - 1, 1);
-          renderCalendar();
+          syncCalendarViews();
         });
         calEl.querySelector("[data-cal-next]").addEventListener("click", () => {
           calendarMonth = new Date(year, month + 1, 1);
-          renderCalendar();
+          syncCalendarViews();
         });
+      };
+
+      /* Keeps the Availability calendar and the price-box date pickers on
+         the same displayed month — call after calendarMonth changes from
+         either side instead of re-rendering just one of them. */
+      const syncCalendarViews = () => {
+        renderCalendar();
+        priceCalRenders.forEach((render) => render());
       };
 
       renderVillaDetail = () => {
@@ -1314,9 +1328,11 @@
 
       /* ---------- Price box: standalone price + check-in/check-out date
          pickers + guests stepper, next to the (unchanged) Amenities panel.
-         Not wired into the Availability calendar above — its own small
-         popovers, reusing the same calendar look as the contact page's
-         date pickers. HOSTAWAY INTEGRATION POINT (via Vercel): swap
+         Shares calendarMonth with the Availability calendar above (see
+         syncCalendarViews) and disables dates blocked in villa.availability
+         so the two never disagree — own small popovers, reusing the same
+         calendar look as the contact page's date pickers.
+         HOSTAWAY INTEGRATION POINT (via Vercel): swap
          villa.priceFromPerNight for a live quote once dates + guests are
          picked here. */
       const priceBox = detailRoot.querySelector("[data-price-box]");
@@ -1340,7 +1356,7 @@
           const prevBtn = panel.querySelector("[data-price-cal-prev]");
           const nextBtn = panel.querySelector("[data-price-cal-next]");
           let selected = null;
-          let viewDate = new Date(today);
+          const blockedRanges = villa.availability?.blockedRanges || [];
 
           const renderWeekdays = () => {
             const base = new Date(2026, 0, 4);
@@ -1355,9 +1371,9 @@
           };
 
           const render = () => {
-            monthEl.textContent = viewDate.toLocaleDateString(locale(), { month: "long", year: "numeric" });
+            monthEl.textContent = calendarMonth.toLocaleDateString(locale(), { month: "long", year: "numeric" });
             daysEl.innerHTML = "";
-            const year = viewDate.getFullYear(), month = viewDate.getMonth();
+            const year = calendarMonth.getFullYear(), month = calendarMonth.getMonth();
             const firstWeekday = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             for (let i = 0; i < firstWeekday; i++) {
@@ -1367,17 +1383,19 @@
             }
             for (let d = 1; d <= daysInMonth; d++) {
               const cellDate = new Date(year, month, d);
+              const isBlocked = mlsDateIsBlocked(mlsDateStr(cellDate), blockedRanges);
               const btn = document.createElement("button");
               btn.type = "button";
               btn.className = "trip-calendar-day";
               btn.textContent = d;
-              if (cellDate < today) btn.disabled = true;
+              if (cellDate < today || isBlocked) btn.disabled = true;
+              if (isBlocked) btn.classList.add("is-unavailable");
               if (sameDay(cellDate, today)) btn.classList.add("is-today");
               if (sameDay(cellDate, selected)) btn.classList.add("is-selected");
               btn.addEventListener("click", () => selectDate(cellDate));
               daysEl.appendChild(btn);
             }
-            prevBtn.disabled = viewDate <= new Date(today.getFullYear(), today.getMonth(), 1);
+            prevBtn.disabled = calendarMonth <= new Date(today.getFullYear(), today.getMonth(), 1);
           };
 
           const selectDate = (date) => {
@@ -1400,8 +1418,10 @@
           };
 
           trigger.addEventListener("click", () => (panel.hidden ? open() : close()));
-          prevBtn.addEventListener("click", () => { viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1); render(); });
-          nextBtn.addEventListener("click", () => { viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1); render(); });
+          prevBtn.addEventListener("click", () => { calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1); syncCalendarViews(); });
+          nextBtn.addEventListener("click", () => { calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1); syncCalendarViews(); });
+
+          priceCalRenders.push(render);
         });
 
         document.addEventListener("click", (e) => {
