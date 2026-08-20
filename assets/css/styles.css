@@ -1900,17 +1900,23 @@ button { font: inherit; cursor: pointer; }
 .villa-calendar-legend-dot.is-booked { background: var(--ink); opacity: .55; }
 .villa-calendar-legend-dot.is-minstay { background: var(--gold); }
 .villa-calendar-note { margin: 1.2rem 0 0; font-size: .8rem; color: var(--stone); line-height: 1.6; }
+/* Collapsed to zero height (no reserved blank space) until a date is
+   picked, then grows to fit via an animated grid track — the classic
+   grid-template-rows 0fr→1fr trick, since height:auto can't be
+   transitioned directly. The inner div's overflow:hidden clips the
+   content while it's collapsing/expanding. */
+.villa-calendar-confirm-wrap {
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows .4s var(--ease-out);
+}
+.villa-calendar-confirm-wrap.is-active { grid-template-rows: 1fr; }
+.villa-calendar-confirm-inner { overflow: hidden; min-height: 0; }
 .villa-calendar-confirm {
   margin-top: 1.2rem; padding: 1.1rem 1.3rem; border-radius: var(--radius);
   background: var(--sage-tint); display: flex; flex-wrap: wrap; align-items: center;
   justify-content: space-between; gap: .7rem 1.4rem;
-  /* Reserved from render (not display:none'd) so picking a date never
-     changes the calendar's height — a growing card was re-centering the
-     description text beside it in .detail-intro-grid. */
-  visibility: hidden; opacity: 0; transition: opacity .2s var(--ease-out);
 }
-.villa-calendar-confirm.is-active { visibility: visible; opacity: 1; }
-.villa-calendar-confirm-text { margin: 0; font-size: .85rem; color: var(--ink); line-height: 1.55; flex: 1; min-width: 200px; min-height: 2.7rem; display: flex; align-items: center; }
+.villa-calendar-confirm-text { margin: 0; font-size: .85rem; color: var(--ink); line-height: 1.55; flex: 1; min-width: 200px; }
 .villa-calendar-confirm-cta {
   display: inline-flex; align-items: center; gap: .5rem; white-space: nowrap; flex: none;
   padding: .75rem 1.4rem; border-radius: 2px; background: var(--green); color: var(--cream);

@@ -1110,9 +1110,13 @@
             ${minStayHtml}
           </div>
           <p class="villa-calendar-note">${t("detail.calendar.note")}</p>
-          <div class="villa-calendar-confirm" data-cal-confirm>
-            <p class="villa-calendar-confirm-text" data-cal-confirm-text></p>
-            <a class="villa-calendar-confirm-cta" data-cal-confirm-cta href="#">${t("detail.calendar.confirmCta")}</a>
+          <div class="villa-calendar-confirm-wrap" data-cal-confirm>
+            <div class="villa-calendar-confirm-inner">
+              <div class="villa-calendar-confirm">
+                <p class="villa-calendar-confirm-text" data-cal-confirm-text></p>
+                <a class="villa-calendar-confirm-cta" data-cal-confirm-cta href="#">${t("detail.calendar.confirmCta")}</a>
+              </div>
+            </div>
           </div>`;
 
         calEl.querySelector("[data-cal-prev]").addEventListener("click", () => {
