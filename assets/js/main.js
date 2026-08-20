@@ -1076,7 +1076,9 @@
           const isPast = dateStr < todayStr;
           const isBlocked = mlsDateIsBlocked(dateStr, blockedRanges);
           const stateClass = isPast ? "is-past" : isBlocked ? "is-booked" : "is-available";
-          cellsHtml += `<span class="villa-calendar-day ${stateClass}" title="${dateStr}">${day}</span>`;
+          cellsHtml += isPast || isBlocked
+            ? `<span class="villa-calendar-day ${stateClass}" title="${dateStr}">${day}</span>`
+            : `<button type="button" class="villa-calendar-day ${stateClass}" data-cal-day="${dateStr}" title="${dateStr}">${day}</button>`;
         }
 
         const minStayHtml = minStay ? `<span class="villa-calendar-legend-item"><span class="villa-calendar-legend-dot is-minstay" aria-hidden="true"></span>${t("detail.calendar.legendMinStay").replace("{n}", minStay)}</span>` : "";
@@ -1101,7 +1103,11 @@
             <span class="villa-calendar-legend-item"><span class="villa-calendar-legend-dot is-booked" aria-hidden="true"></span>${t("detail.calendar.legendBooked")}</span>
             ${minStayHtml}
           </div>
-          <p class="villa-calendar-note">${t("detail.calendar.note")}</p>`;
+          <p class="villa-calendar-note">${t("detail.calendar.note")}</p>
+          <div class="villa-calendar-confirm" data-cal-confirm hidden>
+            <p class="villa-calendar-confirm-text" data-cal-confirm-text></p>
+            <a class="villa-calendar-confirm-cta" data-cal-confirm-cta href="#">${t("detail.calendar.confirmCta")}</a>
+          </div>`;
 
         calEl.querySelector("[data-cal-prev]").addEventListener("click", () => {
           calendarMonth = new Date(year, month - 1, 1);
@@ -1110,6 +1116,27 @@
         calEl.querySelector("[data-cal-next]").addEventListener("click", () => {
           calendarMonth = new Date(year, month + 1, 1);
           syncCalendarViews();
+        });
+
+        /* Clicking an available date offers to carry it straight into the
+           trip-planner form on the contact page (?checkin=, read there —
+           see the contact-form date-picker init) instead of just showing
+           it here with no next step. */
+        const confirmEl = calEl.querySelector("[data-cal-confirm]");
+        const confirmTextEl = calEl.querySelector("[data-cal-confirm-text]");
+        const confirmCtaEl = calEl.querySelector("[data-cal-confirm-cta]");
+        calEl.querySelectorAll("[data-cal-day]").forEach((dayBtn) => {
+          dayBtn.addEventListener("click", () => {
+            const dateStr = dayBtn.dataset.calDay;
+            const [y, m, d] = dateStr.split("-").map(Number);
+            const dLang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
+            const dLocale = dLang === "es" ? "es-MX" : "en-US";
+            const label = new Date(y, m - 1, d).toLocaleDateString(dLocale, { month: "long", day: "numeric", year: "numeric" });
+            calEl.querySelectorAll("[data-cal-day]").forEach((b) => b.classList.toggle("is-day-selected", b === dayBtn));
+            if (confirmTextEl) confirmTextEl.textContent = t("detail.calendar.confirmNote").replace("{date}", label);
+            if (confirmCtaEl) confirmCtaEl.href = `../contact.html?villa=${encodeURIComponent(villa.slug)}&checkin=${dateStr}`;
+            if (confirmEl) confirmEl.hidden = false;
+          });
         });
       };
 
@@ -1700,6 +1727,7 @@
 
       api.render = render;
       api.close = close;
+      api.selectDate = selectDate;
       api.setMinDate = (date) => {
         api.minDate = date;
         if (api.selected && api.selected < date) {
@@ -1882,6 +1910,19 @@
       if (preselected) selectVilla(preselected);
     } else {
       syncTripVilla();
+    }
+
+    /* Arrival date carried over from a villa's Availability calendar
+       (?checkin=YYYY-MM-DD, see the day-click handler in renderCalendar). */
+    if (params.get("checkin") && dateFields.checkin) {
+      const isoMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(params.get("checkin"));
+      if (isoMatch) {
+        const picked = new Date(Number(isoMatch[1]), Number(isoMatch[2]) - 1, Number(isoMatch[3]));
+        if (picked >= today) {
+          dateFields.checkin.viewDate = new Date(picked.getFullYear(), picked.getMonth(), 1);
+          dateFields.checkin.selectDate(picked);
+        }
+      }
     }
 
     contactForm.addEventListener("submit", (e) => {

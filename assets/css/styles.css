@@ -1870,10 +1870,21 @@ button { font: inherit; cursor: pointer; }
 .villa-calendar-day {
   display: grid; place-items: center; aspect-ratio: 1; margin-inline: auto; width: 82%;
   border-radius: 50%; font-size: 1rem; color: var(--ink);
+  border: 0; background: none; padding: 0; font-family: inherit; cursor: default;
 }
 .villa-calendar-day.is-empty { visibility: hidden; }
 .villa-calendar-day.is-past { color: var(--stone); opacity: .35; }
-.villa-calendar-day.is-available { background: var(--sage-tint); }
+.villa-calendar-day.is-available {
+  background: var(--sage-tint); cursor: pointer;
+  transition: background-color .25s var(--ease-out), color .25s var(--ease-out), transform .2s var(--ease-out), box-shadow .25s var(--ease-out);
+}
+.villa-calendar-day.is-available:hover { background: var(--sage); color: var(--cream); }
+.villa-calendar-day.is-available:focus-visible { outline: 2px solid var(--sage); outline-offset: 2px; }
+.villa-calendar-day.is-available:active { transform: scale(.9); }
+.villa-calendar-day.is-day-selected,
+.villa-calendar-day.is-day-selected:hover {
+  background: var(--sage); color: var(--cream); box-shadow: 0 0 0 2px var(--cream), 0 0 0 4px var(--sage);
+}
 .villa-calendar-day.is-booked { background: var(--ink); color: var(--cream); opacity: .55; text-decoration: line-through; }
 .villa-calendar-legend {
   display: flex; flex-wrap: wrap; gap: 1rem 1.6rem; margin-top: 1.4rem; padding-top: 1.2rem;
@@ -1888,6 +1899,21 @@ button { font: inherit; cursor: pointer; }
 .villa-calendar-legend-dot.is-booked { background: var(--ink); opacity: .55; }
 .villa-calendar-legend-dot.is-minstay { background: var(--gold); }
 .villa-calendar-note { margin: 1.2rem 0 0; font-size: .8rem; color: var(--stone); line-height: 1.6; }
+.villa-calendar-confirm {
+  margin-top: 1.2rem; padding: 1.1rem 1.3rem; border-radius: var(--radius);
+  background: var(--sage-tint); display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: .7rem 1.4rem;
+}
+.villa-calendar-confirm-text { margin: 0; font-size: .85rem; color: var(--ink); line-height: 1.55; flex: 1; min-width: 200px; }
+.villa-calendar-confirm-cta {
+  display: inline-flex; align-items: center; gap: .5rem; white-space: nowrap; flex: none;
+  padding: .75rem 1.4rem; border-radius: 2px; background: var(--green); color: var(--cream);
+  font-size: .74rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase;
+  text-decoration: none; transition: background-color .25s var(--ease-out), transform var(--dur) var(--ease-out);
+}
+.villa-calendar-confirm-cta:hover { background: var(--sage); transform: translateY(-2px); }
+.villa-calendar-confirm-cta:focus-visible { outline: 2px solid var(--sage); outline-offset: 2px; }
+.villa-calendar-confirm-cta:active { transform: translateY(0); }
 
 /* ---------- Scroll reveal ---------- */
 .reveal { opacity: 0; transform: translateY(24px); }
