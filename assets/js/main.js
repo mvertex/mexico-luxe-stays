@@ -1055,6 +1055,12 @@
       const mlsDateIsBlocked = (dateStr, ranges) => ranges.some((r) => dateStr >= r.start && dateStr <= r.end);
       const priceCalRenders = [];
 
+      /* Check-in/check-out picked directly on the Availability calendar
+         (see the day-click wiring below) — kept outside renderCalendar so
+         the selection survives a month-navigation or language re-render. */
+      let calSelectedCheckin = null;
+      let calSelectedCheckout = null;
+
       const renderCalendar = () => {
         const calEl = detailRoot.querySelector("[data-villa-calendar]");
         if (!calEl || !villa.availability) return;
@@ -1118,26 +1124,55 @@
           syncCalendarViews();
         });
 
-        /* Clicking an available date offers to carry it straight into the
-           trip-planner form on the contact page (?checkin=, read there —
-           see the contact-form date-picker init) instead of just showing
-           it here with no next step. */
+        /* Clicking available dates picks a check-in/check-out range (first
+           click = check-in, next later click = check-out; clicking again
+           after both are set starts a new range) and offers to carry it
+           straight into the trip-planner form on the contact page
+           (?checkin=&checkout=, read there — see the contact-form
+           date-picker init) instead of just showing it here with no next
+           step. calSelectedCheckin/-Checkout live outside this function so
+           the selection and its highlighting survive a re-render. */
         const confirmEl = calEl.querySelector("[data-cal-confirm]");
         const confirmTextEl = calEl.querySelector("[data-cal-confirm-text]");
         const confirmCtaEl = calEl.querySelector("[data-cal-confirm-cta]");
+        const calDateLabel = (dateStr) => {
+          const [y, m, d] = dateStr.split("-").map(Number);
+          const dLang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
+          return new Date(y, m - 1, d).toLocaleDateString(dLang === "es" ? "es-MX" : "en-US", { month: "long", day: "numeric", year: "numeric" });
+        };
+        const renderCalSelection = () => {
+          calEl.querySelectorAll("[data-cal-day]").forEach((b) => {
+            const ds = b.dataset.calDay;
+            b.classList.toggle("is-day-selected", ds === calSelectedCheckin || ds === calSelectedCheckout);
+            b.classList.toggle("is-in-range", !!(calSelectedCheckin && calSelectedCheckout && ds > calSelectedCheckin && ds < calSelectedCheckout));
+          });
+          if (!calSelectedCheckin) {
+            if (confirmEl) confirmEl.hidden = true;
+            return;
+          }
+          const villaParam = `villa=${encodeURIComponent(villa.slug)}`;
+          if (calSelectedCheckout) {
+            if (confirmTextEl) confirmTextEl.textContent = t("detail.calendar.confirmRange").replace("{checkin}", calDateLabel(calSelectedCheckin)).replace("{checkout}", calDateLabel(calSelectedCheckout));
+            if (confirmCtaEl) confirmCtaEl.href = `../contact.html?${villaParam}&checkin=${calSelectedCheckin}&checkout=${calSelectedCheckout}`;
+          } else {
+            if (confirmTextEl) confirmTextEl.textContent = t("detail.calendar.confirmNote").replace("{date}", calDateLabel(calSelectedCheckin));
+            if (confirmCtaEl) confirmCtaEl.href = `../contact.html?${villaParam}&checkin=${calSelectedCheckin}`;
+          }
+          if (confirmEl) confirmEl.hidden = false;
+        };
         calEl.querySelectorAll("[data-cal-day]").forEach((dayBtn) => {
           dayBtn.addEventListener("click", () => {
             const dateStr = dayBtn.dataset.calDay;
-            const [y, m, d] = dateStr.split("-").map(Number);
-            const dLang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
-            const dLocale = dLang === "es" ? "es-MX" : "en-US";
-            const label = new Date(y, m - 1, d).toLocaleDateString(dLocale, { month: "long", day: "numeric", year: "numeric" });
-            calEl.querySelectorAll("[data-cal-day]").forEach((b) => b.classList.toggle("is-day-selected", b === dayBtn));
-            if (confirmTextEl) confirmTextEl.textContent = t("detail.calendar.confirmNote").replace("{date}", label);
-            if (confirmCtaEl) confirmCtaEl.href = `../contact.html?villa=${encodeURIComponent(villa.slug)}&checkin=${dateStr}`;
-            if (confirmEl) confirmEl.hidden = false;
+            if (!calSelectedCheckin || calSelectedCheckout || dateStr <= calSelectedCheckin) {
+              calSelectedCheckin = dateStr;
+              calSelectedCheckout = null;
+            } else {
+              calSelectedCheckout = dateStr;
+            }
+            renderCalSelection();
           });
         });
+        renderCalSelection();
       };
 
       /* Keeps the Availability calendar and the price-box date pickers on
@@ -1912,8 +1947,10 @@
       syncTripVilla();
     }
 
-    /* Arrival date carried over from a villa's Availability calendar
-       (?checkin=YYYY-MM-DD, see the day-click handler in renderCalendar). */
+    /* Check-in/check-out carried over from a villa's Availability calendar
+       (?checkin=&checkout=YYYY-MM-DD, see the day-click handler in
+       renderCalendar). Checkin is applied first so its onDateSelected
+       bumps checkout's minDate before checkout is validated against it. */
     if (params.get("checkin") && dateFields.checkin) {
       const isoMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(params.get("checkin"));
       if (isoMatch) {
@@ -1921,6 +1958,16 @@
         if (picked >= today) {
           dateFields.checkin.viewDate = new Date(picked.getFullYear(), picked.getMonth(), 1);
           dateFields.checkin.selectDate(picked);
+        }
+      }
+    }
+    if (params.get("checkout") && dateFields.checkout) {
+      const isoMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(params.get("checkout"));
+      if (isoMatch) {
+        const picked = new Date(Number(isoMatch[1]), Number(isoMatch[2]) - 1, Number(isoMatch[3]));
+        if (picked >= dateFields.checkout.minDate) {
+          dateFields.checkout.viewDate = new Date(picked.getFullYear(), picked.getMonth(), 1);
+          dateFields.checkout.selectDate(picked);
         }
       }
     }
