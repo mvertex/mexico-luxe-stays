@@ -58,6 +58,9 @@ const MLS_I18N = {
     "home.search.checkout": "Check out",
     "home.search.calendarNote": "Grayed-out dates are already booked",
     "home.search.guests": "Add guest",
+    "home.search.guestsInvalidError": "Please enter a number only.",
+    "home.search.guestsMaxError": "That's more guests than our largest villa can host (max {max}), but reach out and we may still be able to help.",
+    "home.search.guestsContactCta": "Contact us to check availability",
     "home.search.submit": "Search",
     "home.search.hint": "Not sure where to go?",
     "home.search.hintLink": "Explore our villas",
@@ -83,8 +86,8 @@ const MLS_I18N = {
     "home.featured.viewAll": "View all villas",
     "home.featured.browseAll": "Browse all villas →",
     "home.cta.eyebrow": "Your getaway deserves nothing less",
-    "home.cta.title": "The villa is waiting.",
-    "home.cta.plan": "Make an enquiry",
+    "home.cta.title": "Your villa is waiting.",
+    "home.cta.plan": "Make an inquiry",
     "home.cta.whatsappTitle": "Talk to us on WhatsApp",
     "home.cta.whatsapp": "WhatsApp us",
 
@@ -274,7 +277,7 @@ const MLS_I18N = {
 
     /* ---------- About Us (about.html) ---------- */
     "about.brandStatement.text": "<p>With over 20 years of experience in luxury vacation property management, Mexico Luxe Stays offers exceptional properties and personalized service in two of Mexico&rsquo;s most distinctive destinations: Playa del Carmen and Valle de Guadalupe. Our focus is simple: creating seamless, memorable stays through outstanding accommodations and genuine hospitality.</p>",
-    "about.story.text": "<h3 class=\"h3\">Experience &amp; Destinations</h3><p>Our portfolio brings together luxury residences in <strong>Playa del Carmen</strong> and <strong>Kasa Kava Residences</strong> in <strong>Valle de Guadalupe</strong>, offering guests the opportunity to experience both the Mexican Caribbean and the heart of Mexico's renowned wine country.</p><h3 class=\"h3\">Personal Service</h3><p>As a small, dedicated team, we provide attentive and personalized service from the first inquiry through departure. We take care of the details so every guest can enjoy a comfortable, effortless, and memorable stay.</p>",
+    "about.story.text": "<h3 class=\"h3\">Experience &amp; Destinations</h3><p>Our portfolio brings together luxury residences in <strong>Playa del Carmen</strong> and <strong>Valle de Guadalupe</strong>, offering guests the opportunity to experience both the Mexican Caribbean and the heart of Mexico's renowned wine country.</p><h3 class=\"h3\">Personal Service</h3><p>As a small, dedicated team, we provide attentive and personalized service from the first inquiry through departure. We take care of the details so every guest can enjoy a comfortable, effortless, and memorable stay.</p>",
     "about.hero.title": "About <em>us</em>",
     "about.hero.lead": "A small, passionate team that has spent twenty years learning exactly what extraordinary feels like — and how to deliver it twice.",
     "about.hero.scroll": "Scroll",
@@ -411,6 +414,9 @@ const MLS_I18N = {
     "home.search.checkout": "Salida",
     "home.search.calendarNote": "Las fechas en gris ya están reservadas",
     "home.search.guests": "Agregar huésped",
+    "home.search.guestsInvalidError": "Solo se pueden introducir números.",
+    "home.search.guestsMaxError": "Ese número de huéspedes supera el máximo que aceptan nuestras villas (máx. {max}), pero puedes contactarnos para consultar si es posible hacer una excepción.",
+    "home.search.guestsContactCta": "Contáctanos para consultar disponibilidad",
     "home.search.submit": "Buscar",
     "home.search.hint": "¿No sabes a dónde ir?",
     "home.search.hintLink": "Explora nuestras villas",
@@ -631,7 +637,7 @@ const MLS_I18N = {
 
     /* ---------- About Us (about.html) ---------- */
     "about.brandStatement.text": "<p>Con más de 20 años de experiencia en la administración de propiedades vacacionales de lujo, Mexico Luxe Stays ofrece propiedades excepcionales y un servicio personalizado en dos de los destinos más distintivos de México: Playa del Carmen y Valle de Guadalupe. Nuestro enfoque es simple: crear estancias fluidas y memorables a través de alojamientos excepcionales y una hospitalidad genuina.</p>",
-    "about.story.text": "<h3 class=\"h3\">Experiencia y destinos</h3><p>Nuestro portafolio reúne residencias de lujo en <strong>Playa del Carmen</strong> y <strong>Kasa Kava Residences</strong> en <strong>Valle de Guadalupe</strong>, ofreciendo a nuestros huéspedes la oportunidad de vivir tanto el Caribe mexicano como el corazón de la reconocida región vinícola de México.</p><h3 class=\"h3\">Servicio personalizado</h3><p>Como un equipo pequeño y dedicado, ofrecemos un servicio atento y personalizado desde la primera consulta hasta la salida. Cuidamos cada detalle para que cada huésped disfrute de una estancia cómoda, sencilla e inolvidable.</p>",
+    "about.story.text": "<h3 class=\"h3\">Experiencia y destinos</h3><p>Nuestro portafolio reúne residencias de lujo en <strong>Playa del Carmen</strong> y <strong>Valle de Guadalupe</strong>, ofreciendo a nuestros huéspedes la oportunidad de vivir tanto el Caribe mexicano como el corazón de la reconocida región vinícola de México.</p><h3 class=\"h3\">Servicio personalizado</h3><p>Como un equipo pequeño y dedicado, ofrecemos un servicio atento y personalizado desde la primera consulta hasta la salida. Cuidamos cada detalle para que cada huésped disfrute de una estancia cómoda, sencilla e inolvidable.</p>",
     "about.hero.title": "Sobre <em>nosotros</em>",
     "about.hero.lead": "Un equipo pequeño y apasionado que ha pasado veinte años aprendiendo exactamente cómo se siente lo extraordinario — y cómo entregarlo dos veces.",
     "about.hero.scroll": "Desliza para ver más",

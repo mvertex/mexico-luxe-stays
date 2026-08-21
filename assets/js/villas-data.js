@@ -49,6 +49,7 @@ const MLS_VILLAS = [
     googleMapsUrl: "https://maps.app.goo.gl/A6LuW87UDhajc8tb9",
     guests: 18,
     bedrooms: 6,
+    hostawayListingId: null, // HOSTAWAY INTEGRATION POINT — fill in this villa's Hostaway listing ID to activate live sync (see hostaway-sync.js)
     priceFromPerNight: 2400, // HOSTAWAY INTEGRATION POINT — replace with live pricing API
     availability: { // HOSTAWAY INTEGRATION POINT — replace with live Calendar API data
       minStay: 4,
@@ -566,6 +567,7 @@ const MLS_VILLAS = [
     lng: -116.5662757,
     guests: 12,
     bedrooms: 4,
+    hostawayListingId: null, // HOSTAWAY INTEGRATION POINT — fill in this villa's Hostaway listing ID to activate live sync (see hostaway-sync.js)
     priceFromPerNight: 1100, // HOSTAWAY INTEGRATION POINT — replace with live pricing API
     availability: { // HOSTAWAY INTEGRATION POINT — replace with live Calendar API data
       minStay: 3,
@@ -906,6 +908,7 @@ const MLS_VILLAS = [
     googleMapsUrl: "https://maps.app.goo.gl/fB3C6WZ5AK9Awcyp6",
     guests: 22,
     bedrooms: 11,
+    hostawayListingId: null, // HOSTAWAY INTEGRATION POINT — fill in this villa's Hostaway listing ID to activate live sync (see hostaway-sync.js)
     priceFromPerNight: 4200, // HOSTAWAY INTEGRATION POINT — replace with live pricing API
     availability: { // HOSTAWAY INTEGRATION POINT — replace with live Calendar API data
       minStay: 5,
@@ -1299,6 +1302,7 @@ const MLS_VILLAS = [
     googleMapsUrl: "https://www.google.com/maps/place/Casa+Estrella+%C2%B7+4BR+Jungle+Villa+-+Playacar+Fase+1+-+50+mts.+from+Ocean/@20.6124935,-87.0828781,17z",
     guests: 10,
     bedrooms: 4,
+    hostawayListingId: null, // HOSTAWAY INTEGRATION POINT — fill in this villa's Hostaway listing ID to activate live sync (see hostaway-sync.js)
     priceFromPerNight: 950, // HOSTAWAY INTEGRATION POINT — replace with live pricing API
     availability: { // HOSTAWAY INTEGRATION POINT — replace with live Calendar API data
       minStay: 3,

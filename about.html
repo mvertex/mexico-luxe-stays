@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
-<body class="has-hero">
+<body>
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
 
   <!-- ============ COMPONENT: header (keep identical across pages) ============ -->
@@ -46,21 +46,10 @@
 
   <main id="main">
 
-    <!-- ============ Page hero (full-viewport) ============ -->
-    <section class="hero" aria-label="About Mexico Luxe Stays">
-      <div class="hero-media">
-        <img class="hero-video-poster" src="assets/img/about-hero-poster.webp"
-             alt="Kasa Kefi's hillside villa overlooking the Valle de Guadalupe at dusk" fetchpriority="high">
-      </div>
-      <div class="container">
-        <h1 class="display no-italic" data-hero-reveal="2" data-i18n-html="about.hero.title">About <em>us</em></h1>
-      </div>
-      <a class="hero-scroll-hint" href="#story" data-i18n="about.hero.scroll">Scroll</a>
-    </section>
-
     <!-- ============ Brand statement ============ -->
     <section class="section brand-statement" aria-label="Mexico Luxe Stays">
       <div class="container">
+        <h1 class="visually-hidden" data-i18n="about.hero.title">About us</h1>
         <span class="brand-statement-logo reveal" role="img" aria-label="Mexico Luxe Stays"></span>
         <div class="brand-statement-copy reveal" data-delay="1" data-i18n-html="about.brandStatement.text">
           <p>With over 20 years of experience in luxury vacation property management, Mexico Luxe Stays offers exceptional properties and personalized service in two of Mexico&rsquo;s most distinctive destinations: Playa del Carmen and Valle de Guadalupe. Our focus is simple: creating seamless, memorable stays through outstanding accommodations and genuine hospitality.</p>
@@ -74,11 +63,11 @@
         <div class="story-split story-split--half">
           <figure class="story-split-media reveal">
             <img src="assets/img/about-story-2.webp"
-                 alt="A contemporary villa entrance with a paved driveway leading toward the desert hills" loading="lazy" width="1254" height="1254">
+                 alt="Villa Aqua's bright, elegantly furnished living room with an ocean view in Playa del Carmen" loading="lazy" width="1254" height="1254">
           </figure>
           <div class="story-split-body reveal" data-delay="1" data-i18n-html="about.story.text">
             <h3 class="h3">Experience &amp; Destinations</h3>
-            <p>Our portfolio brings together luxury residences in <strong>Playa del Carmen</strong> and <strong>Kasa Kava Residences</strong> in <strong>Valle de Guadalupe</strong>, offering guests the opportunity to experience both the Mexican Caribbean and the heart of Mexico's renowned wine country.</p>
+            <p>Our portfolio brings together luxury residences in <strong>Playa del Carmen</strong> and <strong>Valle de Guadalupe</strong>, offering guests the opportunity to experience both the Mexican Caribbean and the heart of Mexico's renowned wine country.</p>
             <h3 class="h3">Personal Service</h3>
             <p>As a small, dedicated team, we provide attentive and personalized service from the first inquiry through departure. We take care of the details so every guest can enjoy a comfortable, effortless, and memorable stay.</p>
           </div>
@@ -143,9 +132,8 @@
     <!-- ============ CTA banner ============ -->
     <section class="section cta-banner" aria-labelledby="cta-title">
       <div class="cta-media">
-        <!-- PLACEHOLDER IMAGE -->
-        <img src="https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=2000&q=80"
-             alt="Open water, open calendar" loading="lazy">
+        <img src="assets/img/about-cta.webp"
+             alt="Open water, open calendar" loading="lazy" width="2000" height="1125">
       </div>
       <div class="container reveal">
         <h2 class="visually-hidden" id="cta-title" data-i18n="about.hero.title">About us</h2>
@@ -263,6 +251,7 @@
 
   <script src="assets/js/i18n.js" defer></script>
   <script src="assets/js/villas-data.js" defer></script>
+  <script src="assets/js/hostaway-sync.js" defer></script>
   <script src="assets/js/main.js?v=2" defer></script>
 </body>
 </html>

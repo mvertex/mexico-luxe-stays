@@ -477,9 +477,46 @@
       if (e.key === "Escape") Object.values(heroDateFields).forEach((api) => api.close());
     });
 
+    /* Guests accepts free-form numeric input instead of preset options —
+       validated against the largest villa in the collection, same pattern as
+       the villas.html filter bar (#filter-guests). */
+    const heroGuestsInput = heroSearchForm.querySelector("#hs-guests");
+    const heroGuestsField = heroGuestsInput?.closest(".hero-search-field");
+    const heroGuestsErrorEl = heroSearchForm.querySelector("[data-hero-guests-error]");
+    let heroGuestsHasError = false;
+    if (heroGuestsInput) {
+      const heroMaxGuests = Math.max(...MLS_VILLAS.map((v) => v.guests));
+      const heroClearGuestsError = () => {
+        heroGuestsHasError = false;
+        heroGuestsErrorEl.hidden = true;
+        heroGuestsErrorEl.innerHTML = "";
+        heroGuestsField.classList.remove("has-error");
+      };
+      const heroShowGuestsError = (overMax) => {
+        heroGuestsHasError = true;
+        heroGuestsErrorEl.innerHTML = overMax
+          ? `${t("home.search.guestsMaxError").replace("{max}", heroMaxGuests)}<br><a href="contact.html">${t("home.search.guestsContactCta")}</a>`
+          : t("home.search.guestsInvalidError");
+        heroGuestsErrorEl.hidden = false;
+        heroGuestsField.classList.add("has-error");
+      };
+      heroGuestsInput.addEventListener("input", () => {
+        const raw = heroGuestsInput.value.trim();
+        heroGuestsField.classList.toggle("has-value", !!raw);
+        if (!raw) { heroClearGuestsError(); return; }
+        if (!/^\d+$/.test(raw)) { heroShowGuestsError(false); return; }
+        if (parseInt(raw, 10) > heroMaxGuests) { heroShowGuestsError(true); return; }
+        heroClearGuestsError();
+      });
+    }
+
     /* Valle de Guadalupe has a single villa (Kasa Kefi) — skip the villas.html
        listing and go straight to its page instead of a one-result grid. */
     heroSearchForm.addEventListener("submit", (e) => {
+      if (heroGuestsHasError) {
+        e.preventDefault();
+        return;
+      }
       if (heroDestinationSelect?.value === "valle-de-guadalupe") {
         e.preventDefault();
         window.location.href = "villas/kasa-kefi.html";
@@ -1657,6 +1694,18 @@
       renderVillaDetail();
     }
   }
+
+  /* ---------- Re-render dynamic (data-driven) content once live Hostaway
+     data lands (see hostaway-sync.js) — same render calls as a language
+     change, since both mean "MLS_VILLAS data changed, redraw." ---------- */
+  document.addEventListener("mls:livedata", () => {
+    renderFeaturedShowcase && renderFeaturedShowcase();
+    renderVillaGrid && renderVillaGrid();
+    renderDestinationGrid && renderDestinationGrid();
+    renderVillaDetail && renderVillaDetail();
+    renderTripShowcase && renderTripShowcase();
+    updateTripCapacityNotice && updateTripCapacityNotice();
+  });
 
   /* ---------- Re-render dynamic (data-driven) content when the language toggles ---------- */
   document.addEventListener("mls:languagechange", () => {

@@ -225,44 +225,6 @@
       </div>
     </section>
 
-    <div class="container" style="padding-block:0">
-      <section class="booking-cta" aria-label="Request information about Casa de las Estrellas">
-        <div class="booking-cta-bg" aria-hidden="true">
-          <img src="../assets/img/villas/bg-playa-turtles.webp" alt="" width="1536" height="1024">
-        </div>
-        <div class="booking-cta-card">
-          <div class="booking-cta-head">
-            <div class="booking-cta-head-left">
-              <p><span data-i18n="detail.bookingCta.trustBig">Trust us</span> <span class="small" data-i18n="detail.bookingCta.trustSmall">to</span></p>
-              <p><span data-i18n="detail.bookingCta.guideBig">Guide</span> <span class="small" data-i18n="detail.bookingCta.guideSmall">you</span></p>
-            </div>
-            <div class="booking-cta-head-right">
-              <p class="booking-cta-eyebrow" data-i18n="detail.bookingCta.eyebrow">To your</p>
-              <p class="booking-cta-heading" data-i18n="detail.bookingCta.heading">Future home</p>
-            </div>
-          </div>
-          <p class="booking-cta-note" data-i18n="detail.bookingCta.note">Our specialist will contact you as soon as possible.</p>
-          <!-- ┌─────────────────────────────────────────────────────────┐
-               │ FORM BACKEND INTEGRATION POINT                          │
-               │ No backend wired yet — submit opens WhatsApp with a     │
-               │ prefilled message (see main.js). Swap for a POST to     │
-               │ your CRM / Hostaway inquiry API when ready.             │
-               └─────────────────────────────────────────────────────────┘ -->
-          <form class="booking-cta-form" data-booking-cta-form data-villa-name="Casa de las Estrellas">
-            <div class="booking-cta-field">
-              <input type="text" name="name" required autocomplete="name" data-i18n-placeholder="detail.bookingCta.namePlaceholder" placeholder="Type your name...">
-            </div>
-            <div class="booking-cta-field">
-              <input type="tel" name="phone" required autocomplete="tel" data-i18n-placeholder="detail.bookingCta.phonePlaceholder" placeholder="Type your mobile number...">
-            </div>
-            <button type="submit" class="booking-cta-submit" data-i18n="detail.bookingCta.submit">Request</button>
-            <p class="booking-cta-status" data-form-status></p>
-          </form>
-          <p class="booking-cta-legal" data-i18n="detail.bookingCta.legal">By sending your request, you're agreeing to our privacy policy. We promise to keep your personal information safe and secure.</p>
-        </div>
-      </section>
-    </div>
-
     <!-- ============ FAQ for this villa ============ -->
     <section id="villa-faq" class="section" aria-label="Frequently asked questions about Casa de las Estrellas">
       <div class="container">
@@ -397,6 +359,7 @@
 
   <script src="../assets/js/i18n.js" defer></script>
   <script src="../assets/js/villas-data.js" defer></script>
+  <script src="../assets/js/hostaway-sync.js" defer></script>
   <script src="../assets/js/main.js?v=2" defer></script>
 </body>
 </html>

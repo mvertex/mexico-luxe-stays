@@ -67,7 +67,7 @@
       <div class="hero-media">
         <!-- Brand photo: Casa Corazon Luxe lap pool, palapas, and the Caribbean beyond. -->
         <img src="assets/img/hero-casa-corazon.jpg"
-             alt="The lap pool at Casa Corazon Luxe, framed by palapas and the Caribbean" fetchpriority="high">
+             alt="The lap pool at Casa Corazon Luxe, framed by palapas and the Caribbean" fetchpriority="high" width="1752" height="897">
       </div>
       <div class="container">
         <h1 class="display hero-title--home" data-hero-reveal="2" style="max-width:20ch" data-i18n-html="home.hero.title">Welcome to<br><img class="hero-logo" src="assets/img/brand/wordmark-negative.png" alt="Mexico Luxe Stays" width="387" height="40"></h1>
@@ -123,29 +123,8 @@
           </div>
           <div class="hero-search-field">
             <label for="hs-guests" data-i18n="home.search.guests">Add guest</label>
-            <select id="hs-guests" name="guests">
-              <option value=""></option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-              <option value="14">14</option>
-              <option value="15">15</option>
-              <option value="16">16</option>
-              <option value="17">17</option>
-              <option value="18">18</option>
-              <option value="19">19</option>
-              <option value="20">20</option>
-            </select>
+            <input type="text" inputmode="numeric" autocomplete="off" id="hs-guests" name="guests">
+            <p class="hero-search-field-error" data-hero-guests-error hidden></p>
           </div>
           <button type="submit" class="hero-search-btn" aria-label="Search" data-i18n-aria-label="home.search.submit">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.2" y2="16.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -174,9 +153,8 @@
             </div>
           </a>
           <a class="destination-card reveal" data-delay="1" href="valle-de-guadalupe.html">
-            <!-- PLACEHOLDER IMAGE -->
-            <img src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=1400&q=80"
-                 alt="Vineyard rows rolling toward the hills of Valle de Guadalupe" loading="lazy" width="1400" height="1867">
+            <img src="assets/img/dest-valle-guadalupe.webp"
+                 alt="Vineyard rows rolling toward the hills of Valle de Guadalupe" loading="lazy" width="1400" height="933">
             <div class="destination-body">
               <h3 class="h2" data-i18n="home.destinations.valle.name">Valle de Guadalupe</h3>
               <span class="link-arrow"><span data-i18n="home.destinations.valle.link">Wine country villas</span> <span class="arrow" aria-hidden="true">&rarr;</span></span>
@@ -189,7 +167,13 @@
     <!-- ============ Intro / welcome ============ -->
     <section class="section" id="intro">
       <div class="container villa-story">
-        <div class="villa-story-copy reveal">
+        <div class="villa-story-media reveal">
+          <figure class="villa-story-media-main">
+            <img src="assets/img/intro-central-landing.webp"
+                 alt="Aerial view of Kasa Kefi's rooftop terrace with lounge chairs, fire pit, and plunge pool" loading="lazy" width="1254" height="1254">
+          </figure>
+        </div>
+        <div class="villa-story-copy reveal" data-delay="1">
           <h2 class="stacked-heading">
             <span class="stacked-heading-line"><span class="italic" data-i18n="home.intro.heading1">Luxury</span> <span data-i18n="home.intro.heading1b">Elegance</span></span>
             <span class="stacked-heading-line"><span data-i18n="home.intro.heading2">Comfort</span> <span class="italic" data-i18n="home.intro.heading3">Exclusivity</span></span>
@@ -197,12 +181,6 @@
           </h2>
           <p data-i18n="home.intro.copy">Mexico Luxe Stays offers a curated collection of luxury properties, personalized service, and exceptional experiences across the Riviera Maya and Baja California&rsquo;s renowned wine country. Each stay is thoughtfully designed to provide privacy, sophistication, comfort, and unforgettable moments.</p>
           <a class="btn btn-ghost" href="about.html" data-i18n="home.intro.aboutLink">More about us</a>
-        </div>
-        <div class="villa-story-media reveal" data-delay="1">
-          <figure class="villa-story-media-main">
-            <img src="assets/img/intro-central-landing.webp"
-                 alt="Aerial view of Kasa Kefi's rooftop terrace with lounge chairs, fire pit, and plunge pool" loading="lazy" width="1254" height="1254">
-          </figure>
         </div>
       </div>
     </section>
@@ -237,15 +215,14 @@
     <!-- ============ CTA split ============ -->
     <section class="section cta-split cta-banner" aria-labelledby="cta-title">
       <div class="cta-media">
-        <!-- PLACEHOLDER IMAGE -->
-        <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=2000&q=80"
-             alt="An infinity pool at golden hour, waiting" loading="lazy">
+        <img src="assets/img/cta-infinity-pool.webp"
+             alt="An infinity pool at golden hour, waiting" loading="lazy" width="1536" height="1024">
       </div>
       <div class="container">
         <div class="cta-split-grid">
           <div class="cta-split-col reveal">
-            <h2 class="h2" id="cta-title" data-i18n-html="home.cta.title">The villa is waiting.</h2>
-            <a class="btn btn-solid" href="contact.html" data-i18n="home.cta.plan">Make an enquiry</a>
+            <h2 class="h2" id="cta-title" data-i18n-html="home.cta.title">Your villa is waiting.</h2>
+            <a class="btn btn-solid" href="contact.html" data-i18n="home.cta.plan">Make an inquiry</a>
           </div>
           <div class="cta-split-col reveal" data-delay="1">
             <h2 class="h2" data-i18n-html="home.cta.whatsappTitle">Talk to us on WhatsApp</h2>
@@ -364,6 +341,7 @@
 
   <script src="assets/js/i18n.js" defer></script>
   <script src="assets/js/villas-data.js" defer></script>
+  <script src="assets/js/hostaway-sync.js" defer></script>
   <script src="assets/js/main.js?v=2" defer></script>
 </body>
 </html>
