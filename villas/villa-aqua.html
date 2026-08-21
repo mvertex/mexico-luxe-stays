@@ -99,18 +99,14 @@
           </div>
         </div>
 
-        <!-- Calendar rendered from villa.availability (villas-data.js) — see renderCalendar in
-             main.js. HOSTAWAY INTEGRATION POINT (via Vercel): swap villa.availability.blockedRanges
-             for a live fetch to the Hostaway Calendar API. Docs: https://api.hostaway.com/documentation -->
-        <div class="villa-calendar" data-villa-calendar></div>
-      </div>
-
-      <!-- ============ Price box (left) + Amenities, half-width (right) ============ -->
-      <div class="detail-lower-grid">
         <!-- Standalone price + check-in/check-out + guests widget — see the
              price-box block in main.js. HOSTAWAY INTEGRATION POINT (via
              Vercel): swap villa.priceFromPerNight for a live quote once
-             dates + guests are picked here. -->
+             dates + guests are picked here. Check In/Check Out fields open a
+             mini calendar (data-price-calendar) whose disabled/blocked days
+             read villa.availability.blockedRanges — same real-availability
+             source the old standalone calendar used, so this stays linked to
+             live Hostaway data once that feed lands. -->
         <div class="villa-price-box" data-price-box>
           <div class="villa-price-amount-row">
             <span class="villa-price-from" data-i18n="detail.book.from">From</span>
@@ -181,7 +177,10 @@
             <p class="villa-price-tiers-caption" data-i18n="detail.book.tieredCaption">Nightly rate steps up in three bands as your group grows — the guest count above shows where you land.</p>
           </div>
         </div>
+      </div>
 
+      <!-- ============ Amenities — full-width now that the price box moved up next to the intro copy ============ -->
+      <div class="detail-lower-grid">
         <div class="amenities-panel amenities-panel--half">
           <div class="container">
             <h3 class="h3" data-i18n="detail.amenities.title">Amenities</h3>

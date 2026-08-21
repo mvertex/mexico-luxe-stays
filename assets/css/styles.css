@@ -1272,17 +1272,17 @@ button { font: inherit; cursor: pointer; }
 }
 .spec {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: .5rem; text-align: center; width: 7rem; padding: 1rem; position: relative;
+  gap: .5rem; text-align: center; width: 9rem; padding: 1rem; position: relative;
 }
 .spec + .spec::before {
   content: ""; position: absolute; left: calc(clamp(1.5rem, 4vw, 3.5rem) / -2); top: 15%; bottom: 15%;
   width: 1px; background: rgba(78, 93, 75, .28);
 }
 .spec .spec-text { display: flex; flex-direction: column; align-items: center; }
-.spec .spec-icon { display: block; width: 1.7rem; height: 1.7rem; margin-bottom: .55rem; color: var(--gold); opacity: .9; }
+.spec .spec-icon { display: block; width: 2.3rem; height: 2.3rem; margin-bottom: .55rem; color: var(--gold); opacity: .9; }
 .spec .spec-icon svg { width: 100%; height: 100%; display: block; }
 .spec .spec-num { font-family: var(--font-sans); font-size: 1.7rem; line-height: 1; color: var(--sage); }
-.spec .spec-label { font-size: .62rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); margin-top: .35rem; }
+.spec .spec-label { font-size: .68rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); margin-top: .35rem; }
 .spec.spec--wide .spec-num { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; line-height: 1.2; }
 
 .detail-layout {
@@ -1327,13 +1327,12 @@ button { font: inherit; cursor: pointer; }
 .detail-intro-grid .residence-split-copy { text-align: left; margin-inline: 0; max-width: none; }
 @media (max-width: 900px) { .detail-intro-grid { grid-template-columns: 1fr; } }
 
-/* ---------- Lower row: price box (left) + condensed Amenities (right),
-   50/50, replacing the old full-bleed Amenities band below. ---------- */
+/* ---------- Lower row: condensed Amenities, full width — the price box
+   now sits in the intro grid above instead of sharing this row. ---------- */
 .detail-lower-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 3vw, 2.5rem);
+  display: grid; grid-template-columns: 1fr; gap: clamp(1.5rem, 3vw, 2.5rem);
   align-items: stretch; margin-top: clamp(3.5rem, 7vw, 5.5rem);
 }
-@media (max-width: 900px) { .detail-lower-grid { grid-template-columns: 1fr; } }
 
 /* ---------- Price box: price + check-in/check-out date pickers + guests
    stepper, styled as pill controls (see reference mock). Self-contained —
