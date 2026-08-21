@@ -476,6 +476,15 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") Object.values(heroDateFields).forEach((api) => api.close());
     });
+
+    /* Valle de Guadalupe has a single villa (Kasa Kefi) — skip the villas.html
+       listing and go straight to its page instead of a one-result grid. */
+    heroSearchForm.addEventListener("submit", (e) => {
+      if (heroDestinationSelect?.value === "valle-de-guadalupe") {
+        e.preventDefault();
+        window.location.href = "villas/kasa-kefi.html";
+      }
+    });
   }
 
   /* ---------- Scroll reveal (single observer, animates once) ---------- */
