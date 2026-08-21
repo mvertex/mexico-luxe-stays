@@ -104,7 +104,7 @@ const MLS_VILLAS = [
       { en: "Free private parking", es: "Estacionamiento privado gratuito" },
       { en: "Washer & dryer", es: "Lavadora y secadora" }
     ],
-    services: ["chef", "transfer", "housekeeping", "spa", "grocery", "excursions"],
+    services: ["housekeeping", "concierge", "itinerary", "chef", "transfer", "spa", "grocery", "excursions"],
     gallery: [
       { key: "outdoor", images: [
         { src: "../assets/img/villas/villa-aqua-outdoor-01.webp",
@@ -578,11 +578,11 @@ const MLS_VILLAS = [
       ]
     },
     beds: 7,
-    baths: 4,
+    baths: 4.5,
     area: 400,
     featured: true,
-    short: "Surrounded by vineyards in the heart of Valle de Guadalupe. Every bedroom has its own balcony with a fire pit to watch the sunset, glass of wine in hand.",
-    shortEs: "Rodeada de viñedos en el corazón del Valle de Guadalupe. Cada recámara tiene su propio balcón con fogata para ver el atardecer con una copa de vino en mano.",
+    short: "Surrounded by vineyards in the heart of Valle de Guadalupe. Three suites have their own balcony with a fire pit to watch the sunset, glass of wine in hand, plus a studio with a full bathroom.",
+    shortEs: "Rodeada de viñedos en el corazón del Valle de Guadalupe. Tres suites tienen su propio balcón con fogata para ver el atardecer con una copa de vino en mano, más un estudio con baño completo.",
     image: "assets/img/villas/kasa-kefi-1.webp",
     imageAlt: "Kasa Kefi's concrete and corten-steel silhouette above the vineyard rows, mountains behind",
     imageAltEs: "La silueta de concreto y acero corten de Kasa Kefi sobre las hileras del viñedo, con las montañas detrás",
@@ -596,8 +596,7 @@ const MLS_VILLAS = [
       { en: "Infinity plunge pool over the vineyard", es: "Alberca infinita sobre el viñedo" },
       { en: "Minutes from top wineries & Michelin-starred dining", es: "A minutos de las mejores bodegas y restaurantes con estrella Michelin" },
       { en: "Panoramic vineyard views", es: "Vistas panorámicas al viñedo" },
-      { en: "Private fire-pit terrace in every suite", es: "Terraza privada con fogata en cada suite" },
-      { en: "Wine cellar", es: "Cava de vinos" },
+      { en: "Private fire-pit terrace in 3 of the suites", es: "Terraza privada con fogata en 3 de las suites" },
       { en: "Gourmet kitchen", es: "Cocina gourmet" },
       { en: "Ethanol fireplace", es: "Chimenea de etanol" },
       { en: "Al fresco dining & BBQ terrace", es: "Comedor al aire libre y terraza con BBQ" },
@@ -605,7 +604,7 @@ const MLS_VILLAS = [
       { en: "Sonos sound in living areas", es: "Sonido Sonos en las áreas comunes" }
     ],
     amenitiesMore: [
-      { en: "Ensuite bathrooms in every suite", es: "Baño propio en cada suite" },
+      { en: "Ensuite bathrooms in every suite, plus a full bathroom in the studio", es: "Baño propio en cada suite, más baño completo en el estudio" },
       { en: "Nespresso machines", es: "Máquinas Nespresso" },
       { en: "Smart TVs & Amazon Echo", es: "Smart TVs y Amazon Echo" },
       { en: "Heating & air conditioning", es: "Calefacción y aire acondicionado" },
@@ -617,7 +616,7 @@ const MLS_VILLAS = [
       { en: "Master suite with private entrance", es: "Suite principal con entrada propia" },
       { en: "Free parking", es: "Estacionamiento gratuito" }
     ],
-    services: ["chef", "transfer", "housekeeping", "spa", "grocery", "wine"],
+    services: ["housekeeping", "concierge", "itinerary", "chef", "transfer", "spa", "grocery", "wine"],
     gallery: [
       { key: "outdoor", images: [
         { src: "../assets/img/villas/kasa-kefi-outdoor-01.webp",
@@ -788,7 +787,7 @@ const MLS_VILLAS = [
         { src: "../assets/img/villas/kasa-kefi-living-01.webp",
           alt: "A cozy corner of the living room with round swivel chairs and a live-edge side table", altEs: "Un rincón acogedor de la sala con sillones giratorios redondos y una mesa lateral de borde vivo" },
         { src: "../assets/img/villas/kasa-kefi-living-02.webp",
-          alt: "The open-concept living room with a built-in wine rack, opening onto the kitchen and valley beyond", altEs: "La sala de concepto abierto con cava de vinos integrada, conectada a la cocina y el valle al fondo" },
+          alt: "The open-concept living room with a built-in wine rack, opening onto the kitchen and valley beyond", altEs: "La sala de concepto abierto con botellero integrado, conectada a la cocina y el valle al fondo" },
         { src: "../assets/img/villas/kasa-kefi-living-03.webp",
           alt: "A second living room with a deep sectional sofa and a gallery wall of abstract art", altEs: "Una segunda sala con sofá seccional profundo y una pared de arte abstracto" },
         { src: "../assets/img/villas/kasa-kefi-living-04.webp", alt: "The living room at Kasa Kefi — photo 4", altEs: "La sala en Kasa Kefi — foto 4" },
@@ -850,11 +849,11 @@ const MLS_VILLAS = [
     faqs: [
       {
         q: { en: "Is Kasa Kefi good for a wine-tasting trip?", es: "¿Kasa Kefi es buena para un viaje de cata de vinos?" },
-        a: { en: "It's built for it — the villa sits minutes from the Valle's top wineries, with a private wine cellar on-site and a driver available for tastings, so no one has to skip a pour.", es: "Está pensada para eso — la villa está a minutos de las mejores bodegas del Valle, con una cava de vinos propia y un chofer disponible para las catas, para que nadie tenga que dejar de disfrutar una copa." }
+        a: { en: "It's built for it — the villa sits minutes from the Valle's top wineries, with a driver available for tastings, so no one has to skip a pour.", es: "Está pensada para eso — la villa está a minutos de las mejores bodegas del Valle, con un chofer disponible para las catas, para que nadie tenga que dejar de disfrutar una copa." }
       },
       {
         q: { en: "Does every suite have its own fire pit?", es: "¿Cada suite tiene su propia fogata?" },
-        a: { en: "Yes, every suite has a private fire-pit terrace overlooking the vineyard, perfect for stargazing after dinner.", es: "Sí, cada suite tiene su propia terraza con fogata y vista al viñedo, perfecta para ver las estrellas después de la cena." }
+        a: { en: "Three of the four rooms — the suites — have a private fire-pit terrace overlooking the vineyard, perfect for stargazing after dinner. The fourth room is a studio with a full bathroom.", es: "Tres de las cuatro habitaciones — las suites — tienen su propia terraza con fogata y vista al viñedo, perfecta para ver las estrellas después de la cena. La cuarta habitación es un estudio con baño completo." }
       },
       {
         q: { en: "Is there reliable internet for remote work?", es: "¿Hay internet confiable para trabajar de forma remota?" },
@@ -961,7 +960,7 @@ const MLS_VILLAS = [
       { en: "Garage & free parking", es: "Cochera y estacionamiento gratuito" },
       { en: "Washer & dryer", es: "Lavadora y secadora" }
     ],
-    services: ["chef", "transfer", "housekeeping", "spa", "grocery", "events", "excursions"],
+    services: ["housekeeping", "concierge", "itinerary", "chef", "transfer", "spa", "grocery", "events", "excursions"],
     gallery: [
       { key: "outdoor", images: [
         { src: "../assets/img/villas/casa-corazon-luxe-outdoor-02.webp",
@@ -1352,7 +1351,7 @@ const MLS_VILLAS = [
       { en: "Board games", es: "Juegos de mesa" },
       { en: "Free parking", es: "Estacionamiento gratuito" }
     ],
-    services: ["chef", "transfer", "housekeeping", "spa", "grocery", "excursions"],
+    services: ["housekeeping", "concierge", "itinerary", "chef", "transfer", "spa", "grocery", "excursions"],
     gallery: [
       { key: "outdoor", images: [
         { src: "../assets/img/villas/casa-de-las-estrellas-outdoor-01.webp",
@@ -1561,35 +1560,53 @@ const MLS_VILLAS = [
    (services.<id>.tag / .title / .body), so translations stay in one place.
    Each villa lists which of these it offers via its `services` array above. */
 const MLS_SERVICE_DEFS = {
+  housekeeping: {
+    included: true,
+    image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=900&q=80",
+    alt: "A suite reset to perfect while you were at lunch"
+  },
+  concierge: {
+    included: true,
+    image: "https://images.unsplash.com/photo-1521783988139-89397d761dce?auto=format&fit=crop&w=900&q=80",
+    alt: "A concierge confirming tonight's reservation"
+  },
+  itinerary: {
+    included: true,
+    image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=900&q=80",
+    alt: "A day in the Riviera Maya, mapped out over coffee"
+  },
   chef: {
+    included: false,
     image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=80",
     alt: "A chef's plate finished tableside"
   },
   transfer: {
+    included: false,
     image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=900&q=80",
     alt: "Your driver, already waiting"
   },
-  housekeeping: {
-    image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=900&q=80",
-    alt: "A suite reset to perfect while you were at lunch"
-  },
   spa: {
+    included: false,
     image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=900&q=80",
     alt: "A massage table set poolside, oils warmed"
   },
   grocery: {
+    included: false,
     image: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=900&q=80",
     alt: "The kitchen stocked to your list before you land"
   },
   events: {
+    included: false,
     image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=900&q=80",
     alt: "An arch of flowers, an aisle of sand"
   },
   wine: {
+    included: false,
     image: "https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?auto=format&fit=crop&w=900&q=80",
     alt: "A private tasting poured straight from the barrel"
   },
   excursions: {
+    included: false,
     image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80",
     alt: "Snorkeling the reef before the crowds arrive"
   }

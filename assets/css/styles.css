@@ -356,7 +356,7 @@ button { font: inherit; cursor: pointer; }
 /* ---------- Hero search (liquid glass) ---------- */
 .hero-search {
   display: flex; align-items: stretch; flex-wrap: wrap;
-  width: min(920px, 92vw); margin: 8.5rem auto 0;
+  width: min(920px, 92vw); margin: 9.5rem auto 0;
   border-radius: 4px;
   background: rgba(246, 244, 239, .16);
   backdrop-filter: blur(20px) saturate(160%);
@@ -1250,7 +1250,7 @@ button { font: inherit; cursor: pointer; }
   width: 1px; background: rgba(78, 93, 75, .28);
 }
 .spec .spec-text { display: flex; flex-direction: column; align-items: center; }
-.spec .spec-icon { display: block; width: 1.35rem; height: 1.35rem; margin-bottom: .55rem; color: var(--gold); opacity: .85; }
+.spec .spec-icon { display: block; width: 1.7rem; height: 1.7rem; margin-bottom: .55rem; color: var(--gold); opacity: .9; }
 .spec .spec-icon svg { width: 100%; height: 100%; display: block; }
 .spec .spec-num { font-family: var(--font-sans); font-size: 1.7rem; line-height: 1; color: var(--sage); }
 .spec .spec-label { font-size: .62rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); margin-top: .35rem; }
@@ -1347,6 +1347,36 @@ button { font: inherit; cursor: pointer; }
 .villa-price-guests-btn:hover:not(:disabled) { background: var(--sage); border-color: var(--sage); color: var(--cream); }
 .villa-price-guests-btn:disabled { opacity: .35; cursor: not-allowed; }
 .villa-price-note { font-size: .74rem; line-height: 1.5; color: var(--stone); text-align: center; margin: 1rem 0 0; }
+
+/* Tiered-by-occupancy indicator: three ascending bars showing the guest
+   band the current stepper value falls into. Bounds are computed in
+   main.js from villa.guests — no invented figures, just the real cap
+   split into three bands. */
+.villa-price-tiers { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid rgba(20, 20, 20, .1); }
+.villa-price-tiers-head {
+  display: flex; align-items: center; gap: .4rem; margin-bottom: .7rem;
+  font-family: var(--font-sans); font-size: .7rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: var(--track-caps); color: var(--stone);
+}
+.villa-price-tiers-head svg { width: 14px; height: 14px; flex: none; color: var(--gold); }
+.villa-price-tiers-bar { display: flex; align-items: flex-end; gap: .35rem; height: 26px; }
+.villa-price-tier { flex: 1; display: flex; align-items: flex-end; height: 100%; }
+.villa-price-tier-fill {
+  display: block; width: 100%; border-radius: 2px 2px 0 0;
+  background: var(--sage-tint); opacity: .7;
+  transition: background-color .25s ease, opacity .25s ease;
+}
+.villa-price-tier[data-price-tier="0"] .villa-price-tier-fill { height: 42%; }
+.villa-price-tier[data-price-tier="1"] .villa-price-tier-fill { height: 70%; }
+.villa-price-tier[data-price-tier="2"] .villa-price-tier-fill { height: 100%; }
+.villa-price-tier.is-active .villa-price-tier-fill { background: var(--sage); opacity: 1; }
+.villa-price-tiers-ranges { display: flex; gap: .35rem; margin-top: .4rem; }
+.villa-price-tiers-ranges span {
+  flex: 1; text-align: center; font-family: var(--font-sans); font-size: .68rem;
+  color: var(--stone); transition: color .2s ease;
+}
+.villa-price-tiers-ranges span.is-active { color: var(--ink); font-weight: 700; }
+.villa-price-tiers-caption { font-size: .7rem; line-height: 1.5; color: var(--stone); text-align: center; margin: .65rem 0 0; }
 
 /* Half-width variant: same dark-green Amenities content and two-column
    category layout as the full-bleed band, just contained as a card at
@@ -1603,10 +1633,25 @@ button { font: inherit; cursor: pointer; }
 }
 
 /* ---------- Services (numbered list, one row per service, full-width
-   divider rules — replaces the old hover-reveal image carousel) ---------- */
+   divider rules — replaces the old hover-reveal image carousel).
+   Split into two groups — included in the rate vs. extra cost — so
+   guests never have to guess what they're already paying for. ---------- */
 .service-tag { font-size: .64rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--gold); }
 
-.services-list { margin-top: clamp(1.5rem, 3vw, 2.2rem); border-top: 1px solid rgba(20, 20, 20, .16); }
+.services-groups { margin-top: clamp(1.5rem, 3vw, 2.2rem); }
+.services-groups-row {
+  display: flex; align-items: flex-start; gap: clamp(2rem, 5vw, 4rem);
+}
+.services-group { flex: 1 1 0; min-width: 0; }
+@media (max-width: 700px) {
+  .services-groups-row { flex-direction: column; gap: clamp(2rem, 4vw, 2.8rem); }
+}
+.services-group-title {
+  font-family: var(--font-sans); font-size: .74rem; font-weight: 600;
+  letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone);
+  margin-bottom: .6rem;
+}
+.services-list { border-top: 1px solid rgba(20, 20, 20, .16); }
 .services-list-item {
   display: flex; align-items: baseline; gap: .9rem;
   padding: 1.35rem .1rem; border-bottom: 1px solid rgba(20, 20, 20, .16);
@@ -1617,6 +1662,38 @@ button { font: inherit; cursor: pointer; }
 .services-list-name {
   font-family: var(--font-display); font-size: clamp(1.1rem, 1.8vw, 1.4rem); font-weight: 500; color: var(--ink);
 }
+
+/* Only the first three rows show by default; the rest stay hidden until
+   the arrow toggle below expands the group. */
+.services-list-item-more { display: none; }
+.services-group.is-expanded .services-list-item-more { display: flex; }
+
+.services-more-toggle {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; margin-top: 1rem;
+  border: 1px solid rgba(20, 20, 20, .16); border-radius: 50%;
+  background: none; padding: 0; cursor: pointer; color: var(--ink);
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              border-color .25s ease, background-color .25s ease;
+}
+.services-more-toggle svg { width: 16px; height: 16px; transition: transform .3s var(--ease-out); }
+.services-more-toggle:hover { border-color: var(--gold); }
+.services-more-toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.services-more-toggle:active { transform: scale(.94); }
+.services-group.is-expanded .services-more-toggle svg { transform: rotate(180deg); }
+
+/* Deliberately understated — informational, not a call to action. */
+.services-contact-note {
+  margin-top: 1.4rem; font-family: var(--font-sans); font-size: .74rem;
+  letter-spacing: .03em; text-align: right;
+}
+.services-contact-note a {
+  color: var(--stone); opacity: .55; text-decoration: none;
+  transition: opacity .25s ease;
+}
+.services-contact-note a:hover,
+.services-contact-note a:focus-visible { opacity: .9; }
+.services-contact-note a:focus-visible { outline: 1px solid var(--stone); outline-offset: 3px; }
 
 /* ---------- About ---------- */
 .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.5rem, 3vw, 2.5rem); }
@@ -1821,6 +1898,14 @@ button { font: inherit; cursor: pointer; }
 .trip-stepper-btn:disabled:hover { border-color: rgba(20,20,20,.35); color: var(--ink); }
 .trip-stepper-value { min-width: 1.3rem; text-align: center; font-size: 1rem; }
 
+.trip-capacity-notice {
+  max-width: 320px; margin: 1.1rem auto 0; padding: .9rem 1.1rem;
+  background: var(--cream); border: 1px solid var(--error); border-radius: 4px;
+  font-family: var(--font-sans); font-size: .82rem; line-height: 1.5; color: var(--ink);
+  text-align: center;
+}
+.trip-capacity-notice a { color: var(--sage); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
 .trip-price { text-align: center; }
 .trip-price-label { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--stone); margin: 0; }
 .trip-price-value { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 700; margin: .15rem 0 0; }
@@ -1910,6 +1995,7 @@ button { font: inherit; cursor: pointer; }
 .villa-calendar-legend-dot.is-booked { background: var(--ink); opacity: .55; }
 .villa-calendar-legend-dot.is-minstay { background: var(--gold); }
 .villa-calendar-note { margin: 1.2rem 0 0; font-size: .8rem; color: var(--stone); line-height: 1.6; }
+.villa-calendar-note--capacity { margin-top: .6rem; color: var(--ink); }
 /* Collapsed to zero height (no reserved blank space) until a date is
    picked, then grows to fit via an animated grid track — the classic
    grid-template-rows 0fr→1fr trick, since height:auto can't be

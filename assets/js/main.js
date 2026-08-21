@@ -706,10 +706,14 @@
   }
 
   /* ---------- Map pin click target: every brand-pin marker on the site opens
-     the exact location on Google Maps in a new tab, rather than an in-page
-     popup. ---------- */
+     Google Maps in a new tab, rather than an in-page popup. Coordinates are
+     rounded to ~100m before building the link (and the exact-address
+     googleMapsUrl data field is ignored) so guests only ever see the
+     approximate zone, not the exact villa address, before booking. ---------- */
   function mlsGoogleMapsUrl(villa) {
-    return villa.googleMapsUrl || `https://www.google.com/maps?q=${villa.lat},${villa.lng}`;
+    const approxLat = Math.round(villa.lat * 1000) / 1000;
+    const approxLng = Math.round(villa.lng * 1000) / 1000;
+    return `https://www.google.com/maps/search/?api=1&query=${approxLat},${approxLng}`;
   }
 
   /* ---------- Destination villa map: pins from villas-data.js, lazy-loaded Leaflet
@@ -991,12 +995,12 @@
 
   /* ---------- Spec squares: guests/bedrooms/beds/bathrooms/area/destination row ---------- */
   const MLS_SPEC_ICON = {
-    guests: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="12" cy="7.4" r="3.15"/><path d="M5.4 20c0-4 3-6.8 6.6-6.8s6.6 2.8 6.6 6.8" stroke-linecap="round"/></svg>',
-    bedrooms: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6.4 20.6V4.4L15.6 3v17.6"/><path d="M3.6 20.6h16.8"/><circle cx="13.4" cy="12.4" r=".55" fill="currentColor" stroke="none"/></svg>',
-    beds: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-5.3A2 2 0 0 1 5 10.7h14a2 2 0 0 1 2 2V18"/><path d="M3 18h18"/><path d="M3 15v-8.2A1.4 1.4 0 0 1 4.4 5.4h4a1.4 1.4 0 0 1 1.4 1.4V10"/><path d="M3 20.4V18M21 20.4V18"/></svg>',
-    bathrooms: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 12V6.6A2.4 2.4 0 0 1 6.8 4.2c1 0 1.8.5 2.3 1.3"/><path d="M3 12h18v1.8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V12z"/><path d="M6.4 19v1.8M17.6 19v1.8"/></svg>',
-    area: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4.2 9V4.2H9"/><path d="M19.8 9V4.2H15"/><path d="M4.2 15v4.8H9"/><path d="M19.8 15v4.8H15"/></svg>',
-    destination: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.6s6.6-5.75 6.6-10.9a6.6 6.6 0 1 0-13.2 0c0 5.15 6.6 10.9 6.6 10.9z"/><circle cx="12" cy="9.6" r="2.15"/></svg>'
+    guests: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="7.4" r="3.15"/><path d="M5.4 20c0-4 3-6.8 6.6-6.8s6.6 2.8 6.6 6.8" stroke-linecap="round"/></svg>',
+    bedrooms: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6.4 20.6V4.4L15.6 3v17.6"/><path d="M3.6 20.6h16.8"/><circle cx="13.4" cy="12.4" r=".55" fill="currentColor" stroke="none"/></svg>',
+    beds: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-5.3A2 2 0 0 1 5 10.7h14a2 2 0 0 1 2 2V18"/><path d="M3 18h18"/><path d="M3 15v-8.2A1.4 1.4 0 0 1 4.4 5.4h4a1.4 1.4 0 0 1 1.4 1.4V10"/><path d="M3 20.4V18M21 20.4V18"/></svg>',
+    bathrooms: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.4 12V6.6A2.4 2.4 0 0 1 6.8 4.2c1 0 1.8.5 2.3 1.3"/><path d="M3 12h18v1.8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V12z"/><path d="M6.4 19v1.8M17.6 19v1.8"/></svg>',
+    area: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.2 9V4.2H9"/><path d="M19.8 9V4.2H15"/><path d="M4.2 15v4.8H9"/><path d="M19.8 15v4.8H15"/></svg>',
+    destination: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.6s6.6-5.75 6.6-10.9a6.6 6.6 0 1 0-13.2 0c0 5.15 6.6 10.9 6.6 10.9z"/><circle cx="12" cy="9.6" r="2.15"/></svg>'
   };
   const mlsSpecHTML = (key, numHtml, labelHtml) =>
     `<div class="spec${key === "destination" ? " spec--wide" : ""}"><span class="spec-icon" aria-hidden="true">${MLS_SPEC_ICON[key] || ""}</span><div class="spec-text"><div class="spec-num">${numHtml}</div>${labelHtml ? `<div class="spec-label">${labelHtml}</div>` : ""}</div></div>`;
@@ -1011,6 +1015,7 @@
   const detailRoot = document.querySelector("[data-villa-slug]");
   let renderVillaDetail = null;
   let renderTripShowcase = null;
+  let updateTripCapacityNotice = null;
   if (detailRoot && typeof MLS_VILLAS !== "undefined") {
     const villa = MLS_VILLAS.find((v) => v.slug === detailRoot.dataset.villaSlug);
     if (villa) {
@@ -1128,6 +1133,7 @@
             ${minStayHtml}
           </div>
           <p class="villa-calendar-note">${t("detail.calendar.note")}</p>
+          <p class="villa-calendar-note villa-calendar-note--capacity">${t("detail.calendar.capacityNote").replace("{n}", villa.guests)}</p>
           <div class="villa-calendar-confirm-wrap" data-cal-confirm>
             <div class="villa-calendar-confirm-inner">
               <div class="villa-calendar-confirm">
@@ -1269,20 +1275,56 @@
           }
         }
 
-        /* Services list: which concierge services this specific villa offers,
-           rendered as a plain numbered list (one row per service). */
-        const servicesTrack = detailRoot.querySelector("[data-villa-services]");
-        if (servicesTrack && villa.services && villa.services.length && typeof MLS_SERVICE_DEFS !== "undefined") {
-          servicesTrack.innerHTML = villa.services
-            .map((id, i) => {
-              const def = MLS_SERVICE_DEFS[id];
-              if (!def) return "";
-              return `<li class="services-list-item reveal">
+        /* Services: which concierge services this specific villa offers,
+           split into two clearly separated groups — included in the rate,
+           and available at an extra cost — each a plain numbered list. */
+        const servicesRoot = detailRoot.querySelector("[data-villa-services]");
+        if (servicesRoot && villa.services && villa.services.length && typeof MLS_SERVICE_DEFS !== "undefined") {
+          const VISIBLE_COUNT = 3;
+
+          const renderItems = (ids) =>
+            ids
+              .map(
+                (id, i) => `<li class="services-list-item${i >= VISIBLE_COUNT ? " services-list-item-more" : ""} reveal">
                 <span class="services-list-index" aria-hidden="true">${String(i + 1).padStart(2, "0")}.</span>
                 <span class="services-list-name">${t("services." + id + ".title")}</span>
-              </li>`;
-            })
-            .join("");
+              </li>`
+              )
+              .join("");
+
+          const knownServices = villa.services.filter((id) => MLS_SERVICE_DEFS[id]);
+          const includedIds = knownServices.filter((id) => MLS_SERVICE_DEFS[id].included);
+          const extraIds = knownServices.filter((id) => !MLS_SERVICE_DEFS[id].included);
+
+          const groupHtml = (titleKey, ids) => {
+            if (!ids.length) return "";
+            const hasMore = ids.length > VISIBLE_COUNT;
+            const toggleHtml = hasMore
+              ? `<button type="button" class="services-more-toggle" data-services-more-toggle aria-expanded="false" aria-label="${t("detail.services.more")}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>
+              </button>`
+              : "";
+            return `<div class="services-group">
+                <h4 class="services-group-title">${t(titleKey)}</h4>
+                <ol class="services-list">${renderItems(ids)}</ol>
+                ${toggleHtml}
+              </div>`;
+          };
+
+          servicesRoot.innerHTML =
+            `<div class="services-groups-row">` +
+            groupHtml("detail.services.included", includedIds) +
+            groupHtml("detail.services.extra", extraIds) +
+            `</div>` +
+            `<p class="services-contact-note"><a href="../contact.html">${t("detail.services.contactNote")}</a></p>`;
+
+          servicesRoot.querySelectorAll("[data-services-more-toggle]").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const group = btn.closest(".services-group");
+              const expanded = group.classList.toggle("is-expanded");
+              btn.setAttribute("aria-expanded", String(expanded));
+            });
+          });
         }
 
         /* Guest testimonials: rendered from villa.testimonials (see the
@@ -1616,6 +1658,7 @@
     renderDestinationGrid && renderDestinationGrid();
     renderVillaDetail && renderVillaDetail();
     renderTripShowcase && renderTripShowcase();
+    updateTripCapacityNotice && updateTripCapacityNotice();
     filterCustomSelects.forEach((cs) => cs.rebuildLabels());
     heroSearchSelects.forEach((cs) => cs.rebuildLabels());
     /* i18n.js applies the page's initial language from a DOMContentLoaded
@@ -1658,6 +1701,10 @@
     const params = new URLSearchParams(window.location.search);
     const priceValueEl = contactForm.querySelector("[data-trip-price-value]");
     const bedroomsStepper = contactForm.querySelector('[data-trip-stepper][data-name="bedrooms"]');
+    const adultsStepper = contactForm.querySelector('[data-trip-stepper][data-name="adults"]');
+    const childrenStepper = contactForm.querySelector('[data-trip-stepper][data-name="children"]');
+    const capacityNoticeEl = contactForm.querySelector("[data-trip-capacity-notice]");
+    let currentVillaGuests = Infinity;
 
     /* ---------- Guest/room steppers (Bedrooms, Adults, Children, Infants) ---------- */
     const setStepperValue = (stepper, value) => {
@@ -1672,15 +1719,66 @@
       if (decBtn) decBtn.disabled = clamped <= min;
       if (incBtn) incBtn.disabled = clamped >= max;
     };
+    /* Bedrooms default to double occupancy (2 guests/room, rounded up) —
+       e.g. 2 adults = 1 bedroom, 8 adults = 4 bedrooms — clamped to the
+       selected villa's bedroom count via bedroomsStepper's own max. */
+    const syncBedroomsFromAdults = () => {
+      if (!bedroomsStepper || !adultsStepper) return;
+      const adults = Number(adultsStepper.dataset.value || 1);
+      setStepperValue(bedroomsStepper, Math.ceil(adults / 2));
+    };
+    /* Group (adults + children) hit the villa's real capacity — inviting a
+       personalized quote instead of just silently blocking the stepper. */
+    updateTripCapacityNotice = () => {
+      if (!capacityNoticeEl || !adultsStepper || !childrenStepper) return;
+      const adults = Number(adultsStepper.dataset.value || 1);
+      const children = Number(childrenStepper.dataset.value || 0);
+      const atCapacity = Number.isFinite(currentVillaGuests) && adults + children >= currentVillaGuests;
+      if (!atCapacity) {
+        capacityNoticeEl.hidden = true;
+        capacityNoticeEl.innerHTML = "";
+        return;
+      }
+      const msg = t("contact.form.capacityNotice").replace("{max}", currentVillaGuests);
+      capacityNoticeEl.innerHTML =
+        `${msg} <a href="https://wa.me/5219848079475" target="_blank" rel="noopener">${t("contact.form.capacityNoticeCta")}</a>.`;
+      capacityNoticeEl.hidden = false;
+    };
+    /* Adults + children combined can't exceed the selected villa's real
+       guest capacity (villa.guests). Infants aren't counted (lap/crib,
+       standard hospitality practice). If a villa switch shrinks capacity
+       below the current total, children are trimmed first, then adults. */
+    const syncGuestCapacity = () => {
+      if (!adultsStepper || !childrenStepper) return;
+      const cap = currentVillaGuests;
+      const adultsMin = Number(adultsStepper.dataset.min || 1);
+      let adults = Number(adultsStepper.dataset.value || adultsMin);
+      let children = Number(childrenStepper.dataset.value || 0);
+      if (Number.isFinite(cap)) {
+        while (adults + children > cap && children > 0) children -= 1;
+        while (adults + children > cap && adults > adultsMin) adults -= 1;
+      }
+      adultsStepper.dataset.max = Number.isFinite(cap) ? Math.max(adultsMin, cap - children) : "";
+      childrenStepper.dataset.max = Number.isFinite(cap) ? Math.max(0, cap - adults) : "";
+      setStepperValue(adultsStepper, adults);
+      setStepperValue(childrenStepper, children);
+      updateTripCapacityNotice();
+    };
     contactForm.querySelectorAll("[data-trip-stepper]").forEach((stepper) => {
       setStepperValue(stepper, Number(stepper.dataset.value || 0));
       stepper.querySelector("[data-stepper-dec]")?.addEventListener("click", () => {
         setStepperValue(stepper, Number(stepper.dataset.value) - 1);
+        if (stepper === adultsStepper || stepper === childrenStepper) syncGuestCapacity();
+        if (stepper === adultsStepper) syncBedroomsFromAdults();
       });
       stepper.querySelector("[data-stepper-inc]")?.addEventListener("click", () => {
         setStepperValue(stepper, Number(stepper.dataset.value) + 1);
+        if (stepper === adultsStepper || stepper === childrenStepper) syncGuestCapacity();
+        if (stepper === adultsStepper) syncBedroomsFromAdults();
       });
     });
+    syncGuestCapacity();
+    syncBedroomsFromAdults();
 
     /* ---------- Check-in / check-out: custom calendar popovers ----------
        A native <input type="date"> hands the picker's look to the browser/OS
@@ -1951,9 +2049,11 @@
       const villa = typeof MLS_VILLAS !== "undefined"
         ? MLS_VILLAS.find((v) => v.slug === villaValueInput.value)
         : null;
+      currentVillaGuests = villa ? villa.guests : Infinity;
+      syncGuestCapacity();
       if (bedroomsStepper) {
         bedroomsStepper.dataset.max = villa ? villa.bedrooms : "";
-        setStepperValue(bedroomsStepper, villa ? villa.bedrooms : 1);
+        syncBedroomsFromAdults();
       }
       if (priceValueEl) {
         priceValueEl.textContent = villa

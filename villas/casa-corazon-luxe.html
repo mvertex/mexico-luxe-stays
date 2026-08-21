@@ -166,6 +166,20 @@
             </span>
           </div>
           <p class="villa-price-note" data-i18n="detail.book.note">Estimate only — final rate depends on your dates, season, and guest count.</p>
+
+          <div class="villa-price-tiers" data-price-tiers>
+            <div class="villa-price-tiers-head">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M4 20v-6M12 20V8M20 20v-11"/></svg>
+              <span data-i18n="detail.book.tieredLabel">Tiered by occupancy</span>
+            </div>
+            <div class="villa-price-tiers-bar" data-price-tiers-bar aria-hidden="true">
+              <span class="villa-price-tier" data-price-tier="0"><em class="villa-price-tier-fill"></em></span>
+              <span class="villa-price-tier" data-price-tier="1"><em class="villa-price-tier-fill"></em></span>
+              <span class="villa-price-tier" data-price-tier="2"><em class="villa-price-tier-fill"></em></span>
+            </div>
+            <div class="villa-price-tiers-ranges" data-price-tiers-ranges></div>
+            <p class="villa-price-tiers-caption" data-i18n="detail.book.tieredCaption">Nightly rate steps up in three bands as your group grows — the guest count above shows where you land.</p>
+          </div>
         </div>
 
         <div class="amenities-panel amenities-panel--half">
@@ -184,7 +198,7 @@
       <div class="container">
         <h3 class="h3" data-i18n="detail.services.title">Services</h3>
         <!-- Rendered from assets/js/villas-data.js (MLS_SERVICE_DEFS + villa.services). -->
-        <ol class="services-list" data-villa-services></ol>
+        <div class="services-groups" data-villa-services></div>
       </div>
     </section>
 
