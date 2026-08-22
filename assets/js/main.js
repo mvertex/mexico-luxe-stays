@@ -1313,18 +1313,32 @@
              in progress) that no real-estate photo of the villa itself could
              show — those two use a shared illustrative photo instead of
              villa-specific ones; everything else still uses this villa's
-             own photography. */
+             own photography. Excursions goes further: a small rotating
+             collage (cenote, snorkeling, jungle zip-line) since one photo
+             can't represent "go explore the area" — see startSaRotation
+             below for how the rotation itself is driven. */
           const SA_SHARED_IMAGES = {
             transfer: "../assets/img/services/transfer-suv.webp",
             spa: "../assets/img/services/spa-massage.webp"
           };
+          const SA_EXCURSION_PHOTOS = [
+            "../assets/img/services/excursions/cenote.webp",
+            "../assets/img/services/excursions/snorkel.webp",
+            "../assets/img/services/excursions/zipline.webp"
+          ];
           const serviceImg = (id) => SA_SHARED_IMAGES[id] || (villa.serviceImages && villa.serviceImages[id]) || villaImgPath;
           const serviceImgPos = (id) => (villa.serviceImagePositions && villa.serviceImagePositions[id]) || "";
           const serviceItemHtml = (id) => {
             const title = t("services." + id + ".title");
             const pos = serviceImgPos(id);
+            const photoHtml =
+              id === "excursions"
+                ? `<div class="sa-item-photo sa-item-photo--rotate" data-sa-rotate>${SA_EXCURSION_PHOTOS.map(
+                    (src, i) => `<img src="${src}" alt="${i === 0 ? title : ""}" loading="lazy" class="${i === 0 ? "is-active" : ""}">`
+                  ).join("")}</div>`
+                : `<div class="sa-item-photo"><img src="${serviceImg(id)}" alt="${title}" loading="lazy"${pos ? ` style="object-position:${pos}"` : ""}></div>`;
             return `<div class="sa-item">
-              <div class="sa-item-photo"><img src="${serviceImg(id)}" alt="${title}" loading="lazy"${pos ? ` style="object-position:${pos}"` : ""}></div>
+              ${photoHtml}
               <div class="sa-item-text">
                 <h4>${title}</h4>
                 <p>${t("services." + id + ".body")}</p>
@@ -1521,8 +1535,28 @@
       const saModalBody = document.querySelector("[data-sa-modal-body]");
       const saCardsWrap = document.querySelector("[data-sa-cards]");
       let saLastFocused = null;
+      let saRotateTimer = null;
+      /* Excursions' little photo collage advances on its own timer while the
+         modal is open — started fresh on every open (the DOM under
+         saModalBody was just replaced) and cleared on close so it never
+         keeps ticking in the background. */
+      const startSaRotation = () => {
+        clearInterval(saRotateTimer);
+        if (prefersReducedMotion) return;
+        const groups = saModalBody.querySelectorAll("[data-sa-rotate]");
+        if (!groups.length) return;
+        saRotateTimer = setInterval(() => {
+          groups.forEach((group) => {
+            const imgs = group.querySelectorAll("img");
+            const activeIndex = [...imgs].findIndex((img) => img.classList.contains("is-active"));
+            imgs[activeIndex]?.classList.remove("is-active");
+            imgs[(activeIndex + 1) % imgs.length]?.classList.add("is-active");
+          });
+        }, 3200);
+      };
       const closeSaModal = () => {
         if (!saModal || saModal.hidden) return;
+        clearInterval(saRotateTimer);
         saModal.hidden = true;
         document.body.classList.remove("sa-modal-open");
         saLastFocused?.focus();
@@ -1535,6 +1569,7 @@
         saModal.hidden = false;
         document.body.classList.add("sa-modal-open");
         saModal.querySelector("[data-sa-modal-close]")?.focus();
+        startSaRotation();
       };
       saCardsWrap?.addEventListener("click", (e) => {
         const card = e.target.closest("[data-sa-open]");
