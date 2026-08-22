@@ -106,6 +106,19 @@ const MLS_VILLAS = [
       { en: "Washer & dryer", es: "Lavadora y secadora" }
     ],
     services: ["housekeeping", "concierge", "itinerary", "chef", "transfer", "spa", "grocery", "excursions"],
+    /* Real Villa Aqua photography per service (not stock) — picked by hand,
+       one per service, so guests see this actual property, not a generic
+       stand-in. HOSTAWAY swap point if a future integration supplies these. */
+    serviceImages: {
+      housekeeping: "../assets/img/villas/villa-aqua-rooms-01.webp",
+      concierge: "../assets/img/villas/villa-aqua-living-02.webp",
+      itinerary: "../assets/img/villas/villa-aqua-living-11.webp",
+      chef: "../assets/img/villas/villa-aqua-kitchen-02.webp",
+      transfer: "../assets/img/villas/villa-aqua-interiors-01.webp",
+      spa: "../assets/img/villas/villa-aqua-rooms-79.webp",
+      grocery: "../assets/img/villas/villa-aqua-kitchen-21.webp",
+      excursions: "../assets/img/villas/villa-aqua-outdoor-02.webp"
+    },
     gallery: [
       { key: "outdoor", images: [
         { src: "../assets/img/villas/villa-aqua-outdoor-01.webp",
@@ -619,6 +632,17 @@ const MLS_VILLAS = [
       { en: "Free parking", es: "Estacionamiento gratuito" }
     ],
     services: ["housekeeping", "concierge", "itinerary", "chef", "transfer", "spa", "grocery", "wine"],
+    /* Real Kasa Kefi photography per service — see the note on Villa Aqua above. */
+    serviceImages: {
+      housekeeping: "../assets/img/villas/kasa-kefi-rooms-01.webp",
+      concierge: "../assets/img/villas/kasa-kefi-living-02.webp",
+      itinerary: "../assets/img/villas/kasa-kefi-living-01.webp",
+      chef: "../assets/img/villas/kasa-kefi-kitchen-01.webp",
+      transfer: "../assets/img/villas/kasa-kefi-interiors-02.webp",
+      spa: "../assets/img/villas/kasa-kefi-living-25.webp",
+      grocery: "../assets/img/villas/kasa-kefi-kitchen-02.webp",
+      wine: "../assets/img/villas/kasa-kefi-kitchen-07.webp"
+    },
     gallery: [
       { key: "outdoor", images: [
         { src: "../assets/img/villas/kasa-kefi-outdoor-01.webp",
@@ -964,6 +988,18 @@ const MLS_VILLAS = [
       { en: "Washer & dryer", es: "Lavadora y secadora" }
     ],
     services: ["housekeeping", "concierge", "itinerary", "chef", "transfer", "spa", "grocery", "events", "excursions"],
+    /* Real Casa Corazon Luxe photography per service — see the note on Villa Aqua above. */
+    serviceImages: {
+      housekeeping: "../assets/img/villas/casa-corazon-luxe-rooms-03.webp",
+      concierge: "../assets/img/villas/casa-corazon-luxe-interiors-01.webp",
+      itinerary: "../assets/img/villas/casa-corazon-luxe-interiors-35.webp",
+      chef: "../assets/img/villas/casa-corazon-luxe-interiors-03.webp",
+      transfer: "../assets/img/villas/casa-corazon-luxe-interiors-33.webp",
+      spa: "../assets/img/villas/casa-corazon-luxe-multipurpose-03.webp",
+      grocery: "../assets/img/villas/casa-corazon-luxe-interiors-02.webp",
+      events: "../assets/img/villas/casa-corazon-luxe-outdoor-04.webp",
+      excursions: "../assets/img/villas/casa-corazon-luxe-rooms-02.webp"
+    },
     gallery: [
       { key: "outdoor", images: [
         { src: "../assets/img/villas/casa-corazon-luxe-outdoor-02.webp",
@@ -1356,6 +1392,17 @@ const MLS_VILLAS = [
       { en: "Free parking", es: "Estacionamiento gratuito" }
     ],
     services: ["housekeeping", "concierge", "itinerary", "chef", "transfer", "spa", "grocery", "excursions"],
+    /* Real Casa de las Estrellas photography per service — see the note on Villa Aqua above. */
+    serviceImages: {
+      housekeeping: "../assets/img/villas/casa-de-las-estrellas-rooms-01.webp",
+      concierge: "../assets/img/villas/casa-de-las-estrellas-interiors-01.webp",
+      itinerary: "../assets/img/villas/casa-de-las-estrellas-rooms-26.webp",
+      chef: "../assets/img/villas/casa-de-las-estrellas-kitchen-03.webp",
+      transfer: "../assets/img/villas/casa-de-las-estrellas-interiors-08.webp",
+      spa: "../assets/img/villas/casa-de-las-estrellas-rooms-12.webp",
+      grocery: "../assets/img/villas/casa-de-las-estrellas-kitchen-02.webp",
+      excursions: "../assets/img/villas/casa-de-las-estrellas-kitchen-09.webp"
+    },
     gallery: [
       { key: "outdoor", images: [
         { src: "../assets/img/villas/casa-de-las-estrellas-outdoor-01.webp",
@@ -1563,57 +1610,21 @@ const MLS_VILLAS = [
    Copy/title/tag text reuses the same i18n keys as the Our Services page
    (services.<id>.tag / .title / .body), so translations stay in one place.
    Each villa lists which of these it offers via its `services` array above. */
+/* Whether each service is included in the rate or an extra-cost add-on.
+   Photos are no longer sourced here — each villa now points its own
+   `serviceImages` (see above) at real photography of that property, one
+   image per service, instead of a shared stock photo. */
 const MLS_SERVICE_DEFS = {
-  housekeeping: {
-    included: true,
-    image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=900&q=80",
-    alt: "A suite reset to perfect while you were at lunch"
-  },
-  concierge: {
-    included: true,
-    image: "https://images.unsplash.com/photo-1521783988139-89397d761dce?auto=format&fit=crop&w=900&q=80",
-    alt: "A concierge confirming tonight's reservation"
-  },
-  itinerary: {
-    included: true,
-    image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=900&q=80",
-    alt: "A day in the Riviera Maya, mapped out over coffee"
-  },
-  chef: {
-    included: false,
-    image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=80",
-    alt: "A chef's plate finished tableside"
-  },
-  transfer: {
-    included: false,
-    image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=900&q=80",
-    alt: "Your driver, already waiting"
-  },
-  spa: {
-    included: false,
-    image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=900&q=80",
-    alt: "A massage table set poolside, oils warmed"
-  },
-  grocery: {
-    included: false,
-    image: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=900&q=80",
-    alt: "The kitchen stocked to your list before you land"
-  },
-  events: {
-    included: false,
-    image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=900&q=80",
-    alt: "An arch of flowers, an aisle of sand"
-  },
-  wine: {
-    included: false,
-    image: "https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?auto=format&fit=crop&w=900&q=80",
-    alt: "A private tasting poured straight from the barrel"
-  },
-  excursions: {
-    included: false,
-    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80",
-    alt: "Snorkeling the reef before the crowds arrive"
-  }
+  housekeeping: { included: true },
+  concierge: { included: true },
+  itinerary: { included: true },
+  chef: { included: false },
+  transfer: { included: false },
+  spa: { included: false },
+  grocery: { included: false },
+  events: { included: false },
+  wine: { included: false },
+  excursions: { included: false }
 };
 
 /* Renders one alternating showcase row (Our Villas page) — a photo carousel

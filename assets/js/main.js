@@ -1309,12 +1309,13 @@
           const includedIds = knownServices.filter((id) => MLS_SERVICE_DEFS[id].included);
           const extraIds = knownServices.filter((id) => !MLS_SERVICE_DEFS[id].included);
 
+          const serviceImg = (id) => (villa.serviceImages && villa.serviceImages[id]) || villaImgPath;
           const serviceItemHtml = (id) => {
-            const def = MLS_SERVICE_DEFS[id];
+            const title = t("services." + id + ".title");
             return `<div class="sa-item">
-              <div class="sa-item-photo"><img src="${def.image}" alt="${def.alt || ""}" loading="lazy"></div>
+              <div class="sa-item-photo"><img src="${serviceImg(id)}" alt="${title}" loading="lazy"></div>
               <div class="sa-item-text">
-                <h4>${t("services." + id + ".title")}</h4>
+                <h4>${title}</h4>
                 <p>${t("services." + id + ".body")}</p>
               </div>
             </div>`;
@@ -1364,8 +1365,8 @@
             </button>`;
 
           const galleryImg = (i) => villa.gallery?.[0]?.images?.[i]?.src || villaImgPath;
-          const includedImgs = includedIds.map((id) => MLS_SERVICE_DEFS[id].image);
-          const extraImgs = extraIds.map((id) => MLS_SERVICE_DEFS[id].image);
+          const includedImgs = includedIds.map(serviceImg);
+          const extraImgs = extraIds.map(serviceImg);
           const fallback = (arr, i) => arr[i] || arr[0] || villaImgPath;
 
           saCardsEl.innerHTML =
