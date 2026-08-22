@@ -1336,23 +1336,51 @@
 
           saModalContent = { included: includedModalHtml, extra: extraModalHtml, amenities: amenitiesModalHtml };
 
-          const cardHtml = (key, count, imgSrc, label) => `
+          /* Card visual: a large rounded photo with a smaller detail shot
+             floating over its top-left corner, a category badge floating
+             top-right, an arrow button straddling the bottom edge, and a
+             small caption chip overlapping the photo — the layered,
+             floating-element composition from the reference layout,
+             reapplied to three peer cards instead of one hero. */
+          const SA_BADGE_ICON = {
+            included: '<circle cx="12" cy="12" r="9"/><path d="M8.3 12.4l2.3 2.3L16 9.2"/>',
+            extra: '<path d="M12 3h6a2 2 0 0 1 2 2v6L11 20l-8-8L12 3z"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/>',
+            amenities: '<path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9L12 3z"/>'
+          };
+          const cardHtml = (key, mainImg, thumbImg, chipImg, chipText, title, desc) => `
             <button type="button" class="sa-card" data-sa-open="${key}">
-              <span class="sa-card-badge">${count}</span>
-              <span class="sa-card-photo"><img src="${imgSrc}" alt="" loading="lazy"></span>
-              <span class="sa-card-footer">
-                <span class="sa-card-label">${label}</span>
-                <span class="sa-card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M9 7h8v8"/></svg></span>
+              <span class="sa-card-frame">
+                <span class="sa-card-badge-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${SA_BADGE_ICON[key]}</svg></span>
+                <span class="sa-card-thumb-float"><img src="${thumbImg}" alt="" loading="lazy"></span>
+                <span class="sa-card-photo-clip"><img src="${mainImg}" alt="" loading="lazy"></span>
+                <span class="sa-card-chip"><img src="${chipImg}" alt="" loading="lazy"><span>${chipText}</span></span>
+                <span class="sa-card-arrow-btn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+              </span>
+              <span class="sa-card-body">
+                <span class="sa-card-title">${title}</span>
+                <span class="sa-card-desc">${desc}</span>
+                <span class="sa-card-cta">${t("detail.sa.viewCta")}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
               </span>
             </button>`;
 
-          const includedImg = includedIds.length ? MLS_SERVICE_DEFS[includedIds[0]].image : villaImgPath;
-          const extraImg = extraIds.length ? MLS_SERVICE_DEFS[extraIds[0]].image : villaImgPath;
+          const galleryImg = (i) => villa.gallery?.[0]?.images?.[i]?.src || villaImgPath;
+          const includedImgs = includedIds.map((id) => MLS_SERVICE_DEFS[id].image);
+          const extraImgs = extraIds.map((id) => MLS_SERVICE_DEFS[id].image);
+          const fallback = (arr, i) => arr[i] || arr[0] || villaImgPath;
 
           saCardsEl.innerHTML =
-            cardHtml("included", includedIds.length, includedImg, t("detail.services.included")) +
-            cardHtml("extra", extraIds.length, extraImg, t("detail.services.extra")) +
-            cardHtml("amenities", allAmenities.length, villaImgPath, t("detail.amenities.title"));
+            cardHtml(
+              "included", fallback(includedImgs, 0), fallback(includedImgs, 1), fallback(includedImgs, 2),
+              t("detail.sa.included.teaser"), t("detail.services.included"), t("detail.sa.included.intro")
+            ) +
+            cardHtml(
+              "extra", fallback(extraImgs, 0), fallback(extraImgs, 1), fallback(extraImgs, 2),
+              t("detail.sa.extra.teaser"), t("detail.services.extra"), t("detail.sa.extra.intro")
+            ) +
+            cardHtml(
+              "amenities", villaImgPath, galleryImg(0), galleryImg(1),
+              t("detail.sa.amenities.teaser"), t("detail.amenities.title"), t("detail.sa.amenities.intro")
+            );
         }
 
         /* Guest testimonials: rendered from villa.testimonials (see the
