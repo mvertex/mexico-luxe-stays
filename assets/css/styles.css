@@ -936,6 +936,29 @@ button { font: inherit; cursor: pointer; }
 }
 @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .footer-grid { grid-template-columns: 1fr; } }
+.footer-legal-links { display: flex; gap: 1.1rem; flex-wrap: wrap; }
+.footer-legal-links a { color: inherit; text-decoration: none; transition: color .2s ease; }
+.footer-legal-links a:hover, .footer-legal-links a:focus-visible { color: var(--cream); }
+
+/* ---------- Legal pages (Privacy Notice / Terms & Conditions) — plain,
+   readable document layout, reused by both pages. ---------- */
+.legal-content { max-width: 68ch; margin: 0 auto; }
+.legal-updated { font-size: .8rem; color: var(--stone); margin: 0 0 1.6rem; }
+.legal-pending {
+  background: var(--sage-tint); border-left: 3px solid var(--gold);
+  border-radius: 0 4px 4px 0; padding: .9rem 1.2rem;
+  font-size: .86rem; line-height: 1.6; color: var(--sage); margin: 0 0 2.6rem;
+}
+.legal-content h2 {
+  font-family: var(--font-sans); font-size: 1.05rem; font-weight: 600;
+  color: var(--ink); margin: 2.4rem 0 .8rem;
+}
+.legal-content section:first-of-type h2 { margin-top: 0; }
+.legal-content p { font-size: .96rem; line-height: 1.75; color: var(--ink); margin: 0 0 1.1rem; }
+.legal-content ul { margin: 0 0 1.1rem; padding-left: 1.3rem; }
+.legal-content li { font-size: .96rem; line-height: 1.75; color: var(--ink); margin-bottom: .5rem; }
+.legal-content a { color: var(--sage); }
+.legal-content strong { font-weight: 600; }
 
 /* ---------- Quick actions (phone / WhatsApp / FAQ, stacked bottom-right) ---------- */
 .quick-actions {
