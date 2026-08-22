@@ -1359,7 +1359,7 @@
               <span class="sa-card-body">
                 <span class="sa-card-title">${title}</span>
                 <span class="sa-card-desc">${desc}</span>
-                <span class="sa-card-cta">${t("detail.sa.viewCta")}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+                <span class="sa-card-cta">${t("detail.sa.viewCta")}<span class="sa-card-cta-dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
               </span>
             </button>`;
 
