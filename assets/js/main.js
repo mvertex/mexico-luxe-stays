@@ -1309,11 +1309,22 @@
           const includedIds = knownServices.filter((id) => MLS_SERVICE_DEFS[id].included);
           const extraIds = knownServices.filter((id) => !MLS_SERVICE_DEFS[id].included);
 
-          const serviceImg = (id) => (villa.serviceImages && villa.serviceImages[id]) || villaImgPath;
+          /* A couple of services depict an action (a car arriving, a massage
+             in progress) that no real-estate photo of the villa itself could
+             show — those two use a shared illustrative photo instead of
+             villa-specific ones; everything else still uses this villa's
+             own photography. */
+          const SA_SHARED_IMAGES = {
+            transfer: "../assets/img/services/transfer-suv.webp",
+            spa: "../assets/img/services/spa-massage.webp"
+          };
+          const serviceImg = (id) => SA_SHARED_IMAGES[id] || (villa.serviceImages && villa.serviceImages[id]) || villaImgPath;
+          const serviceImgPos = (id) => (villa.serviceImagePositions && villa.serviceImagePositions[id]) || "";
           const serviceItemHtml = (id) => {
             const title = t("services." + id + ".title");
+            const pos = serviceImgPos(id);
             return `<div class="sa-item">
-              <div class="sa-item-photo"><img src="${serviceImg(id)}" alt="${title}" loading="lazy"></div>
+              <div class="sa-item-photo"><img src="${serviceImg(id)}" alt="${title}" loading="lazy"${pos ? ` style="object-position:${pos}"` : ""}></div>
               <div class="sa-item-text">
                 <h4>${title}</h4>
                 <p>${t("services." + id + ".body")}</p>
@@ -1348,12 +1359,12 @@
             extra: '<path d="M12 3h6a2 2 0 0 1 2 2v6L11 20l-8-8L12 3z"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/>',
             amenities: '<path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9L12 3z"/>'
           };
-          const cardHtml = (key, mainImg, thumbImg, chipImg, chipText, title, desc) => `
+          const cardHtml = (key, mainImg, mainImgPos, thumbImg, chipImg, chipText, title, desc) => `
             <button type="button" class="sa-card" data-sa-open="${key}">
               <span class="sa-card-frame">
                 <span class="sa-card-badge-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${SA_BADGE_ICON[key]}</svg></span>
                 <span class="sa-card-thumb-float"><img src="${thumbImg}" alt="" loading="lazy"></span>
-                <span class="sa-card-photo-clip"><img src="${mainImg}" alt="" loading="lazy"></span>
+                <span class="sa-card-photo-clip"><img src="${mainImg}" alt="" loading="lazy"${mainImgPos ? ` style="object-position:${mainImgPos}"` : ""}></span>
                 <span class="sa-card-chip"><img src="${chipImg}" alt="" loading="lazy"><span>${chipText}</span></span>
                 <span class="sa-card-arrow-btn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
               </span>
@@ -1371,15 +1382,15 @@
 
           saCardsEl.innerHTML =
             cardHtml(
-              "included", fallback(includedImgs, 0), fallback(includedImgs, 1), fallback(includedImgs, 2),
+              "included", fallback(includedImgs, 0), serviceImgPos(includedIds[0]), fallback(includedImgs, 1), fallback(includedImgs, 2),
               t("detail.sa.included.teaser"), t("detail.services.included"), t("detail.sa.included.intro")
             ) +
             cardHtml(
-              "extra", fallback(extraImgs, 0), fallback(extraImgs, 1), fallback(extraImgs, 2),
+              "extra", fallback(extraImgs, 0), serviceImgPos(extraIds[0]), fallback(extraImgs, 1), fallback(extraImgs, 2),
               t("detail.sa.extra.teaser"), t("detail.services.extra"), t("detail.sa.extra.intro")
             ) +
             cardHtml(
-              "amenities", villaImgPath, galleryImg(0), galleryImg(1),
+              "amenities", villaImgPath, "", galleryImg(0), galleryImg(1),
               t("detail.sa.amenities.teaser"), t("detail.amenities.title"), t("detail.sa.amenities.intro")
             );
         }

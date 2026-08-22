@@ -111,14 +111,15 @@ const MLS_VILLAS = [
        stand-in. HOSTAWAY swap point if a future integration supplies these. */
     serviceImages: {
       housekeeping: "../assets/img/villas/villa-aqua-rooms-01.webp",
-      concierge: "../assets/img/villas/villa-aqua-living-02.webp",
+      concierge: "../assets/img/villas/villa-aqua-interiors-02.webp",
       itinerary: "../assets/img/villas/villa-aqua-living-11.webp",
       chef: "../assets/img/villas/villa-aqua-kitchen-02.webp",
-      transfer: "../assets/img/villas/villa-aqua-interiors-01.webp",
-      spa: "../assets/img/villas/villa-aqua-rooms-79.webp",
-      grocery: "../assets/img/villas/villa-aqua-kitchen-21.webp",
+      grocery: "../assets/img/villas/villa-aqua-kitchen-15.webp",
       excursions: "../assets/img/villas/villa-aqua-outdoor-02.webp"
     },
+    /* Non-default focal point so the crop favors this part of the source
+       image (e.g. keeping a person's face in frame on a tight square crop). */
+    serviceImagePositions: { chef: "center 22%" },
     gallery: [
       { key: "outdoor", images: [
         { src: "../assets/img/villas/villa-aqua-outdoor-01.webp",
@@ -635,11 +636,9 @@ const MLS_VILLAS = [
     /* Real Kasa Kefi photography per service — see the note on Villa Aqua above. */
     serviceImages: {
       housekeeping: "../assets/img/villas/kasa-kefi-rooms-01.webp",
-      concierge: "../assets/img/villas/kasa-kefi-living-02.webp",
+      concierge: "../assets/img/villas/kasa-kefi-outdoor-04.webp",
       itinerary: "../assets/img/villas/kasa-kefi-living-01.webp",
       chef: "../assets/img/villas/kasa-kefi-kitchen-01.webp",
-      transfer: "../assets/img/villas/kasa-kefi-interiors-02.webp",
-      spa: "../assets/img/villas/kasa-kefi-living-25.webp",
       grocery: "../assets/img/villas/kasa-kefi-kitchen-02.webp",
       wine: "../assets/img/villas/kasa-kefi-kitchen-07.webp"
     },
@@ -994,8 +993,6 @@ const MLS_VILLAS = [
       concierge: "../assets/img/villas/casa-corazon-luxe-interiors-01.webp",
       itinerary: "../assets/img/villas/casa-corazon-luxe-interiors-35.webp",
       chef: "../assets/img/villas/casa-corazon-luxe-interiors-03.webp",
-      transfer: "../assets/img/villas/casa-corazon-luxe-interiors-33.webp",
-      spa: "../assets/img/villas/casa-corazon-luxe-multipurpose-03.webp",
       grocery: "../assets/img/villas/casa-corazon-luxe-interiors-02.webp",
       events: "../assets/img/villas/casa-corazon-luxe-outdoor-04.webp",
       excursions: "../assets/img/villas/casa-corazon-luxe-rooms-02.webp"
@@ -1398,8 +1395,6 @@ const MLS_VILLAS = [
       concierge: "../assets/img/villas/casa-de-las-estrellas-interiors-01.webp",
       itinerary: "../assets/img/villas/casa-de-las-estrellas-rooms-26.webp",
       chef: "../assets/img/villas/casa-de-las-estrellas-kitchen-03.webp",
-      transfer: "../assets/img/villas/casa-de-las-estrellas-interiors-08.webp",
-      spa: "../assets/img/villas/casa-de-las-estrellas-rooms-12.webp",
       grocery: "../assets/img/villas/casa-de-las-estrellas-kitchen-02.webp",
       excursions: "../assets/img/villas/casa-de-las-estrellas-kitchen-09.webp"
     },
