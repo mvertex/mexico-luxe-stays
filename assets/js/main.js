@@ -1065,16 +1065,11 @@
   if (detailRoot && typeof MLS_VILLAS !== "undefined") {
     const villa = MLS_VILLAS.find((v) => v.slug === detailRoot.dataset.villaSlug);
     if (villa) {
-      let amenitiesExpanded = false;
-      const amenitiesToggle = document.querySelector("[data-amenities-toggle]");
-
-      const updateAmenitiesToggleLabel = () => {
-        if (!amenitiesToggle) return;
-        const key = amenitiesExpanded ? "detail.amenities.showLess" : "detail.amenities.showAll";
-        /* keep data-i18n in sync so a language switch re-applies the right label */
-        amenitiesToggle.setAttribute("data-i18n", key);
-        amenitiesToggle.textContent = t(key);
-      };
+      /* Services & Amenities cards: built fresh on every render (including a
+         language switch) and cached here so the delegated click handler
+         below — bound once, outside this render function — always shows
+         content in whatever language is currently active. */
+      let saModalContent = { included: "", extra: "", amenities: "" };
 
       /* Testimonials rotator, scoped to whichever container holds this villa's
          slides. Re-bound on every render (including a language switch, which
@@ -1277,100 +1272,87 @@
             ${areaSpecHtml}
             ${mlsSpecHTML("destination", destinationLabel, "")}`;
         }
-        const amenitiesEl = detailRoot.querySelector("[data-villa-amenities]");
-        if (amenitiesEl) {
+        /* Services & Amenities: three big tappable cards (Included / Extra
+           cost / Amenities) — clicking one opens a centered modal with that
+           category's full detail. Replaces the old separate amenities panel
+           and services list; built to be obvious to tap and easy to read at
+           a glance, since most guests browsing this site skew older. */
+        const saCardsEl = detailRoot.querySelector("[data-sa-cards]");
+        if (saCardsEl && typeof MLS_SERVICE_DEFS !== "undefined") {
           const allAmenities = [...(villa.amenities || []), ...(villa.amenitiesMore || [])];
-
-          /* Group into fixed categories (wellness/dining/services/entertainment),
-             falling back to "other" — each item's position in villa.amenities /
-             amenitiesMore decides priority, so within a category only the first
-             two (the ones listed first, i.e. most important) show by default. */
           const groups = {};
           allAmenities.forEach((a) => {
             const cat = mlsAmenityCategory(a.en);
             (groups[cat] = groups[cat] || []).push(a);
           });
-          Object.keys(groups).forEach((cat) => {
-            groups[cat] = groups[cat].map((item, i) => ({ item, more: i >= 2 }));
-          });
-          const hasMore = Object.values(groups).some((rows) => rows.some((r) => r.more));
-
           const activeCategories = MLS_AMENITY_CATEGORY_ORDER.filter((cat) => groups[cat] && groups[cat].length);
-          const renderCategory = (cat) => {
-            const rows = groups[cat]
-              .map(
-                ({ item, more }) => `<li${more ? ' class="amenity-more"' : ""} tabindex="0"><span class="amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(item.en)}</svg></span><span class="amenity-text">${pick(item)}</span></li>`
-              )
-              .join("");
-            return `<div class="amenity-category">
-              <h3 class="amenity-category-title">${t("detail.amenities.category." + cat)}</h3>
-              <span class="amenity-category-rule" aria-hidden="true"></span>
-              <ul class="amenity-category-list">${rows}</ul>
+          const amenityRowHtml = (item) =>
+            `<li><span class="sa-amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(item.en)}</svg></span><span>${pick(item)}</span></li>`;
+          const villaImgPath = "../" + villa.image;
+
+          const amenitiesModalHtml = `
+            <h2 class="sa-modal-title">${t("detail.amenities.title")}</h2>
+            <p class="sa-modal-intro">${t("detail.sa.amenities.intro")}</p>
+            <div class="sa-amenities-photo"><img src="${villaImgPath}" alt="${villa.imageAlt || ""}" loading="lazy"></div>
+            <div class="sa-amenities-groups">
+              ${activeCategories
+                .map(
+                  (cat) => `<div class="sa-amenity-category">
+                    <h4>${t("detail.amenities.category." + cat)}</h4>
+                    <ul>${groups[cat].map(amenityRowHtml).join("")}</ul>
+                  </div>`
+                )
+                .join("")}
             </div>`;
-          };
-          /* Two independent flex columns (not a shared grid row) so a tall
-             category never leaves a mismatched gap next to a short one. */
-          const leftCol = activeCategories.filter((_, i) => i % 2 === 0).map(renderCategory).join("");
-          const rightCol = activeCategories.filter((_, i) => i % 2 === 1).map(renderCategory).join("");
-          amenitiesEl.innerHTML = `<div class="amenities-col">${leftCol}</div><div class="amenities-col">${rightCol}</div>`;
 
-          amenitiesEl.classList.toggle("is-expanded", amenitiesExpanded);
-          if (amenitiesToggle) {
-            amenitiesToggle.hidden = !hasMore;
-            updateAmenitiesToggleLabel();
-          }
-        }
-
-        /* Services: which concierge services this specific villa offers,
-           split into two clearly separated groups — included in the rate,
-           and available at an extra cost — each a plain numbered list. */
-        const servicesRoot = detailRoot.querySelector("[data-villa-services]");
-        if (servicesRoot && villa.services && villa.services.length && typeof MLS_SERVICE_DEFS !== "undefined") {
-          const VISIBLE_COUNT = 3;
-
-          const renderItems = (ids) =>
-            ids
-              .map(
-                (id, i) => `<li class="services-list-item${i >= VISIBLE_COUNT ? " services-list-item-more" : ""} reveal">
-                <span class="services-list-index" aria-hidden="true">${String(i + 1).padStart(2, "0")}.</span>
-                <span class="services-list-name">${t("services." + id + ".title")}</span>
-              </li>`
-              )
-              .join("");
-
-          const knownServices = villa.services.filter((id) => MLS_SERVICE_DEFS[id]);
+          const knownServices = (villa.services || []).filter((id) => MLS_SERVICE_DEFS[id]);
           const includedIds = knownServices.filter((id) => MLS_SERVICE_DEFS[id].included);
           const extraIds = knownServices.filter((id) => !MLS_SERVICE_DEFS[id].included);
 
-          const groupHtml = (titleKey, ids) => {
-            if (!ids.length) return "";
-            const hasMore = ids.length > VISIBLE_COUNT;
-            const toggleHtml = hasMore
-              ? `<button type="button" class="services-more-toggle" data-services-more-toggle aria-expanded="false" aria-label="${t("detail.services.more")}">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>
-              </button>`
-              : "";
-            return `<div class="services-group">
-                <h4 class="services-group-title">${t(titleKey)}</h4>
-                <ol class="services-list">${renderItems(ids)}</ol>
-                ${toggleHtml}
-              </div>`;
+          const serviceItemHtml = (id) => {
+            const def = MLS_SERVICE_DEFS[id];
+            return `<div class="sa-item">
+              <div class="sa-item-photo"><img src="${def.image}" alt="${def.alt || ""}" loading="lazy"></div>
+              <div class="sa-item-text">
+                <h4>${t("services." + id + ".title")}</h4>
+                <p>${t("services." + id + ".body")}</p>
+              </div>
+            </div>`;
           };
 
-          servicesRoot.innerHTML =
-            `<div class="services-groups-row">` +
-            groupHtml("detail.services.included", includedIds) +
-            groupHtml("detail.services.extra", extraIds) +
-            `</div>` +
-            `<p class="services-contact-note"><a href="../contact.html">${t("detail.services.contactNote")}</a></p>`;
+          const includedModalHtml = `
+            <h2 class="sa-modal-title">${t("detail.services.included")}</h2>
+            <p class="sa-modal-intro">${t("detail.sa.included.intro")}</p>
+            <div class="sa-item-grid">${includedIds.map(serviceItemHtml).join("")}</div>`;
 
-          servicesRoot.querySelectorAll("[data-services-more-toggle]").forEach((btn) => {
-            btn.addEventListener("click", () => {
-              const group = btn.closest(".services-group");
-              const expanded = group.classList.toggle("is-expanded");
-              btn.setAttribute("aria-expanded", String(expanded));
-            });
-          });
+          const extraModalHtml = `
+            <h2 class="sa-modal-title">${t("detail.services.extra")}</h2>
+            <p class="sa-modal-intro">${t("detail.sa.extra.intro")}</p>
+            <div class="sa-item-grid">${extraIds.map(serviceItemHtml).join("")}</div>
+            <div class="sa-contact-cta">
+              <p>${t("detail.services.contactNote")}</p>
+              <a class="btn btn-solid" href="../contact.html">${t("detail.sa.contactCta")}</a>
+            </div>`;
+
+          saModalContent = { included: includedModalHtml, extra: extraModalHtml, amenities: amenitiesModalHtml };
+
+          const cardHtml = (key, count, imgSrc, label) => `
+            <button type="button" class="sa-card" data-sa-open="${key}">
+              <span class="sa-card-badge">${count}</span>
+              <span class="sa-card-photo"><img src="${imgSrc}" alt="" loading="lazy"></span>
+              <span class="sa-card-footer">
+                <span class="sa-card-label">${label}</span>
+                <span class="sa-card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M9 7h8v8"/></svg></span>
+              </span>
+            </button>`;
+
+          const includedImg = includedIds.length ? MLS_SERVICE_DEFS[includedIds[0]].image : villaImgPath;
+          const extraImg = extraIds.length ? MLS_SERVICE_DEFS[extraIds[0]].image : villaImgPath;
+
+          saCardsEl.innerHTML =
+            cardHtml("included", includedIds.length, includedImg, t("detail.services.included")) +
+            cardHtml("extra", extraIds.length, extraImg, t("detail.services.extra")) +
+            cardHtml("amenities", allAmenities.length, villaImgPath, t("detail.amenities.title"));
         }
 
         /* Guest testimonials: rendered from villa.testimonials (see the
@@ -1491,11 +1473,37 @@
         }
       };
 
-      amenitiesToggle?.addEventListener("click", () => {
-        amenitiesExpanded = !amenitiesExpanded;
-        detailRoot.querySelector("[data-villa-amenities]")?.classList.toggle("is-expanded", amenitiesExpanded);
-        amenitiesToggle.setAttribute("aria-expanded", String(amenitiesExpanded));
-        updateAmenitiesToggleLabel();
+      /* Services & Amenities modal: one shared dialog per page, reused for
+         all three cards. The click listener lives on the (static) cards
+         wrapper rather than the cards themselves, since those get replaced
+         wholesale on every render (including a language switch). */
+      const saModal = document.querySelector("[data-sa-modal]");
+      const saModalBody = document.querySelector("[data-sa-modal-body]");
+      const saCardsWrap = document.querySelector("[data-sa-cards]");
+      let saLastFocused = null;
+      const closeSaModal = () => {
+        if (!saModal || saModal.hidden) return;
+        saModal.hidden = true;
+        document.body.classList.remove("sa-modal-open");
+        saLastFocused?.focus();
+      };
+      const openSaModal = (key, trigger) => {
+        if (!saModal || !saModalBody) return;
+        saModalBody.innerHTML = saModalContent[key] || "";
+        saModalBody.scrollTop = 0;
+        saLastFocused = trigger;
+        saModal.hidden = false;
+        document.body.classList.add("sa-modal-open");
+        saModal.querySelector("[data-sa-modal-close]")?.focus();
+      };
+      saCardsWrap?.addEventListener("click", (e) => {
+        const card = e.target.closest("[data-sa-open]");
+        if (!card) return;
+        openSaModal(card.dataset.saOpen, card);
+      });
+      saModal?.querySelectorAll("[data-sa-modal-dismiss]").forEach((el) => el.addEventListener("click", closeSaModal));
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeSaModal();
       });
 
       /* ---------- Price box: standalone price + check-in/check-out date

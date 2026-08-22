@@ -179,27 +179,28 @@
         </div>
       </div>
 
-      <!-- ============ Amenities — full-width now that the price box moved up next to the intro copy ============ -->
-      <div class="detail-lower-grid">
-        <div class="amenities-panel amenities-panel--half">
-          <div class="container">
-            <h3 class="h3" data-i18n="detail.amenities.title">Amenities</h3>
-            <!-- Rendered from assets/js/villas-data.js — HOSTAWAY swap point -->
-            <div class="amenities-categories" data-villa-amenities></div>
-            <button class="amenities-toggle" type="button" data-amenities-toggle aria-expanded="false" data-i18n="detail.amenities.showAll">Show all amenities</button>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- ============ Services offered at this villa ============ -->
-    <section class="section" aria-label="Services available at Villa Aqua" data-services-section>
+    <!-- ============ Services & Amenities ============ -->
+    <section class="section" aria-label="Services and amenities at Villa Aqua">
       <div class="container">
-        <h3 class="h3" data-i18n="detail.services.title">Services</h3>
-        <!-- Rendered from assets/js/villas-data.js (MLS_SERVICE_DEFS + villa.services). -->
-        <div class="services-groups" data-villa-services></div>
+        <h3 class="h3 center" data-i18n="detail.sa.title">Services &amp; Amenities</h3>
+        <p class="lead center sa-section-lead" data-i18n="detail.sa.lead">Tap a card below to see the full detail.</p>
+        <!-- Rendered from assets/js/villas-data.js (MLS_SERVICE_DEFS + villa.amenities/amenitiesMore). -->
+        <div class="sa-cards" data-sa-cards></div>
       </div>
     </section>
+
+    <!-- ============ Services & Amenities modal (shared dialog, content swapped per card clicked) ============ -->
+    <div class="sa-modal" data-sa-modal hidden>
+      <div class="sa-modal-overlay" data-sa-modal-dismiss></div>
+      <div class="sa-modal-panel" role="dialog" aria-modal="true">
+        <button class="sa-modal-close" type="button" data-sa-modal-dismiss aria-label="Close" data-i18n-aria-label="detail.sa.close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <div class="sa-modal-body" data-sa-modal-body></div>
+      </div>
+    </div>
 
     <!-- ============ Property location map ============ -->
     <section class="section property-map-section" aria-label="Where Villa Aqua is located">
