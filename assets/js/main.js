@@ -1289,11 +1289,17 @@
           const amenityRowHtml = (item) =>
             `<li><span class="sa-amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(item.en)}</svg></span><span>${pick(item)}</span></li>`;
           const villaImgPath = "../" + villa.image;
+          /* The card face already shows the villa's hero photo (plus two
+             outdoor shots as the floating thumb/chip) as a teaser — the
+             modal should reveal something new when tapped, not repeat the
+             exact same hero image, so it pulls from a different gallery
+             category (an interior, typically) instead. */
+          const amenitiesModalImg = villa.gallery?.[1]?.images?.[0]?.src || villa.gallery?.[0]?.images?.[2]?.src || villaImgPath;
 
           const amenitiesModalHtml = `
             <h2 class="sa-modal-title">${t("detail.amenities.title")}</h2>
             <p class="sa-modal-intro">${t("detail.sa.amenities.intro")}</p>
-            <div class="sa-amenities-photo"><img src="${villaImgPath}" alt="${villa.imageAlt || ""}" loading="lazy"></div>
+            <div class="sa-amenities-photo"><img src="${amenitiesModalImg}" alt="" loading="lazy"></div>
             <div class="sa-amenities-groups">
               ${activeCategories
                 .map(
