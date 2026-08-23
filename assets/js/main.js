@@ -1289,12 +1289,15 @@
           const amenityRowHtml = (item) =>
             `<li><span class="sa-amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(item.en)}</svg></span><span>${pick(item)}</span></li>`;
           const villaImgPath = "../" + villa.image;
-          /* The card face already shows the villa's hero photo (plus two
-             outdoor shots as the floating thumb/chip) as a teaser — the
-             modal should reveal something new when tapped, not repeat the
-             exact same hero image, so it pulls from a different gallery
-             category (an interior, typically) instead. */
-          const amenitiesModalImg = villa.gallery?.[1]?.images?.[0]?.src || villa.gallery?.[0]?.images?.[2]?.src || villaImgPath;
+          /* The card face already shows the villa's hero exterior plus two
+             other rooms as the floating thumb/chip (see catImg below) — the
+             modal should reveal yet another space when tapped, not repeat
+             one of those, so it reaches for a third/fourth gallery category. */
+          const amenitiesModalImg =
+            villa.gallery?.[3]?.images?.[0]?.src ||
+            villa.gallery?.[2]?.images?.[1]?.src ||
+            villa.gallery?.[1]?.images?.[1]?.src ||
+            villaImgPath;
 
           const amenitiesModalHtml = `
             <h2 class="sa-modal-title">${t("detail.amenities.title")}</h2>
@@ -1397,7 +1400,11 @@
               </span>
             </button>`;
 
-          const galleryImg = (i) => villa.gallery?.[0]?.images?.[i]?.src || villaImgPath;
+          /* Pulls from a specific gallery *category* (not just an index
+             within one category), so the amenities card's three photos —
+             and the modal photo — land in genuinely different rooms
+             instead of three near-identical angles of the same pool. */
+          const catImg = (catIndex, imgIndex = 0) => villa.gallery?.[catIndex]?.images?.[imgIndex]?.src || villaImgPath;
           const includedImgs = includedIds.map(serviceImg);
           const extraImgs = extraIds.map(serviceImg);
           const fallback = (arr, i) => arr[i] || arr[0] || villaImgPath;
@@ -1412,7 +1419,7 @@
               t("detail.sa.extra.teaser"), t("detail.services.extra"), t("detail.sa.extra.intro")
             ) +
             cardHtml(
-              "amenities", villaImgPath, "", galleryImg(0), galleryImg(1),
+              "amenities", villaImgPath, "", catImg(1), catImg(2),
               t("detail.sa.amenities.teaser"), t("detail.amenities.title"), t("detail.sa.amenities.intro")
             );
         }
