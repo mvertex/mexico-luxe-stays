@@ -111,7 +111,6 @@ const MLS_VILLAS = [
        stand-in. HOSTAWAY swap point if a future integration supplies these. */
     serviceImages: {
       housekeeping: "../assets/img/villas/villa-aqua-rooms-01.webp",
-      concierge: "../assets/img/villas/villa-aqua-interiors-02.webp",
       itinerary: "../assets/img/villas/villa-aqua-living-11.webp",
       chef: "../assets/img/villas/villa-aqua-kitchen-02.webp",
       grocery: "../assets/img/villas/villa-aqua-kitchen-15.webp",
@@ -636,7 +635,6 @@ const MLS_VILLAS = [
     /* Real Kasa Kefi photography per service — see the note on Villa Aqua above. */
     serviceImages: {
       housekeeping: "../assets/img/villas/kasa-kefi-rooms-01.webp",
-      concierge: "../assets/img/villas/kasa-kefi-outdoor-04.webp",
       itinerary: "../assets/img/villas/kasa-kefi-living-01.webp",
       chef: "../assets/img/villas/kasa-kefi-kitchen-01.webp",
       grocery: "../assets/img/villas/kasa-kefi-kitchen-02.webp",
@@ -990,7 +988,6 @@ const MLS_VILLAS = [
     /* Real Casa Corazon Luxe photography per service — see the note on Villa Aqua above. */
     serviceImages: {
       housekeeping: "../assets/img/villas/casa-corazon-luxe-rooms-03.webp",
-      concierge: "../assets/img/villas/casa-corazon-luxe-interiors-01.webp",
       itinerary: "../assets/img/villas/casa-corazon-luxe-interiors-35.webp",
       chef: "../assets/img/villas/casa-corazon-luxe-interiors-03.webp",
       grocery: "../assets/img/villas/casa-corazon-luxe-interiors-02.webp",
@@ -1392,7 +1389,6 @@ const MLS_VILLAS = [
     /* Real Casa de las Estrellas photography per service — see the note on Villa Aqua above. */
     serviceImages: {
       housekeeping: "../assets/img/villas/casa-de-las-estrellas-rooms-01.webp",
-      concierge: "../assets/img/villas/casa-de-las-estrellas-interiors-01.webp",
       itinerary: "../assets/img/villas/casa-de-las-estrellas-rooms-26.webp",
       chef: "../assets/img/villas/casa-de-las-estrellas-kitchen-03.webp",
       grocery: "../assets/img/villas/casa-de-las-estrellas-kitchen-02.webp",

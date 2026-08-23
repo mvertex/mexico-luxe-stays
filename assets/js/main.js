@@ -1309,15 +1309,17 @@
           const includedIds = knownServices.filter((id) => MLS_SERVICE_DEFS[id].included);
           const extraIds = knownServices.filter((id) => !MLS_SERVICE_DEFS[id].included);
 
-          /* A couple of services depict an action (a car arriving, a massage
-             in progress) that no real-estate photo of the villa itself could
-             show — those two use a shared illustrative photo instead of
-             villa-specific ones; everything else still uses this villa's
-             own photography. Excursions goes further: a small rotating
-             collage (cenote, snorkeling, jungle zip-line) since one photo
-             can't represent "go explore the area" — see startSaRotation
-             below for how the rotation itself is driven. */
+          /* Some services depict an action or an on-call presence — a car
+             arriving, a massage in progress, a concierge you ring for —
+             that no real-estate photo of the villa itself could show, so
+             these use a shared illustrative photo instead of villa-specific
+             ones; everything else still uses this villa's own photography.
+             Excursions goes further: a small rotating collage (cenote,
+             snorkeling, jungle zip-line) since one photo can't represent
+             "go explore the area" — see startSaRotation below for how the
+             rotation itself is driven. */
           const SA_SHARED_IMAGES = {
+            concierge: "../assets/img/services/concierge-bell.webp",
             transfer: "../assets/img/services/transfer-suv.webp",
             spa: "../assets/img/services/spa-massage.webp"
           };
