@@ -566,7 +566,7 @@ button { font: inherit; cursor: pointer; }
   min-height: 100svh; display: flex; flex-direction: column; justify-content: center;
 }
 .destinations-title-line {
-  font-family: var(--font-display); font-weight: 500; line-height: 1.08;
+  font-family: var(--font-display); font-weight: 500; font-style: italic; line-height: 1.08;
   font-size: var(--text-h2); color: var(--ink); margin: 0;
   white-space: nowrap;
 }
