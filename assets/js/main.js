@@ -321,6 +321,39 @@
     });
   });
 
+  /* ---------- Home hero: auto-rotating photo carousel ----------
+     The first slide ships eagerly (LCP). The other three only start
+     downloading once the page has finished loading, and only rotate
+     if the visitor hasn't asked for reduced motion — no controls, no
+     indicator, it just quietly cycles. */
+  const heroCarousel = document.querySelector("[data-hero-carousel]");
+  if (heroCarousel) {
+    const slides = [...heroCarousel.querySelectorAll(".hero-slide")];
+    if (slides.length > 1) {
+      const startCarousel = () => {
+        slides.forEach((slide) => {
+          if (slide.dataset.src) {
+            slide.src = slide.dataset.src;
+            slide.removeAttribute("data-src");
+          }
+        });
+        if (prefersReducedMotion) return;
+        let index = slides.findIndex((slide) => slide.classList.contains("is-active"));
+        setInterval(() => {
+          const next = (index + 1) % slides.length;
+          slides[index].classList.remove("is-active");
+          slides[next].classList.add("is-active");
+          index = next;
+        }, 6000);
+      };
+      if (document.readyState === "complete") {
+        startCarousel();
+      } else {
+        window.addEventListener("load", startCarousel, { once: true });
+      }
+    }
+  }
+
   /* ---------- Home hero search: submits a plain GET to villas.html, which
      already reads ?destination/?guests to pre-fill its own filters (see the
      villa grid block below); ?checkin/?checkout ride along for later. */
@@ -1373,22 +1406,12 @@
 
           saModalContent = { included: includedModalHtml, extra: extraModalHtml, amenities: amenitiesModalHtml };
 
-          /* Card visual: a large rounded photo with a smaller detail shot
-             floating over its top-left corner, a category badge floating
-             top-right, an arrow button straddling the bottom edge, and a
-             small caption chip overlapping the photo — the layered,
-             floating-element composition from the reference layout,
-             reapplied to three peer cards instead of one hero. */
-          const SA_BADGE_ICON = {
-            included: '<circle cx="12" cy="12" r="9"/><path d="M8.3 12.4l2.3 2.3L16 9.2"/>',
-            extra: '<path d="M12 3h6a2 2 0 0 1 2 2v6L11 20l-8-8L12 3z"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/>',
-            amenities: '<path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9L12 3z"/>'
-          };
-          const cardHtml = (key, mainImg, mainImgPos, thumbImg, chipImg, chipText, title, desc) => `
+          /* Card visual: a large rounded photo with an arrow button
+             straddling the bottom edge and a small caption chip
+             overlapping the photo. */
+          const cardHtml = (key, mainImg, mainImgPos, chipImg, chipText, title, desc) => `
             <button type="button" class="sa-card" data-sa-open="${key}">
               <span class="sa-card-frame">
-                <span class="sa-card-badge-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${SA_BADGE_ICON[key]}</svg></span>
-                <span class="sa-card-thumb-float"><img src="${thumbImg}" alt="" loading="lazy"></span>
                 <span class="sa-card-photo-clip"><img src="${mainImg}" alt="" loading="lazy"${mainImgPos ? ` style="object-position:${mainImgPos}"` : ""}></span>
                 <span class="sa-card-chip"><img src="${chipImg}" alt="" loading="lazy"><span>${chipText}</span></span>
                 <span class="sa-card-arrow-btn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
@@ -1411,15 +1434,15 @@
 
           saCardsEl.innerHTML =
             cardHtml(
-              "included", fallback(includedImgs, 0), serviceImgPos(includedIds[0]), fallback(includedImgs, 1), fallback(includedImgs, 2),
+              "included", fallback(includedImgs, 0), serviceImgPos(includedIds[0]), fallback(includedImgs, 2),
               t("detail.sa.included.teaser"), t("detail.services.included"), t("detail.sa.included.intro")
             ) +
             cardHtml(
-              "extra", fallback(extraImgs, 0), serviceImgPos(extraIds[0]), fallback(extraImgs, 1), fallback(extraImgs, 2),
+              "extra", fallback(extraImgs, 0), serviceImgPos(extraIds[0]), fallback(extraImgs, 2),
               t("detail.sa.extra.teaser"), t("detail.services.extra"), t("detail.sa.extra.intro")
             ) +
             cardHtml(
-              "amenities", villaImgPath, "", catImg(1), catImg(2),
+              "amenities", villaImgPath, "", catImg(2),
               t("detail.sa.amenities.teaser"), t("detail.amenities.title"), t("detail.sa.amenities.intro")
             );
         }
@@ -2253,6 +2276,12 @@
     contactForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const intent = e.submitter?.dataset.tripIntent || "inquire";
+      if (intent === "book" && !villaValueInput.value) {
+        const status = contactForm.querySelector(".form-status");
+        if (status) status.textContent = t("contact.form.villaRequired");
+        openVillaListbox();
+        return;
+      }
       const f = new FormData(contactForm);
       const selectedVillaOption = villaOptions.find((o) => o.dataset.value === f.get("villa"));
       const lines = [
@@ -2264,7 +2293,8 @@
         f.get("bedrooms") ? `Bedrooms: ${f.get("bedrooms")}` : "",
         f.get("adults") ? `Adults: ${f.get("adults")}` : "",
         f.get("children") ? `Children (2–12): ${f.get("children")}` : "",
-        f.get("infants") ? `Infants (under 2): ${f.get("infants")}` : ""
+        f.get("infants") ? `Infants (under 2): ${f.get("infants")}` : "",
+        f.get("notes")?.trim() ? `Notes: ${f.get("notes").trim()}` : ""
       ].filter(Boolean);
       window.open("https://wa.me/5219848079475?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener");
       const status = contactForm.querySelector(".form-status");

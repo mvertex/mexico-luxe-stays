@@ -47,7 +47,7 @@
   <main id="main">
 
     <!-- ============ Page hero ============ -->
-    <section class="hero hero--page" aria-label="Contact us" style="min-height:52svh">
+    <section class="hero hero--page" aria-label="Contact us" style="height:52svh;min-height:52svh">
       <div class="hero-media">
         <img src="assets/img/cta-infinity-pool.webp"
              alt="An infinity edge waiting for your first morning" fetchpriority="high" width="2000" height="1333">
@@ -96,11 +96,11 @@
             <div class="trip-villa-field" data-trip-villa-field>
               <span id="cf-villa-label" class="visually-hidden" data-i18n="contact.form.villa">Which villa?</span>
               <button type="button" class="trip-villa-trigger" data-villa-trigger aria-haspopup="listbox" aria-expanded="false" aria-labelledby="cf-villa-label">
-                <span data-villa-trigger-text data-i18n="contact.form.villaAdvise">Not sure yet — advise me</span>
+                <span data-villa-trigger-text data-i18n="contact.form.villaAdvise">Choose your villa</span>
                 <svg class="trip-villa-chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
               </button>
               <ul class="trip-villa-listbox" role="listbox" tabindex="-1" data-villa-listbox aria-labelledby="cf-villa-label" hidden>
-                <li role="option" data-value="" aria-selected="true" data-i18n="contact.form.villaAdvise">Not sure yet — advise me</li>
+                <li role="option" data-value="" aria-selected="true" data-i18n="contact.form.villaAdvise">Choose your villa</li>
                 <li role="option" data-value="villa-aqua" aria-selected="false">Villa Aqua — Playa del Carmen</li>
                 <li role="option" data-value="casa-de-las-estrellas" aria-selected="false">Casa de las Estrellas — Playa del Carmen</li>
                 <li role="option" data-value="casa-corazon-luxe" aria-selected="false">Casa Corazon Luxe — Playa del Carmen</li>
@@ -195,6 +195,11 @@
             </div>
 
             <p class="trip-capacity-notice" data-trip-capacity-notice hidden></p>
+
+            <div class="trip-notes-field">
+              <label class="trip-notes-label" for="cf-notes" data-i18n="contact.form.notes">Tell us about your group</label>
+              <textarea class="trip-notes-textarea" id="cf-notes" name="notes" rows="3" data-i18n-placeholder="contact.form.notesPlaceholder" placeholder="Celebrating an anniversary, need extra cribs, traveling with pets…"></textarea>
+            </div>
 
             <div class="trip-price" data-trip-price>
               <p class="trip-price-label" data-i18n="contact.form.priceLabel">Starting from</p>
