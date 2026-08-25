@@ -209,9 +209,12 @@
       listEl.scrollLeft = 0;
       listEl.innerHTML = rooms.map((room, i) => `
         <button type="button" class="room-picker-item" data-room-index="${i}">
-          <img src="${room.src}" alt="${room.alt}" loading="lazy">
-          <span class="room-picker-item-scrim" aria-hidden="true"></span>
-          <span class="room-picker-item-label">${t("detail.gallery.roomLabel").replace("{n}", i + 1)}</span>
+          <span class="room-picker-item-media">
+            <img src="${room.src}" alt="${room.alt}" loading="lazy">
+          </span>
+          <span class="room-picker-item-body">
+            <span class="room-picker-item-label">${t("detail.gallery.roomLabel").replace("{n}", i + 1)}</span>
+          </span>
         </button>`).join("");
       listEl.querySelectorAll(".room-picker-item").forEach((btn) => {
         btn.addEventListener("click", () => {
