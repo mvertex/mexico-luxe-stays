@@ -170,6 +170,45 @@
     });
   }
 
+  /* ---------- Room picker: the "Rooms" gallery tile doesn't jump straight
+     into the lightbox — it opens a small dialog listing Bedroom 1, Bedroom 2,
+     ... one per villa.bedrooms, then hands that room's photos to the same
+     lightbox. Room count comes from villa.bedrooms so this scales
+     automatically as villas are added or resized. ---------- */
+  let mlsOpenRoomPicker = null;
+  const roomPicker = document.querySelector("[data-room-picker]");
+  if (roomPicker) {
+    const listEl = roomPicker.querySelector("[data-room-picker-list]");
+    let rpLastFocused = null;
+    const closeRoomPicker = () => {
+      roomPicker.hidden = true;
+      document.body.style.overflow = "";
+      rpLastFocused?.focus();
+    };
+    mlsOpenRoomPicker = (count, onPick, trigger) => {
+      if (!count) return;
+      rpLastFocused = trigger || null;
+      listEl.innerHTML = Array.from({ length: count }, (_, i) => `
+        <button type="button" class="room-picker-item" data-room-index="${i}">
+          ${t("detail.gallery.roomLabel").replace("{n}", i + 1)}
+        </button>`).join("");
+      listEl.querySelectorAll(".room-picker-item").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          closeRoomPicker();
+          onPick(Number(btn.dataset.roomIndex));
+        });
+      });
+      roomPicker.hidden = false;
+      document.body.style.overflow = "hidden";
+      roomPicker.querySelector("button[data-room-picker-dismiss]")?.focus();
+    };
+    roomPicker.querySelectorAll("[data-room-picker-dismiss]").forEach((el) => el.addEventListener("click", closeRoomPicker));
+    document.addEventListener("keydown", (e) => {
+      if (roomPicker.hidden) return;
+      if (e.key === "Escape") closeRoomPicker();
+    });
+  }
+
   /* ---------- Quick actions: phone / WhatsApp popovers (hover-intent) ---------- */
   const quickActions = document.querySelector("[data-quick-actions]");
   if (quickActions) {
@@ -1557,8 +1596,22 @@
           tilesEl.querySelectorAll(".villa-gallery-tile").forEach((btn) => {
             btn.addEventListener("click", () => {
               const i = Number(btn.dataset.catIndex);
-              if (typeof mlsOpenLightbox === "function") {
-                mlsOpenLightbox(categories[i].images.map(pickImg));
+              const cat = categories[i];
+              /* The "Rooms" tile opens a bedroom picker first (Bedroom 1,
+                 Bedroom 2, ...) instead of dumping every room photo into one
+                 lightbox — see cat.roomImages in villas-data.js. A room whose
+                 photos aren't sorted yet (empty array) falls back to the
+                 full pooled set so nothing looks broken in the meantime. */
+              if (cat.key === "rooms" && typeof mlsOpenRoomPicker === "function") {
+                mlsOpenRoomPicker(villa.bedrooms, (roomIndex) => {
+                  const roomIdxList = cat.roomImages?.[roomIndex];
+                  const images = roomIdxList && roomIdxList.length
+                    ? roomIdxList.map((imgIndex) => cat.images[imgIndex])
+                    : cat.images;
+                  if (typeof mlsOpenLightbox === "function") mlsOpenLightbox(images.map(pickImg));
+                }, btn);
+              } else if (typeof mlsOpenLightbox === "function") {
+                mlsOpenLightbox(cat.images.map(pickImg));
               }
             });
           });

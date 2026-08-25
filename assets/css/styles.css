@@ -1536,6 +1536,42 @@ button { font: inherit; cursor: pointer; }
   .lightbox-next { right: .6rem; }
 }
 
+/* ---------- Room picker: bedroom chooser opened by the "Rooms" gallery tile ---------- */
+.room-picker {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(1rem, 4vw, 2.5rem);
+}
+.room-picker[hidden] { display: none; }
+.room-picker-overlay { position: absolute; inset: 0; background: rgba(20, 26, 19, .72); backdrop-filter: blur(3px); }
+.room-picker-panel {
+  position: relative; z-index: 1;
+  background: var(--cream); color: var(--ink);
+  width: min(420px, 100%); max-height: min(80vh, 700px); overflow-y: auto;
+  border-radius: var(--radius); padding: clamp(1.6rem, 4vw, 2.2rem);
+  box-shadow: var(--shadow-lift);
+}
+.room-picker-close {
+  position: sticky; top: 0; float: right; margin: -.5rem -.5rem 0 0;
+  width: 2.6rem; height: 2.6rem; border-radius: 50%;
+  background: var(--sage-tint); color: var(--ink); border: 0; cursor: pointer;
+  display: grid; place-items: center; z-index: 2;
+  transition: background-color .2s ease;
+}
+.room-picker-close:hover { background: var(--gold); }
+.room-picker-close:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.room-picker-close svg { width: 18px; height: 18px; display: block; }
+.room-picker-title { font-family: var(--font-display); font-size: clamp(1.3rem, 3vw, 1.7rem); margin: 0 0 1.2rem; clear: both; }
+.room-picker-list { display: grid; gap: .6rem; }
+.room-picker-item {
+  width: 100%; text-align: left; padding: .85rem 1.1rem; border-radius: 10px;
+  background: var(--sage-tint); color: var(--ink); border: 1px solid transparent;
+  font-family: var(--font-sans); font-size: .95rem; cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.room-picker-item:hover, .room-picker-item:focus-visible { background: var(--cream); border-color: var(--gold); }
+.room-picker-item:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
 /* Property location map: a live Google Maps embed pinned to the villa's
    coordinates. Sits on the same cream background as the section above it
    (Explore the villa); kept narrower than the page and rounded so it reads

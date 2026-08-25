@@ -365,6 +365,18 @@
     <div class="lightbox-counter" data-lightbox-counter aria-live="polite"></div>
   </div>
 
+  <!-- ============ Room picker (bedroom chooser for the "Rooms" gallery tile) ============ -->
+  <div class="room-picker" data-room-picker hidden>
+    <div class="room-picker-overlay" data-room-picker-dismiss></div>
+    <div class="room-picker-panel" role="dialog" aria-modal="true">
+      <button class="room-picker-close" type="button" data-room-picker-dismiss aria-label="Close" data-i18n-aria-label="detail.gallery.roomPicker.close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <h3 class="room-picker-title" data-i18n="detail.gallery.roomPicker.title">Choose a bedroom</h3>
+      <div class="room-picker-list" data-room-picker-list></div>
+    </div>
+  </div>
+
   <script src="../assets/js/i18n.js?v=3" defer></script>
   <script src="../assets/js/villas-data.js?v=5" defer></script>
   <script src="../assets/js/hostaway-sync.js" defer></script>

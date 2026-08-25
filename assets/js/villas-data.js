@@ -489,7 +489,10 @@ const MLS_VILLAS = [
           alt: "A bathroom vanity with rainforest views at Villa Aqua", altEs: "Un tocador con vista a la selva en Villa Aqua" },
         { src: "../assets/img/villas/villa-aqua-rooms-80.webp",
           alt: "A bathroom at Villa Aqua — photo 26", altEs: "Un baño en Villa Aqua — foto 26" }
-      ] },
+      ],
+        // Per-bedroom split for the room picker — fill with image indices (into `images` above) once each bedroom's photos are sorted; empty arrays fall back to the full "rooms" list.
+        roomImages: [[], [], [], [], [], []]
+      },
       { key: "interiors", images: [
         { src: "../assets/img/villas/villa-aqua-interiors-01.webp",
           alt: "The entrance hall beneath the sweeping spiral staircase", altEs: "El vestíbulo de entrada bajo la escalera de caracol" },
@@ -795,7 +798,10 @@ const MLS_VILLAS = [
         { src: "../assets/img/villas/kasa-kefi-living-25.webp", alt: "An ensuite bathroom at Kasa Kefi, with a walk-in shower and travertine finishes", altEs: "Un baño en Kasa Kefi, con regadera y acabados de travertino" },
         { src: "../assets/img/villas/kasa-kefi-multipurpose-04.webp", alt: "A bedroom suite's ensuite bathroom at Kasa Kefi — photo 1", altEs: "El baño de una suite en Kasa Kefi — foto 1" },
         { src: "../assets/img/villas/kasa-kefi-multipurpose-05.webp", alt: "A bedroom suite's ensuite bathroom at Kasa Kefi — photo 2", altEs: "El baño de una suite en Kasa Kefi — foto 2" }
-      ] },
+      ],
+        // Per-bedroom split for the room picker — fill with image indices (into `images` above) once each bedroom's photos are sorted; empty arrays fall back to the full "rooms" list.
+        roomImages: [[], [], [], []]
+      },
       { key: "kitchen", images: [
         { src: "../assets/img/villas/kasa-kefi-kitchen-01.webp",
           alt: "The kitchen's dark wood cabinetry and live-edge breakfast bar with a floating range hood", altEs: "La cocina con gabinetes de madera oscura y barra de desayuno de borde vivo, bajo una campana flotante" },
@@ -1162,7 +1168,22 @@ const MLS_VILLAS = [
           alt: "Bedroom 11 — photo 6", altEs: "Recámara 11 — foto 6" },
         { src: "../assets/img/villas/casa-corazon-luxe-rooms-58.webp",
           alt: "Bedroom 11 — photo 7", altEs: "Recámara 11 — foto 7" }
-      ] },
+      ],
+        // Per-bedroom split for the room picker, derived from each photo's "Bedroom N" alt tag above.
+        roomImages: [
+          [3, 4],
+          [5, 6, 7, 8, 9, 10, 11, 12, 13],
+          [14, 15, 16, 17],
+          [18, 19, 20, 21, 22, 23, 24, 25],
+          [26, 27, 28, 29],
+          [30, 31, 32, 33, 34, 35, 36],
+          [37, 38],
+          [39, 40],
+          [41, 42],
+          [43, 44, 45, 46, 47, 48, 49, 50],
+          [51, 52, 53, 54, 55, 56, 57]
+        ]
+      },
       { key: "kitchen", images: [
         { src: "../assets/img/villas/casa-corazon-luxe-interiors-02.webp",
           alt: "One of two dining areas, opening to the courtyard garden", altEs: "Uno de los dos comedores, abierto hacia el jardín del patio" },
@@ -1508,7 +1529,15 @@ const MLS_VILLAS = [
           alt: "The ensuite bathroom of Bedroom 3, with a rainfall shower", altEs: "El baño de la Recámara 3, con regadera de lluvia" },
         { src: "../assets/img/villas/casa-de-las-estrellas-rooms-27.webp",
           alt: "Bedroom 4 — photo 1", altEs: "Recámara 4 — foto 1" }
-      ] },
+      ],
+        // Per-bedroom split for the room picker, derived from each photo's "Bedroom N" alt tag above.
+        roomImages: [
+          [5, 6, 7, 8, 9, 10, 11, 12],
+          [13, 14, 15, 16, 17, 18],
+          [19, 20, 21, 22, 23, 24, 25],
+          [26]
+        ]
+      },
       { key: "interiors", images: [
         { src: "../assets/img/villas/casa-de-las-estrellas-interiors-01.webp",
           alt: "The entrance hall, dressed in stacked stone and warm travertine", altEs: "El vestíbulo de entrada, con piedra apilada y travertino cálido" },
