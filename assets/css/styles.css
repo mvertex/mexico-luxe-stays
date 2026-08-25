@@ -1586,16 +1586,19 @@ button { font: inherit; cursor: pointer; }
 }
 .room-picker-list::-webkit-scrollbar { display: none; }
 /* Each bedroom is a proper card — photo on top, name in a solid card
-   body below it — rather than text overlaid on the image. */
+   body below it — rather than text overlaid on the image. Taller than
+   wide so the row fills more of the page height (less empty cream
+   below it), and a soft single shadow instead of --shadow-lift, whose
+   big dark blur read as a smudge sitting on the same cream background. */
 .room-picker-item {
   flex: 0 0 auto; scroll-snap-align: start;
-  width: clamp(300px, 30vw, 420px);
+  width: clamp(260px, 22vw, 340px);
   display: flex; flex-direction: column; text-align: left;
   border: 0; padding: 0; background: var(--cream); cursor: pointer; font: inherit;
-  border-radius: var(--radius); box-shadow: var(--shadow-lift); overflow: hidden;
+  border-radius: var(--radius); box-shadow: 0 2px 10px rgba(20, 26, 19, .1); overflow: hidden;
 }
 .room-picker-item-media {
-  position: relative; aspect-ratio: 4 / 3; overflow: hidden; display: block;
+  position: relative; aspect-ratio: 3 / 4; overflow: hidden; display: block;
 }
 .room-picker-item-media img {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
