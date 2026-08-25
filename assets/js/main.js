@@ -179,16 +179,34 @@
   const roomPicker = document.querySelector("[data-room-picker]");
   if (roomPicker) {
     const listEl = roomPicker.querySelector("[data-room-picker-list]");
+    const prevBtn = roomPicker.querySelector("[data-room-picker-prev]");
+    const nextBtn = roomPicker.querySelector("[data-room-picker-next]");
     let rpLastFocused = null;
     const closeRoomPicker = () => {
       roomPicker.hidden = true;
       document.body.style.overflow = "";
       rpLastFocused?.focus();
     };
+    const updateRoomNav = () => {
+      if (!prevBtn || !nextBtn) return;
+      const max = listEl.scrollWidth - listEl.clientWidth;
+      prevBtn.disabled = listEl.scrollLeft <= 4;
+      nextBtn.disabled = max <= 4 || listEl.scrollLeft >= max - 4;
+    };
+    const scrollRoomsBy = (dir) => {
+      const card = listEl.querySelector(".room-picker-item");
+      const gap = parseFloat(getComputedStyle(listEl).columnGap) || 24;
+      const amount = card ? card.getBoundingClientRect().width + gap : listEl.clientWidth * 0.8;
+      listEl.scrollBy({ left: dir * amount, behavior: prefersReducedMotion ? "auto" : "smooth" });
+    };
+    prevBtn?.addEventListener("click", () => scrollRoomsBy(-1));
+    nextBtn?.addEventListener("click", () => scrollRoomsBy(1));
+    listEl.addEventListener("scroll", updateRoomNav);
     /* `rooms` is one cover image per bedroom: [{ src, alt }, ...]. */
     mlsOpenRoomPicker = (rooms, onPick, trigger) => {
       if (!rooms || !rooms.length) return;
       rpLastFocused = trigger || null;
+      listEl.scrollLeft = 0;
       listEl.innerHTML = rooms.map((room, i) => `
         <button type="button" class="room-picker-item" data-room-index="${i}">
           <img src="${room.src}" alt="${room.alt}" loading="lazy">
@@ -204,6 +222,7 @@
       roomPicker.hidden = false;
       document.body.style.overflow = "hidden";
       roomPicker.querySelector("button[data-room-picker-dismiss]")?.focus();
+      requestAnimationFrame(updateRoomNav);
     };
     roomPicker.querySelectorAll("[data-room-picker-dismiss]").forEach((el) => el.addEventListener("click", closeRoomPicker));
     document.addEventListener("keydown", (e) => {
@@ -1584,10 +1603,19 @@
           tilesEl.innerHTML = categories
             .map((g, i) => {
               const cover = pickImg(g.images[0]);
+              /* The "Rooms" tile hides a bedroom picker behind it, which
+                 isn't obvious from a photo tile alone (and hover hints don't
+                 reach touch devices) — so it gets a badge that's visible
+                 without hovering, telling people there's more than one room
+                 to browse behind this tile. */
+              const roomsBadge = g.key === "rooms"
+                ? `<span class="villa-gallery-tile-badge">${t("detail.gallery.roomsBadge").replace("{n}", villa.bedrooms)}</span>`
+                : "";
               return `
               <button type="button" class="villa-gallery-tile" data-slot="${positions[i]}" data-cat-index="${i}" aria-haspopup="dialog">
                 <img src="${cover.src}" alt="${cover.alt}" loading="${i === 0 ? "eager" : "lazy"}">
                 <span class="villa-gallery-tile-scrim" aria-hidden="true"></span>
+                ${roomsBadge}
                 <span class="villa-gallery-tile-label">
                   <span class="villa-gallery-tile-name">${t("detail.gallery." + g.key)}</span>
                   <span class="villa-gallery-tile-view" aria-hidden="true">${t("detail.gallery.viewGallery")}</span>

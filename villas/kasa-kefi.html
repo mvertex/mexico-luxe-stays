@@ -38,7 +38,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/styles.css?v=3">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=4">
 </head>
 <body>
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
@@ -372,13 +372,21 @@
     </button>
     <div class="room-picker-inner">
       <h3 class="room-picker-title" data-i18n="detail.gallery.roomPicker.title">Choose a bedroom</h3>
-      <div class="room-picker-list" data-room-picker-list></div>
+      <div class="room-picker-track">
+        <button type="button" class="room-picker-nav room-picker-prev" data-room-picker-prev aria-label="Previous bedroom" data-i18n-aria-label="detail.gallery.roomPicker.prev">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
+        </button>
+        <div class="room-picker-list" data-room-picker-list></div>
+        <button type="button" class="room-picker-nav room-picker-next" data-room-picker-next aria-label="Next bedroom" data-i18n-aria-label="detail.gallery.roomPicker.next">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
     </div>
   </div>
 
-  <script src="../assets/js/i18n.js?v=4" defer></script>
+  <script src="../assets/js/i18n.js?v=5" defer></script>
   <script src="../assets/js/villas-data.js?v=6" defer></script>
   <script src="../assets/js/hostaway-sync.js" defer></script>
-  <script src="../assets/js/main.js?v=10" defer></script>
+  <script src="../assets/js/main.js?v=11" defer></script>
 </body>
 </html>
