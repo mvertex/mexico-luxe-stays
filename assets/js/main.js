@@ -171,10 +171,10 @@
   }
 
   /* ---------- Room picker: the "Rooms" gallery tile doesn't jump straight
-     into the lightbox — it opens a small dialog listing Bedroom 1, Bedroom 2,
-     ... one per villa.bedrooms, then hands that room's photos to the same
-     lightbox. Room count comes from villa.bedrooms so this scales
-     automatically as villas are added or resized. ---------- */
+     into the lightbox — it opens a full-screen picker with one photo card
+     per bedroom (Bedroom 1, Bedroom 2, ...), then hands that room's photos
+     to the same lightbox. Room count comes from villa.bedrooms so this
+     scales automatically as villas are added or resized. ---------- */
   let mlsOpenRoomPicker = null;
   const roomPicker = document.querySelector("[data-room-picker]");
   if (roomPicker) {
@@ -185,12 +185,15 @@
       document.body.style.overflow = "";
       rpLastFocused?.focus();
     };
-    mlsOpenRoomPicker = (count, onPick, trigger) => {
-      if (!count) return;
+    /* `rooms` is one cover image per bedroom: [{ src, alt }, ...]. */
+    mlsOpenRoomPicker = (rooms, onPick, trigger) => {
+      if (!rooms || !rooms.length) return;
       rpLastFocused = trigger || null;
-      listEl.innerHTML = Array.from({ length: count }, (_, i) => `
+      listEl.innerHTML = rooms.map((room, i) => `
         <button type="button" class="room-picker-item" data-room-index="${i}">
-          ${t("detail.gallery.roomLabel").replace("{n}", i + 1)}
+          <img src="${room.src}" alt="${room.alt}" loading="lazy">
+          <span class="room-picker-item-scrim" aria-hidden="true"></span>
+          <span class="room-picker-item-label">${t("detail.gallery.roomLabel").replace("{n}", i + 1)}</span>
         </button>`).join("");
       listEl.querySelectorAll(".room-picker-item").forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -1603,12 +1606,12 @@
                  photos aren't sorted yet (empty array) falls back to the
                  full pooled set so nothing looks broken in the meantime. */
               if (cat.key === "rooms" && typeof mlsOpenRoomPicker === "function") {
-                mlsOpenRoomPicker(villa.bedrooms, (roomIndex) => {
-                  const roomIdxList = cat.roomImages?.[roomIndex];
-                  const images = roomIdxList && roomIdxList.length
-                    ? roomIdxList.map((imgIndex) => cat.images[imgIndex])
-                    : cat.images;
-                  if (typeof mlsOpenLightbox === "function") mlsOpenLightbox(images.map(pickImg));
+                const roomImageSets = Array.from({ length: villa.bedrooms }, (_, r) => {
+                  const idxList = cat.roomImages?.[r];
+                  return idxList && idxList.length ? idxList.map((imgIndex) => cat.images[imgIndex]) : cat.images;
+                });
+                mlsOpenRoomPicker(roomImageSets.map((set) => pickImg(set[0])), (roomIndex) => {
+                  if (typeof mlsOpenLightbox === "function") mlsOpenLightbox(roomImageSets[roomIndex].map(pickImg));
                 }, btn);
               } else if (typeof mlsOpenLightbox === "function") {
                 mlsOpenLightbox(cat.images.map(pickImg));

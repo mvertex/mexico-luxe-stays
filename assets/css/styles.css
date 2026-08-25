@@ -1536,40 +1536,54 @@ button { font: inherit; cursor: pointer; }
   .lightbox-next { right: .6rem; }
 }
 
-/* ---------- Room picker: bedroom chooser opened by the "Rooms" gallery tile ---------- */
+/* ---------- Room picker: bedroom chooser opened by the "Rooms" gallery tile.
+   A full-screen cream takeover (not a floating dialog over the page) so the
+   busy gallery grid behind it disappears entirely — each bedroom is its own
+   photo card, styled like the .villa-gallery-tile cards above. ---------- */
 .room-picker {
   position: fixed; inset: 0; z-index: 200;
-  display: flex; align-items: center; justify-content: center;
-  padding: clamp(1rem, 4vw, 2.5rem);
+  background: var(--cream);
+  overflow-y: auto;
+  padding: clamp(4.5rem, 9vw, 6rem) clamp(1.25rem, 5vw, 3rem) clamp(2.5rem, 6vw, 4rem);
 }
 .room-picker[hidden] { display: none; }
-.room-picker-overlay { position: absolute; inset: 0; background: rgba(20, 26, 19, .72); backdrop-filter: blur(3px); }
-.room-picker-panel {
-  position: relative; z-index: 1;
-  background: var(--cream); color: var(--ink);
-  width: min(420px, 100%); max-height: min(80vh, 700px); overflow-y: auto;
-  border-radius: var(--radius); padding: clamp(1.6rem, 4vw, 2.2rem);
-  box-shadow: var(--shadow-lift);
-}
+.room-picker-inner { width: 100%; max-width: 1100px; margin-inline: auto; }
 .room-picker-close {
-  position: sticky; top: 0; float: right; margin: -.5rem -.5rem 0 0;
-  width: 2.6rem; height: 2.6rem; border-radius: 50%;
+  position: fixed; top: 1.5rem; right: 1.5rem; z-index: 2;
+  width: 2.75rem; height: 2.75rem; border-radius: 50%;
   background: var(--sage-tint); color: var(--ink); border: 0; cursor: pointer;
-  display: grid; place-items: center; z-index: 2;
+  display: grid; place-items: center;
   transition: background-color .2s ease;
 }
 .room-picker-close:hover { background: var(--gold); }
 .room-picker-close:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .room-picker-close svg { width: 18px; height: 18px; display: block; }
-.room-picker-title { font-family: var(--font-display); font-size: clamp(1.3rem, 3vw, 1.7rem); margin: 0 0 1.2rem; clear: both; }
-.room-picker-list { display: grid; gap: .6rem; }
-.room-picker-item {
-  width: 100%; text-align: left; padding: .85rem 1.1rem; border-radius: 10px;
-  background: var(--sage-tint); color: var(--ink); border: 1px solid transparent;
-  font-family: var(--font-sans); font-size: .95rem; cursor: pointer;
-  transition: background-color .2s ease, border-color .2s ease;
+.room-picker-title {
+  font-family: var(--font-display); color: var(--ink); text-align: center;
+  font-size: clamp(1.8rem, 4vw, 2.5rem); margin: 0 0 clamp(1.8rem, 4vw, 2.8rem);
 }
-.room-picker-item:hover, .room-picker-item:focus-visible { background: var(--cream); border-color: var(--gold); }
+.room-picker-list {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+.room-picker-item {
+  position: relative; aspect-ratio: 4 / 3; overflow: hidden;
+  border: 0; padding: 0; background: var(--sage-tint); cursor: pointer; font: inherit;
+  border-radius: var(--radius); box-shadow: var(--shadow-lift);
+}
+.room-picker-item img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  transition: transform .6s var(--ease-out);
+}
+.room-picker-item:hover img, .room-picker-item:focus-visible img { transform: scale(1.045); }
+.room-picker-item-scrim {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(20, 26, 19, .62) 0%, rgba(20, 26, 19, .08) 42%, rgba(20, 26, 19, 0) 62%);
+}
+.room-picker-item-label {
+  position: absolute; left: 1.1rem; right: 1.1rem; bottom: 1rem; z-index: 1;
+  color: var(--cream); font-family: var(--font-display); font-size: 1.15rem;
+}
 .room-picker-item:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 /* Property location map: a live Google Maps embed pinned to the villa's
