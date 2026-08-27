@@ -1121,20 +1121,34 @@
   };
   const mlsAmenityIcon = (enText) => MLS_AMENITY_ICON_DEFS[mlsAmenityIconKey(enText)];
 
-  /* ---------- Amenity categories: grouped by icon concept for the categorized showcase ---------- */
-  const MLS_AMENITY_CATEGORY_BY_ICON = {
-    pool: "wellness", squash: "wellness", gym: "wellness", jacuzzi: "wellness",
-    spa: "wellness", sports: "wellness", beach: "wellness", view: "wellness", bath: "wellness",
-    grill: "dining", chef: "dining", bar: "dining", wine: "dining", kitchen: "dining",
-    coffee: "dining", basket: "dining",
-    sparkle: "services", bell: "services", safe: "services", parking: "services",
-    laundry: "services", transfer: "services", door: "services", baby: "services",
-    ac: "services", ev: "services",
-    sound: "entertainment", cinema: "entertainment", game: "entertainment",
-    tv: "entertainment", wifi: "entertainment", family: "entertainment", sofa: "entertainment"
+  /* ---------- Amenity categories: keyword-matched against the English label ---------- */
+  const MLS_AMENITY_CATEGORY_RULES = [
+    ["beach essentials", "comfort"],
+    ["outdoor kitchen", "outdoor"], ["outdoor grill", "outdoor"],
+    ["pool", "outdoor"], ["hammock", "outdoor"],
+    ["game room", "outdoor"], ["foosball", "outdoor"], ["ping pong", "outdoor"], ["board game", "outdoor"],
+    ["exercise equipment", "outdoor"],
+    ["squash", "outdoor"], ["tennis", "outdoor"], ["basketball", "outdoor"], ["sports", "outdoor"],
+    ["jacuzzi", "outdoor"], ["hot tub", "outdoor"],
+    ["grill", "outdoor"], ["bbq", "outdoor"], ["al fresco", "outdoor"], ["fire-pit", "outdoor"], ["fireplace", "outdoor"],
+    ["beachfront", "beach"], ["oceanfront", "beach"], ["waterfront", "beach"],
+    ["kayak", "beach"], ["canoe", "beach"], ["water sports", "beach"],
+    ["quinta avenida", "beach"], ["beach", "beach"],
+    ["coffee", "kitchen"], ["tea maker", "kitchen"], ["toaster", "kitchen"], ["dishwasher", "kitchen"],
+    ["microwave", "kitchen"], ["oven", "kitchen"], ["blender", "kitchen"], ["winer", "kitchen"], ["wine", "kitchen"],
+    ["honor bar", "kitchen"], ["nespresso", "kitchen"], ["grocery", "kitchen"],
+    ["dining", "kitchen"], ["kitchen", "kitchen"],
+    ["cleaning", "services"], ["housekeeping", "services"], ["chef", "services"], ["butler", "services"],
+    ["concierge", "services"], ["massage", "services"], ["spa", "services"], ["sauna", "services"],
+    ["airport transfer", "services"], ["transfer", "services"], ["event", "services"], ["celebrat", "services"],
+    ["security", "services"], ["gated", "services"]
+  ];
+  const MLS_AMENITY_CATEGORY_ORDER = ["comfort", "kitchen", "outdoor", "views", "beach", "family", "services", "safety"];
+  const mlsAmenityCategory = (enText) => {
+    const lower = (enText || "").toLowerCase();
+    const hit = MLS_AMENITY_CATEGORY_RULES.find(([kw]) => lower.includes(kw));
+    return hit ? hit[1] : "comfort";
   };
-  const MLS_AMENITY_CATEGORY_ORDER = ["wellness", "dining", "services", "entertainment", "other"];
-  const mlsAmenityCategory = (enText) => MLS_AMENITY_CATEGORY_BY_ICON[mlsAmenityIconKey(enText)] || "other";
 
   /* ---------- Spec squares: guests/bedrooms/beds/bathrooms/area/destination row ---------- */
   const MLS_SPEC_ICON = {
@@ -1379,27 +1393,15 @@
           const allAmenities = [...(villa.amenities || []), ...(villa.amenitiesMore || [])];
           const groups = {};
           allAmenities.forEach((a) => {
-            const cat = mlsAmenityCategory(a.en);
+            const cat = a.cat || mlsAmenityCategory(a.en);
             (groups[cat] = groups[cat] || []).push(a);
           });
           const activeCategories = MLS_AMENITY_CATEGORY_ORDER.filter((cat) => groups[cat] && groups[cat].length);
-          const amenityRowHtml = (item) =>
-            `<li><span class="sa-amenity-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${mlsAmenityIcon(item.en)}</svg></span><span>${pick(item)}</span></li>`;
+          const amenityRowHtml = (item) => `<li><span>${pick(item)}</span></li>`;
           const villaImgPath = "../" + villa.image;
-          /* The card face already shows the villa's hero exterior plus two
-             other rooms as the floating thumb/chip (see catImg below) — the
-             modal should reveal yet another space when tapped, not repeat
-             one of those, so it reaches for a third/fourth gallery category. */
-          const amenitiesModalImg =
-            villa.gallery?.[3]?.images?.[0]?.src ||
-            villa.gallery?.[2]?.images?.[1]?.src ||
-            villa.gallery?.[1]?.images?.[1]?.src ||
-            villaImgPath;
 
           const amenitiesModalHtml = `
             <h2 class="sa-modal-title">${t("detail.amenities.title")}</h2>
-            <p class="sa-modal-intro">${t("detail.sa.amenities.intro")}</p>
-            <div class="sa-amenities-photo"><img src="${amenitiesModalImg}" alt="" loading="lazy"></div>
             <div class="sa-amenities-groups">
               ${activeCategories
                 .map(
@@ -2058,6 +2060,21 @@
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    /* A date is unavailable once a villa is chosen if it falls in that
+       villa's own blockedRanges; before a villa is chosen, only dates
+       blocked for every villa count (same "combined availability" logic
+       as the home hero search above). */
+    const contactDateIsUnavailable = (dateStr) => {
+      if (typeof MLS_VILLAS === "undefined") return false;
+      const chosen = villaValueInput?.value
+        ? MLS_VILLAS.find((v) => v.slug === villaValueInput.value)
+        : null;
+      const villas = chosen ? [chosen] : MLS_VILLAS;
+      return villas.length > 0 && villas.every((v) =>
+        (v.availability?.blockedRanges || []).some((r) => dateStr >= r.start && dateStr <= r.end)
+      );
+    };
+
     const dateFields = {};
     contactForm.querySelectorAll("[data-trip-date-field]").forEach((fieldEl) => {
       const key = fieldEl.dataset.tripDateField;
@@ -2102,11 +2119,13 @@
         }
         for (let d = 1; d <= daysInMonth; d++) {
           const cellDate = new Date(year, month, d);
+          const unavailable = contactDateIsUnavailable(isoDay(cellDate));
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "trip-calendar-day";
           btn.textContent = d;
-          if (cellDate < api.minDate) btn.disabled = true;
+          if (cellDate < api.minDate || unavailable) btn.disabled = true;
+          if (unavailable) btn.classList.add("is-unavailable");
           if (sameDay(cellDate, today)) btn.classList.add("is-today");
           if (sameDay(cellDate, api.selected)) btn.classList.add("is-selected");
           btn.addEventListener("click", () => selectDate(cellDate));
@@ -2327,6 +2346,16 @@
           : "—";
       }
       applyVillaShowcase(villa, { resetImages: true });
+      /* Switching villas can make a previously-picked date unavailable for
+         the new villa — drop it rather than silently keep a blocked date. */
+      Object.values(dateFields).forEach((api) => {
+        if (api.selected && contactDateIsUnavailable(isoDay(api.selected))) {
+          api.selected = null;
+          api.hiddenInput.value = "";
+          api.textEl.textContent = api.defaultLabel;
+        }
+        if (!api.fieldEl.querySelector("[data-trip-calendar]").hidden) api.render();
+      });
     }
     if (params.get("villa") && villaValueInput) {
       const preselected = villaOptions.find((o) => o.dataset.value === params.get("villa"));
@@ -2369,22 +2398,41 @@
         openVillaListbox();
         return;
       }
+      if (intent === "book" && (!dateFields.checkin?.selected || !dateFields.checkout?.selected)) {
+        const status = contactForm.querySelector(".form-status");
+        if (status) status.textContent = t("contact.form.datesRequired");
+        (dateFields.checkin?.selected ? dateFields.checkout : dateFields.checkin)?.trigger.click();
+        return;
+      }
       const f = new FormData(contactForm);
       const selectedVillaOption = villaOptions.find((o) => o.dataset.value === f.get("villa"));
-      const lines = [
-        intent === "book"
-          ? `Hello Mexico Luxe Stays — I'd like to book a stay.`
-          : `Hello Mexico Luxe Stays — I'd like more information about a stay.`,
-        f.get("villa") ? `Villa of interest: ${selectedVillaOption?.textContent.trim()}` : "",
-        f.get("checkin") || f.get("checkout") ? `Dates: ${f.get("checkin") || "?"} to ${f.get("checkout") || "?"}` : "",
-        f.get("bedrooms") ? `Bedrooms: ${f.get("bedrooms")}` : "",
-        f.get("adults") ? `Adults: ${f.get("adults")}` : "",
-        f.get("children") ? `Children (2–12): ${f.get("children")}` : "",
-        f.get("infants") ? `Infants (under 2): ${f.get("infants")}` : "",
-        f.get("notes")?.trim() ? `Notes: ${f.get("notes").trim()}` : ""
-      ].filter(Boolean);
-      window.open("https://wa.me/5219848079475?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener");
       const status = contactForm.querySelector(".form-status");
+
+      if (intent === "book") {
+        if (status) status.textContent = t("contact.form.sending");
+        fetch("/api/send-inquiry", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            villaName: selectedVillaOption?.textContent.trim() || f.get("villa"),
+            checkin: f.get("checkin"),
+            checkout: f.get("checkout"),
+            bedrooms: f.get("bedrooms"),
+            adults: f.get("adults"),
+            children: f.get("children"),
+            infants: f.get("infants"),
+            notes: f.get("notes")?.trim() || "",
+          }),
+        })
+          .then((res) => { if (!res.ok) throw new Error("send-inquiry failed"); })
+          .then(() => { if (status) status.textContent = t("contact.form.bookSuccess"); })
+          .catch(() => { if (status) status.textContent = t("contact.form.bookError"); });
+        return;
+      }
+
+      /* "Inquire" opens a blank email so the guest writes their own
+         question — unlike Book Now, it's not a prefilled booking summary. */
+      window.location.href = "mailto:info@mexicoluxestays.com";
       if (status) status.textContent = t("contact.form.status");
     });
   }
