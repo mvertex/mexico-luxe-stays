@@ -50,7 +50,7 @@ const MLS_VILLAS = [
     googleMapsUrl: "https://maps.app.goo.gl/A6LuW87UDhajc8tb9",
     guests: 18,
     bedrooms: 6,
-    hostawayListingId: null, // HOSTAWAY INTEGRATION POINT — fill in this villa's Hostaway listing ID to activate live sync (see hostaway-sync.js)
+    hostawayListingId: 145234,
     priceFromPerNight: 2400, // HOSTAWAY INTEGRATION POINT — replace with live pricing API
     availability: { // HOSTAWAY INTEGRATION POINT — replace with live Calendar API data
       minStay: 4,
@@ -671,7 +671,7 @@ const MLS_VILLAS = [
     mapIcon: "assets/img/brand/kasa-kefi-icon.png",
     guests: 12,
     bedrooms: 4,
-    hostawayListingId: null, // HOSTAWAY INTEGRATION POINT — fill in this villa's Hostaway listing ID to activate live sync (see hostaway-sync.js)
+    hostawayListingId: 305921,
     priceFromPerNight: 1100, // HOSTAWAY INTEGRATION POINT — replace with live pricing API
     availability: { // HOSTAWAY INTEGRATION POINT — replace with live Calendar API data
       minStay: 3,
@@ -914,7 +914,7 @@ const MLS_VILLAS = [
     googleMapsUrl: "https://maps.app.goo.gl/fB3C6WZ5AK9Awcyp6",
     guests: 22,
     bedrooms: 11,
-    hostawayListingId: null, // HOSTAWAY INTEGRATION POINT — fill in this villa's Hostaway listing ID to activate live sync (see hostaway-sync.js)
+    hostawayListingId: 144272,
     priceFromPerNight: 4200, // HOSTAWAY INTEGRATION POINT — replace with live pricing API
     availability: { // HOSTAWAY INTEGRATION POINT — replace with live Calendar API data
       minStay: 5,
@@ -1379,7 +1379,7 @@ const MLS_VILLAS = [
     googleMapsUrl: "https://www.google.com/maps/place/Home+in+Playa+del+Carmen,+MX/@20.6134124,-87.0875142,16.2z/data=!4m14!1m2!2m1!1scasa+de+las+estrellas!3m10!1s0x8f4e434044c42bef:0x388f20b80006b76c!5m2!4m1!1i2!8m2!3d20.6142178!4d-87.0805817!15sChVjYXNhIGRlIGxhcyBlc3RyZWxsYXOSAQ92YWNhdGlvbl9yZW50YWzgAQA!16s%2Fg%2F11zdf51myh!17BQ0FF",
     guests: 10,
     bedrooms: 4,
-    hostawayListingId: null, // HOSTAWAY INTEGRATION POINT — fill in this villa's Hostaway listing ID to activate live sync (see hostaway-sync.js)
+    hostawayListingId: 456289,
     priceFromPerNight: 950, // HOSTAWAY INTEGRATION POINT — replace with live pricing API
     availability: { // HOSTAWAY INTEGRATION POINT — replace with live Calendar API data
       minStay: 3,
