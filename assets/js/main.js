@@ -234,6 +234,35 @@
     });
   }
 
+  /* ---------- Villa detail: "more questions" popup — the villa-specific
+     questions/answers are built by renderVillaDetail below (it has the
+     current language in scope); this just wires the modal shell once. ---------- */
+  let mlsOpenFaqModal = null;
+  const faqModal = document.querySelector("[data-faq-modal]");
+  if (faqModal) {
+    const faqModalList = faqModal.querySelector("[data-faq-extra]");
+    const faqModalTitle = faqModal.querySelector("[data-faq-modal-title]");
+    let faqModalLastFocused = null;
+    const closeFaqModal = () => {
+      faqModal.hidden = true;
+      document.body.style.overflow = "";
+      faqModalLastFocused?.focus();
+    };
+    faqModal.querySelectorAll("[data-faq-modal-dismiss]").forEach((el) => el.addEventListener("click", closeFaqModal));
+    document.addEventListener("keydown", (e) => {
+      if (faqModal.hidden) return;
+      if (e.key === "Escape") closeFaqModal();
+    });
+    mlsOpenFaqModal = (title, listHtml, trigger) => {
+      faqModalLastFocused = trigger || null;
+      if (faqModalTitle) faqModalTitle.textContent = title;
+      faqModalList.innerHTML = listHtml;
+      faqModal.hidden = false;
+      document.body.style.overflow = "hidden";
+      faqModal.querySelector("[data-faq-modal-close]")?.focus();
+    };
+  }
+
   /* ---------- Quick actions: phone / WhatsApp popovers (hover-intent) ---------- */
   const quickActions = document.querySelector("[data-quick-actions]");
   if (quickActions) {
@@ -849,14 +878,13 @@
   }
 
   /* ---------- Map pin click target: every brand-pin marker on the site opens
-     Google Maps in a new tab, rather than an in-page popup. Coordinates are
-     rounded to ~100m before building the link (and the exact-address
-     googleMapsUrl data field is ignored) so guests only ever see the
-     approximate zone, not the exact villa address, before booking. ---------- */
+     Google Maps in a new tab, rather than an in-page popup. Each villa's own
+     Google Maps place (googleMapsUrl in villas-data.js) is used when set, so
+     guests land on that villa's real listing with its name and info; falls
+     back to a coordinate search if a villa has no place link yet. ---------- */
   function mlsGoogleMapsUrl(villa) {
-    const approxLat = Math.round(villa.lat * 1000) / 1000;
-    const approxLng = Math.round(villa.lng * 1000) / 1000;
-    return `https://www.google.com/maps/search/?api=1&query=${approxLat},${approxLng}`;
+    if (villa.googleMapsUrl) return villa.googleMapsUrl;
+    return `https://www.google.com/maps/search/?api=1&query=${villa.lat},${villa.lng}`;
   }
 
   /* ---------- Destination villa map: pins from villas-data.js, lazy-loaded Leaflet
@@ -872,10 +900,11 @@
     let leafletMap = null;
     let mapMarkers = [];
 
-    function mlsBrandPinIcon() {
+    function mlsBrandPinIcon(villa) {
+      const iconSrc = villa.mapIcon || "assets/img/brand/icon-positive.png";
       return L.divIcon({
         className: "mls-map-pin",
-        html: '<span class="mls-map-pin-dot"><img src="assets/img/brand/icon-positive.png" alt="" width="16" height="13" loading="lazy"></span>',
+        html: `<span class="mls-map-pin-dot mls-map-pin-dot--${villa.slug}"><img src="${iconSrc}" alt="" loading="lazy"></span>`,
         iconSize: [44, 62],
         iconAnchor: [22, 60],
         popupAnchor: [0, -56]
@@ -886,7 +915,7 @@
       if (!leafletMap) return;
       mapMarkers.forEach((m) => m.remove());
       mapMarkers = mapVillas.map((villa) => {
-        const marker = L.marker([villa.lat, villa.lng], { icon: mlsBrandPinIcon(), title: villa.name })
+        const marker = L.marker([villa.lat, villa.lng], { icon: mlsBrandPinIcon(villa), title: villa.name })
           .addTo(leafletMap);
         marker.on("click", () => window.open(mlsGoogleMapsUrl(villa), "_blank", "noopener"));
         return marker;
@@ -968,10 +997,11 @@
         (v) => v.destination === villa.destination && typeof v.lat === "number" && typeof v.lng === "number"
       );
 
-      function propertyPinIcon(isCurrent) {
+      function propertyPinIcon(v, isCurrent) {
+        const iconSrc = v.mapIcon ? `../${v.mapIcon}` : "../assets/img/brand/icon-positive.png";
         return L.divIcon({
           className: "mls-map-pin",
-          html: `<span class="mls-map-pin-dot${isCurrent ? " mls-map-pin-dot--current" : ""}"><img src="../assets/img/brand/icon-positive.png" alt="" width="16" height="13" loading="lazy"></span>`,
+          html: `<span class="mls-map-pin-dot mls-map-pin-dot--${v.slug}${isCurrent ? " mls-map-pin-dot--current" : ""}"><img src="${iconSrc}" alt="" loading="lazy"></span>`,
           iconSize: isCurrent ? [52, 62] : [44, 62],
           iconAnchor: isCurrent ? [26, 60] : [22, 60]
         });
@@ -991,7 +1021,7 @@
 
         destVillas.forEach((v) => {
           const isCurrent = v.slug === villa.slug;
-          const marker = L.marker([v.lat, v.lng], { icon: propertyPinIcon(isCurrent), title: v.name }).addTo(map);
+          const marker = L.marker([v.lat, v.lng], { icon: propertyPinIcon(v, isCurrent), title: v.name }).addTo(map);
           marker.on("click", () => window.open(mlsGoogleMapsUrl(v), "_blank", "noopener"));
         });
 
@@ -1553,7 +1583,12 @@
         if (faqShowcase && villa.faqs && villa.faqs.length) {
           const faqList = faqShowcase.querySelector("[data-faq-list]");
           const faqAnswerEl = faqShowcase.querySelector("[data-faq-answer]");
-          const faqs = villa.faqs;
+          /* Only the first 5 faqs (curated, most important, in villas-data.js
+             order) show in the showcase; any beyond that live in the
+             scrollable "more questions" panel below, revealed on demand. */
+          const FAQ_PREVIEW_COUNT = 5;
+          const faqs = villa.faqs.slice(0, FAQ_PREVIEW_COUNT);
+          const extraFaqs = villa.faqs.slice(FAQ_PREVIEW_COUNT);
 
           faqList.innerHTML = faqs
             .map(
@@ -1579,6 +1614,30 @@
             item.addEventListener("focus", activate);
             item.addEventListener("click", activate);
           });
+
+          const moreBtnRaw = detailRoot.querySelector("[data-faq-more]");
+          if (moreBtnRaw) {
+            if (extraFaqs.length && typeof mlsOpenFaqModal === "function") {
+              /* Clone-and-replace to drop any listener from a previous
+                 render (renderVillaDetail re-runs on language change). */
+              const moreBtn = moreBtnRaw.cloneNode(true);
+              moreBtnRaw.replaceWith(moreBtn);
+              const label = `${t("detail.faq.morePrefix")} ${villa.name}`;
+              moreBtn.textContent = label;
+              moreBtn.hidden = false;
+              const extraHtml = extraFaqs
+                .map(
+                  (f) => `<li class="villa-faq-extra-item">
+                    <p class="villa-faq-extra-q">${pick(f.q)}</p>
+                    <p class="villa-faq-extra-a">${pick(f.a)}</p>
+                  </li>`
+                )
+                .join("");
+              moreBtn.addEventListener("click", () => mlsOpenFaqModal(label, extraHtml, moreBtn));
+            } else {
+              moreBtnRaw.hidden = true;
+            }
+          }
         }
 
         /* Villa gallery: a bento grid of photo tiles, one per category, with

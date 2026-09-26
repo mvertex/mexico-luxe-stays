@@ -241,9 +241,19 @@
         </div>
       </div>
       <div class="container center" style="margin-top:clamp(2rem, 4vw, 3rem)">
-        <a class="btn btn-ghost" href="../faq.html#cta-title" data-i18n="detail.faq.more">More questions</a>
+        <button type="button" class="btn btn-ghost" data-faq-more hidden>More questions</button>
       </div>
     </section>
+
+    <!-- ============ Villa FAQ "more questions" popup (shared shell; content filled per-villa by main.js) ============ -->
+    <div class="villa-faq-modal" data-faq-modal hidden>
+      <button type="button" class="villa-faq-modal-backdrop" data-faq-modal-dismiss aria-label="Close" data-i18n-aria-label="qa.close"></button>
+      <div class="villa-faq-modal-panel" role="dialog" aria-modal="true" aria-labelledby="villa-faq-modal-title">
+        <button type="button" class="villa-faq-modal-close" data-faq-modal-dismiss aria-label="Close" data-i18n-aria-label="qa.close">&times;</button>
+        <h3 class="villa-faq-modal-title" id="villa-faq-modal-title" data-faq-modal-title></h3>
+        <ul class="villa-faq-extra-list" data-faq-extra></ul>
+      </div>
+    </div>
 
   </main>
 
@@ -311,7 +321,7 @@
         <span class="qa-pill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg></span>
         <div class="qa-pill-links">
           <a href="tel:+529848079475">+52 (984) 807 94 75</a>
-          <a href="tel:+154415149312">+1 (544) 151 493 12</a>
+          <a href="tel:+15415149312">+1 (541) 514 9312</a>
         </div>
       </div>
     </div>

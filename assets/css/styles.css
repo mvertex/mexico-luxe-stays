@@ -54,7 +54,18 @@
 /* ---------- Reset & base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; overflow-x: hidden; }
+html {
+  scroll-behavior: smooth; overflow-x: hidden;
+  scrollbar-width: thin; scrollbar-color: rgba(20, 26, 19, .25) transparent;
+}
+/* Thin floating page scrollbar — no track, no up/down arrow buttons,
+   same treatment as the villa FAQ popup's scrollable list below. */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(20, 26, 19, .25); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(20, 26, 19, .4); }
+::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+::-webkit-scrollbar-corner { background: transparent; }
 
 body {
   margin: 0;
@@ -734,8 +745,20 @@ button { font: inherit; cursor: pointer; }
   background: rgba(20, 26, 19, .28); filter: blur(1px);
   transform: translateX(-50%);
 }
-.mls-map-pin-dot img { width: 22px; height: 18px; display: block; }
+.mls-map-pin-dot img,
+.leaflet-container .leaflet-marker-pane .mls-map-pin-dot img {
+  max-width: 24px !important; max-height: 20px !important; width: auto; height: auto; display: block; object-fit: contain;
+}
 .mls-map-pin.leaflet-div-icon { cursor: pointer; }
+
+/* Casa de las Estrellas' mark is a slender flare with a lot of empty canvas
+   around it, so at the shared box size it reads visibly smaller/fainter than
+   the other villas' bolder marks — size it up so all four fill the pin at
+   roughly the same visual weight, without touching the source artwork. */
+.mls-map-pin-dot--casa-de-las-estrellas img,
+.leaflet-container .leaflet-marker-pane .mls-map-pin-dot--casa-de-las-estrellas img {
+  max-width: 34px !important; max-height: 30px !important;
+}
 
 /* Property page map: the current villa's pin is enlarged and gold-bordered
    so it reads as "you are here" against its sibling villas' plain pins. */
@@ -745,7 +768,14 @@ button { font: inherit; cursor: pointer; }
   border-width: 2px;
   box-shadow: 0 12px 22px -8px rgba(20, 26, 19, .5);
 }
-.mls-map-pin-dot--current img { width: 26px; height: 21px; }
+.mls-map-pin-dot--current img,
+.leaflet-container .leaflet-marker-pane .mls-map-pin-dot--current img {
+  max-width: 30px !important; max-height: 25px !important;
+}
+.mls-map-pin-dot--current.mls-map-pin-dot--casa-de-las-estrellas img,
+.leaflet-container .leaflet-marker-pane .mls-map-pin-dot--current.mls-map-pin-dot--casa-de-las-estrellas img {
+  max-width: 40px !important; max-height: 34px !important;
+}
 
 @media (max-width: 640px) {
   .destination-map { height: clamp(320px, 90vw, 400px); }
@@ -1506,6 +1536,57 @@ button { font: inherit; cursor: pointer; }
 @media (max-width: 720px) {
   .villa-faq-showcase { grid-template-columns: 1fr; }
   .villa-faq-card { min-height: 0; }
+}
+
+/* Extra villa FAQs beyond the featured 5 — a popup opened by the
+   "More questions about <villa>" button, same modal language as the
+   lightbox/room-picker above (fixed overlay, centered panel). */
+.villa-faq-modal {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(1.25rem, 4vw, 3rem);
+}
+.villa-faq-modal[hidden] { display: none; }
+.villa-faq-modal-backdrop {
+  position: absolute; inset: 0; z-index: 0; border: 0; padding: 0; margin: 0; cursor: pointer;
+  background: rgba(20, 26, 19, .55);
+}
+.villa-faq-modal-panel {
+  position: relative; z-index: 1; width: 100%; max-width: 680px;
+  background: var(--cream); border-radius: var(--radius); box-shadow: var(--shadow-lift);
+  padding: clamp(2rem, 4vw, 2.75rem);
+  max-height: 82vh; display: flex; flex-direction: column;
+}
+.villa-faq-modal-title {
+  font-family: var(--font-display); font-size: clamp(1.3rem, 2.4vw, 1.6rem); color: var(--ink);
+  margin: 0 0 clamp(1.25rem, 2.5vw, 1.75rem); padding-right: 2.5rem; flex: none;
+}
+.villa-faq-modal-close {
+  position: absolute; top: 1.25rem; right: 1.25rem; z-index: 2;
+  width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 0;
+  background: var(--sage-tint); color: var(--ink); font-size: 1.4rem; line-height: 1;
+  display: grid; place-items: center; cursor: pointer;
+  transition: background-color .2s ease;
+}
+.villa-faq-modal-close:hover { background: var(--gold); }
+.villa-faq-modal-close:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.villa-faq-extra-list {
+  list-style: none; margin: 0; padding: 0 .75rem 0 0; overflow-y: auto; flex: 1; min-height: 0;
+  display: flex; flex-direction: column; gap: clamp(1.25rem, 2.5vw, 1.75rem);
+  scrollbar-width: thin; scrollbar-color: rgba(20, 26, 19, .25) transparent;
+}
+/* Thin floating thumb, no track and no up/down arrow buttons — the
+   native scrollbar's "rail + arrows" look is what we're avoiding. */
+.villa-faq-extra-list::-webkit-scrollbar { width: 6px; }
+.villa-faq-extra-list::-webkit-scrollbar-track { background: transparent; }
+.villa-faq-extra-list::-webkit-scrollbar-thumb { background: rgba(20, 26, 19, .25); border-radius: 999px; }
+.villa-faq-extra-list::-webkit-scrollbar-thumb:hover { background: rgba(20, 26, 19, .4); }
+.villa-faq-extra-list::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+.villa-faq-extra-item + .villa-faq-extra-item { border-top: 1px solid rgba(20, 26, 19, .1); padding-top: clamp(1.25rem, 2.5vw, 1.75rem); }
+.villa-faq-extra-q { font-family: var(--font-display); font-size: clamp(1rem, 1.4vw, 1.15rem); color: var(--ink); margin: 0 0 .5rem; }
+.villa-faq-extra-a { font-size: .95rem; font-weight: 300; line-height: 1.7; color: var(--stone); margin: 0; }
+@media (max-width: 640px) {
+  .villa-faq-modal-panel { max-height: 88vh; }
 }
 
 /* ---------- Lightbox (villa gallery viewer) ---------- */
