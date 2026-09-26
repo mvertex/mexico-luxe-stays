@@ -73,7 +73,12 @@ module.exports = async (req, res) => {
     ]);
 
     const calendarDays = calendarRes.result || [];
-    const reviews = reviewsRes.result || [];
+    // Hostaway's /reviews "listingMapId" query param is not a reliable
+    // server-side filter — it can return reviews for the whole account.
+    // Filter explicitly by the review's own listingMapId field instead.
+    const reviews = (reviewsRes.result || []).filter(
+      (r) => String(r.listingMapId) === String(listingId)
+    );
 
     const payload = {
       availability: {
