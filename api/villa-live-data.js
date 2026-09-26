@@ -61,6 +61,12 @@ module.exports = async (req, res) => {
     return;
   }
 
+  if (req.query.debugReviewFields === "1") {
+    const reviewsRes = await hostawayGet("/reviews", { listingMapId: listingId });
+    res.status(200).json({ sample: (reviewsRes.result || []).slice(0, 2) });
+    return;
+  }
+
   const today = new Date().toISOString().slice(0, 10);
   const oneYearOut = new Date();
   oneYearOut.setFullYear(oneYearOut.getFullYear() + 1);
