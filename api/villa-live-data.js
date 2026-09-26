@@ -37,7 +37,7 @@ function toPriceFromPerNight(calendarDays) {
 
 function toTestimonials(reviews) {
   return reviews
-    .filter((r) => r.publicReview || r.comment)
+    .filter((r) => r.type === "guest-to-host" && r.status === "published" && (r.publicReview || r.comment))
     .map((r) => {
       const text = r.publicReview || r.comment || "";
       const rating = Math.max(1, Math.min(5, Math.round(Number(r.rating) || 5)));
@@ -58,12 +58,6 @@ module.exports = async (req, res) => {
   const listingId = req.query.listingId;
   if (!listingId) {
     res.status(400).json({ error: "Missing listingId" });
-    return;
-  }
-
-  if (req.query.debugReviewFields === "1") {
-    const reviewsRes = await hostawayGet("/reviews", { listingMapId: listingId });
-    res.status(200).json({ sample: (reviewsRes.result || []).slice(0, 2) });
     return;
   }
 
