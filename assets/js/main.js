@@ -2448,9 +2448,17 @@
       }
     }
 
+    const consentInput = contactForm.querySelector("[data-trip-consent]");
+
     contactForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const intent = e.submitter?.dataset.tripIntent || "inquire";
+      if (consentInput && !consentInput.checked) {
+        const status = contactForm.querySelector(".form-status");
+        if (status) status.textContent = t("contact.form.consentRequired");
+        consentInput.focus();
+        return;
+      }
       if (intent === "book" && !villaValueInput.value) {
         const status = contactForm.querySelector(".form-status");
         if (status) status.textContent = t("contact.form.villaRequired");

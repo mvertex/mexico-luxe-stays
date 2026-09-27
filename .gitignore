@@ -10,3 +10,8 @@ Componentes marca/
 # OS / editor cruft
 .DS_Store
 Thumbs.db
+
+# Local env files (API keys/secrets belong in Vercel project settings, never in git)
+.env
+.env.*
+!.env.example

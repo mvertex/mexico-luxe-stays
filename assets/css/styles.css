@@ -148,6 +148,7 @@ button { font: inherit; cursor: pointer; }
 .eyebrow--center { justify-content: center; }
 .eyebrow--center::after { content: ""; width: 2.4rem; height: 1px; background: var(--gold); }
 .eyebrow--plain::before, .eyebrow--plain::after { content: none; }
+.notfound-code { font-size: clamp(1.3rem, 2.6vw, 1.7rem); letter-spacing: .3em; margin-bottom: 1.8rem; }
 
 .display {
   font-family: var(--font-display);
@@ -1001,8 +1002,7 @@ button { font: inherit; cursor: pointer; }
 .legal-content { max-width: 68ch; margin: 0 auto; }
 .legal-updated { font-size: .8rem; color: var(--stone); margin: 0 0 1.6rem; }
 .legal-pending {
-  background: var(--sage-tint); border-left: 3px solid var(--gold);
-  border-radius: 0 4px 4px 0; padding: .9rem 1.2rem;
+  background: var(--sage-tint); border-radius: 4px; padding: .9rem 1.2rem;
   font-size: .86rem; line-height: 1.6; color: var(--sage); margin: 0 0 2.6rem;
 }
 .legal-content h2 {
@@ -2178,6 +2178,16 @@ body.sa-modal-open { overflow: hidden; }
 .trip-price-value [data-trip-price-value] { text-decoration: underline; text-decoration-color: var(--sage); text-underline-offset: 4px; }
 .trip-price-unit { font-family: var(--font-sans); font-size: .82rem; font-weight: 400; color: var(--stone); }
 .trip-price-note { font-family: var(--font-sans); font-size: .78rem; line-height: 1.5; color: var(--stone); max-width: 34ch; margin: .5rem auto 0; }
+
+.trip-consent-field {
+  max-width: 320px; margin: 1.1rem auto 0; width: 100%; text-align: left;
+  display: flex; align-items: flex-start; gap: .6rem;
+}
+.trip-consent-field input[type="checkbox"] {
+  margin-top: .2rem; width: 1rem; height: 1rem; accent-color: var(--sage); flex-shrink: 0; cursor: pointer;
+}
+.trip-consent-label { font-size: .8rem; line-height: 1.4; color: var(--ink); cursor: pointer; }
+.trip-consent-label a { color: var(--sage); text-decoration: underline; }
 
 .form-status { text-align: center; font-size: .85rem; color: var(--sage); min-height: 1.4em; margin: -.8rem 0 0; }
 

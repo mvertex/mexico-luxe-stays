@@ -1,0 +1,27 @@
+# Mexico Luxe Stays
+
+> Mexico Luxe Stays is a boutique villa rental brand offering handpicked, privately managed luxury villas in Playa del Carmen (Riviera Maya) and Valle de Guadalupe (Baja California), Mexico. Each property is professionally staffed and curated to a high standard, with direct booking, concierge-style guest support, and multilingual (English/Spanish) service.
+
+## Destinations
+
+- [Playa del Carmen](https://www.mexicoluxestays.com/playa-del-carmen.html): Riviera Maya destination guide and villa collection.
+- [Valle de Guadalupe](https://www.mexicoluxestays.com/valle-de-guadalupe.html): Baja California wine country destination guide and villa collection.
+
+## Villas
+
+- [Villa Aqua](https://www.mexicoluxestays.com/villas/villa-aqua.html): Luxury villa in Playa del Carmen.
+- [Casa de las Estrellas](https://www.mexicoluxestays.com/villas/casa-de-las-estrellas.html): Luxury villa in Playa del Carmen.
+- [Casa Corazon Luxe](https://www.mexicoluxestays.com/villas/casa-corazon-luxe.html): Luxury villa in Playa del Carmen.
+- [Kasa Kefi](https://www.mexicoluxestays.com/villas/kasa-kefi.html): Luxury villa in Valle de Guadalupe.
+- [All villas](https://www.mexicoluxestays.com/villas.html): Full collection, filterable by destination, guest count, and bedrooms.
+
+## Plan a stay
+
+- [About Us](https://www.mexicoluxestays.com/about.html)
+- [FAQ](https://www.mexicoluxestays.com/faq.html)
+- [Contact / Book](https://www.mexicoluxestays.com/contact.html)
+
+## Contact
+
+- Phone/WhatsApp: +52 (984) 807 94 75
+- Email: info@mexicoluxestays.com

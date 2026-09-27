@@ -54,7 +54,7 @@ const MLS_I18N = {
     "qa.faq.label": "Frequently asked questions",
 
     /* ---------- Home ---------- */
-    "home.hero.title": "Welcome to<br><img class=\"hero-logo\" src=\"assets/img/brand/wordmark-negative.png\" alt=\"Mexico Luxe Stays\" width=\"387\" height=\"40\">",
+    "home.hero.title": "Welcome to<br><img class=\"hero-logo\" src=\"assets/img/brand/wordmark-negative.png\" alt=\"Mexico Luxe Stays\" width=\"387\" height=\"40\"><span class=\"visually-hidden\"> — Luxury Villa Rentals in Playa del Carmen &amp; Valle de Guadalupe</span>",
     "home.search.destination": "Destination",
     "home.search.checkin": "Check in",
     "home.search.checkout": "Check out",
@@ -94,7 +94,7 @@ const MLS_I18N = {
     "home.cta.whatsapp": "Email us",
 
     /* ---------- Our Villas (villas.html) ---------- */
-    "villas.hero.title": "Our villas",
+    "villas.hero.title": "Our villas<span class=\"visually-hidden\"> — Luxury Villa Collection in Playa del Carmen &amp; Valle de Guadalupe</span>",
     "villas.hero.lead": "Every residence is handpicked, privately managed, and staffed to the standard we'd demand ourselves.",
     "villas.filter.destination": "Destination",
     "villas.filter.allDestinations": "All destinations",
@@ -202,6 +202,8 @@ const MLS_I18N = {
     "detail.book.checkout": "Check Out",
     "detail.book.guests": "Guests",
     "detail.book.note": "Estimate only — final rate depends on your dates, season, and guest count.",
+    "detail.book.cancelStrict": "Cancellation: 92% refund up to 60 days before arrival, 42% up to 30 days. Non-refundable within 30 days — see <a href=\"../terms.html#cancellation-policy\">full policy</a>.",
+    "detail.book.cancelDirect": "Cancellation: 92% refund up to 30 days before arrival, 50% up to 15 days. Non-refundable within 15 days — see <a href=\"../terms.html#cancellation-policy\">full policy</a>.",
     "detail.book.tieredLabel": "Tiered by occupancy",
     "detail.book.tieredCaption": "Nightly rate steps up in three bands as your group grows — the guest count above shows where you land.",
     "detail.calendar.title": "Availability",
@@ -298,7 +300,7 @@ const MLS_I18N = {
     /* ---------- About Us (about.html) ---------- */
     "about.brandStatement.text": "<p>With over 20 years of experience in luxury vacation property management, Mexico Luxe Stays offers exceptional properties and personalized service in two of Mexico&rsquo;s most distinctive destinations: Playa del Carmen and Valle de Guadalupe. Our focus is simple: creating seamless, memorable stays through outstanding accommodations and genuine hospitality.</p>",
     "about.story.text": "<h3 class=\"h3\"><em>Experience &amp; Destinations</em></h3><p>Our portfolio brings together luxury residences in <strong>Playa del Carmen</strong> and <strong>Valle de Guadalupe</strong>, offering guests the opportunity to experience both the Mexican Caribbean and the heart of Mexico's renowned wine country.</p><h3 class=\"h3\"><em>Personal Service</em></h3><p>As a small, dedicated team, we provide attentive and personalized service from the first inquiry through departure. We take care of the details so every guest can enjoy a comfortable, effortless, and memorable stay.</p>",
-    "about.hero.title": "About <em>us</em>",
+    "about.hero.title": "About Mexico Luxe Stays — Luxury Villa Rentals in Playa del Carmen &amp; Valle de Guadalupe",
     "about.hero.lead": "A small, passionate team that has spent twenty years learning exactly what extraordinary feels like — and how to deliver it twice.",
     "about.hero.scroll": "Scroll",
     "about.values.eyebrow": "Mission &amp; values",
@@ -355,6 +357,13 @@ const MLS_I18N = {
     "faq.cta.phoneNumber": "Phone number (MX)",
     "faq.cta.phoneNumberUs": "Phone number (USA)",
 
+    /* ---------- 404 (404.html) ---------- */
+    "notFound.eyebrow": "Error 404",
+    "notFound.title": "This path leads <em>nowhere</em>",
+    "notFound.lead": "The page you're looking for has wandered off. Let's get you back to paradise.",
+    "notFound.home": "Back to home",
+    "notFound.villas": "Browse our villas",
+
     /* ---------- Privacy Notice (privacy.html) ---------- */
     "legal.privacy.hero.title": "Privacy <em>Notice</em>",
     "legal.privacy.updated": "Last updated: August 2026",
@@ -387,7 +396,10 @@ const MLS_I18N = {
     "legal.terms.payment.title": "Payment",
     "legal.terms.payment.body": "We accept bank transfer (USD or MXN) and major credit cards; card payments carry the processor's fee. A deposit secures your dates and the balance is due 30 days before arrival — reservations made inside 30 days settle in full at booking. Every payment is documented with a formal agreement and receipt.",
     "legal.terms.cancellation.title": "Cancellation policy",
-    "legal.terms.cancellation.body": "Reservations canceled 60 or more days before arrival receive a full refund of amounts paid, less processing fees. Between 59 and 30 days, the deposit is retained; within 30 days, payments are non-refundable. We always try to rebook your dates — if we succeed, we return what the calendar allows. Holiday weeks carry their own terms, confirmed at booking.",
+    "legal.terms.cancellation.intro": "Cancellation terms vary by villa:",
+    "legal.terms.cancellation.strict": "<strong>Casa Corazón Luxe &amp; Casa de las Estrellas</strong> — 92% refund of amounts paid for cancellations made 60 or more days before arrival; 42% refund for cancellations made between 30 and 59 days before arrival. Cancellations made within 30 days of arrival are non-refundable.",
+    "legal.terms.cancellation.direct": "<strong>Villa Aqua &amp; Kasa Kefi</strong> — 92% refund of amounts paid for cancellations made 30 or more days before arrival; 50% refund for cancellations made between 15 and 29 days before arrival. Cancellations made within 15 days of arrival are non-refundable.",
+    "legal.terms.cancellation.rebook": "We always try to rebook your dates — if we succeed, we return what the calendar allows. Holiday weeks may carry their own terms, confirmed at booking.",
     "legal.terms.stay.title": "Check-in, check-out & security deposit",
     "legal.terms.stay.body": "Check-in is from 3:00 PM, check-out by 11:00 AM; early arrivals and late departures may be arranged where possible. A refundable security deposit is held per stay (amount confirmed at booking) and released within 7 days of departure, provided the villa is returned in the condition it was received.",
     "legal.terms.conduct.title": "Guest conduct & liability for damage",
@@ -425,6 +437,8 @@ const MLS_I18N = {
     "contact.form.capacityNoticeCta": "chat with us for a personalized quote",
     "contact.form.book": "Book Now",
     "contact.form.inquire": "Inquire for more info",
+    "contact.form.consent": "I agree to the <a href=\"privacy.html\" target=\"_blank\" rel=\"noopener\">Privacy Notice</a>.",
+    "contact.form.consentRequired": "Please confirm you agree to the Privacy Notice.",
     "contact.form.villaRequired": "Please choose a villa to book.",
     "contact.form.datesRequired": "Please select your check-in and check-out dates to book.",
     "contact.form.sending": "Sending your booking request…",
@@ -484,7 +498,7 @@ const MLS_I18N = {
     "qa.faq.label": "Preguntas frecuentes",
 
     /* ---------- Home ---------- */
-    "home.hero.title": "Bienvenido a<br><img class=\"hero-logo\" src=\"assets/img/brand/wordmark-negative.png\" alt=\"Mexico Luxe Stays\" width=\"387\" height=\"40\">",
+    "home.hero.title": "Bienvenido a<br><img class=\"hero-logo\" src=\"assets/img/brand/wordmark-negative.png\" alt=\"Mexico Luxe Stays\" width=\"387\" height=\"40\"><span class=\"visually-hidden\"> — Villas de Lujo en Renta en Playa del Carmen y Valle de Guadalupe</span>",
     "home.search.destination": "Destino",
     "home.search.checkin": "Llegada",
     "home.search.checkout": "Salida",
@@ -524,7 +538,7 @@ const MLS_I18N = {
     "home.cta.whatsapp": "Envíanos un correo",
 
     /* ---------- Our Villas (villas.html) ---------- */
-    "villas.hero.title": "Nuestras villas",
+    "villas.hero.title": "Nuestras villas<span class=\"visually-hidden\"> — Colección de Villas de Lujo en Playa del Carmen y Valle de Guadalupe</span>",
     "villas.hero.lead": "Cada residencia es seleccionada a mano, administrada de forma privada, y atendida con el estándar que exigiríamos para nosotros mismos.",
     "villas.filter.destination": "Destino",
     "villas.filter.allDestinations": "Todos los destinos",
@@ -632,6 +646,8 @@ const MLS_I18N = {
     "detail.book.checkout": "Salida",
     "detail.book.guests": "Huéspedes",
     "detail.book.note": "Precio estimado — la tarifa final depende de tus fechas, la temporada y el número de huéspedes.",
+    "detail.book.cancelStrict": "Cancelación: reembolso del 92% hasta 60 días antes de la llegada, 42% hasta 30 días. No reembolsable dentro de los 30 días — consulta la <a href=\"../terms.html#cancellation-policy\">política completa</a>.",
+    "detail.book.cancelDirect": "Cancelación: reembolso del 92% hasta 30 días antes de la llegada, 50% hasta 15 días. No reembolsable dentro de los 15 días — consulta la <a href=\"../terms.html#cancellation-policy\">política completa</a>.",
     "detail.book.tieredLabel": "Tarifas por rango de ocupación",
     "detail.book.tieredCaption": "La tarifa por noche sube en tres rangos conforme crece tu grupo — el número de huéspedes arriba muestra en cuál caes.",
     "detail.calendar.title": "Disponibilidad",
@@ -789,6 +805,13 @@ const MLS_I18N = {
     "faq.cta.phoneNumber": "Número de teléfono (MX)",
     "faq.cta.phoneNumberUs": "Número de teléfono (USA)",
 
+    /* ---------- 404 (404.html) ---------- */
+    "notFound.eyebrow": "Error 404",
+    "notFound.title": "Este camino no lleva a <em>ningún lado</em>",
+    "notFound.lead": "La página que buscas se ha perdido. Déjanos llevarte de vuelta al paraíso.",
+    "notFound.home": "Volver al inicio",
+    "notFound.villas": "Ver nuestras villas",
+
     /* ---------- Aviso de Privacidad (privacy.html) ---------- */
     "legal.privacy.hero.title": "Aviso de <em>Privacidad</em>",
     "legal.privacy.updated": "Última actualización: agosto de 2026",
@@ -821,7 +844,10 @@ const MLS_I18N = {
     "legal.terms.payment.title": "Forma de pago",
     "legal.terms.payment.body": "Aceptamos transferencia bancaria (USD o MXN) y las principales tarjetas de crédito; los pagos con tarjeta llevan la comisión del procesador. Un depósito asegura tus fechas y el saldo se vence 30 días antes de la llegada — las reservaciones hechas dentro de esos 30 días se liquidan por completo al reservar. Todo pago queda documentado con un acuerdo formal y su comprobante.",
     "legal.terms.cancellation.title": "Política de cancelación",
-    "legal.terms.cancellation.body": "Las reservaciones canceladas 60 días o más antes de la llegada reciben un reembolso completo de lo pagado, menos comisiones de procesamiento. Entre 59 y 30 días, se retiene el depósito; dentro de los 30 días, los pagos no son reembolsables. Siempre intentamos volver a reservar tus fechas — si lo logramos, devolvemos lo que el calendario permita. Las semanas de temporada alta tienen sus propios términos, confirmados al reservar.",
+    "legal.terms.cancellation.intro": "Los términos de cancelación varían según la villa:",
+    "legal.terms.cancellation.strict": "<strong>Casa Corazón Luxe y Casa de las Estrellas</strong> — reembolso del 92% de lo pagado por cancelaciones hechas 60 días o más antes de la llegada; reembolso del 42% por cancelaciones hechas entre 30 y 59 días antes de la llegada. Las cancelaciones hechas dentro de los 30 días previos a la llegada no son reembolsables.",
+    "legal.terms.cancellation.direct": "<strong>Villa Aqua y Kasa Kefi</strong> — reembolso del 92% de lo pagado por cancelaciones hechas 30 días o más antes de la llegada; reembolso del 50% por cancelaciones hechas entre 15 y 29 días antes de la llegada. Las cancelaciones hechas dentro de los 15 días previos a la llegada no son reembolsables.",
+    "legal.terms.cancellation.rebook": "Siempre intentamos volver a reservar tus fechas — si lo logramos, devolvemos lo que el calendario permita. Las semanas de temporada alta pueden tener sus propios términos, confirmados al reservar.",
     "legal.terms.stay.title": "Check-in, check-out y depósito de garantía",
     "legal.terms.stay.body": "El check-in es a partir de las 3:00 PM y el check-out antes de las 11:00 AM; llegadas tempranas o salidas tardías pueden gestionarse cuando sea posible. Se retiene un depósito de garantía reembolsable por estancia (monto confirmado al reservar), que se libera dentro de los 7 días posteriores a la salida, siempre que la villa se devuelva en la condición en que se recibió.",
     "legal.terms.conduct.title": "Conducta del huésped y responsabilidad por daños",
@@ -859,6 +885,8 @@ const MLS_I18N = {
     "contact.form.capacityNoticeCta": "escríbenos para una cotización personalizada",
     "contact.form.book": "Reservar ahora",
     "contact.form.inquire": "Pedir más información",
+    "contact.form.consent": "Acepto el <a href=\"privacy.html\" target=\"_blank\" rel=\"noopener\">Aviso de Privacidad</a>.",
+    "contact.form.consentRequired": "Confirma que aceptas el Aviso de Privacidad.",
     "contact.form.villaRequired": "Elige una villa para reservar.",
     "contact.form.datesRequired": "Selecciona tus fechas de llegada y salida para reservar.",
     "contact.form.sending": "Enviando tu solicitud de reserva…",
