@@ -31,7 +31,8 @@
 
       if (data.availability && data.availability.blockedRanges) villa.availability = data.availability;
       if (typeof data.priceFromPerNight === "number") villa.priceFromPerNight = data.priceFromPerNight;
-      if (Array.isArray(data.testimonials) && data.testimonials.length) villa.testimonials = data.testimonials;
+      // Real reviews only — an empty list hides the section on that villa.
+      if (Array.isArray(data.testimonials)) villa.testimonials = data.testimonials;
     } catch (err) {
       console.warn(`[hostaway-sync] Falling back to static data for "${villa.slug}":`, err.message || err);
     } finally {

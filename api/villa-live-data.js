@@ -3,9 +3,12 @@
    closed-to-arrival/departure days, lowest nightly price) and
    Reviews API (testimonials) for one listing, merged into the shape
    assets/js/villas-data.js already uses so the frontend needs no
-   per-field mapping. Credentials stay server-side (see lib/hostaway.js). */
+   per-field mapping. Credentials stay server-side (see lib/hostaway.js);
+   review fetching, filtering and name shortening live in
+   lib/hostaway-reviews.js. */
 
 const { hostawayGet } = require("../lib/hostaway");
+const { getListingTestimonials } = require("../lib/hostaway-reviews");
 
 /* Only these listings are proxied — the four villas in villas-data.js. */
 const KNOWN_LISTINGS = new Set(["145234", "305921", "144272", "456289"]);
@@ -60,29 +63,11 @@ function toMinStay(calendarDays) {
   return { minStay, minStayRanges };
 }
 
-function toTestimonials(reviews) {
-  return reviews
-    .filter((r) => r.type === "guest-to-host" && r.status === "published" && (r.publicReview || r.comment))
-    .map((r) => {
-      const text = r.publicReview || r.comment || "";
-      const rating = Math.max(1, Math.min(5, Math.round(Number(r.rating) || 5)));
-      const guestName = r.guestName || r.reviewerName || "Verified guest";
-      const context = [r.channelName, r.departureDate ? r.departureDate.slice(0, 7) : null]
-        .filter(Boolean)
-        .join(" · ");
-      return {
-        name: guestName,
-        rating,
-        quote: { en: text, es: text },
-        context: { en: context, es: context },
-      };
-    });
-}
-
 module.exports = async (req, res) => {
   const listingId = String(req.query.listingId || "");
   if (!KNOWN_LISTINGS.has(listingId)) {
-    res.status(400).json({ error: "Unknown listingId" });
+    res.setHeader("Cache-Control", "no-store");
+    res.status(404).json({ error: "Unknown listing" });
     return;
   }
 
@@ -92,19 +77,16 @@ module.exports = async (req, res) => {
   const endDate = oneYearOut.toISOString().slice(0, 10);
 
   try {
-    const [calendarRes, reviewsRes] = await Promise.all([
+    // Reviews are optional: if only they fail, availability still ships.
+    const [calendarRes, reviewsResult] = await Promise.all([
       hostawayGet(`/listings/${listingId}/calendar`, { startDate: today, endDate }),
-      hostawayGet("/reviews", { listingMapId: listingId }),
+      getListingTestimonials(listingId).catch((err) => {
+        console.error(`[villa-live-data] reviews for ${listingId} failed:`, err.message);
+        return null;
+      }),
     ]);
 
     const calendarDays = calendarRes.result || [];
-    // Hostaway's /reviews "listingMapId" query param is not a reliable
-    // server-side filter — it can return reviews for the whole account.
-    // Filter explicitly by the review's own listingMapId field instead.
-    const reviews = (reviewsRes.result || []).filter(
-      (r) => String(r.listingMapId) === String(listingId)
-    );
-
     const { minStay, minStayRanges } = toMinStay(calendarDays);
     const payload = {
       availability: {
@@ -115,13 +97,16 @@ module.exports = async (req, res) => {
         closedOnDeparture: plainRanges(toRanges(calendarDays, (d) => Boolean(d.closedOnDeparture))),
       },
       priceFromPerNight: toPriceFromPerNight(calendarDays),
-      testimonials: toTestimonials(reviews),
+      testimonials: reviewsResult ? reviewsResult.testimonials : null,
+      reviewsMeta: reviewsResult ? reviewsResult.meta : null,
     };
 
     res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=1800");
     res.status(200).json(payload);
   } catch (err) {
-    console.error("[villa-live-data]", listingId, err.message);
-    res.status(502).json({ error: "Live availability is unavailable right now" });
+    // Details stay in the server log; the browser only learns it failed.
+    console.error(`[villa-live-data] ${listingId} failed:`, err.message);
+    res.setHeader("Cache-Control", "no-store");
+    res.status(502).json({ error: "Live data is temporarily unavailable" });
   }
 };

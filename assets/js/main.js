@@ -1623,19 +1623,36 @@
             );
         }
 
-        /* Guest testimonials: rendered from villa.testimonials (see the
-           HOSTAWAY INTEGRATION POINT note at the top of villas-data.js —
-           swap this array for the Hostaway Reviews API once it's live). */
+        /* Guest testimonials: real Hostaway reviews only, loaded by
+           hostaway-sync.js (see lib/hostaway-reviews.js). The section stays
+           hidden until that villa has at least one review. Review text and
+           names are written by guests on third-party channels, so they are
+           escaped before going into the markup. */
         const testimonialsEl = detailRoot.querySelector("[data-villa-testimonials]");
-        if (testimonialsEl && villa.testimonials && villa.testimonials.length) {
+        const testimonialsSection = testimonialsEl?.closest("section");
+        const hasTestimonials = Boolean(villa.testimonials && villa.testimonials.length);
+        if (testimonialsSection) testimonialsSection.hidden = !hasTestimonials;
+        if (testimonialsEl && !hasTestimonials) {
+          testimonialsEl.innerHTML = "";
+          initTestimonialRotator(testimonialsEl);
+        }
+        if (testimonialsEl && hasTestimonials) {
+          const escapeText = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => (
+            { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+          ));
           const starsHtml = (rating) =>
             Array.from({ length: 5 }, (_, i) => `<svg class="star${i < rating ? " is-filled" : ""}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7-5.4-4.7 7.1-.7z"/></svg>`).join("");
+          const ratingHtml = (rating) => {
+            const n = Math.round(Number(rating));
+            if (!Number.isFinite(n) || n < 1 || n > 5) return "";
+            return `<div class="testimonial-rating" role="img" aria-label="${n} out of 5 stars">${starsHtml(n)}</div>`;
+          };
           const quoteHtml = (r) => `<blockquote class="testimonial-quote-block">
-                <div class="testimonial-rating" role="img" aria-label="${r.rating} out of 5 stars">${starsHtml(r.rating)}</div>
-                <p class="testimonial-quote">${pick(r.quote)}</p>
+                ${ratingHtml(r.rating)}
+                <p class="testimonial-quote">${escapeText(pick(r.quote))}</p>
                 <footer class="testimonial-attr">
-                  <div class="name">${r.name}</div>
-                  <div class="villa">${pick(r.context)}</div>
+                  <div class="name">${escapeText(r.name)}</div>
+                  <div class="villa">${escapeText(pick(r.context))}</div>
                 </footer>
               </blockquote>`;
           const pairs = [];

@@ -10,10 +10,10 @@
    │ listingImages→image/gallery.                                        │
    │ Docs: https://api.hostaway.com/documentation                        │
    │                                                                      │
-   │ `testimonials` per villa is a placeholder too — replace with the    │
-   │ Hostaway Reviews API (GET /v1/reviews, filtered by listingMapId)    │
-   │ once live, mapping rating→testimonial.rating (1-5). See             │
-   │ detail.testimonials integration note in main.js.                    │
+   │ Guest reviews are NOT stored here: they come only from Hostaway     │
+   │ (api/villa-live-data.js → lib/hostaway-reviews.js) and the section  │
+   │ stays hidden on a villa with no real reviews. Never add sample or   │
+   │ invented testimonials to this file.                                 │
    │                                                                      │
    │ `priceFromPerNight` and `availability` are filled live from         │
    │ Hostaway by assets/js/hostaway-sync.js (/api/villa-live-data); the  │
@@ -652,32 +652,6 @@ const MLS_VILLAS = [
         q: { en: "Can I change my dates, add guests, extend my stay, or get a returning-guest rate?", es: "¿Puedo cambiar mis fechas, agregar huéspedes, extender mi estancia u obtener una tarifa de huésped recurrente?" },
         a: { en: "Yes, in all of those cases. We'll always do our best to accommodate date changes subject to availability, and fees may apply. Guests can be added before or during your stay as long as you stay within the villa's maximum occupancy, and charges may apply. Extensions are welcome whenever availability allows, and we're happy to offer special rates to returning guests; just contact our team for details.", es: "Sí, en todos esos casos. Siempre haremos lo posible por acomodar cambios de fecha sujeto a disponibilidad, y pueden aplicar cargos. Se pueden agregar huéspedes antes o durante tu estancia mientras no se exceda la ocupación máxima de la villa, y pueden aplicar cargos adicionales. Las extensiones son bienvenidas cuando la disponibilidad lo permita, y con gusto ofrecemos tarifas especiales a huéspedes recurrentes; solo contacta a nuestro equipo para más detalles." }
       }
-    ],
-    testimonials: [
-      {
-        name: "Keller M.",
-        rating: 5,
-        quote: { en: "An incredible villa in an unbeatable location. The staff were endlessly warm and made every single day feel effortless.", es: "Una villa increíble en una ubicación inmejorable. El personal fue cálido en todo momento e hizo que cada día se sintiera sin esfuerzo." },
-        context: { en: "Family trip · Chicago, IL", es: "Viaje familiar · Chicago, IL" }
-      },
-      {
-        name: "Marcus T.",
-        rating: 5,
-        quote: { en: "The squash court and gym sold us, but it was the butler remembering everyone's drink order by day two that made it feel like home.", es: "La cancha de squash y el gimnasio nos convencieron, pero fue el mayordomo recordando la bebida de cada quien desde el segundo día lo que lo hizo sentir como en casa." },
-        context: { en: "Group of twelve · Toronto, ON", es: "Grupo de doce · Toronto, ON" }
-      },
-      {
-        name: "Danielle R.",
-        rating: 4,
-        quote: { en: "Having a private chef for six bedrooms of guests meant nobody had to agree on a restaurant once. Breakfast on the terrace every morning was the real luxury.", es: "Tener chef privado para seis recámaras de huéspedes significó que nadie tuvo que ponerse de acuerdo en un restaurante. El desayuno en la terraza cada mañana fue el verdadero lujo." },
-        context: { en: "Multigenerational trip · Austin, TX", es: "Viaje multigeneracional · Austin, TX" }
-      },
-      {
-        name: "Priya S.",
-        rating: 5,
-        quote: { en: "The jacuzzi and honor bar after a day at the beach, with Sonos playing on the terrace — it's hard to go back to a regular hotel after this.", es: "El jacuzzi y el honor bar después de un día de playa, con música Sonos en la terraza — es difícil volver a un hotel normal después de esto." },
-        context: { en: "Couples getaway · Miami, FL", es: "Escapada en pareja · Miami, FL" }
-      }
     ]
   },
   {
@@ -888,32 +862,6 @@ const MLS_VILLAS = [
       {
         q: { en: "Is a security deposit required?", es: "¿Se requiere un depósito de garantía?" },
         a: { en: "A refundable security deposit may be required, depending on the reservation. Our team will confirm the applicable amount and details before your stay.", es: "Puede requerirse un depósito de garantía reembolsable, dependiendo de la reservación. Nuestro equipo confirmará el monto y los detalles aplicables antes de tu estancia." }
-      }
-    ],
-    testimonials: [
-      {
-        name: "Kelly M.",
-        rating: 5,
-        quote: { en: "A peaceful retreat from start to finish. Carlos had the jacuzzi warmed before we even asked, and the fire pit lit at sunset. The team thought of everything.", es: "Un retiro tranquilo de principio a fin. Carlos ya había calentado el jacuzzi antes de que lo pidiéramos, y encendió la fogata al atardecer. El equipo pensó en todo." },
-        context: { en: "Anniversary trip · San Diego, CA", es: "Aniversario · San Diego, CA" }
-      },
-      {
-        name: "Oliver B.",
-        rating: 5,
-        quote: { en: "We spent our days at the wineries minutes away and came back each evening to a quiet, gorgeous property. Kasa Kefi is the best of both worlds.", es: "Pasamos los días en las bodegas a minutos de distancia y regresábamos cada tarde a una propiedad tranquila y hermosa. Kasa Kefi es lo mejor de ambos mundos." },
-        context: { en: "Wine tour weekend · Los Angeles, CA", es: "Fin de semana de vinos · Los Ángeles, CA" }
-      },
-      {
-        name: "Sofia N.",
-        rating: 4,
-        quote: { en: "I worked two mornings from the terrace on Starlink Wi-Fi that never dropped, then spent the afternoons doing nothing at all. Exactly the reset I needed.", es: "Trabajé dos mañanas desde la terraza con Wi-Fi Starlink que nunca falló, y las tardes las pasé sin hacer nada. Exactamente el descanso que necesitaba." },
-        context: { en: "Remote work + rest · Seattle, WA", es: "Trabajo remoto y descanso · Seattle, WA" }
-      },
-      {
-        name: "Diego A.",
-        rating: 5,
-        quote: { en: "The chef sourced everything from local producers in the valley — best meal of the whole trip, and we didn't even leave the property.", es: "El chef consiguió todo con productores locales del valle — la mejor comida de todo el viaje, y ni siquiera salimos de la propiedad." },
-        context: { en: "Friends trip · Monterrey, NL", es: "Viaje entre amigos · Monterrey, NL" }
       }
     ]
   },
@@ -1348,32 +1296,6 @@ const MLS_VILLAS = [
         q: { en: "What is the cancellation policy?", es: "¿Cuál es la política de cancelación?" },
         a: { en: "The cancellation policy varies depending on the timing of the cancellation; the applicable terms are confirmed at the time of booking.", es: "La política de cancelación varía según el momento de la cancelación; los términos aplicables se confirman al momento de reservar." }
       }
-    ],
-    testimonials: [
-      {
-        name: "Elizabeth F.",
-        rating: 5,
-        quote: { en: "We were treated like royalty. Able arranged a private chef and organized my daughter's birthday down to the last candle — better than any restaurant in town.", es: "Nos trataron como realeza. Able organizó un chef privado y el cumpleaños de mi hija hasta el último detalle — mejor que cualquier restaurante de la ciudad." },
-        context: { en: "Birthday celebration · Dallas, TX", es: "Celebración de cumpleaños · Dallas, TX" }
-      },
-      {
-        name: "Rachel W.",
-        rating: 5,
-        quote: { en: "Twenty-two of us stayed under one roof for a family wedding and it never felt crowded — three living rooms and two kitchens meant everyone had space.", es: "Fuimos veintidós bajo un mismo techo para una boda familiar y nunca se sintió lleno — tres salas y dos cocinas hicieron que todos tuvieran su espacio." },
-        context: { en: "Family wedding · Houston, TX", es: "Boda familiar · Houston, TX" }
-      },
-      {
-        name: "Nathan P.",
-        rating: 4,
-        quote: { en: "The kids didn't want to leave the home cinema, and the private beach at the end of the terrace meant we barely had to plan a single outing.", es: "Los niños no querían dejar el cine en casa, y la playa privada al final de la terraza hizo que casi no tuviéramos que planear ninguna salida." },
-        context: { en: "Family trip · Denver, CO", es: "Viaje familiar · Denver, CO" }
-      },
-      {
-        name: "Camila G.",
-        rating: 5,
-        quote: { en: "The infinity pool over the Caribbean is even better than the photos, and having 24/7 security on-site let us actually relax while hosting a big group.", es: "La alberca infinita frente al Caribe es incluso mejor que en las fotos, y tener seguridad 24/7 en el lugar nos dejó relajarnos de verdad mientras recibíamos a un grupo grande." },
-        context: { en: "Milestone celebration · New York, NY", es: "Celebración especial · Nueva York, NY" }
-      }
     ]
   },
   {
@@ -1672,32 +1594,6 @@ const MLS_VILLAS = [
       {
         q: { en: "How does pricing work, and what's the minimum stay?", es: "¿Cómo funciona el precio y cuál es la estancia mínima?" },
         a: { en: "Casa de las Estrellas offers flexible accommodation options, with rates based on the number of guests and bedrooms required — contact our team for the rate applicable to your group and dates. Minimum stays vary by season; during the Christmas and New Year's period, a 7-night minimum may apply.", es: "Casa de las Estrellas ofrece opciones de hospedaje flexibles, con tarifas según el número de huéspedes y recámaras requeridas — contacta a nuestro equipo para la tarifa aplicable a tu grupo y fechas. La estancia mínima varía según la temporada; durante el periodo de Navidad y Año Nuevo puede aplicar un mínimo de 7 noches." }
-      }
-    ],
-    testimonials: [
-      {
-        name: "Amanda C.",
-        rating: 5,
-        quote: { en: "The rooftop jacuzzi at sunset, thirty seconds from the beach — this is exactly what we pictured when we booked our honeymoon.", es: "El jacuzzi en la azotea al atardecer, a treinta segundos de la playa — esto es exactamente lo que imaginamos al reservar nuestra luna de miel." },
-        context: { en: "Honeymoon · Vancouver, BC", es: "Luna de miel · Vancouver, BC" }
-      },
-      {
-        name: "Thomas H.",
-        rating: 5,
-        quote: { en: "The independent studio gave my in-laws their own entrance and privacy while the rest of us stayed in the main house — solved a real logistics problem.", es: "El estudio independiente le dio a mis suegros su propia entrada y privacidad mientras el resto nos quedamos en la casa principal — resolvió un problema real de logística." },
-        context: { en: "Family visit · Phoenix, AZ", es: "Visita familiar · Phoenix, AZ" }
-      },
-      {
-        name: "Isabella M.",
-        rating: 4,
-        quote: { en: "We walked to the sand in under a minute every single morning. For a small, intimate villa it felt incredibly private.", es: "Caminamos a la arena en menos de un minuto cada mañana. Para ser una villa pequeña e íntima, se sintió increíblemente privada." },
-        context: { en: "Girls' trip · Portland, OR", es: "Viaje entre amigas · Portland, OR" }
-      },
-      {
-        name: "Ethan V.",
-        rating: 5,
-        quote: { en: "We booked an in-villa massage through the concierge for our last night and it was the perfect close to the trip — zero effort on our part.", es: "Reservamos un masaje en la villa a través del concierge para nuestra última noche y fue el cierre perfecto del viaje — cero esfuerzo de nuestra parte." },
-        context: { en: "Couples getaway · Chicago, IL", es: "Escapada en pareja · Chicago, IL" }
       }
     ]
   }
