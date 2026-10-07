@@ -2347,6 +2347,14 @@ body.sa-modal-open { overflow: hidden; }
   .detail-hero { align-items: flex-start; }
 }
 
+@media (max-width: 780px) {
+  /* About wordmark mask: the 2696px PNG (93 KB) for a ≤60px-tall logo. */
+  .brand-statement-logo {
+    -webkit-mask-image: url("../img/brand/wordmark-negative-1200w.png");
+    mask-image: url("../img/brand/wordmark-negative-1200w.png");
+  }
+}
+
 @media (max-width: 480px) {
   /* Two 44vw cards plus the gap don't fit side by side, so they stacked as
      small squares with cramped, overlapping titles. Stack them at a readable size. */
