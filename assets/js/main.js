@@ -1878,8 +1878,21 @@
         let selectedCheckin = null;
         let selectedCheckout = null;
         let updatePriceDisplay = () => {};
+        const priceDateFields = {};
+
+        /* Stay helpers. Availability is read on every call, not captured
+           once, so the pickers and the booking checks follow the live
+           Hostaway calendar as soon as hostaway-sync.js swaps it in. */
+        const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+        const nightsBetween = (a, b) => Math.round((b - a) / (24 * 60 * 60 * 1000));
+        const nightIsBlocked = (d) => mlsDateIsBlocked(mlsDateStr(d), villa.availability?.blockedRanges || []);
+        const stayHasBlockedNight = (checkin, checkout) => {
+          for (let d = checkin; d < checkout; d = addDays(d, 1)) if (nightIsBlocked(d)) return true;
+          return false;
+        };
 
         priceBox.querySelectorAll("[data-price-date-field]").forEach((fieldEl) => {
+          const key = fieldEl.dataset.priceDateField;
           const trigger = fieldEl.querySelector("[data-price-date-trigger]");
           const textEl = fieldEl.querySelector("[data-price-date-text]");
           const panel = fieldEl.querySelector("[data-price-calendar]");
@@ -1889,7 +1902,15 @@
           const prevBtn = panel.querySelector("[data-price-cal-prev]");
           const nextBtn = panel.querySelector("[data-price-cal-next]");
           let selected = null;
-          const blockedRanges = villa.availability?.blockedRanges || [];
+
+          /* Check-in: the night itself must be free. Check-out: the night
+             before must be free (a booking starting that morning is fine),
+             and once a check-in is picked every night in between too. */
+          const dayIsSelectable = (cellDate) => {
+            if (key !== "checkout") return !nightIsBlocked(cellDate);
+            if (selectedCheckin) return cellDate > selectedCheckin && !stayHasBlockedNight(selectedCheckin, cellDate);
+            return !nightIsBlocked(addDays(cellDate, -1));
+          };
 
           const renderWeekdays = () => {
             const base = new Date(2026, 0, 4);
@@ -1916,13 +1937,12 @@
             }
             for (let d = 1; d <= daysInMonth; d++) {
               const cellDate = new Date(year, month, d);
-              const isBlocked = mlsDateIsBlocked(mlsDateStr(cellDate), blockedRanges);
               const btn = document.createElement("button");
               btn.type = "button";
               btn.className = "trip-calendar-day";
               btn.textContent = d;
-              if (cellDate < today || isBlocked) btn.disabled = true;
-              if (isBlocked) btn.classList.add("is-unavailable");
+              if (cellDate < today || !dayIsSelectable(cellDate)) btn.disabled = true;
+              if (btn.disabled && nightIsBlocked(cellDate)) btn.classList.add("is-unavailable");
               if (sameDay(cellDate, today)) btn.classList.add("is-today");
               if (sameDay(cellDate, selected)) btn.classList.add("is-selected");
               btn.addEventListener("click", () => selectDate(cellDate));
@@ -1931,14 +1951,42 @@
             prevBtn.disabled = calendarMonth <= new Date(today.getFullYear(), today.getMonth(), 1);
           };
 
+          /* The label drops its data-i18n key while it shows a date, so a
+             language switch re-formats the date instead of resetting it to
+             "Check In" (see setText on mls:languagechange below). */
+          const setText = () => {
+            if (selected) {
+              textEl.removeAttribute("data-i18n");
+              textEl.textContent = selected.toLocaleDateString(locale(), { month: "short", day: "numeric" });
+            } else {
+              textEl.setAttribute("data-i18n", `detail.book.${key}`);
+              textEl.textContent = t(`detail.book.${key}`);
+            }
+          };
+
           const selectDate = (date) => {
             selected = date;
-            textEl.textContent = date.toLocaleDateString(locale(), { month: "short", day: "numeric" });
+            setText();
             fieldEl.classList.add("has-value");
-            if (fieldEl.dataset.priceDateField === "checkin") selectedCheckin = date;
-            else selectedCheckout = date;
+            if (key === "checkin") {
+              selectedCheckin = date;
+              if (selectedCheckout && (selectedCheckout <= date || stayHasBlockedNight(date, selectedCheckout))) {
+                priceDateFields.checkout.clear();
+              }
+            } else {
+              selectedCheckout = date;
+            }
             updatePriceDisplay();
             close();
+            if (key === "checkin" && !selectedCheckout) priceDateFields.checkout.open();
+          };
+
+          const clear = () => {
+            selected = null;
+            if (key === "checkin") selectedCheckin = null;
+            else selectedCheckout = null;
+            fieldEl.classList.remove("has-value");
+            setText();
           };
 
           const open = () => {
@@ -1958,6 +2006,7 @@
           nextBtn.addEventListener("click", () => { calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1); syncCalendarViews(); });
 
           priceCalRenders.push(render);
+          priceDateFields[key] = { open, close, clear, setText, trigger };
         });
 
         document.addEventListener("click", (e) => {
@@ -2009,24 +2058,177 @@
         const guestsIncBtn = priceBox.querySelector("[data-price-guests-inc]");
         let guests = 1;
 
-        updatePriceDisplay = () => {
-          if (!priceEl) return;
-          const nightlyRate = villa.priceFromPerNight * TIER_RATE_MULTIPLIERS[activeTierIndex(guests)];
-          const oneDay = 24 * 60 * 60 * 1000;
+        /* ---------- Stay quote ----------
+           HOSTAWAY INTEGRATION POINT: the one place a real quote plugs in.
+           Nightly rate is still the tiered estimate above; cleaning and
+           taxes come from villa.fees ({ cleaning: USD, taxRate: 0–1 }) once
+           that's populated, and until then show as "confirmed in your
+           quote" rather than an invented figure. */
+        const money = (n) => `$${Math.round(n).toLocaleString("en-US")}`;
+        const nightsLabel = (n) => (n === 1 ? t("detail.book.oneNight") : t("detail.book.totalNights").replace("{n}", n));
+        const stayQuote = () => {
+          const nightly = Math.round(villa.priceFromPerNight * TIER_RATE_MULTIPLIERS[activeTierIndex(guests)]);
           const nights = selectedCheckin && selectedCheckout && selectedCheckout > selectedCheckin
-            ? Math.round((selectedCheckout - selectedCheckin) / oneDay)
+            ? nightsBetween(selectedCheckin, selectedCheckout)
             : 0;
+          const fees = villa.fees || {};
+          const subtotal = nightly * nights;
+          const cleaning = typeof fees.cleaning === "number" ? fees.cleaning : null;
+          const taxes = typeof fees.taxRate === "number" ? Math.round((subtotal + (cleaning || 0)) * fees.taxRate) : null;
+          return { nightly, nights, subtotal, cleaning, taxes, total: subtotal + (cleaning || 0) + (taxes || 0), complete: cleaning !== null && taxes !== null };
+        };
 
-          if (nights > 0) {
-            priceEl.textContent = `$${Math.round(nightlyRate * nights).toLocaleString("en-US")}`;
+        /* What stops this stay from being booked, if anything. Missing
+           dates only surface after a Book attempt; the rest show as soon
+           as both dates are in. */
+        const bookingIssue = () => {
+          if (!selectedCheckin) return { key: "detail.book.errCheckin", field: "checkin", needsAttempt: true };
+          if (!selectedCheckout) return { key: "detail.book.errCheckout", field: "checkout", needsAttempt: true };
+          if (stayHasBlockedNight(selectedCheckin, selectedCheckout)) return { key: "detail.book.errBooked", field: "checkin" };
+          const minStay = villa.availability?.minStay || 1;
+          const nights = nightsBetween(selectedCheckin, selectedCheckout);
+          if (nights < minStay) {
+            return { key: "detail.book.errMinStay", field: "checkout", text: t("detail.book.errMinStay").replace("{n}", minStay).replace("{m}", minStay - nights) };
+          }
+          if (guests > villa.guests) return { key: "detail.book.errCapacity", text: t("detail.book.errCapacity").replace("{n}", villa.guests) };
+          return null;
+        };
+
+        const bookHref = () => {
+          const qs = new URLSearchParams({ villa: villa.slug });
+          if (selectedCheckin) qs.set("checkin", mlsDateStr(selectedCheckin));
+          if (selectedCheckout) qs.set("checkout", mlsDateStr(selectedCheckout));
+          qs.set("guests", guests);
+          return `../contact.html?${qs}`;
+        };
+
+        /* Booking panel: breakdown + validation + Book now, injected under
+           the guests stepper (one copy here instead of four villa pages). */
+        const bookPanel = document.createElement("div");
+        bookPanel.className = "villa-book";
+        bookPanel.setAttribute("data-book-panel", "");
+        bookPanel.innerHTML = `
+          <dl class="villa-book-breakdown" data-book-breakdown hidden></dl>
+          <p class="villa-book-error" data-book-error role="alert" hidden></p>
+          <a class="btn btn-solid villa-book-cta" id="villa-book-now" data-book-cta href="${bookHref()}" data-i18n="detail.book.cta">${t("detail.book.cta")}</a>`;
+        priceBox.querySelector(".villa-price-guests")?.after(bookPanel);
+        const breakdownEl = bookPanel.querySelector("[data-book-breakdown]");
+        const bookErrorEl = bookPanel.querySelector("[data-book-error]");
+
+        /* Phones/tablets: the same CTA as a fixed bottom bar while the
+           card's own controls are off-screen (hidden by CSS above 900px). */
+        const bookBar = document.createElement("div");
+        bookBar.className = "book-bar";
+        bookBar.setAttribute("data-book-bar", "");
+        bookBar.setAttribute("role", "region");
+        bookBar.setAttribute("aria-label", t("detail.book.barLabel"));
+        bookBar.innerHTML = `
+          <div class="book-bar-summary">
+            <span class="book-bar-amount" data-book-bar-amount></span>
+            <span class="book-bar-meta" data-book-bar-meta></span>
+          </div>
+          <a class="btn btn-solid book-bar-cta" id="villa-book-now-bar" data-book-cta href="${bookHref()}" data-i18n="detail.book.cta">${t("detail.book.cta")}</a>`;
+        document.body.appendChild(bookBar);
+        document.body.classList.add("has-book-bar");
+        const barAmountEl = bookBar.querySelector("[data-book-bar-amount]");
+        const barMetaEl = bookBar.querySelector("[data-book-bar-meta]");
+        let bookAttempted = false;
+
+        updatePriceDisplay = () => {
+          const q = stayQuote();
+          const pending = `<span class="is-pending">${t("detail.book.feePending")}</span>`;
+
+          if (priceEl) priceEl.textContent = money(q.nights > 0 ? q.total : q.nightly);
+          if (q.nights > 0) {
             if (priceFromEl) { priceFromEl.setAttribute("data-i18n", "detail.book.total"); priceFromEl.textContent = t("detail.book.total"); }
-            if (priceUnitEl) { priceUnitEl.setAttribute("data-i18n", "detail.book.totalNights"); priceUnitEl.textContent = t("detail.book.totalNights").replace("{n}", nights); }
+            if (priceUnitEl) { priceUnitEl.removeAttribute("data-i18n"); priceUnitEl.textContent = nightsLabel(q.nights); }
           } else {
-            priceEl.textContent = `$${Math.round(nightlyRate).toLocaleString("en-US")}`;
             if (priceFromEl) { priceFromEl.setAttribute("data-i18n", "detail.book.from"); priceFromEl.textContent = t("detail.book.from"); }
             if (priceUnitEl) { priceUnitEl.setAttribute("data-i18n", "detail.book.perNight"); priceUnitEl.textContent = t("detail.book.perNight"); }
           }
+
+          breakdownEl.hidden = q.nights === 0;
+          breakdownEl.innerHTML = q.nights === 0 ? "" : `
+            <div class="villa-book-row"><dt>${money(q.nightly)} × ${nightsLabel(q.nights)}</dt><dd>${money(q.subtotal)}</dd></div>
+            <div class="villa-book-row"><dt>${t("detail.book.cleaning")}</dt><dd>${q.cleaning === null ? pending : money(q.cleaning)}</dd></div>
+            <div class="villa-book-row"><dt>${t("detail.book.taxes")}</dt><dd>${q.taxes === null ? pending : money(q.taxes)}</dd></div>
+            <div class="villa-book-row villa-book-row--total"><dt>${t(q.complete ? "detail.book.total" : "detail.book.totalEstimated")}</dt><dd>${money(q.total)}</dd></div>`;
+
+          const issue = bookingIssue();
+          const showIssue = issue && (bookAttempted || !issue.needsAttempt);
+          bookErrorEl.hidden = !showIssue;
+          bookErrorEl.textContent = showIssue ? (issue.text || t(issue.key)) : "";
+          bookPanel.classList.toggle("has-issue", Boolean(issue));
+
+          const href = bookHref();
+          document.querySelectorAll("[data-book-cta]").forEach((a) => { a.href = href; });
+
+          const fmt = (d) => d.toLocaleDateString(locale(), { month: "short", day: "numeric" });
+          barAmountEl.textContent = money(q.nights > 0 ? q.total : q.nightly);
+          barMetaEl.textContent = q.nights > 0
+            ? `${fmt(selectedCheckin)} – ${fmt(selectedCheckout)} · ${nightsLabel(q.nights)}`
+            : `${t("detail.book.perNight")} · ${t("detail.book.addDates")}`;
         };
+
+        /* Book now (card or bar): go straight to the booking form with
+           villa, dates and guests prefilled — or, if something's missing or
+           invalid, bring the card into view and point at what to fix. */
+        document.querySelectorAll("[data-book-cta]").forEach((cta) => {
+          cta.addEventListener("click", (e) => {
+            const issue = bookingIssue();
+            const notes = priceBox.querySelector("[data-price-notes]")?.value.trim();
+            if (!issue) {
+              // Notes ride along in sessionStorage, not the URL (free text
+              // shouldn't end up in server logs or analytics).
+              try { notes ? sessionStorage.setItem("mlsBookNotes", notes) : sessionStorage.removeItem("mlsBookNotes"); } catch (_) {}
+              return;
+            }
+            e.preventDefault();
+            bookAttempted = true;
+            updatePriceDisplay();
+            const fromBar = bookBar.contains(cta);
+            if (fromBar) {
+              const top = priceBox.getBoundingClientRect().top + window.scrollY - 96;
+              window.scrollTo({ top, behavior: prefersReducedMotion ? "auto" : "smooth" });
+            }
+            // A missing date opens its picker; other issues leave the
+            // message in view (an open picker would cover it).
+            if (issue.needsAttempt) setTimeout(() => priceDateFields[issue.field]?.open(), fromBar && !prefersReducedMotion ? 450 : 0);
+          });
+        });
+
+        /* Bar visibility: shown only while neither the date pickers nor the
+           card's own Book button are on screen, and it lifts the floating
+           contact button by its own height so the two never overlap. */
+        const setBarHeight = () => document.body.style.setProperty("--book-bar-h", `${bookBar.offsetHeight}px`);
+        const setBarVisible = (visible) => {
+          document.body.classList.toggle("book-bar-visible", visible);
+          bookBar.inert = !visible;
+          setBarHeight();
+        };
+        if ("IntersectionObserver" in window) {
+          const onScreen = new Set();
+          const barObserver = new IntersectionObserver((entries) => {
+            entries.forEach((en) => (en.isIntersecting ? onScreen.add(en.target) : onScreen.delete(en.target)));
+            setBarVisible(onScreen.size === 0);
+          });
+          [priceBox.querySelector(".villa-price-dates"), bookPanel].forEach((el) => el && barObserver.observe(el));
+        } else {
+          setBarVisible(true);
+        }
+        window.addEventListener("resize", setBarHeight);
+
+        /* Live Hostaway data or a language switch: redraw pickers, labels
+           and the quote with the new availability / wording. */
+        document.addEventListener("mls:livedata", () => {
+          priceCalRenders.forEach((render) => render());
+          updatePriceDisplay();
+        });
+        document.addEventListener("mls:languagechange", () => {
+          Object.values(priceDateFields).forEach((f) => f.setText());
+          bookBar.setAttribute("aria-label", t("detail.book.barLabel"));
+          updatePriceDisplay();
+        });
 
         const updateGuests = () => {
           if (guestsValueEl) guestsValueEl.textContent = guests;
@@ -2535,6 +2737,21 @@
         }
       }
     }
+    /* Guest count from a villa page's Book now (?guests=N) lands as adults,
+       clamped to the villa's capacity; notes typed there come through
+       sessionStorage (kept out of the URL). */
+    const guestsParam = parseInt(params.get("guests"), 10);
+    if (guestsParam > 0 && adultsStepper) {
+      setStepperValue(adultsStepper, guestsParam);
+      syncGuestCapacity();
+      syncBedroomsFromAdults();
+    }
+    try {
+      const carriedNotes = sessionStorage.getItem("mlsBookNotes");
+      const notesEl = contactForm.querySelector("#cf-notes");
+      if (carriedNotes && notesEl && !notesEl.value) notesEl.value = carriedNotes;
+      sessionStorage.removeItem("mlsBookNotes");
+    } catch (_) {}
 
     const consentInput = contactForm.querySelector("[data-trip-consent]");
     contactForm.addEventListener("input", (e) => {
