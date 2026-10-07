@@ -2228,7 +2228,11 @@
       const nextBtn = panel.querySelector("[data-cal-next]");
       const hiddenInput = fieldEl.querySelector("[data-date-value]");
 
-      const api = { key, fieldEl, trigger, textEl, defaultLabel, hiddenInput, selected: null, minDate: today, viewDate: new Date(today) };
+      /* i18nKey: the label's data-i18n key, dropped while it shows a picked
+         date so i18n.js's DOMContentLoaded pass doesn't reset a date
+         prefilled from the URL back to "Check-In". */
+      const i18nKey = textEl.getAttribute("data-i18n");
+      const api = { key, fieldEl, trigger, textEl, defaultLabel, i18nKey, hiddenInput, selected: null, minDate: today, viewDate: new Date(today) };
 
       const lang = () => (typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en");
       const locale = () => (lang() === "es" ? "es-MX" : "en-US");
@@ -2277,6 +2281,7 @@
       const selectDate = (date) => {
         api.selected = date;
         api.hiddenInput.value = isoDay(date);
+        api.textEl.removeAttribute("data-i18n");
         api.textEl.textContent = date.toLocaleDateString(locale(), { month: "short", day: "numeric", year: "numeric" });
         close();
         onDateSelected(key, date);
@@ -2312,7 +2317,8 @@
         if (api.selected && api.selected < date) {
           api.selected = null;
           api.hiddenInput.value = "";
-          api.textEl.textContent = api.defaultLabel;
+          if (api.i18nKey) api.textEl.setAttribute("data-i18n", api.i18nKey);
+          api.textEl.textContent = api.i18nKey ? t(api.i18nKey) : api.defaultLabel;
         }
         if (api.viewDate < date) api.viewDate = new Date(date.getFullYear(), date.getMonth(), 1);
         if (!panel.hidden) render();
@@ -2357,6 +2363,7 @@
     };
     const selectVilla = (option) => {
       villaValueInput.value = option.dataset.value;
+      villaTriggerText.removeAttribute("data-i18n"); // keep the villa name through i18n.js's DOMContentLoaded pass
       villaTriggerText.textContent = option.textContent.trim();
       villaOptions.forEach((o) => o.setAttribute("aria-selected", o === option ? "true" : "false"));
       closeVillaListbox();
@@ -2491,7 +2498,8 @@
         if (api.selected && contactDateIsUnavailable(isoDay(api.selected))) {
           api.selected = null;
           api.hiddenInput.value = "";
-          api.textEl.textContent = api.defaultLabel;
+          if (api.i18nKey) api.textEl.setAttribute("data-i18n", api.i18nKey);
+          api.textEl.textContent = api.i18nKey ? t(api.i18nKey) : api.defaultLabel;
         }
         if (!api.fieldEl.querySelector("[data-trip-calendar]").hidden) api.render();
       });
