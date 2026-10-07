@@ -17,6 +17,7 @@
   --green-deep: #2C362B;
   --sage-tint: #E9ECE6;
   --gold: #C2A878;
+  --stone-text: #6B6862;   /* Gris Piedra deepened for small text: 5:1 on cream (stone itself is 3.1:1, ≥18px only) */
   --error: #9C4B3E;
   --cream-60: rgba(246, 244, 239, .6);
   --cream-80: rgba(246, 244, 239, .8);
@@ -175,7 +176,7 @@ button { font: inherit; cursor: pointer; }
 
 .lead { font-size: var(--text-lead); font-weight: 300; line-height: 1.75; }
 
-.text-muted { color: var(--stone); }
+.text-muted { color: var(--stone-text); }
 .section--green .text-muted { color: var(--cream-60); }
 
 .measure { max-width: 34em; }
@@ -444,7 +445,7 @@ button { font: inherit; cursor: pointer; }
 .hero-date-trigger:focus-visible { outline: 2px solid var(--cream); outline-offset: 4px; }
 .hero-search-field.has-value .hero-date-trigger,
 .hero-date-trigger[aria-expanded="true"] { color: var(--cream); }
-.hero-calendar { left: 50%; right: auto; transform: translateX(-50%); width: min(300px, calc(100vw - 2.4rem)); }
+.trip-calendar.hero-calendar { left: 50%; right: auto; transform: translateX(-50%); width: min(300px, calc(100vw - 2.4rem)); }
 .trip-calendar.hero-calendar { animation-name: hero-calendar-in; }
 @keyframes hero-calendar-in {
   from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
@@ -452,7 +453,7 @@ button { font: inherit; cursor: pointer; }
 }
 .hero-calendar-note {
   margin: .9rem 0 0; padding-top: .8rem; border-top: 1px solid rgba(20,20,20,.1);
-  font-family: var(--font-sans); font-size: .72rem; color: var(--stone); text-align: center;
+  font-family: var(--font-sans); font-size: .72rem; color: var(--stone-text); text-align: center;
 }
 .trip-calendar-day.is-unavailable { text-decoration: line-through; }
 .hero-search-btn {
@@ -501,7 +502,7 @@ button { font: inherit; cursor: pointer; }
 }
 .stat-row { display: flex; gap: 3rem; margin-top: 2.4rem; }
 .stat .stat-num { font-family: var(--font-display); font-size: 2.6rem; line-height: 1; color: var(--sage); }
-.stat .stat-label { font-size: .7rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); margin-top: .4rem; }
+.stat .stat-label { font-size: .7rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone-text); margin-top: .4rem; }
 .stat-row--standalone { justify-content: center; margin-top: clamp(3rem, 6vw, 4.5rem); }
 
 @media (max-width: 820px) { .intro-grid { grid-template-columns: 1fr; } }
@@ -540,9 +541,9 @@ button { font: inherit; cursor: pointer; }
   .story-split--bleed-left { grid-template-columns: 1fr; padding-right: var(--pad-x); padding-left: var(--pad-x); }
   .story-split--bleed-left .story-split-media img { border-radius: var(--radius); }
 }
-.story-split-body h3 { margin-top: 2rem; }
-.story-split-body h3:not(:first-child) { padding-top: 1.8rem; margin-top: 2.2rem; border-top: 1px solid rgba(20,20,20,.12); }
-.story-split-body h3:first-child { margin-top: 0; }
+.story-split-body :is(h2, h3) { margin-top: 2rem; }
+.story-split-body :is(h2, h3):not(:first-child) { padding-top: 1.8rem; margin-top: 2.2rem; border-top: 1px solid rgba(20,20,20,.12); }
+.story-split-body :is(h2, h3):first-child { margin-top: 0; }
 
 .story-image-solo { max-width: 50rem; margin-inline: auto; }
 .story-image-solo img {
@@ -707,7 +708,7 @@ button { font: inherit; cursor: pointer; }
 .villa-row-desc { margin: 1rem 0 0; font-size: 1rem; font-weight: 300; line-height: 1.7; color: var(--ink); max-width: 46ch; }
 .villa-row-specs {
   display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; margin: 1.2rem 0 1.6rem;
-  font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--stone);
+  font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--stone-text);
 }
 
 /* ---------- Destination intro text (sits between hero and map) ---------- */
@@ -725,7 +726,7 @@ button { font: inherit; cursor: pointer; }
 }
 .destination-map-loading {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  margin: 0; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--stone);
+  margin: 0; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--stone-text);
 }
 .destination-map .leaflet-container { width: 100%; height: 100%; font-family: var(--font-sans); background: var(--sage-tint); }
 .destination-map .leaflet-control-attribution { font-size: .68rem; }
@@ -806,7 +807,7 @@ button { font: inherit; cursor: pointer; }
 .featured-cta { margin-top: clamp(3.5rem, 7vw, 5.5rem); text-align: left; }
 .featured-item {
   display: flex; align-items: center; gap: 1.2rem;
-  text-decoration: none; color: var(--stone);
+  text-decoration: none; color: var(--stone-text);
   font-family: var(--font-sans); font-size: clamp(1.2rem, 2vw, 1.6rem);
   padding-block: .2rem;
   transition: color .3s ease;
@@ -886,7 +887,7 @@ button { font: inherit; cursor: pointer; }
 .testimonial-card .testimonial-rating .star.is-filled { fill: var(--gold); }
 .testimonial-card .testimonial-quote { font-size: clamp(1.05rem, 1.6vw, 1.3rem); color: var(--ink); max-width: 26em; }
 .testimonial-card .testimonial-attr .name { color: var(--green); }
-.testimonial-card .testimonial-attr .villa { color: var(--stone); }
+.testimonial-card .testimonial-attr .villa { color: var(--stone-text); }
 @media (max-width: 820px) { .testimonial-grid { grid-template-columns: 1fr; gap: 2.75rem; } }
 
 /* ---------- CTA banner ---------- */
@@ -933,10 +934,10 @@ button { font: inherit; cursor: pointer; }
   padding: 1.2rem; text-align: center;
 }
 .qr-popover img { width: 130px; height: 130px; margin-inline: auto; border-radius: 10px; border: 1px solid rgba(20,20,20,.1); }
-.qr-popover-hint { font-size: .72rem; color: var(--stone); margin: .7rem 0 0; }
+.qr-popover-hint { font-size: .72rem; color: var(--stone-text); margin: .7rem 0 0; }
 .qr-popover-close {
   position: absolute; top: .5rem; right: .5rem;
-  width: 22px; height: 22px; border: 0; background: none; color: var(--stone);
+  width: 22px; height: 22px; border: 0; background: none; color: var(--stone-text);
   font-size: 1.1rem; line-height: 1; border-radius: 50%; cursor: pointer;
   transition: background-color .2s ease, color .2s ease;
 }
@@ -992,7 +993,7 @@ button { font: inherit; cursor: pointer; }
   border-top: 1px solid rgba(246,244,239,.12);
   padding-block: 1.6rem;
   display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
-  font-size: .74rem; color: rgba(246,244,239,.45);
+  font-size: .74rem; color: var(--cream-60);
 }
 @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .footer-grid { grid-template-columns: 1fr; } }
@@ -1003,7 +1004,7 @@ button { font: inherit; cursor: pointer; }
 /* ---------- Legal pages (Privacy Notice / Terms & Conditions) — plain,
    readable document layout, reused by both pages. ---------- */
 .legal-content { max-width: 68ch; margin: 0 auto; }
-.legal-updated { font-size: .8rem; color: var(--stone); margin: 0 0 1.6rem; }
+.legal-updated { font-size: .8rem; color: var(--stone-text); margin: 0 0 1.6rem; }
 .legal-pending {
   background: var(--sage-tint); border-radius: 4px; padding: .9rem 1.2rem;
   font-size: .86rem; line-height: 1.6; color: var(--sage); margin: 0 0 2.6rem;
@@ -1036,6 +1037,10 @@ button { font: inherit; cursor: pointer; }
 }
 .qa-btn:hover, .qa-btn:focus-visible { background: var(--sage); transform: translateY(-3px); }
 .qa-btn svg { width: 21px; height: 21px; fill: currentColor; }
+.qa-fab { display: none; }
+.qa-fab .qa-fab-close, .qa-fab[aria-expanded="true"] .qa-fab-open { display: none; }
+.qa-fab[aria-expanded="true"] .qa-fab-close { display: block; }
+.qa-btn.qa-fab:active { transform: scale(.94); }
 
 .qa-btn--light { background: var(--cream); color: var(--green); border: 1px solid rgba(20, 20, 20, .12); }
 .qa-btn--light:hover, .qa-btn--light:focus-visible { background: var(--sage-tint); transform: translateY(-3px); }
@@ -1087,7 +1092,7 @@ button { font: inherit; cursor: pointer; }
 
 .qa-panel-close {
   position: absolute; top: .7rem; right: .7rem;
-  width: 26px; height: 26px; border: 0; background: none; color: var(--stone);
+  width: 26px; height: 26px; border: 0; background: none; color: var(--stone-text);
   font-size: 1.3rem; line-height: 1; border-radius: 50%;
   transition: background-color .2s ease, color .2s ease;
 }
@@ -1111,7 +1116,7 @@ button { font: inherit; cursor: pointer; }
 }
 .wa-option-icon svg { width: 16px; height: 16px; fill: currentColor; }
 .wa-option-label { display: block; font-size: .88rem; font-weight: 600; }
-.wa-option-hint { display: block; font-size: .74rem; color: var(--stone); margin-top: .1rem; }
+.wa-option-hint { display: block; font-size: .74rem; color: var(--stone-text); margin-top: .1rem; }
 
 .wa-qr {
   display: none; text-align: center; margin-top: .9rem;
@@ -1119,7 +1124,7 @@ button { font: inherit; cursor: pointer; }
 }
 .wa-qr.is-visible { display: block; }
 .wa-qr img { width: 150px; height: 150px; margin-inline: auto; border-radius: 14px; border: 1px solid rgba(20,20,20,.1); }
-.wa-qr-hint { font-size: .74rem; color: var(--stone); margin: .7rem 0 0; }
+.wa-qr-hint { font-size: .74rem; color: var(--stone-text); margin: .7rem 0 0; }
 
 @media (max-width: 480px) {
   .qa-panel--pill { padding-right: 1rem; }
@@ -1152,7 +1157,7 @@ button { font: inherit; cursor: pointer; }
 }
 .filter-field label {
   display: block; font-size: .64rem; font-weight: 600; letter-spacing: var(--track-caps);
-  text-transform: uppercase; color: var(--stone); margin-bottom: .45rem;
+  text-transform: uppercase; color: var(--stone-text); margin-bottom: .45rem;
 }
 .filter-field select {
   width: 100%; font-family: var(--font-sans); font-size: 1.05rem; color: var(--ink);
@@ -1229,7 +1234,7 @@ button { font: inherit; cursor: pointer; }
   transition: background-color .2s ease;
 }
 .filter-clear:hover { background: var(--green-deep); }
-.filter-count { font-family: var(--font-display); font-style: italic; font-size: 1rem; color: var(--stone); margin-bottom: 1.6rem; }
+.filter-count { font-family: var(--font-display); font-style: italic; font-size: 1rem; color: var(--stone-text); margin-bottom: 1.6rem; }
 @media (max-width: 720px) {
   .filter-bar { flex-direction: column; }
   .filter-field { border-right: 0; border-bottom: 1px solid rgba(20, 20, 20, .08); }
@@ -1237,7 +1242,7 @@ button { font: inherit; cursor: pointer; }
 }
 .empty-state {
   text-align: center; padding: 4rem 1rem; border: 1px dashed var(--stone);
-  border-radius: var(--radius); color: var(--stone);
+  border-radius: var(--radius); color: var(--stone-text);
 }
 
 /* ---------- Villa detail ---------- */
@@ -1248,7 +1253,7 @@ button { font: inherit; cursor: pointer; }
 .detail-hero .container { width: 100%; max-width: 1560px; padding-inline: clamp(1rem, 3vw, 2rem); }
 .detail-hero .container { position: relative; }
 .detail-hero .breadcrumb { display: block; margin-bottom: clamp(.6rem, 1.2vw, 1rem); }
-.breadcrumb { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--stone); }
+.breadcrumb { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--stone-text); }
 .breadcrumb a { color: inherit; text-decoration: none; }
 .breadcrumb a:hover { color: var(--sage); }
 
@@ -1373,7 +1378,7 @@ button { font: inherit; cursor: pointer; }
 .spec .spec-icon { display: block; width: 2.3rem; height: 2.3rem; margin-bottom: .55rem; color: var(--gold); opacity: .9; }
 .spec .spec-icon svg { width: 100%; height: 100%; display: block; }
 .spec .spec-num { font-family: var(--font-sans); font-size: 1.7rem; line-height: 1; color: var(--sage); }
-.spec .spec-label { font-size: .68rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); margin-top: .35rem; }
+.spec .spec-label { font-size: .68rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone-text); margin-top: .35rem; }
 .spec.spec--wide .spec-num { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; line-height: 1.2; }
 
 .detail-layout {
@@ -1428,18 +1433,18 @@ button { font: inherit; cursor: pointer; }
   padding: clamp(1.5rem, 3vw, 2rem); display: flex; flex-direction: column; justify-content: center;
 }
 .villa-price-amount-row { text-align: center; margin-bottom: 1.5rem; }
-.villa-price-from { font-family: var(--font-sans); font-size: .8rem; font-weight: 500; text-transform: uppercase; letter-spacing: var(--track-caps); color: var(--stone); margin-right: .35rem; }
+.villa-price-from { font-family: var(--font-sans); font-size: .8rem; font-weight: 500; text-transform: uppercase; letter-spacing: var(--track-caps); color: var(--stone-text); margin-right: .35rem; }
 .villa-price-amount { font-family: var(--font-sans); font-size: clamp(1.8rem, 3vw, 2.3rem); font-weight: 700; color: var(--ink); }
-.villa-price-unit { font-family: var(--font-sans); font-size: .88rem; color: var(--stone); margin-left: .3rem; }
+.villa-price-unit { font-family: var(--font-sans); font-size: .88rem; color: var(--stone-text); margin-left: .3rem; }
 .villa-price-dates { display: flex; gap: .7rem; margin-bottom: .8rem; }
 .villa-price-date-field { position: relative; flex: 1; min-width: 0; }
 .villa-price-date-trigger {
   width: 100%; display: flex; align-items: center; justify-content: flex-start; gap: .5rem;
   border: 1px solid rgba(20, 20, 20, .16); border-radius: 999px; background: transparent;
-  padding: .8rem .9rem; font-family: var(--font-sans); font-size: .85rem; color: var(--stone); cursor: pointer;
+  padding: .8rem .9rem; font-family: var(--font-sans); font-size: .85rem; color: var(--stone-text); cursor: pointer;
   transition: border-color .2s ease, color .2s ease;
 }
-.villa-price-date-trigger svg { width: 16px; height: 16px; flex: none; color: var(--stone); }
+.villa-price-date-trigger svg { width: 16px; height: 16px; flex: none; color: var(--stone-text); }
 .villa-price-date-trigger:hover, .villa-price-date-trigger[aria-expanded="true"] { border-color: var(--sage); }
 .villa-price-date-field.has-value .villa-price-date-trigger { color: var(--ink); font-weight: 600; }
 .villa-price-date-field.has-value .villa-price-date-trigger svg { color: var(--sage); }
@@ -1450,7 +1455,7 @@ button { font: inherit; cursor: pointer; }
   border: 1px solid rgba(20, 20, 20, .16); border-radius: 999px;
   padding: .7rem .7rem .7rem 1.1rem;
 }
-.villa-price-guests svg { width: 18px; height: 18px; flex: none; color: var(--stone); }
+.villa-price-guests svg { width: 18px; height: 18px; flex: none; color: var(--stone-text); }
 .villa-price-guests-label { flex: 1; font-family: var(--font-sans); font-size: .85rem; color: var(--ink); }
 .villa-price-guests-controls { display: flex; align-items: center; gap: .4rem; }
 .villa-price-guests-btn {
@@ -1461,7 +1466,7 @@ button { font: inherit; cursor: pointer; }
 .villa-price-guests-btn:hover:not(:disabled) { background: var(--sage); border-color: var(--sage); color: var(--cream); }
 .villa-price-guests-btn:disabled { opacity: .35; cursor: not-allowed; }
 .villa-price-notes { margin-top: .8rem; text-align: left; }
-.villa-price-notes-label { display: block; font-family: var(--font-sans); font-size: .78rem; font-weight: 500; color: var(--stone); margin-bottom: .4rem; }
+.villa-price-notes-label { display: block; font-family: var(--font-sans); font-size: .78rem; font-weight: 500; color: var(--stone-text); margin-bottom: .4rem; }
 .villa-price-notes-textarea {
   width: 100%; resize: vertical; min-height: 4rem;
   font: inherit; font-family: var(--font-sans); font-size: .85rem; line-height: 1.5; color: var(--ink);
@@ -1471,7 +1476,7 @@ button { font: inherit; cursor: pointer; }
 .villa-price-notes-textarea::placeholder { color: rgba(20,20,20,.4); }
 .villa-price-notes-textarea:hover { border-color: rgba(20, 20, 20, .3); }
 .villa-price-notes-textarea:focus-visible { outline: none; border-color: var(--sage); }
-.villa-price-note { font-size: .74rem; line-height: 1.5; color: var(--stone); text-align: center; margin: 1rem 0 0; }
+.villa-price-note { font-size: .74rem; line-height: 1.5; color: var(--stone-text); text-align: center; margin: 1rem 0 0; }
 
 /* Tiered-by-occupancy indicator: three ascending bars showing the guest
    band the current stepper value falls into. Bounds are computed in
@@ -1481,7 +1486,7 @@ button { font: inherit; cursor: pointer; }
 .villa-price-tiers-head {
   display: flex; align-items: center; gap: .4rem; margin-bottom: .7rem;
   font-family: var(--font-sans); font-size: .7rem; font-weight: 600;
-  text-transform: uppercase; letter-spacing: var(--track-caps); color: var(--stone);
+  text-transform: uppercase; letter-spacing: var(--track-caps); color: var(--stone-text);
 }
 .villa-price-tiers-head svg { width: 14px; height: 14px; flex: none; color: var(--gold); }
 .villa-price-tiers-bar { display: flex; align-items: flex-end; gap: .35rem; height: 26px; }
@@ -1498,10 +1503,10 @@ button { font: inherit; cursor: pointer; }
 .villa-price-tiers-ranges { display: flex; gap: .35rem; margin-top: .4rem; }
 .villa-price-tiers-ranges span {
   flex: 1; text-align: center; font-family: var(--font-sans); font-size: .68rem;
-  color: var(--stone); transition: color .2s ease;
+  color: var(--stone-text); transition: color .2s ease;
 }
 .villa-price-tiers-ranges span.is-active { color: var(--ink); font-weight: 700; }
-.villa-price-tiers-caption { font-size: .7rem; line-height: 1.5; color: var(--stone); text-align: center; margin: .65rem 0 0; }
+.villa-price-tiers-caption { font-size: .7rem; line-height: 1.5; color: var(--stone-text); text-align: center; margin: .65rem 0 0; }
 
 
 /* Villa FAQ showcase: question list on the left, answer card on the right —
@@ -1515,7 +1520,7 @@ button { font: inherit; cursor: pointer; }
 .villa-faq-item {
   display: flex; align-items: center; gap: 1rem; width: 100%;
   background: none; border: 0; padding: .2rem 0; text-align: left; cursor: pointer;
-  font-family: var(--font-display); font-size: clamp(1.05rem, 1.6vw, 1.3rem); color: var(--stone);
+  font-family: var(--font-display); font-size: clamp(1.05rem, 1.6vw, 1.3rem); color: var(--stone-text);
   transition: color .3s ease;
 }
 .villa-faq-item-line {
@@ -1587,7 +1592,7 @@ button { font: inherit; cursor: pointer; }
 .villa-faq-extra-list::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
 .villa-faq-extra-item + .villa-faq-extra-item { border-top: 1px solid rgba(20, 26, 19, .1); padding-top: clamp(1.25rem, 2.5vw, 1.75rem); }
 .villa-faq-extra-q { font-family: var(--font-display); font-size: clamp(1rem, 1.4vw, 1.15rem); color: var(--ink); margin: 0 0 .5rem; }
-.villa-faq-extra-a { font-size: .95rem; font-weight: 300; line-height: 1.7; color: var(--stone); margin: 0; }
+.villa-faq-extra-a { font-size: .95rem; font-weight: 300; line-height: 1.7; color: var(--stone-text); margin: 0; }
 @media (max-width: 640px) {
   .villa-faq-modal-panel { max-height: 88vh; }
 }
@@ -1752,7 +1757,7 @@ button { font: inherit; cursor: pointer; }
 .sa-title { font-family: var(--font-display); font-size: var(--text-section-title); line-height: 1.06; }
 .property-map-section .h3,
 #villa-faq .h3 { font-size: var(--text-section-title); }
-.sa-section-lead { color: var(--stone); margin-top: .8rem; max-width: 46ch; font-size: 1.02rem; }
+.sa-section-lead { color: var(--stone-text); margin-top: .8rem; max-width: 46ch; font-size: 1.02rem; }
 
 .sa-cards {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.8rem, 3vw, 2.6rem);
@@ -1799,7 +1804,7 @@ button { font: inherit; cursor: pointer; }
 
 .sa-card-body { display: block; margin-top: .8rem; }
 .sa-card-title { display: block; font-family: var(--font-display); font-size: clamp(1.15rem, 1.7vw, 1.4rem); color: var(--ink); }
-.sa-card-desc { display: block; font-size: .84rem; line-height: 1.6; color: var(--stone); margin: .5rem auto 1.1rem; max-width: 28ch; min-height: 2.7rem; }
+.sa-card-desc { display: block; font-size: .84rem; line-height: 1.6; color: var(--stone-text); margin: .5rem auto 1.1rem; max-width: 28ch; min-height: 2.7rem; }
 .sa-card-desc:empty { display: none; }
 .sa-card-cta {
   display: inline-flex; align-items: center; gap: .6rem;
@@ -1845,7 +1850,7 @@ body.sa-modal-open { overflow: hidden; }
 .sa-modal-close:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .sa-modal-close svg { width: 18px; height: 18px; display: block; }
 .sa-modal-title { font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 .5rem; clear: both; }
-.sa-modal-intro { font-size: .95rem; line-height: 1.6; color: var(--stone); margin: 0 0 1.8rem; }
+.sa-modal-intro { font-size: .95rem; line-height: 1.6; color: var(--stone-text); margin: 0 0 1.8rem; }
 
 .sa-item-grid { display: flex; flex-direction: column; gap: 1.4rem; }
 .sa-item { display: flex; gap: 1.1rem; align-items: flex-start; }
@@ -1861,7 +1866,7 @@ body.sa-modal-open { overflow: hidden; }
 }
 .sa-item-photo--rotate img.is-active { opacity: 1; }
 .sa-item-text h4 { font-family: var(--font-display); font-size: 1.15rem; font-weight: 500; margin: 0 0 .3rem; }
-.sa-item-text p { font-size: .88rem; line-height: 1.6; color: var(--stone); margin: 0; }
+.sa-item-text p { font-size: .88rem; line-height: 1.6; color: var(--stone-text); margin: 0; }
 @media (max-width: 480px) {
   .sa-item { flex-direction: column; }
   .sa-item-photo { width: 100%; height: auto; aspect-ratio: 16 / 9; }
@@ -1873,7 +1878,7 @@ body.sa-modal-open { overflow: hidden; }
 .sa-amenities-groups { display: flex; flex-direction: column; gap: 1.8rem; }
 .sa-amenity-category h4 {
   font-family: var(--font-sans); font-size: .74rem; font-weight: 600;
-  letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone);
+  letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone-text);
   margin: 0 0 .8rem;
 }
 .sa-amenity-category ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: .7rem 1rem; }
@@ -1906,13 +1911,13 @@ body.sa-modal-open { overflow: hidden; }
 }
 .booking-cta-head-left .small {
   font-family: var(--font-sans); font-size: .8rem; font-weight: 600;
-  letter-spacing: .05em; text-transform: uppercase; color: var(--stone);
+  letter-spacing: .05em; text-transform: uppercase; color: var(--stone-text);
   margin-left: .35rem;
 }
 .booking-cta-head-right { text-align: right; }
 .booking-cta-eyebrow {
   font-family: var(--font-sans); font-size: .68rem; font-weight: 600;
-  letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone);
+  letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone-text);
 }
 .booking-cta-heading {
   font-family: var(--font-display); font-size: clamp(1.1rem, 1.9vw, 1.5rem);
@@ -1920,7 +1925,7 @@ body.sa-modal-open { overflow: hidden; }
 }
 .booking-cta-note {
   font-family: var(--font-sans); font-size: .72rem; font-weight: 500;
-  letter-spacing: .05em; text-transform: uppercase; color: var(--stone);
+  letter-spacing: .05em; text-transform: uppercase; color: var(--stone-text);
   margin-top: 1.8rem; max-width: 26ch;
 }
 .booking-cta-form { margin-top: 1.8rem; }
@@ -1935,7 +1940,7 @@ body.sa-modal-open { overflow: hidden; }
   letter-spacing: .04em; color: var(--ink);
 }
 .booking-cta-field input:focus { outline: none; }
-.booking-cta-field input::placeholder { color: var(--stone); text-transform: uppercase; letter-spacing: .04em; font-size: .76rem; }
+.booking-cta-field input::placeholder { color: var(--stone-text); text-transform: uppercase; letter-spacing: .04em; font-size: .76rem; }
 .booking-cta-submit {
   display: block; width: 100%; border: 0; cursor: pointer; text-align: center;
   background: var(--gold); color: var(--ink);
@@ -1945,7 +1950,7 @@ body.sa-modal-open { overflow: hidden; }
 }
 .booking-cta-submit:hover { filter: brightness(.92); }
 .booking-cta-legal {
-  font-size: .64rem; line-height: 1.6; color: var(--stone); margin-top: 1rem;
+  font-size: .64rem; line-height: 1.6; color: var(--stone-text); margin-top: 1rem;
 }
 .booking-cta-status { font-size: .76rem; color: var(--sage); margin-top: .7rem; }
 @media (max-width: 700px) {
@@ -2037,13 +2042,13 @@ body.sa-modal-open { overflow: hidden; }
 }
 .trip-showcase-dots button[aria-current="true"] { background: var(--cream); width: 16px; border-radius: 3px; }
 
-.trip-showcase-location { font-size: .64rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); margin: 0; }
+.trip-showcase-location { font-size: .64rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone-text); margin: 0; }
 .trip-showcase-name { font-family: var(--font-display); font-size: clamp(1.5rem, 2.8vw, 1.9rem); font-weight: 600; color: var(--ink); margin: .3rem 0 0; }
 .trip-showcase-specs { display: flex; flex-wrap: wrap; gap: 1.6rem; margin-top: 1.1rem; }
 .trip-showcase-specs .spec { width: 5rem; padding: .7rem; gap: .35rem; border-color: rgba(78, 93, 75, .28); }
 .trip-showcase-specs .spec-icon { width: 1.1rem; height: 1.1rem; margin-bottom: .3rem; }
 .trip-showcase-specs .spec-num { font-family: var(--font-sans); font-size: 1.3rem; line-height: 1; color: var(--sage); }
-.trip-showcase-specs .spec-label { font-size: .62rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone); margin-top: .3rem; }
+.trip-showcase-specs .spec-label { font-size: .62rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone-text); margin-top: .3rem; }
 .trip-showcase-desc { font-size: .92rem; font-weight: 300; line-height: 1.7; color: rgba(20,20,20,.75); margin-top: 1.1rem; }
 
 .trip-panel {
@@ -2062,7 +2067,7 @@ body.sa-modal-open { overflow: hidden; }
 }
 .trip-villa-trigger:hover { border-color: var(--sage); }
 .trip-villa-trigger:focus-visible { outline: none; border-color: var(--sage); }
-.trip-villa-chevron { width: 16px; height: 16px; color: var(--stone); flex: none; transition: transform .2s ease; }
+.trip-villa-chevron { width: 16px; height: 16px; color: var(--stone-text); flex: none; transition: transform .2s ease; }
 .trip-villa-trigger[aria-expanded="true"] .trip-villa-chevron { transform: rotate(180deg); }
 
 .trip-villa-listbox {
@@ -2092,7 +2097,7 @@ body.sa-modal-open { overflow: hidden; }
 .trip-date-pill:hover { border-color: var(--sage); }
 .trip-date-pill[aria-expanded="true"] { border-color: var(--sage); }
 .trip-date-text { font-size: .92rem; color: var(--ink); }
-.trip-date-icon { width: 18px; height: 18px; color: var(--stone); flex: none; }
+.trip-date-icon { width: 18px; height: 18px; color: var(--stone-text); flex: none; }
 
 /* ---------- Custom calendar popover (replaces the native date picker for a
    consistent, on-brand look) ---------- */
@@ -2126,7 +2131,7 @@ body.sa-modal-open { overflow: hidden; }
 .trip-calendar-weekdays, .trip-calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); }
 .trip-calendar-weekdays span {
   text-align: center; font-size: .62rem; font-weight: 600; letter-spacing: var(--track-caps);
-  text-transform: uppercase; color: var(--stone); padding-bottom: .6rem;
+  text-transform: uppercase; color: var(--stone-text); padding-bottom: .6rem;
 }
 .trip-calendar-day {
   width: 34px; height: 34px; margin: 2px auto; border-radius: 50%; border: none; background: none;
@@ -2142,7 +2147,7 @@ body.sa-modal-open { overflow: hidden; }
 .trip-steppers { display: flex; flex-direction: column; gap: 1.1rem; max-width: 320px; margin: 0 auto; width: 100%; }
 .trip-stepper { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .trip-stepper-label { font-size: 1rem; color: var(--ink); }
-.trip-stepper-sub { display: block; font-size: .7rem; color: var(--stone); margin-top: .1rem; }
+.trip-stepper-sub { display: block; font-size: .7rem; color: var(--stone-text); margin-top: .1rem; }
 .trip-stepper-controls { display: flex; align-items: center; gap: .7rem; flex: none; }
 .trip-stepper-btn {
   width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(20,20,20,.35);
@@ -2164,7 +2169,7 @@ body.sa-modal-open { overflow: hidden; }
 .trip-capacity-notice a { color: var(--sage); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
 .trip-notes-field { max-width: 320px; margin: 1.3rem auto 0; width: 100%; text-align: left; }
-.trip-notes-label { display: block; font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--stone); margin-bottom: .5rem; }
+.trip-notes-label { display: block; font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--stone-text); margin-bottom: .5rem; }
 .trip-notes-textarea {
   width: 100%; resize: vertical; min-height: 4.5rem;
   font: inherit; font-size: .9rem; line-height: 1.5; color: var(--ink);
@@ -2176,11 +2181,11 @@ body.sa-modal-open { overflow: hidden; }
 .trip-notes-textarea:focus-visible { outline: none; border-color: var(--sage); }
 
 .trip-price { text-align: center; }
-.trip-price-label { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--stone); margin: 0; }
+.trip-price-label { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--stone-text); margin: 0; }
 .trip-price-value { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 700; margin: .15rem 0 0; }
 .trip-price-value [data-trip-price-value] { text-decoration: underline; text-decoration-color: var(--sage); text-underline-offset: 4px; }
-.trip-price-unit { font-family: var(--font-sans); font-size: .82rem; font-weight: 400; color: var(--stone); }
-.trip-price-note { font-family: var(--font-sans); font-size: .78rem; line-height: 1.5; color: var(--stone); max-width: 34ch; margin: .5rem auto 0; }
+.trip-price-unit { font-family: var(--font-sans); font-size: .82rem; font-weight: 400; color: var(--stone-text); }
+.trip-price-note { font-family: var(--font-sans); font-size: .78rem; line-height: 1.5; color: var(--stone-text); max-width: 34ch; margin: .5rem auto 0; }
 
 .trip-consent-field {
   max-width: 320px; margin: 1.1rem auto 0; width: 100%; text-align: left;
@@ -2202,20 +2207,20 @@ body.sa-modal-open { overflow: hidden; }
 }
 .trip-book-btn:hover { background: var(--green); transform: translateY(-1px); }
 .trip-inquire-btn {
-  background: none; border: none; color: var(--stone); font: inherit; font-size: .9rem;
+  background: none; border: none; color: var(--stone-text); font: inherit; font-size: .9rem;
   text-align: center; max-width: 150px; cursor: pointer; transition: color .2s ease;
 }
 .trip-inquire-btn:hover { color: var(--ink); }
 
 .trip-phone-cta { border-top: 1px solid rgba(20,20,20,.14); padding-top: 1.5rem; text-align: center; }
-.trip-phone-cta p { font-size: .9rem; color: var(--stone); margin: 0; line-height: 1.6; }
+.trip-phone-cta p { font-size: .9rem; color: var(--stone-text); margin: 0; line-height: 1.6; }
 .trip-phone-link { color: var(--ink); font-weight: 700; text-decoration: none; }
 .trip-phone-link:hover { color: var(--sage); }
 
 .map-placeholder {
   border-radius: var(--arch); overflow: hidden; position: relative; aspect-ratio: 16 / 10;
   background: var(--sage-tint); border: 1px dashed var(--stone);
-  display: grid; place-items: center; text-align: center; color: var(--stone);
+  display: grid; place-items: center; text-align: center; color: var(--stone-text);
   font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; padding: 1rem;
 }
 
@@ -2227,7 +2232,7 @@ body.sa-modal-open { overflow: hidden; }
 .villa-calendar-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; }
 .villa-calendar-title { font-family: var(--font-display); font-size: 1.15rem; margin: 0; color: var(--ink); }
 .villa-calendar-nav { display: flex; align-items: center; gap: .6rem; }
-.villa-calendar-month { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--stone); min-width: 9ch; text-align: center; }
+.villa-calendar-month { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--stone-text); min-width: 9ch; text-align: center; }
 .villa-calendar-nav-btn {
   display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
   border: 1px solid rgba(20, 20, 20, .14); background: transparent; color: var(--ink); cursor: pointer;
@@ -2238,7 +2243,7 @@ body.sa-modal-open { overflow: hidden; }
 .villa-calendar-weekdays, .villa-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
 .villa-calendar-weekdays span {
   text-align: center; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase;
-  color: var(--stone); padding-bottom: .5rem;
+  color: var(--stone-text); padding-bottom: .5rem;
 }
 .villa-calendar-grid { row-gap: .35rem; }
 .villa-calendar-day {
@@ -2247,7 +2252,7 @@ body.sa-modal-open { overflow: hidden; }
   border: 0; background: none; padding: 0; font-family: inherit; cursor: default;
 }
 .villa-calendar-day.is-empty { visibility: hidden; }
-.villa-calendar-day.is-past { color: var(--stone); opacity: .35; }
+.villa-calendar-day.is-past { color: var(--stone-text); opacity: .35; }
 .villa-calendar-day.is-available {
   background: var(--sage-tint); cursor: pointer;
   transition: background-color .25s var(--ease-out), color .25s var(--ease-out), transform .2s var(--ease-out), box-shadow .25s var(--ease-out);
@@ -2267,13 +2272,13 @@ body.sa-modal-open { overflow: hidden; }
 }
 .villa-calendar-legend-item {
   display: inline-flex; align-items: center; gap: .4rem; font-size: .72rem;
-  letter-spacing: .04em; text-transform: uppercase; color: var(--stone);
+  letter-spacing: .04em; text-transform: uppercase; color: var(--stone-text);
 }
 .villa-calendar-legend-dot { width: 9px; height: 9px; border-radius: 50%; }
 .villa-calendar-legend-dot.is-available { background: var(--sage-tint); border: 1px solid var(--sage); }
 .villa-calendar-legend-dot.is-booked { background: var(--ink); opacity: .55; }
 .villa-calendar-legend-dot.is-minstay { background: var(--gold); }
-.villa-calendar-note { margin: .9rem 0 0; font-size: .74rem; color: var(--stone); line-height: 1.55; }
+.villa-calendar-note { margin: .9rem 0 0; font-size: .74rem; color: var(--stone-text); line-height: 1.55; }
 .villa-calendar-note--capacity { margin-top: .5rem; color: var(--ink); }
 /* Collapsed to zero height (no reserved blank space) until a date is
    picked, then grows to fit via an animated grid track — the classic
@@ -2333,13 +2338,6 @@ body.sa-modal-open { overflow: hidden; }
   .qa-panel--card { max-height: calc(100dvh - 3.2rem - 131px); }
 }
 
-@media (max-width: 780px) {
-  /* Home hero date popovers: the later `.trip-calendar { left: 0 }` beat
-     `.hero-calendar { left: 50% }`, so translateX(-50%) pushed half the
-     calendar off the left edge of the screen. */
-  .trip-calendar.hero-calendar { left: 50%; }
-}
-
 @media (max-width: 720px) {
   /* Villa pages: the gallery is a tall stack of photos here, so centring it
      in the hero only mattered before main.js rendered the tiles — the title
@@ -2370,6 +2368,17 @@ body.sa-modal-open { overflow: hidden; }
     gap: .6rem;
   }
   .qa-btn { width: 46px; height: 46px; }
+
+  /* Collapse the three buttons behind one (injected by main.js) so they
+     only cover content while the guest is choosing one. */
+  .qa-fab { display: grid; }
+  .quick-actions .qa-item {
+    transition: opacity .25s var(--ease-out), transform .25s var(--ease-out), visibility 0s linear .25s;
+  }
+  .quick-actions:not(.is-expanded) .qa-item {
+    opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(14px) scale(.9);
+  }
+  .quick-actions.is-expanded .qa-item { transition-delay: 0s; }
   .qa-panel--card {
     right: calc(1.8rem + 46px); bottom: calc(1.6rem + 46px);
     max-width: calc(100vw - 1.8rem - 46px - 1rem);
@@ -2397,7 +2406,7 @@ body.sa-modal-open { overflow: hidden; }
   .main-nav a { padding-block: .65rem; }
 }
 
-@media (pointer: coarse) {
+@media (pointer: coarse), (max-width: 900px) {
   /* iOS zooms the page into any field under 16px when it's focused. */
   .trip-notes-textarea, .villa-price-notes-textarea { font-size: 16px; }
 
