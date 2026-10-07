@@ -1792,7 +1792,7 @@ function mlsVillaShowcaseRow(villa, index, basePath = "") {
         ${dotsHtml}
       </div>
       <div class="villa-row-body">
-        <h3 class="h2"><a href="${basePath}villas/${villa.slug}.html">${villa.name}</a></h3>
+        <h2 class="h2"><a href="${basePath}villas/${villa.slug}.html">${villa.name}</a></h2>
         <p class="villa-row-desc">${short}</p>
         <div class="villa-row-specs">
           <span>${lang === "es" ? `${villa.area} m&sup2;` : `${Math.round(villa.area * 10.7639).toLocaleString("en-US")} ${t("card.sqft", lang)}`}</span>
