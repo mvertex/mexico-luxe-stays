@@ -2277,6 +2277,7 @@ body.sa-modal-open { overflow: hidden; }
 .trip-text-input:focus-visible { outline: none; border-color: var(--sage); }
 .trip-text-input[aria-invalid="true"] { border-color: var(--error); }
 .trip-contact-fields + .trip-notes-field { margin-top: 0; }
+.trip-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 .trip-notes-field { max-width: 320px; margin: 1.3rem auto 0; width: 100%; text-align: left; }
 .trip-notes-label { display: block; font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--stone-text); margin-bottom: .5rem; }
 .trip-notes-textarea {

@@ -2758,83 +2758,143 @@
       if (e.target.getAttribute && e.target.getAttribute("aria-invalid") === "true") e.target.removeAttribute("aria-invalid");
     });
 
+    /* Submit: "Book Now" sends a booking request, "Inquire" a question;
+       both go to /api/booking-request, which files them in Hostaway as an
+       inquiry (no calendar block, nothing confirmed). The server re-checks
+       everything below plus live availability, minimum stay and capacity. */
+    const statusEl = contactForm.querySelector(".form-status");
+    const submitBtns = [...contactForm.querySelectorAll('button[type="submit"]')];
+    const CONTACT_LINKS = {
+      whatsapp: { text: "+52 984 807 9475", href: "https://wa.me/5219848079475" },
+      email: { text: "info@mexicoluxestays.com", href: "mailto:info@mexicoluxestays.com" },
+    };
+    /* Messages are fixed i18n strings; {whatsapp}/{email} become real links,
+       {n} a number — built as DOM nodes, never as HTML. */
+    const setStatus = (key, vars = {}) => {
+      if (!statusEl) return;
+      statusEl.textContent = "";
+      t(key).split(/(\{whatsapp\}|\{email\}|\{n\})/).forEach((part) => {
+        const name = part.slice(1, -1);
+        if (CONTACT_LINKS[name] && part === `{${name}}`) {
+          const a = document.createElement("a");
+          a.href = CONTACT_LINKS[name].href;
+          a.textContent = CONTACT_LINKS[name].text;
+          if (name === "whatsapp") { a.target = "_blank"; a.rel = "noopener"; }
+          statusEl.appendChild(a);
+        } else if (part === "{n}") {
+          statusEl.appendChild(document.createTextNode(String(vars.n ?? "")));
+        } else if (part) {
+          statusEl.appendChild(document.createTextNode(part));
+        }
+      });
+    };
+    const setBusy = (busy) => submitBtns.forEach((b) => { b.disabled = busy; b.setAttribute("aria-busy", String(busy)); });
+    const field = (sel) => (sel ? contactForm.querySelector(sel) : null);
+    const markInvalid = (input, msgKey, vars) => {
+      if (input) { input.setAttribute("aria-invalid", "true"); input.focus(); }
+      setStatus(msgKey, vars);
+    };
+    const SERVER_FIELD_INPUTS = { firstName: "#cf-first-name", lastName: "#cf-last-name", email: "#cf-email", phone: "#cf-phone", notes: "#cf-notes" };
+    const SERVER_FIELD_MESSAGES = {
+      firstName: "contact.form.firstNameRequired", lastName: "contact.form.lastNameRequired",
+      email: "contact.form.emailRequired", phone: "contact.form.phoneRequired",
+      notes: "contact.form.questionRequired", villa: "contact.form.villaRequired",
+      dates: "contact.form.datesRequired", guests: "contact.form.errInvalid",
+    };
+    let lastSentKey = null;
+
     contactForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const intent = e.submitter?.dataset.tripIntent || "inquire";
+      if (submitBtns.some((b) => b.disabled)) return; // a request is already in flight
+      const intent = e.submitter?.dataset.tripIntent === "book" ? "book" : "question";
       if (consentInput && !consentInput.checked) {
-        const status = contactForm.querySelector(".form-status");
-        if (status) status.textContent = t("contact.form.consentRequired");
+        setStatus("contact.form.consentRequired");
         consentInput.focus();
         return;
       }
-      if (intent === "book" && !villaValueInput.value) {
-        const status = contactForm.querySelector(".form-status");
-        if (status) status.textContent = t("contact.form.villaRequired");
+      if (!villaValueInput.value) {
+        setStatus(intent === "book" ? "contact.form.villaRequired" : "contact.form.questionVillaRequired");
         openVillaListbox();
         return;
       }
-      if (intent === "book" && (!dateFields.checkin?.selected || !dateFields.checkout?.selected)) {
-        const status = contactForm.querySelector(".form-status");
-        if (status) status.textContent = t("contact.form.datesRequired");
-        (dateFields.checkin?.selected ? dateFields.checkout : dateFields.checkin)?.trigger.click();
+      const hasCheckin = !!dateFields.checkin?.selected;
+      const hasCheckout = !!dateFields.checkout?.selected;
+      if ((intent === "book" && (!hasCheckin || !hasCheckout)) || (intent === "question" && hasCheckin !== hasCheckout)) {
+        setStatus("contact.form.datesRequired");
+        (hasCheckin ? dateFields.checkout : dateFields.checkin)?.trigger.click();
         return;
       }
-      /* Guest contact details: the booking email is useless to the team
-         without a way to reach the guest. */
-      if (intent === "book") {
-        const checks = [
-          ["#cf-name", (v) => v.length >= 2, "contact.form.nameRequired"],
-          ["#cf-email", (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v), "contact.form.emailRequired"],
-          ["#cf-phone", (v) => v.replace(/\D/g, "").length >= 7, "contact.form.phoneRequired"],
-        ];
-        let firstInvalid = null;
-        checks.forEach(([sel, isValid, msgKey]) => {
-          const input = contactForm.querySelector(sel);
-          if (!input) return;
-          const ok = isValid(input.value.trim());
-          input.setAttribute("aria-invalid", String(!ok));
-          if (!ok && !firstInvalid) firstInvalid = [input, msgKey];
-        });
-        if (firstInvalid) {
-          const status = contactForm.querySelector(".form-status");
-          if (status) status.textContent = t(firstInvalid[1]);
-          firstInvalid[0].focus();
-          return;
-        }
-      }
+      /* Guest contact details — the team needs a way to reach the guest. */
+      const checks = [
+        ["#cf-first-name", (v) => v.length >= 1, "contact.form.firstNameRequired"],
+        ["#cf-last-name", (v) => v.length >= 1, "contact.form.lastNameRequired"],
+        ["#cf-email", (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v), "contact.form.emailRequired"],
+        ["#cf-phone", (v) => v.replace(/\D/g, "").length >= 7, "contact.form.phoneRequired"],
+      ];
+      if (intent === "question") checks.push(["#cf-notes", (v) => v.length >= 2, "contact.form.questionRequired"]);
+      let firstInvalid = null;
+      checks.forEach(([sel, isValid, msgKey]) => {
+        const input = field(sel);
+        if (!input) return;
+        const ok = isValid(input.value.trim());
+        input.setAttribute("aria-invalid", String(!ok));
+        if (!ok && !firstInvalid) firstInvalid = [input, msgKey];
+      });
+      if (firstInvalid) { markInvalid(firstInvalid[0], firstInvalid[1]); return; }
+
       const f = new FormData(contactForm);
-      const selectedVillaOption = villaOptions.find((o) => o.dataset.value === f.get("villa"));
-      const status = contactForm.querySelector(".form-status");
+      const payload = {
+        intent,
+        villa: f.get("villa"),
+        checkin: f.get("checkin") || "",
+        checkout: f.get("checkout") || "",
+        bedrooms: f.get("bedrooms"),
+        adults: f.get("adults"),
+        children: f.get("children"),
+        infants: f.get("infants"),
+        firstName: f.get("firstName")?.trim() || "",
+        lastName: f.get("lastName")?.trim() || "",
+        email: f.get("email")?.trim() || "",
+        phone: f.get("phone")?.trim() || "",
+        notes: f.get("notes")?.trim() || "",
+        company: f.get("company") || "",
+        lang: typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en",
+      };
+      const successKey = intent === "book" ? "contact.form.bookSuccess" : "contact.form.questionSuccess";
+      /* Same request again right after a success: just repeat the
+         confirmation instead of sending a duplicate. */
+      const sendKey = JSON.stringify(payload);
+      if (sendKey === lastSentKey) { setStatus(successKey); return; }
 
-      if (intent === "book") {
-        if (status) status.textContent = t("contact.form.sending");
-        fetch("/api/send-inquiry", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            guestName: f.get("name")?.trim() || "",
-            guestEmail: f.get("email")?.trim() || "",
-            guestPhone: f.get("phone")?.trim() || "",
-            villaName: selectedVillaOption?.textContent.trim() || f.get("villa"),
-            checkin: f.get("checkin"),
-            checkout: f.get("checkout"),
-            bedrooms: f.get("bedrooms"),
-            adults: f.get("adults"),
-            children: f.get("children"),
-            infants: f.get("infants"),
-            notes: f.get("notes")?.trim() || "",
-          }),
+      setBusy(true);
+      setStatus(intent === "book" ? "contact.form.sending" : "contact.form.sendingQuestion");
+      fetch("/api/booking-request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+        .then(async (res) => {
+          const data = await res.json().catch(() => ({}));
+          if (res.ok && data.ok) {
+            lastSentKey = sendKey;
+            setStatus(successKey);
+            return;
+          }
+          switch (data.code) {
+            case "unavailable": setStatus("contact.form.errUnavailable"); break;
+            case "min_stay": setStatus("contact.form.errMinStay", { n: data.minNights }); break;
+            case "closed_arrival":
+            case "closed_departure": setStatus("contact.form.errClosedDates"); break;
+            case "capacity": setStatus("contact.form.errCapacity", { n: data.maxGuests }); break;
+            case "rate_limited": setStatus("contact.form.errRateLimited"); break;
+            case "invalid":
+              markInvalid(field(SERVER_FIELD_INPUTS[data.field]), SERVER_FIELD_MESSAGES[data.field] || "contact.form.errInvalid");
+              break;
+            default: setStatus("contact.form.bookError");
+          }
         })
-          .then((res) => { if (!res.ok) throw new Error("send-inquiry failed"); })
-          .then(() => { if (status) status.textContent = t("contact.form.bookSuccess"); })
-          .catch(() => { if (status) status.textContent = t("contact.form.bookError"); });
-        return;
-      }
-
-      /* "Inquire" opens a blank email so the guest writes their own
-         question — unlike Book Now, it's not a prefilled booking summary. */
-      window.location.href = "mailto:info@mexicoluxestays.com";
-      if (status) status.textContent = t("contact.form.status");
+        .catch(() => setStatus("contact.form.bookError"))
+        .finally(() => setBusy(false));
     });
   }
 
