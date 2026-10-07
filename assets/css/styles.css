@@ -2430,16 +2430,23 @@ body.sa-modal-open { overflow: hidden; }
   .qa-panel--pill a { position: relative; }
   .qa-pill-links { gap: .9rem; }
 
-  /* Carousel dots stay small; each gets a 24px hit area, spaced so they don't overlap. */
-  .carousel-dots { gap: 1.1rem; }
-  .carousel-dot { position: relative; }
-  .carousel-dot::after {
-    content: ""; position: absolute; top: 50%; left: 50%;
-    width: 24px; height: 24px; transform: translate(-50%, -50%);
+  /* Carousel dots: the button becomes a 24px target and the 7px dot is
+     drawn inside it, so the look is unchanged but each dot is tappable on
+     its own (they sit over the photo's link). */
+  .carousel-dots { gap: 1px; }
+  .carousel-dot, .carousel-dot.is-active {
+    width: 24px; height: 24px; background: none; transform: none;
+    display: grid; place-items: center;
   }
+  .carousel-dot::before {
+    content: ""; width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(255, 255, 255, .5);
+    transition: background-color .25s ease, transform .25s ease;
+  }
+  .carousel-dot.is-active::before { background: var(--cream); transform: scale(1.2); }
   .testimonial-dots button { position: relative; }
   .testimonial-dots button::after {
-    content: ""; position: absolute; left: -6px; right: -6px; top: 50%;
+    content: ""; position: absolute; left: -7px; right: -7px; top: 50%;
     height: 44px; transform: translateY(-50%);
   }
 
