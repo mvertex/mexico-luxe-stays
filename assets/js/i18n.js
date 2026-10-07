@@ -54,7 +54,7 @@ const MLS_I18N = {
     "qa.faq.label": "Frequently asked questions",
 
     /* ---------- Home ---------- */
-    "home.hero.title": "Welcome to<br><img class=\"hero-logo\" src=\"assets/img/brand/wordmark-negative.png\" alt=\"Mexico Luxe Stays\" width=\"387\" height=\"40\"><span class=\"visually-hidden\"> — Luxury Villa Rentals in Playa del Carmen &amp; Valle de Guadalupe</span>",
+    "home.hero.title": "Welcome to<br><img class=\"hero-logo\" src=\"assets/img/brand/wordmark-negative.png\" srcset=\"assets/img/brand/wordmark-negative-800w.png 800w, assets/img/brand/wordmark-negative-1200w.png 1200w, assets/img/brand/wordmark-negative.png 2696w\" sizes=\"(max-width: 780px) 350px, 580px\" alt=\"Mexico Luxe Stays\" width=\"386\" height=\"40\"><span class=\"visually-hidden\"> — Luxury Villa Rentals in Playa del Carmen &amp; Valle de Guadalupe</span>",
     "home.search.destination": "Destination",
     "home.search.checkin": "Check in",
     "home.search.checkout": "Check out",
@@ -498,7 +498,7 @@ const MLS_I18N = {
     "qa.faq.label": "Preguntas frecuentes",
 
     /* ---------- Home ---------- */
-    "home.hero.title": "Bienvenido a<br><img class=\"hero-logo\" src=\"assets/img/brand/wordmark-negative.png\" alt=\"Mexico Luxe Stays\" width=\"387\" height=\"40\"><span class=\"visually-hidden\"> — Villas de Lujo en Renta en Playa del Carmen y Valle de Guadalupe</span>",
+    "home.hero.title": "Bienvenido a<br><img class=\"hero-logo\" src=\"assets/img/brand/wordmark-negative.png\" srcset=\"assets/img/brand/wordmark-negative-800w.png 800w, assets/img/brand/wordmark-negative-1200w.png 1200w, assets/img/brand/wordmark-negative.png 2696w\" sizes=\"(max-width: 780px) 350px, 580px\" alt=\"Mexico Luxe Stays\" width=\"386\" height=\"40\"><span class=\"visually-hidden\"> — Villas de Lujo en Renta en Playa del Carmen y Valle de Guadalupe</span>",
     "home.search.destination": "Destino",
     "home.search.checkin": "Llegada",
     "home.search.checkout": "Salida",

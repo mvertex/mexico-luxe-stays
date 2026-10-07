@@ -9,6 +9,78 @@
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* srcset/sizes for photos that have mobile-sized copies (see
+     MLS_IMG_VARIANTS / mlsSrcAttrs in villas-data.js). */
+  const mlsImgAttrs = (src) => (typeof mlsSrcAttrs === "function" ? mlsSrcAttrs(src) : "");
+  function mlsSetImg(img, src) {
+    const attrs = /srcset="([^"]+)" sizes="([^"]+)"/.exec(mlsImgAttrs(src));
+    if (attrs) { img.sizes = attrs[2]; img.srcset = attrs[1]; } else { img.removeAttribute("srcset"); }
+    img.src = src;
+  }
+
+  /* ---------- Touch swipe: calls onSwipe(+1 | -1, touchEndEvent) for a
+     clearly horizontal swipe; mostly-vertical drags are left alone so page
+     scrolling is unaffected. ---------- */
+  function mlsOnSwipe(el, onSwipe) {
+    let x0 = null;
+    let y0 = 0;
+    el.addEventListener("touchstart", (e) => {
+      if (e.touches.length !== 1) { x0 = null; return; }
+      x0 = e.touches[0].clientX;
+      y0 = e.touches[0].clientY;
+    }, { passive: true });
+    el.addEventListener("touchend", (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      const dy = e.changedTouches[0].clientY - y0;
+      x0 = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) onSwipe(dx < 0 ? 1 : -1, e);
+    }, { passive: true });
+  }
+
+  /* ---------- Villa showcase rows (Our Villas + destination pages): photo
+     carousel driven by arrows, dots and swipe. Slides after the first carry
+     their source in data-src/data-srcset (see mlsVillaShowcaseRow) and are
+     loaded when shown, with the following one prefetched. ---------- */
+  function mlsLoadSlide(img) {
+    if (!img || !img.dataset.src) return;
+    if (img.dataset.srcset) img.srcset = img.dataset.srcset;
+    img.src = img.dataset.src;
+    img.removeAttribute("data-src");
+    img.removeAttribute("data-srcset");
+  }
+  function mlsShowRowSlide(row, target) {
+    const slides = [...row.querySelectorAll(".villa-row-slide")];
+    const dots = [...row.querySelectorAll(".carousel-dot")];
+    const current = slides.findIndex((s) => s.classList.contains("is-active"));
+    const next = typeof target === "function" ? target(current, slides.length) : target;
+    if (next === current || !slides[next]) return;
+    mlsLoadSlide(slides[next]);
+    mlsLoadSlide(slides[(next + 1) % slides.length]);
+    slides[current]?.classList.remove("is-active");
+    slides[next].classList.add("is-active");
+    dots[current]?.classList.remove("is-active");
+    dots[next]?.classList.add("is-active");
+  }
+  const mlsStepRow = (dir) => (current, n) => (current + dir + n) % n;
+  function mlsWireRowCarousels(container) {
+    container.addEventListener("click", (e) => {
+      const prevBtn = e.target.closest("[data-carousel-prev]");
+      const nextBtn = e.target.closest("[data-carousel-next]");
+      const dotBtn = e.target.closest("[data-carousel-dot]");
+      if (!prevBtn && !nextBtn && !dotBtn) return;
+      const row = e.target.closest("[data-villa-row]");
+      if (!row) return;
+      if (prevBtn) mlsShowRowSlide(row, mlsStepRow(-1));
+      if (nextBtn) mlsShowRowSlide(row, mlsStepRow(1));
+      if (dotBtn) mlsShowRowSlide(row, parseInt(dotBtn.dataset.carouselDot, 10));
+    });
+    mlsOnSwipe(container, (dir, e) => {
+      const row = e.target.closest && e.target.closest("[data-villa-row]");
+      if (row && e.target.closest(".villa-row-media")) mlsShowRowSlide(row, mlsStepRow(dir));
+    });
+  }
+
   /* ---------- Custom select: replaces the native dropdown's OS-styled option
      list with a listbox that matches the filter bar's own look. The original
      <select> stays in the DOM (visually hidden) as the single source of
@@ -40,6 +112,16 @@
       li.textContent = opt.textContent;
       list.appendChild(li);
     });
+
+    /* Name the trigger after the field's <label> (plus its current value):
+       with an empty placeholder option, as on the home hero, the button
+       would otherwise have no accessible name at all. */
+    const fieldLabel = select.id && document.querySelector(`label[for="${select.id}"]`);
+    if (fieldLabel) {
+      fieldLabel.id = fieldLabel.id || `${select.id}-label`;
+      label.id = `${select.id}-value`;
+      trigger.setAttribute("aria-labelledby", `${fieldLabel.id} ${label.id}`);
+    }
 
     wrapper.appendChild(trigger);
     wrapper.appendChild(list);
@@ -162,6 +244,7 @@
     lightbox.querySelector("[data-lightbox-next]").addEventListener("click", nextImage);
     lightbox.querySelector("[data-lightbox-prev]").addEventListener("click", prevImage);
     lightbox.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); });
+    mlsOnSwipe(lightbox, (dir) => (dir > 0 ? nextImage() : prevImage()));
     document.addEventListener("keydown", (e) => {
       if (lightbox.hidden) return;
       if (e.key === "Escape") closeLightbox();
@@ -210,7 +293,7 @@
       listEl.innerHTML = rooms.map((room, i) => `
         <button type="button" class="room-picker-item" data-room-index="${i}">
           <span class="room-picker-item-media">
-            <img src="${room.src}" alt="${room.alt}" loading="lazy">
+            <img src="${room.src}"${mlsImgAttrs(room.src)} alt="${room.alt}" loading="lazy">
           </span>
           <span class="room-picker-item-body">
             <span class="room-picker-item-label">${t("detail.gallery.roomLabel").replace("{n}", i + 1)}</span>
@@ -426,8 +509,10 @@
       const startCarousel = () => {
         slides.forEach((slide) => {
           if (slide.dataset.src) {
+            if (slide.dataset.srcset) slide.srcset = slide.dataset.srcset;
             slide.src = slide.dataset.src;
             slide.removeAttribute("data-src");
+            slide.removeAttribute("data-srcset");
           }
         });
         if (prefersReducedMotion) return;
@@ -687,7 +772,7 @@
       if (imgEl.src === villa.image) return;
       imgEl.style.opacity = "0";
       swapTimer = setTimeout(() => {
-        imgEl.src = villa.image;
+        mlsSetImg(imgEl, villa.image);
         imgEl.alt = villa.imageAlt;
         imgEl.style.opacity = "1";
       }, prefersReducedMotion ? 0 : 220);
@@ -709,7 +794,7 @@
         )
         .join("");
 
-      imgEl.src = villas[0].image;
+      mlsSetImg(imgEl, villas[0].image);
       imgEl.alt = villas[0].imageAlt;
 
       const items = list.querySelectorAll(".featured-item");
@@ -816,28 +901,9 @@
     });
     renderVillaGrid();
 
-    /* Per-row photo carousel (prev/next + dots). Delegated on the grid
-       container so it survives re-renders triggered by the filters. */
-    villaGrid.addEventListener("click", (e) => {
-      const prevBtn = e.target.closest("[data-carousel-prev]");
-      const nextBtn = e.target.closest("[data-carousel-next]");
-      const dotBtn = e.target.closest("[data-carousel-dot]");
-      if (!prevBtn && !nextBtn && !dotBtn) return;
-      const row = e.target.closest("[data-villa-row]");
-      if (!row) return;
-      const slides = [...row.querySelectorAll(".villa-row-slide")];
-      const dots = [...row.querySelectorAll(".carousel-dot")];
-      const current = slides.findIndex((s) => s.classList.contains("is-active"));
-      let next = current;
-      if (prevBtn) next = (current - 1 + slides.length) % slides.length;
-      if (nextBtn) next = (current + 1) % slides.length;
-      if (dotBtn) next = parseInt(dotBtn.dataset.carouselDot, 10);
-      if (next === current) return;
-      slides[current]?.classList.remove("is-active");
-      slides[next]?.classList.add("is-active");
-      dots[current]?.classList.remove("is-active");
-      dots[next]?.classList.add("is-active");
-    });
+    /* Per-row photo carousel (prev/next + dots + swipe). Delegated on the
+       grid container so it survives re-renders triggered by the filters. */
+    mlsWireRowCarousels(villaGrid);
   }
 
   /* ---------- Destination landing pages (Playa del Carmen / Valle de Guadalupe) ---------- */
@@ -853,28 +919,10 @@
     };
     renderDestinationGrid();
 
-    /* Per-row photo carousel (prev/next + dots) — same delegated pattern as the
-       main villa grid above, so rows keep working after a language re-render. */
-    destinationGrid.addEventListener("click", (e) => {
-      const prevBtn = e.target.closest("[data-carousel-prev]");
-      const nextBtn = e.target.closest("[data-carousel-next]");
-      const dotBtn = e.target.closest("[data-carousel-dot]");
-      if (!prevBtn && !nextBtn && !dotBtn) return;
-      const row = e.target.closest("[data-villa-row]");
-      if (!row) return;
-      const slides = [...row.querySelectorAll(".villa-row-slide")];
-      const dots = [...row.querySelectorAll(".carousel-dot")];
-      const current = slides.findIndex((s) => s.classList.contains("is-active"));
-      let next = current;
-      if (prevBtn) next = (current - 1 + slides.length) % slides.length;
-      if (nextBtn) next = (current + 1) % slides.length;
-      if (dotBtn) next = parseInt(dotBtn.dataset.carouselDot, 10);
-      if (next === current) return;
-      slides[current]?.classList.remove("is-active");
-      slides[next]?.classList.add("is-active");
-      dots[current]?.classList.remove("is-active");
-      dots[next]?.classList.add("is-active");
-    });
+    /* Per-row photo carousel (prev/next + dots + swipe) — same delegated
+       pattern as the main villa grid above, so rows keep working after a
+       language re-render. */
+    mlsWireRowCarousels(destinationGrid);
   }
 
   /* ---------- Map pin click target: every brand-pin marker on the site opens
@@ -1474,9 +1522,9 @@
             const photoHtml =
               id === "excursions"
                 ? `<div class="sa-item-photo sa-item-photo--rotate" data-sa-rotate>${SA_EXCURSION_PHOTOS.map(
-                    (src, i) => `<img src="${src}" alt="${i === 0 ? title : ""}" loading="lazy" class="${i === 0 ? "is-active" : ""}">`
+                    (src, i) => `<img src="${src}"${mlsImgAttrs(src)} alt="${i === 0 ? title : ""}" loading="lazy" class="${i === 0 ? "is-active" : ""}">`
                   ).join("")}</div>`
-                : `<div class="sa-item-photo"><img src="${serviceImg(id)}" alt="${title}" loading="lazy"${pos ? ` style="object-position:${pos}"` : ""}></div>`;
+                : `<div class="sa-item-photo"><img src="${serviceImg(id)}"${mlsImgAttrs(serviceImg(id))} alt="${title}" loading="lazy"${pos ? ` style="object-position:${pos}"` : ""}></div>`;
             return `<div class="sa-item">
               ${photoHtml}
               <div class="sa-item-text">
@@ -1508,7 +1556,7 @@
           const cardHtml = (key, mainImg, mainImgPos, chipImg, chipText, title, desc) => `
             <button type="button" class="sa-card" data-sa-open="${key}">
               <span class="sa-card-frame">
-                <span class="sa-card-photo-clip"><img src="${mainImg}" alt="" loading="lazy"${mainImgPos ? ` style="object-position:${mainImgPos}"` : ""}></span>
+                <span class="sa-card-photo-clip"><img src="${mainImg}"${mlsImgAttrs(mainImg)} alt="" loading="lazy"${mainImgPos ? ` style="object-position:${mainImgPos}"` : ""}></span>
                 <span class="sa-card-chip"><img src="${chipImg}" alt="" loading="lazy"><span>${chipText}</span></span>
                 <span class="sa-card-arrow-btn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
               </span>
@@ -1677,7 +1725,7 @@
                 : "";
               return `
               <button type="button" class="villa-gallery-tile" data-slot="${positions[i]}" data-cat-index="${i}" aria-haspopup="dialog">
-                <img src="${cover.src}" alt="${cover.alt}" loading="${i === 0 ? "eager" : "lazy"}">
+                <img src="${cover.src}"${mlsImgAttrs(cover.src)} alt="${cover.alt}" loading="${i === 0 ? "eager" : "lazy"}">
                 <span class="villa-gallery-tile-scrim" aria-hidden="true"></span>
                 ${roomsBadge}
                 <span class="villa-gallery-tile-label">

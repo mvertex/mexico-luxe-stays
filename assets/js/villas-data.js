@@ -37,6 +37,24 @@
    the "Show all amenities" button on detail pages.
    ========================================================================== */
 
+/* ---------- Responsive images ----------
+   Mobile-sized WebP copies (NAME-800w.webp, and NAME-1200w.webp for
+   full-bleed heroes) exist for the photos shown on-page; this table maps
+   each original (relative to assets/img/) to [originalWidth, ...variantWidths].
+   mlsSrcAttrs() turns a src into srcset/sizes attributes so phones download
+   the small copy while desktop keeps picking the original. Lightbox images
+   aren't listed (they stay full size). Regenerate both together. */
+const MLS_IMG_VARIANTS = {"about-cta.webp":[2000,800,1200],"about-story-2.webp":[1254,800],"cta-infinity-pool.webp":[1536,800],"dest-valle-guadalupe.webp":[1400,800],"hero-casa-corazon.jpg":[1752,800,1200],"hero-dest-playa.webp":[1870,800,1200],"hero-dest-valle.webp":[1774,800,1200],"hero-estrellas.webp":[1752,800,1200],"hero-kasa-kefi.webp":[1752,800,1200],"hero-villa-aqua.webp":[1752,800,1200],"hero-villas.webp":[1900,800,1200],"home-dest-playa.webp":[1400,800],"intro-central-landing.webp":[1254,800],"services/spa-massage.webp":[1600,800],"villas/bg-desierto.webp":[1870,800],"villas/bg-playa-turtles.webp":[1536,800],"villas/casa-corazon-luxe-1.webp":[1200,800],"villas/casa-corazon-luxe-2.webp":[1200,800],"villas/casa-corazon-luxe-3.webp":[1200,800],"villas/casa-corazon-luxe-4.webp":[1200,800],"villas/casa-corazon-luxe-5.webp":[1200,800],"villas/casa-corazon-luxe-interiors-02.webp":[1400,800],"villas/casa-corazon-luxe-interiors-03.webp":[1400,800],"villas/casa-corazon-luxe-interiors-33.webp":[1400,800],"villas/casa-corazon-luxe-interiors-35.webp":[1400,800],"villas/casa-corazon-luxe-multipurpose-01.webp":[1400,800],"villas/casa-corazon-luxe-outdoor-02.webp":[1400,800],"villas/casa-corazon-luxe-rooms-01.webp":[1400,800],"villas/casa-corazon-luxe-rooms-03.webp":[1400,800],"villas/casa-corazon-luxe-rooms-04.webp":[1400,800],"villas/casa-corazon-luxe-rooms-06.webp":[1400,800],"villas/casa-corazon-luxe-rooms-15.webp":[1400,800],"villas/casa-corazon-luxe-rooms-19.webp":[1400,800],"villas/casa-corazon-luxe-rooms-27.webp":[1400,800],"villas/casa-corazon-luxe-rooms-38.webp":[1200,800],"villas/casa-corazon-luxe-rooms-40.webp":[1200,800],"villas/casa-corazon-luxe-rooms-42.webp":[1200,800],"villas/casa-corazon-luxe-rooms-44.webp":[1400,800],"villas/casa-corazon-luxe-rooms-52.webp":[1400,800],"villas/casa-de-las-estrellas-1.webp":[1350,800],"villas/casa-de-las-estrellas-2.webp":[1350,800],"villas/casa-de-las-estrellas-3.webp":[1280,800],"villas/casa-de-las-estrellas-interiors-01.webp":[1280,800],"villas/casa-de-las-estrellas-kitchen-02.webp":[1349,800],"villas/casa-de-las-estrellas-kitchen-03.webp":[1351,800],"villas/casa-de-las-estrellas-living-01.webp":[1350,800],"villas/casa-de-las-estrellas-multipurpose-01.webp":[1350,800],"villas/casa-de-las-estrellas-outdoor-01.webp":[1350,800],"villas/casa-de-las-estrellas-rooms-01.webp":[1350,800],"villas/casa-de-las-estrellas-rooms-06.webp":[1349,800],"villas/casa-de-las-estrellas-rooms-14.webp":[1350,800],"villas/casa-de-las-estrellas-rooms-20.webp":[1351,800],"villas/casa-de-las-estrellas-rooms-26.webp":[1280,800],"villas/casa-de-las-estrellas-rooms-27.webp":[1350,800],"villas/kasa-kefi-interiors-01.webp":[1920,800],"villas/kasa-kefi-kitchen-01.webp":[1920,800],"villas/kasa-kefi-living-01.webp":[1920,800],"villas/kasa-kefi-living-05.webp":[1920,800],"villas/kasa-kefi-multipurpose-01.webp":[1920,800],"villas/kasa-kefi-outdoor-01.webp":[1920,800],"villas/kasa-kefi-outdoor-02.webp":[1920,800],"villas/kasa-kefi-outdoor-04.webp":[1920,800],"villas/kasa-kefi-outdoor-07.webp":[1920,800],"villas/kasa-kefi-rooms-01.webp":[1920,800],"villas/villa-aqua-1.webp":[1350,800],"villas/villa-aqua-2.webp":[1350,800],"villas/villa-aqua-3.webp":[1350,800],"villas/villa-aqua-4.webp":[1280,800],"villas/villa-aqua-5.webp":[1350,800],"villas/villa-aqua-interiors-01.webp":[1350,800],"villas/villa-aqua-kitchen-01.webp":[1349,800],"villas/villa-aqua-kitchen-02.webp":[1280,800],"villas/villa-aqua-living-02.webp":[1350,800],"villas/villa-aqua-living-11.webp":[1350,800],"villas/villa-aqua-multipurpose-01.webp":[1350,800],"villas/villa-aqua-outdoor-01.webp":[1350,800],"villas/villa-aqua-rooms-01.webp":[1350,800]};
+function mlsSrcAttrs(src) {
+  const m = /^((?:\.\.\/)*)assets\/img\/(.+)$/.exec(src || "");
+  const entry = m && MLS_IMG_VARIANTS[m[2]];
+  if (!entry) return "";
+  const [origW, ...widths] = entry;
+  const stem = src.replace(/\.(webp|jpe?g)$/i, "");
+  const srcset = widths.map((w) => `${stem}-${w}w.webp ${w}w`).concat(`${src} ${origW}w`).join(", ");
+  return ` srcset="${srcset}" sizes="(max-width: 780px) 100vw, ${origW}px"`;
+}
+
 const MLS_VILLAS = [
   {
     slug: "villa-aqua",
@@ -1742,8 +1760,14 @@ function mlsVillaShowcaseRow(villa, index, basePath = "") {
     });
   }
 
+  /* Only the first slide loads up front; the rest keep their source in
+     data-src/data-srcset until the carousel shows them (see
+     mlsShowRowSlide in main.js) — they're stacked in view, so
+     loading="lazy" alone would still fetch every photo on page load. */
   const slidesHtml = slides
-    .map((s, i) => `<img class="villa-row-slide${i === 0 ? " is-active" : ""}" src="${s.src}" alt="${s.alt}" loading="${i === 0 ? "eager" : "lazy"}" width="1200" height="900" data-slide-index="${i}">`)
+    .map((s, i) => i === 0
+      ? `<img class="villa-row-slide is-active" src="${s.src}"${mlsSrcAttrs(s.src)} alt="${s.alt}" loading="eager" width="1200" height="900" data-slide-index="${i}">`
+      : `<img class="villa-row-slide" data-src="${s.src}"${mlsSrcAttrs(s.src).replace(" srcset=", " data-srcset=")} alt="${s.alt}" width="1200" height="900" data-slide-index="${i}">`)
     .join("");
   const dotsHtml = slides.length > 1
     ? `<div class="carousel-dots" data-carousel-dots>${slides
