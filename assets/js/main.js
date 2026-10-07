@@ -1852,16 +1852,14 @@
          Shares calendarMonth with the Availability calendar above (see
          syncCalendarViews) and disables dates blocked in villa.availability
          so the two never disagree — own small popovers, reusing the same
-         calendar look as the contact page's date pickers.
-         HOSTAWAY INTEGRATION POINT (via Vercel): swap
-         villa.priceFromPerNight for a live quote once dates + guests are
-         picked here. */
+         calendar look as the contact page's date pickers. Prices are
+         Hostaway's: the lowest live nightly rate, then a real quote
+         (/api/villa-quote) once dates + guests are picked. */
       const priceBox = detailRoot.querySelector("[data-price-box]");
       if (priceBox) {
         const priceEl = priceBox.querySelector("[data-price-amount]");
         const priceFromEl = priceBox.querySelector(".villa-price-from");
         const priceUnitEl = priceBox.querySelector(".villa-price-unit");
-        if (priceEl) priceEl.textContent = `$${villa.priceFromPerNight.toLocaleString("en-US")}`;
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -1869,12 +1867,6 @@
         const lang = () => (typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en");
         const locale = () => (lang() === "es" ? "es-MX" : "en-US");
 
-        /* Live estimate: nightly rate steps up by guest-count tier (see
-           TIER_RATE_MULTIPLIERS below) and, once both dates are picked,
-           the display switches from a per-night rate to the stay's total.
-           Placeholder math — see HOSTAWAY INTEGRATION POINT above — but
-           wired end-to-end so swapping in a real quote later is a one-line
-           change in updatePriceDisplay. */
         let selectedCheckin = null;
         let selectedCheckout = null;
         let updatePriceDisplay = () => {};
@@ -1889,6 +1881,15 @@
         const stayHasBlockedNight = (checkin, checkout) => {
           for (let d = checkin; d < checkout; d = addDays(d, 1)) if (nightIsBlocked(d)) return true;
           return false;
+        };
+        const inRanges = (d, ranges) => mlsDateIsBlocked(mlsDateStr(d), ranges || []);
+        /* Hostaway applies the arrival day's minimum stay, which changes by
+           season (e.g. 7 nights over Christmas) — see minStayRanges in
+           api/villa-live-data.js. */
+        const minStayFor = (checkin) => {
+          const iso = mlsDateStr(checkin);
+          const season = (villa.availability?.minStayRanges || []).find((r) => iso >= r.start && iso <= r.end);
+          return season ? season.nights : villa.availability?.minStay || 1;
         };
 
         priceBox.querySelectorAll("[data-price-date-field]").forEach((fieldEl) => {
@@ -1905,9 +1906,12 @@
 
           /* Check-in: the night itself must be free. Check-out: the night
              before must be free (a booking starting that morning is fine),
-             and once a check-in is picked every night in between too. */
+             and once a check-in is picked every night in between too.
+             Days Hostaway closes to arrival/departure can't be picked. */
           const dayIsSelectable = (cellDate) => {
-            if (key !== "checkout") return !nightIsBlocked(cellDate);
+            const a = villa.availability || {};
+            if (key !== "checkout") return !nightIsBlocked(cellDate) && !inRanges(cellDate, a.closedOnArrival);
+            if (inRanges(cellDate, a.closedOnDeparture)) return false;
             if (selectedCheckin) return cellDate > selectedCheckin && !stayHasBlockedNight(selectedCheckin, cellDate);
             return !nightIsBlocked(addDays(cellDate, -1));
           };
@@ -2015,68 +2019,16 @@
           priceBox.querySelectorAll("[data-price-date-trigger]").forEach((b) => b.setAttribute("aria-expanded", "false"));
         });
 
-        /* Tiered-by-occupancy indicator: split the villa's real guest cap
-           into three ascending bands and highlight whichever band the
-           guests stepper currently lands in. TIER_RATE_MULTIPLIERS below
-           turns that band into an actual rate step-up — placeholder
-           percentages (see HOSTAWAY INTEGRATION POINT above) until real
-           per-occupancy pricing is wired in, at which point they're
-           replaced by whatever the API quotes for that band. */
-        const tierEls = Array.from(priceBox.querySelectorAll("[data-price-tier]"));
-        const tierRangesEl = priceBox.querySelector("[data-price-tiers-ranges]");
-        const tierBounds = (() => {
-          const max = villa.guests;
-          const step = Math.ceil(max / 3);
-          const b1 = Math.min(step, max);
-          const b2 = Math.min(step * 2, max);
-          const b3min = Math.min(b2 + 1, max);
-          return [
-            { min: 1, max: b1 },
-            { min: Math.min(b1 + 1, max), max: b2 },
-            { min: b3min, max },
-          ];
-        })();
-        if (tierRangesEl) {
-          tierRangesEl.innerHTML = tierBounds
-            .map((b) => `<span>${b.min >= b.max ? b.max : `${b.min}–${b.max}`}</span>`)
-            .join("");
-        }
-        const tierRangeEls = tierRangesEl ? Array.from(tierRangesEl.children) : [];
-        const TIER_RATE_MULTIPLIERS = [1, 1.15, 1.3];
-        const activeTierIndex = (guestCount) => {
-          const i = tierBounds.findIndex((b) => guestCount >= b.min && guestCount <= b.max);
-          return i === -1 ? 0 : i;
-        };
-        const updateTiers = (guestCount) => {
-          const activeIndex = activeTierIndex(guestCount);
-          tierEls.forEach((el, i) => el.classList.toggle("is-active", i === activeIndex));
-          tierRangeEls.forEach((el, i) => el.classList.toggle("is-active", i === activeIndex));
-        };
-
         const guestsValueEl = priceBox.querySelector("[data-price-guests-value]");
         const guestsDecBtn = priceBox.querySelector("[data-price-guests-dec]");
         const guestsIncBtn = priceBox.querySelector("[data-price-guests-inc]");
         let guests = 1;
 
-        /* ---------- Stay quote ----------
-           HOSTAWAY INTEGRATION POINT: the one place a real quote plugs in.
-           Nightly rate is still the tiered estimate above; cleaning and
-           taxes come from villa.fees ({ cleaning: USD, taxRate: 0–1 }) once
-           that's populated, and until then show as "confirmed in your
-           quote" rather than an invented figure. */
-        const money = (n) => `$${Math.round(n).toLocaleString("en-US")}`;
+        const money = (n) => `$${Number(n).toLocaleString("en-US", Number(n) % 1 ? { minimumFractionDigits: 2, maximumFractionDigits: 2 } : {})}`;
         const nightsLabel = (n) => (n === 1 ? t("detail.book.oneNight") : t("detail.book.totalNights").replace("{n}", n));
-        const stayQuote = () => {
-          const nightly = Math.round(villa.priceFromPerNight * TIER_RATE_MULTIPLIERS[activeTierIndex(guests)]);
-          const nights = selectedCheckin && selectedCheckout && selectedCheckout > selectedCheckin
-            ? nightsBetween(selectedCheckin, selectedCheckout)
-            : 0;
-          const fees = villa.fees || {};
-          const subtotal = nightly * nights;
-          const cleaning = typeof fees.cleaning === "number" ? fees.cleaning : null;
-          const taxes = typeof fees.taxRate === "number" ? Math.round((subtotal + (cleaning || 0)) * fees.taxRate) : null;
-          return { nightly, nights, subtotal, cleaning, taxes, total: subtotal + (cleaning || 0) + (taxes || 0), complete: cleaning !== null && taxes !== null };
-        };
+        const stayNights = () => (selectedCheckin && selectedCheckout && selectedCheckout > selectedCheckin
+          ? nightsBetween(selectedCheckin, selectedCheckout)
+          : 0);
 
         /* What stops this stay from being booked, if anything. Missing
            dates only surface after a Book attempt; the rest show as soon
@@ -2085,7 +2037,7 @@
           if (!selectedCheckin) return { key: "detail.book.errCheckin", field: "checkin", needsAttempt: true };
           if (!selectedCheckout) return { key: "detail.book.errCheckout", field: "checkout", needsAttempt: true };
           if (stayHasBlockedNight(selectedCheckin, selectedCheckout)) return { key: "detail.book.errBooked", field: "checkin" };
-          const minStay = villa.availability?.minStay || 1;
+          const minStay = minStayFor(selectedCheckin);
           const nights = nightsBetween(selectedCheckin, selectedCheckout);
           if (nights < minStay) {
             return { key: "detail.book.errMinStay", field: "checkout", text: t("detail.book.errMinStay").replace("{n}", minStay).replace("{m}", minStay - nights) };
@@ -2094,7 +2046,14 @@
           return null;
         };
 
+        /* Hostaway Booking Engine checkout once it's published
+           (MLS_BOOKING_ENGINE_URL in villas-data.js); until then, the
+           contact page's booking request with everything prefilled. */
         const bookHref = () => {
+          const engineUrl = typeof mlsBookingEngineUrl === "function"
+            ? mlsBookingEngineUrl(villa, selectedCheckin && mlsDateStr(selectedCheckin), selectedCheckout && mlsDateStr(selectedCheckout), guests)
+            : null;
+          if (engineUrl) return engineUrl;
           const qs = new URLSearchParams({ villa: villa.slug });
           if (selectedCheckin) qs.set("checkin", mlsDateStr(selectedCheckin));
           if (selectedCheckout) qs.set("checkout", mlsDateStr(selectedCheckout));
@@ -2134,12 +2093,46 @@
         const barMetaEl = bookBar.querySelector("[data-book-bar-meta]");
         let bookAttempted = false;
 
-        updatePriceDisplay = () => {
-          const q = stayQuote();
-          const pending = `<span class="is-pending">${t("detail.book.feePending")}</span>`;
+        /* ---------- Stay quote: Hostaway's own price ----------
+           /api/villa-quote returns Hostaway's breakdown (base rate,
+           cleaning, taxes, other fees) for the picked dates + guests — what
+           the Booking Engine checkout charges. Fetched once the stay is
+           valid, cached per stay; until it answers (or if it can't) the
+           box shows no made-up total. */
+        const quoteCache = new Map();
+        let quote = { key: null, status: "idle", data: null };
+        let quoteTimer = null;
+        const requestQuote = () => {
+          const key = stayNights() > 0 && !bookingIssue()
+            ? `${mlsDateStr(selectedCheckin)}_${mlsDateStr(selectedCheckout)}_${guests}`
+            : null;
+          if (key === quote.key) return;
+          clearTimeout(quoteTimer);
+          if (!key) { quote = { key: null, status: "idle", data: null }; return; }
+          if (quoteCache.has(key)) { quote = { key, status: "ready", data: quoteCache.get(key) }; return; }
+          quote = { key, status: "loading", data: null };
+          quoteTimer = setTimeout(() => {
+            const [checkin, checkout, g] = key.split("_");
+            const qs = new URLSearchParams({ listingId: villa.hostawayListingId, checkin, checkout, guests: g });
+            fetch(`/api/villa-quote?${qs}`)
+              .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`status ${res.status}`))))
+              .then((data) => {
+                quoteCache.set(key, data);
+                if (quote.key === key) quote = { key, status: "ready", data };
+              })
+              .catch(() => { if (quote.key === key) quote = { key, status: "error", data: null }; })
+              .finally(() => updatePriceDisplay());
+          }, 250);
+        };
 
-          if (priceEl) priceEl.textContent = money(q.nights > 0 ? q.total : q.nightly);
-          if (q.nights > 0) {
+        updatePriceDisplay = () => {
+          requestQuote();
+          const nights = stayNights();
+          const q = quote.status === "ready" ? quote.data : null;
+          const from = typeof villa.priceFromPerNight === "number" ? villa.priceFromPerNight : null;
+
+          if (priceEl) priceEl.textContent = q ? money(q.total) : from !== null ? money(from) : "—";
+          if (q) {
             if (priceFromEl) { priceFromEl.setAttribute("data-i18n", "detail.book.total"); priceFromEl.textContent = t("detail.book.total"); }
             if (priceUnitEl) { priceUnitEl.removeAttribute("data-i18n"); priceUnitEl.textContent = nightsLabel(q.nights); }
           } else {
@@ -2147,12 +2140,23 @@
             if (priceUnitEl) { priceUnitEl.setAttribute("data-i18n", "detail.book.perNight"); priceUnitEl.textContent = t("detail.book.perNight"); }
           }
 
-          breakdownEl.hidden = q.nights === 0;
-          breakdownEl.innerHTML = q.nights === 0 ? "" : `
-            <div class="villa-book-row"><dt>${money(q.nightly)} × ${nightsLabel(q.nights)}</dt><dd>${money(q.subtotal)}</dd></div>
-            <div class="villa-book-row"><dt>${t("detail.book.cleaning")}</dt><dd>${q.cleaning === null ? pending : money(q.cleaning)}</dd></div>
-            <div class="villa-book-row"><dt>${t("detail.book.taxes")}</dt><dd>${q.taxes === null ? pending : money(q.taxes)}</dd></div>
-            <div class="villa-book-row villa-book-row--total"><dt>${t(q.complete ? "detail.book.total" : "detail.book.totalEstimated")}</dt><dd>${money(q.total)}</dd></div>`;
+          const row = (label, value, cls = "") => `<div class="villa-book-row${cls}"><dt>${label}</dt><dd>${value}</dd></div>`;
+          let rows = "";
+          if (q) {
+            rows = row(`${money(Math.round((q.accommodation / q.nights) * 100) / 100)} × ${nightsLabel(q.nights)}`, money(q.accommodation))
+              + (q.cleaning !== null ? row(t("detail.book.cleaning"), money(q.cleaning)) : "")
+              + q.fees.map((f) => row(f.title, money(f.amount))).join("")
+              + q.discounts.map((f) => row(f.title, `−${money(Math.abs(f.amount))}`)).join("")
+              + (q.taxes !== null ? row(t("detail.book.taxes"), money(q.taxes)) : "")
+              + row(t("detail.book.total"), money(q.total), " villa-book-row--total")
+              + q.notIncluded.map((f) => row(`${f.title} <span class="is-pending">${t("detail.book.notIncluded")}</span>`, money(f.amount), " villa-book-row--aside")).join("");
+          } else if (quote.status === "loading") {
+            rows = `<p class="villa-book-status">${t("detail.book.quoteLoading")}</p>`;
+          } else if (quote.status === "error") {
+            rows = `<p class="villa-book-status">${t("detail.book.quoteUnavailable")}</p>`;
+          }
+          breakdownEl.hidden = !rows;
+          breakdownEl.innerHTML = rows;
 
           const issue = bookingIssue();
           const showIssue = issue && (bookAttempted || !issue.needsAttempt);
@@ -2164,9 +2168,9 @@
           document.querySelectorAll("[data-book-cta]").forEach((a) => { a.href = href; });
 
           const fmt = (d) => d.toLocaleDateString(locale(), { month: "short", day: "numeric" });
-          barAmountEl.textContent = money(q.nights > 0 ? q.total : q.nightly);
-          barMetaEl.textContent = q.nights > 0
-            ? `${fmt(selectedCheckin)} – ${fmt(selectedCheckout)} · ${nightsLabel(q.nights)}`
+          barAmountEl.textContent = q ? money(q.total) : from !== null ? `${t("detail.book.from")} ${money(from)}` : "—";
+          barMetaEl.textContent = nights > 0
+            ? `${fmt(selectedCheckin)} – ${fmt(selectedCheckout)} · ${nightsLabel(nights)}`
             : `${t("detail.book.perNight")} · ${t("detail.book.addDates")}`;
         };
 
@@ -2220,9 +2224,23 @@
 
         /* Live Hostaway data or a language switch: redraw pickers, labels
            and the quote with the new availability / wording. */
+        /* Structured data: priceRange only once Hostaway's live "from"
+           rate is known (no hardcoded figure in the page's JSON-LD). */
+        const syncStructuredPrice = () => {
+          if (typeof villa.priceFromPerNight !== "number") return;
+          document.querySelectorAll('script[type="application/ld+json"]').forEach((el) => {
+            try {
+              const data = JSON.parse(el.textContent);
+              if (data["@type"] !== "LodgingBusiness") return;
+              data.priceRange = `From $${villa.priceFromPerNight} USD/night`;
+              el.textContent = JSON.stringify(data, null, 2);
+            } catch (_) {}
+          });
+        };
         document.addEventListener("mls:livedata", () => {
           priceCalRenders.forEach((render) => render());
           updatePriceDisplay();
+          syncStructuredPrice();
         });
         document.addEventListener("mls:languagechange", () => {
           Object.values(priceDateFields).forEach((f) => f.setText());
@@ -2234,7 +2252,6 @@
           if (guestsValueEl) guestsValueEl.textContent = guests;
           if (guestsDecBtn) guestsDecBtn.disabled = guests <= 1;
           if (guestsIncBtn) guestsIncBtn.disabled = guests >= villa.guests;
-          updateTiers(guests);
           updatePriceDisplay();
         };
         guestsDecBtn?.addEventListener("click", () => { guests = Math.max(1, guests - 1); updateGuests(); });
@@ -2689,7 +2706,7 @@
         syncBedroomsFromAdults();
       }
       if (priceValueEl) {
-        priceValueEl.textContent = villa
+        priceValueEl.textContent = villa && typeof villa.priceFromPerNight === "number"
           ? `$${villa.priceFromPerNight.toLocaleString("en-US")}`
           : "—";
       }

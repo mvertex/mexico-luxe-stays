@@ -23,7 +23,6 @@
     "url": "https://www.mexicoluxestays.com/villas/casa-corazon-luxe.html",
     "image": "https://www.mexicoluxestays.com/assets/img/villas/casa-corazon-luxe-1.webp",
     "telephone": "+529848079475",
-    "priceRange": "$4200 USD/night",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Playa del Carmen",
@@ -129,9 +128,8 @@
         </div>
 
         <!-- Standalone price + check-in/check-out + guests widget — see the
-             price-box block in main.js. HOSTAWAY INTEGRATION POINT (via
-             Vercel): swap villa.priceFromPerNight for a live quote once
-             dates + guests are picked here. Check In/Check Out fields open a
+             price-box block in main.js. Prices are Hostaway's (live "from"
+             rate, then /api/villa-quote for the picked stay). Check In/Check Out fields open a
              mini calendar (data-price-calendar) whose disabled/blocked days
              read villa.availability.blockedRanges — same real-availability
              source the old standalone calendar used, so this stays linked to
@@ -194,22 +192,8 @@
             <label class="villa-price-notes-label" for="price-notes-corazon" data-i18n="contact.form.notes">Tell us about your group</label>
             <textarea class="villa-price-notes-textarea" id="price-notes-corazon" rows="3" data-price-notes data-i18n-placeholder="contact.form.notesPlaceholder" placeholder="Celebrating an anniversary, need extra cribs, traveling with pets…"></textarea>
           </div>
-          <p class="villa-price-note" data-i18n="detail.book.note">Estimate only — final rate depends on your dates, season, and guest count.</p>
+          <p class="villa-price-note" data-i18n="detail.book.note">Live rates from our booking system — the checkout shows the final amount before you pay.</p>
           <p class="villa-price-note" data-i18n-html="detail.book.cancelStrict">Cancellation: 92% refund up to 60 days before arrival, 42% up to 30 days. Non-refundable within 30 days — see <a href="../terms.html#cancellation-policy">full policy</a>.</p>
-
-          <div class="villa-price-tiers" data-price-tiers>
-            <div class="villa-price-tiers-head">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M4 20v-6M12 20V8M20 20v-11"/></svg>
-              <span data-i18n="detail.book.tieredLabel">Tiered by occupancy</span>
-            </div>
-            <div class="villa-price-tiers-bar" data-price-tiers-bar aria-hidden="true">
-              <span class="villa-price-tier" data-price-tier="0"><em class="villa-price-tier-fill"></em></span>
-              <span class="villa-price-tier" data-price-tier="1"><em class="villa-price-tier-fill"></em></span>
-              <span class="villa-price-tier" data-price-tier="2"><em class="villa-price-tier-fill"></em></span>
-            </div>
-            <div class="villa-price-tiers-ranges" data-price-tiers-ranges></div>
-            <p class="villa-price-tiers-caption" data-i18n="detail.book.tieredCaption">Nightly rate steps up in three bands as your group grows — the guest count above shows where you land.</p>
-          </div>
         </div>
       </div>
 

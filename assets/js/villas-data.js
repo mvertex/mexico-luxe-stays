@@ -15,17 +15,9 @@
    │ once live, mapping rating→testimonial.rating (1-5). See             │
    │ detail.testimonials integration note in main.js.                    │
    │                                                                      │
-   │ `priceFromPerNight` is a placeholder editorial figure — replace     │
-   │ with live nightly rates from the Hostaway pricing API (used by the  │
-   │ "Plan your trip" widget on the contact page).                       │
-   │                                                                      │
-   │ `availability` drives the calendar widget on each villa's detail    │
-   │ page (see mlsRenderCalendar in main.js). Replace `blockedRanges`    │
-   │ with a live fetch to the Hostaway Calendar API (GET                 │
-   │ /v1/listings/{id}/calendar, date range query params), mapping any   │
-   │ date with status "unavailable" or "reserved" into a blocked range.  │
-   │ Once wired, this should come from the server (see the /api proxy    │
-   │ plan) rather than being bundled here as static data.                │
+   │ `priceFromPerNight` and `availability` are filled live from         │
+   │ Hostaway by assets/js/hostaway-sync.js (/api/villa-live-data); the  │
+   │ stay quote comes from /api/villa-quote (Hostaway priceDetails).     │
    └─────────────────────────────────────────────────────────────────────┘
 
    Content sourced from the client's Hostaway listings (July 2026).
@@ -55,6 +47,23 @@ function mlsSrcAttrs(src) {
   return ` srcset="${srcset}" sizes="(max-width: 780px) 100vw, ${origW}px"`;
 }
 
+/* ---------- Hostaway Booking Engine ----------
+   "Book now" sends guests to the owner's Hostaway Booking Engine checkout
+   for the villa, with dates and guests prefilled — the same URL Hostaway's
+   own calendar widget builds: {base}checkout/{listingId}?start=&end=&numberOfGuests=
+   null until the owner publishes the Booking Engine (on its own subdomain,
+   e.g. "https://reservas.mexicoluxestays.com/"); until then Book now falls
+   back to the contact page's booking request. */
+const MLS_BOOKING_ENGINE_URL = null;
+function mlsBookingEngineUrl(villa, checkin, checkout, guests) {
+  if (!MLS_BOOKING_ENGINE_URL || !villa || !villa.hostawayListingId) return null;
+  const url = new URL(`checkout/${villa.hostawayListingId}`, MLS_BOOKING_ENGINE_URL);
+  if (checkin) url.searchParams.set("start", checkin);
+  if (checkout) url.searchParams.set("end", checkout);
+  url.searchParams.set("numberOfGuests", String(guests || 1));
+  return url.toString();
+}
+
 const MLS_VILLAS = [
   {
     slug: "villa-aqua",
@@ -69,17 +78,11 @@ const MLS_VILLAS = [
     guests: 18,
     bedrooms: 6,
     hostawayListingId: 145234,
-    priceFromPerNight: 2400, // HOSTAWAY INTEGRATION POINT — replace with live pricing API
-    availability: { // HOSTAWAY INTEGRATION POINT — replace with live Calendar API data
-      minStay: 4,
-      blockedRanges: [
-        { start: "2026-08-14", end: "2026-08-18" },
-        { start: "2026-08-28", end: "2026-09-02" },
-        { start: "2026-09-19", end: "2026-09-25" },
-        { start: "2026-10-09", end: "2026-10-13" },
-        { start: "2026-12-20", end: "2027-01-03" }
-      ]
-    },
+    // Live from Hostaway (hostaway-sync.js): lowest bookable nightly rate,
+    // per-date minimum stay and booked nights. Empty until it lands, so
+    // the site never shows a made-up price or booking.
+    priceFromPerNight: null,
+    availability: { minStay: null, minStayRanges: [], blockedRanges: [] },
     beds: 11,
     baths: 6,
     area: 1200,
@@ -690,17 +693,11 @@ const MLS_VILLAS = [
     guests: 12,
     bedrooms: 4,
     hostawayListingId: 305921,
-    priceFromPerNight: 1100, // HOSTAWAY INTEGRATION POINT — replace with live pricing API
-    availability: { // HOSTAWAY INTEGRATION POINT — replace with live Calendar API data
-      minStay: 3,
-      blockedRanges: [
-        { start: "2026-08-21", end: "2026-08-24" },
-        { start: "2026-09-11", end: "2026-09-15" },
-        { start: "2026-10-02", end: "2026-10-06" },
-        { start: "2026-11-06", end: "2026-11-09" },
-        { start: "2026-12-23", end: "2027-01-02" }
-      ]
-    },
+    // Live from Hostaway (hostaway-sync.js): lowest bookable nightly rate,
+    // per-date minimum stay and booked nights. Empty until it lands, so
+    // the site never shows a made-up price or booking.
+    priceFromPerNight: null,
+    availability: { minStay: null, minStayRanges: [], blockedRanges: [] },
     beds: 7,
     baths: 4.5,
     area: 400,
@@ -933,17 +930,11 @@ const MLS_VILLAS = [
     guests: 22,
     bedrooms: 11,
     hostawayListingId: 144272,
-    priceFromPerNight: 4200, // HOSTAWAY INTEGRATION POINT — replace with live pricing API
-    availability: { // HOSTAWAY INTEGRATION POINT — replace with live Calendar API data
-      minStay: 5,
-      blockedRanges: [
-        { start: "2026-08-15", end: "2026-08-22" },
-        { start: "2026-09-04", end: "2026-09-08" },
-        { start: "2026-10-16", end: "2026-10-20" },
-        { start: "2026-11-25", end: "2026-11-30" },
-        { start: "2026-12-18", end: "2027-01-05" }
-      ]
-    },
+    // Live from Hostaway (hostaway-sync.js): lowest bookable nightly rate,
+    // per-date minimum stay and booked nights. Empty until it lands, so
+    // the site never shows a made-up price or booking.
+    priceFromPerNight: null,
+    availability: { minStay: null, minStayRanges: [], blockedRanges: [] },
     beds: 16,
     baths: 12,
     area: 1486,
@@ -1398,17 +1389,11 @@ const MLS_VILLAS = [
     guests: 10,
     bedrooms: 4,
     hostawayListingId: 456289,
-    priceFromPerNight: 950, // HOSTAWAY INTEGRATION POINT — replace with live pricing API
-    availability: { // HOSTAWAY INTEGRATION POINT — replace with live Calendar API data
-      minStay: 3,
-      blockedRanges: [
-        { start: "2026-08-12", end: "2026-08-15" },
-        { start: "2026-09-01", end: "2026-09-05" },
-        { start: "2026-09-26", end: "2026-09-30" },
-        { start: "2026-10-24", end: "2026-10-28" },
-        { start: "2026-12-15", end: "2026-12-27" }
-      ]
-    },
+    // Live from Hostaway (hostaway-sync.js): lowest bookable nightly rate,
+    // per-date minimum stay and booked nights. Empty until it lands, so
+    // the site never shows a made-up price or booking.
+    priceFromPerNight: null,
+    availability: { minStay: null, minStayRanges: [], blockedRanges: [] },
     beds: 5,
     baths: 4,
     area: 460,

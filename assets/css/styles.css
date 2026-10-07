@@ -1550,6 +1550,9 @@ button { font: inherit; cursor: pointer; }
 .villa-book-row .is-pending { font-size: .76rem; color: var(--stone-text); }
 .villa-book-row--total { margin-top: .35rem; padding-top: .8rem; border-top: 1px solid rgba(20, 20, 20, .12); }
 .villa-book-row--total dt, .villa-book-row--total dd { color: var(--ink); font-weight: 600; }
+.villa-book-row--aside { font-size: .78rem; }
+.villa-book-row--aside dd { color: var(--stone-text); }
+.villa-book-status { margin: 0; padding: .4rem .2rem; font-size: .8rem; line-height: 1.5; color: var(--stone-text); }
 .villa-book-error { margin: 0 0 .9rem; padding-inline: .2rem; font-size: .8rem; line-height: 1.5; color: var(--error); }
 .villa-book-cta { width: 100%; min-height: 48px; }
 .villa-book-cta:active, .book-bar-cta:active { transform: translateY(0) scale(.98); }
@@ -1580,31 +1583,6 @@ button { font: inherit; cursor: pointer; }
    band the current stepper value falls into. Bounds are computed in
    main.js from villa.guests — no invented figures, just the real cap
    split into three bands. */
-.villa-price-tiers { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid rgba(20, 20, 20, .1); }
-.villa-price-tiers-head {
-  display: flex; align-items: center; gap: .4rem; margin-bottom: .7rem;
-  font-family: var(--font-sans); font-size: .7rem; font-weight: 600;
-  text-transform: uppercase; letter-spacing: var(--track-caps); color: var(--stone-text);
-}
-.villa-price-tiers-head svg { width: 14px; height: 14px; flex: none; color: var(--gold); }
-.villa-price-tiers-bar { display: flex; align-items: flex-end; gap: .35rem; height: 26px; }
-.villa-price-tier { flex: 1; display: flex; align-items: flex-end; height: 100%; }
-.villa-price-tier-fill {
-  display: block; width: 100%; border-radius: 2px 2px 0 0;
-  background: var(--sage-tint); opacity: .7;
-  transition: background-color .25s ease, opacity .25s ease;
-}
-.villa-price-tier[data-price-tier="0"] .villa-price-tier-fill { height: 42%; }
-.villa-price-tier[data-price-tier="1"] .villa-price-tier-fill { height: 70%; }
-.villa-price-tier[data-price-tier="2"] .villa-price-tier-fill { height: 100%; }
-.villa-price-tier.is-active .villa-price-tier-fill { background: var(--sage); opacity: 1; }
-.villa-price-tiers-ranges { display: flex; gap: .35rem; margin-top: .4rem; }
-.villa-price-tiers-ranges span {
-  flex: 1; text-align: center; font-family: var(--font-sans); font-size: .68rem;
-  color: var(--stone-text); transition: color .2s ease;
-}
-.villa-price-tiers-ranges span.is-active { color: var(--ink); font-weight: 700; }
-.villa-price-tiers-caption { font-size: .7rem; line-height: 1.5; color: var(--stone-text); text-align: center; margin: .65rem 0 0; }
 
 
 /* Villa FAQ showcase: question list on the left, answer card on the right —
@@ -2501,7 +2479,7 @@ body.sa-modal-open { overflow: hidden; }
   .hero-scroll-hint, .filter-field label, .footer-bottom, .breadcrumb, .detail-faq-jump,
   .eyebrow, .trip-stepper-sub, .trip-notes-label, .trip-price-label, .wa-option-hint,
   .villa-price-note, .wa-qr-hint, .qr-popover-hint, .hero-calendar-note,
-  .villa-price-tiers-head, .villa-price-tiers-ranges span, .villa-price-tiers-caption,
+  .villa-book-status,
   .sa-card-cta, .sa-card-chip span { font-size: .75rem; }
 }
 
