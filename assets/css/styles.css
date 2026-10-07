@@ -374,7 +374,10 @@ button { font: inherit; cursor: pointer; }
 /* ---------- Hero search (liquid glass) ---------- */
 .hero-search {
   display: flex; align-items: stretch; flex-wrap: wrap;
-  width: min(920px, 92vw); margin: 9.5rem auto 0;
+  /* The last term caps it at the container's content width: 92vw alone is
+     wider than that on phones/tablets, which widened the whole page sideways.
+     (Not 100% — the hero container shrink-wraps its content.) */
+  width: min(920px, 92vw, calc(100vw - 2 * var(--pad-x))); margin: 9.5rem auto 0;
   border-radius: 4px;
   background: rgba(246, 244, 239, .16);
   backdrop-filter: blur(20px) saturate(160%);
@@ -2314,4 +2317,131 @@ body.sa-modal-open { overflow: hidden; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   .hero [data-hero-reveal], .reveal { opacity: 1; transform: none; }
+}
+
+/* ==========================================================================
+   Mobile & touch fixes
+   Everything below is scoped to small viewports or coarse (touch) pointers,
+   so the desktop layout is untouched.
+   ========================================================================== */
+
+/* Mobile browser chrome: 100vh is taller than the visible screen while the
+   URL bar shows; svh/dvh track what's actually visible (same as vh on desktop). */
+@supports (height: 100svh) {
+  .detail-hero { min-height: 100svh; }
+  .qa-panel { max-height: calc(100dvh - 2.8rem); }
+  .qa-panel--card { max-height: calc(100dvh - 3.2rem - 131px); }
+}
+
+@media (max-width: 780px) {
+  /* Home hero date popovers: the later `.trip-calendar { left: 0 }` beat
+     `.hero-calendar { left: 50% }`, so translateX(-50%) pushed half the
+     calendar off the left edge of the screen. */
+  .trip-calendar.hero-calendar { left: 50%; }
+}
+
+@media (max-width: 720px) {
+  /* Villa pages: the gallery is a tall stack of photos here, so centring it
+     in the hero only mattered before main.js rendered the tiles — the title
+     sat mid-screen, then jumped ~230px up (CLS 0.29). Top-align from the start. */
+  .detail-hero { align-items: flex-start; }
+}
+
+@media (max-width: 480px) {
+  /* Two 44vw cards plus the gap don't fit side by side, so they stacked as
+     small squares with cramped, overlapping titles. Stack them at a readable size. */
+  .destination-card { width: min(100%, 340px); }
+}
+
+@media (max-width: 600px) {
+  /* Floating phone / WhatsApp / FAQ stack: slimmer and tucked into the
+     corner (clear of the iPhone home indicator) so it covers less content. */
+  .quick-actions {
+    right: max(.9rem, env(safe-area-inset-right));
+    bottom: max(.9rem, env(safe-area-inset-bottom));
+    gap: .6rem;
+  }
+  .qa-btn { width: 46px; height: 46px; }
+  .qa-panel--card {
+    right: calc(1.8rem + 46px); bottom: calc(1.6rem + 46px);
+    max-width: calc(100vw - 1.8rem - 46px - 1rem);
+  }
+}
+
+@media (max-width: 900px) {
+  /* Small labels and captions: 12px floor so nothing drops below legible size. */
+  .villa-gallery-tile-badge, .villa-location, .footer-heading, .spec .spec-label,
+  .hero-scroll-hint, .filter-field label, .footer-bottom, .breadcrumb, .detail-faq-jump,
+  .eyebrow, .trip-stepper-sub, .trip-notes-label, .trip-price-label, .wa-option-hint,
+  .villa-price-note, .wa-qr-hint, .qr-popover-hint, .hero-calendar-note,
+  .villa-price-tiers-head, .villa-price-tiers-ranges span, .villa-price-tiers-caption,
+  .sa-card-cta, .sa-card-chip span { font-size: .75rem; }
+}
+
+@media (max-width: 900px) {
+  .cta-actions--quad { flex-wrap: wrap; }
+  .cta-actions--quad .btn { font-size: .75rem; }
+}
+
+@media (max-width: 900px) {
+  /* Mobile menu links: taller tap rows, same overall rhythm. */
+  .main-nav { gap: 1.1rem; }
+  .main-nav a { padding-block: .65rem; }
+}
+
+@media (pointer: coarse) {
+  /* iOS zooms the page into any field under 16px when it's focused. */
+  .trip-notes-textarea, .villa-price-notes-textarea { font-size: 16px; }
+
+  /* Touch targets ≥44px. Small round controls keep their look; an invisible
+     ::after extends the tappable area around them. */
+  .nav-toggle, .trip-stepper-btn, .villa-price-guests-btn, .social-row a,
+  .lang-toggle button, .detail-faq-jump, .featured-item, .villa-faq-item { position: relative; }
+  .nav-toggle::after, .trip-stepper-btn::after, .villa-price-guests-btn::after,
+  .social-row a::after, .lang-toggle button::after, .qa-panel-close::after,
+  .qr-popover-close::after, .carousel-arrow::after {
+    content: ""; position: absolute; top: 50%; left: 50%;
+    width: max(100%, 44px); height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+  .site-footer .logo { position: relative; }
+  .detail-faq-jump::after, .featured-item::after, .villa-faq-item::after,
+  .hero-scroll-hint::after, .qa-panel--pill a::after, .site-footer .logo::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 50%;
+    height: max(100%, 44px); transform: translateY(-50%);
+  }
+  .qa-panel--pill a { position: relative; }
+  .qa-pill-links { gap: .9rem; }
+
+  /* Carousel dots stay small; each gets a 24px hit area, spaced so they don't overlap. */
+  .carousel-dots { gap: 1.1rem; }
+  .carousel-dot { position: relative; }
+  .carousel-dot::after {
+    content: ""; position: absolute; top: 50%; left: 50%;
+    width: 24px; height: 24px; transform: translate(-50%, -50%);
+  }
+  .testimonial-dots button { position: relative; }
+  .testimonial-dots button::after {
+    content: ""; position: absolute; left: -6px; right: -6px; top: 50%;
+    height: 44px; transform: translateY(-50%);
+  }
+
+  /* Hero search / villa filter fields: the visible control was only the
+     text line; stretch it over the field's padding (negative margin keeps
+     the layout identical). */
+  .hero-date-trigger, .hero-search .custom-select-trigger { padding-block: 1.3rem; margin-block: -1.3rem; }
+  .hero-search-field input[type="text"] { padding-block: 1.1rem; margin-block: -1.1rem; }
+  .filter-field .custom-select-trigger, .filter-field input[type="text"] { padding-block: .75rem; margin-block: -.75rem; }
+
+  .cta-actions--quad .btn, .cta-actions--triple .btn { min-height: 44px; }
+  .filter-clear { min-height: 44px; }
+
+  /* Footer links: full-height tap rows. */
+  .footer-links li { margin-bottom: 0; }
+  .footer-links a, .footer-legal-links a {
+    display: inline-flex; align-items: center; min-height: 44px; min-width: 44px;
+  }
+  .breadcrumb a { padding-block: 1rem; }
+  .footer-legal-links { row-gap: 0; }
+  .footer-contact a { display: inline-block; padding-block: .7rem; margin-block: -.7rem; }
 }
