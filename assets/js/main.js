@@ -1757,7 +1757,7 @@
                 : "";
               return `
               <button type="button" class="villa-gallery-tile" data-slot="${positions[i]}" data-cat-index="${i}" aria-haspopup="dialog">
-                <img src="${cover.src}"${mlsImgAttrs(cover.src)} alt="${cover.alt}" loading="${i === 0 ? "eager" : "lazy"}">
+                <img src="${cover.src}"${mlsImgAttrs(cover.src)} alt="${cover.alt}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>
                 <span class="villa-gallery-tile-scrim" aria-hidden="true"></span>
                 ${roomsBadge}
                 <span class="villa-gallery-tile-label">
