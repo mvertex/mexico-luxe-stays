@@ -1393,7 +1393,7 @@ const MLS_VILLAS = [
     destinationLabelEs: "Playa del Carmen",
     lat: 20.6124935,
     lng: -87.0828781,
-    mapIcon: "assets/img/brand/casa-de-las-estrellas-icon.png",
+    mapIcon: "assets/img/brand/casa-de-las-estrellas-pin.png",
     googleMapsUrl: "https://www.google.com/maps/place/Home+in+Playa+del+Carmen,+MX/@20.6134124,-87.0875142,16.2z/data=!4m14!1m2!2m1!1scasa+de+las+estrellas!3m10!1s0x8f4e434044c42bef:0x388f20b80006b76c!5m2!4m1!1i2!8m2!3d20.6142178!4d-87.0805817!15sChVjYXNhIGRlIGxhcyBlc3RyZWxsYXOSAQ92YWNhdGlvbl9yZW50YWzgAQA!16s%2Fg%2F11zdf51myh!17BQ0FF",
     guests: 10,
     bedrooms: 4,

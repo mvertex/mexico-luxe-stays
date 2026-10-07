@@ -817,13 +817,13 @@ button { font: inherit; cursor: pointer; }
 }
 .mls-map-pin.leaflet-div-icon { cursor: pointer; }
 
-/* Casa de las Estrellas' mark is a slender flare with a lot of empty canvas
-   around it, so at the shared box size it reads visibly smaller/fainter than
-   the other villas' bolder marks — size it up so all four fill the pin at
-   roughly the same visual weight, without touching the source artwork. */
+/* Casa de las Estrellas' mark is a slender radial flare (square, trimmed and
+   centred on the star, brand green — see casa-de-las-estrellas-pin.png), so
+   it gets a slightly larger square box than the other marks to carry the
+   same visual weight inside the pin. */
 .mls-map-pin-dot--casa-de-las-estrellas img,
 .leaflet-container .leaflet-marker-pane .mls-map-pin-dot--casa-de-las-estrellas img {
-  max-width: 34px !important; max-height: 30px !important;
+  max-width: 28px !important; max-height: 28px !important;
 }
 
 /* Property page map: the current villa's pin is enlarged and gold-bordered
@@ -840,7 +840,7 @@ button { font: inherit; cursor: pointer; }
 }
 .mls-map-pin-dot--current.mls-map-pin-dot--casa-de-las-estrellas img,
 .leaflet-container .leaflet-marker-pane .mls-map-pin-dot--current.mls-map-pin-dot--casa-de-las-estrellas img {
-  max-width: 40px !important; max-height: 34px !important;
+  max-width: 34px !important; max-height: 34px !important;
 }
 
 @media (max-width: 640px) {
