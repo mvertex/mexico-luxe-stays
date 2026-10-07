@@ -2168,6 +2168,17 @@ body.sa-modal-open { overflow: hidden; }
 }
 .trip-capacity-notice a { color: var(--sage); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
+/* Guest contact details: same label + field look as the notes box below. */
+.trip-contact-fields { display: flex; flex-direction: column; gap: 1rem; max-width: 320px; margin: 1.3rem auto 0; width: 100%; text-align: left; }
+.trip-text-input {
+  width: 100%; font: inherit; font-size: .9rem; line-height: 1.5; color: var(--ink);
+  background: var(--cream); border: 1px solid rgba(20,20,20,.22); border-radius: 4px;
+  padding: .7rem .9rem; transition: border-color .2s ease;
+}
+.trip-text-input:hover { border-color: rgba(20,20,20,.35); }
+.trip-text-input:focus-visible { outline: none; border-color: var(--sage); }
+.trip-text-input[aria-invalid="true"] { border-color: var(--error); }
+.trip-contact-fields + .trip-notes-field { margin-top: 0; }
 .trip-notes-field { max-width: 320px; margin: 1.3rem auto 0; width: 100%; text-align: left; }
 .trip-notes-label { display: block; font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--stone-text); margin-bottom: .5rem; }
 .trip-notes-textarea {
@@ -2408,7 +2419,7 @@ body.sa-modal-open { overflow: hidden; }
 
 @media (pointer: coarse), (max-width: 900px) {
   /* iOS zooms the page into any field under 16px when it's focused. */
-  .trip-notes-textarea, .villa-price-notes-textarea { font-size: 16px; }
+  .trip-notes-textarea, .villa-price-notes-textarea, .trip-text-input { font-size: 16px; }
 
   /* Touch targets ≥44px. Small round controls keep their look; an invisible
      ::after extends the tappable area around them. */

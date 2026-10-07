@@ -2529,6 +2529,9 @@
     }
 
     const consentInput = contactForm.querySelector("[data-trip-consent]");
+    contactForm.addEventListener("input", (e) => {
+      if (e.target.getAttribute && e.target.getAttribute("aria-invalid") === "true") e.target.removeAttribute("aria-invalid");
+    });
 
     contactForm.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -2551,6 +2554,29 @@
         (dateFields.checkin?.selected ? dateFields.checkout : dateFields.checkin)?.trigger.click();
         return;
       }
+      /* Guest contact details: the booking email is useless to the team
+         without a way to reach the guest. */
+      if (intent === "book") {
+        const checks = [
+          ["#cf-name", (v) => v.length >= 2, "contact.form.nameRequired"],
+          ["#cf-email", (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v), "contact.form.emailRequired"],
+          ["#cf-phone", (v) => v.replace(/\D/g, "").length >= 7, "contact.form.phoneRequired"],
+        ];
+        let firstInvalid = null;
+        checks.forEach(([sel, isValid, msgKey]) => {
+          const input = contactForm.querySelector(sel);
+          if (!input) return;
+          const ok = isValid(input.value.trim());
+          input.setAttribute("aria-invalid", String(!ok));
+          if (!ok && !firstInvalid) firstInvalid = [input, msgKey];
+        });
+        if (firstInvalid) {
+          const status = contactForm.querySelector(".form-status");
+          if (status) status.textContent = t(firstInvalid[1]);
+          firstInvalid[0].focus();
+          return;
+        }
+      }
       const f = new FormData(contactForm);
       const selectedVillaOption = villaOptions.find((o) => o.dataset.value === f.get("villa"));
       const status = contactForm.querySelector(".form-status");
@@ -2561,6 +2587,9 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            guestName: f.get("name")?.trim() || "",
+            guestEmail: f.get("email")?.trim() || "",
+            guestPhone: f.get("phone")?.trim() || "",
             villaName: selectedVillaOption?.textContent.trim() || f.get("villa"),
             checkin: f.get("checkin"),
             checkout: f.get("checkout"),

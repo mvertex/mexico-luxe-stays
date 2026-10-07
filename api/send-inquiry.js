@@ -9,6 +9,7 @@
 
 const TO_EMAIL = "info@mexicoluxestays.com";
 const DEFAULT_FROM_EMAIL = "Mexico Luxe Stays <onboarding@resend.dev>";
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, (c) => (
@@ -30,13 +31,24 @@ module.exports = async (req, res) => {
 
   const body = req.body && typeof req.body === "object" ? req.body : {};
   const { villaName, checkin, checkout, bedrooms, adults, children, infants, notes } = body;
+  const guestName = String(body.guestName ?? "").trim();
+  const guestEmail = String(body.guestEmail ?? "").trim();
+  const guestPhone = String(body.guestPhone ?? "").trim();
 
   if (!villaName || !checkin || !checkout) {
     res.status(400).json({ error: "Missing required booking fields" });
     return;
   }
+  // Same rules as the form (main.js): without these the team can't reply.
+  if (guestName.length < 2 || !EMAIL_RE.test(guestEmail) || guestPhone.replace(/\D/g, "").length < 7) {
+    res.status(400).json({ error: "Missing or invalid guest contact details" });
+    return;
+  }
 
   const rows = [
+    ["Guest", guestName],
+    ["Email", guestEmail],
+    ["Phone / WhatsApp", guestPhone],
     ["Villa", villaName],
     ["Dates", `${checkin} to ${checkout}`],
     ["Bedrooms", bedrooms],
@@ -64,7 +76,9 @@ module.exports = async (req, res) => {
       body: JSON.stringify({
         from: process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL,
         to: TO_EMAIL,
-        subject: `Booking request — ${villaName} (${checkin} to ${checkout})`,
+        // "Reply" in the team's inbox goes straight to the guest.
+        reply_to: guestEmail,
+        subject: `Booking request — ${guestName} — ${villaName} (${checkin} to ${checkout})`,
         text: textBody,
         html: htmlBody,
       }),
