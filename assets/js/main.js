@@ -410,6 +410,38 @@
       });
     });
 
+    /* Phones: the three-button stack covered the right edge of forms and
+       steppers, so it collapses behind a single button (CSS shows it only
+       ≤600px; on larger screens the stack is unchanged). */
+    const tr = (key, fallback) => (typeof window.mlsT === "function" ? window.mlsT(key) : fallback);
+    const fab = document.createElement("button");
+    fab.type = "button";
+    fab.className = "qa-btn qa-fab";
+    fab.setAttribute("aria-expanded", "false");
+    fab.setAttribute("aria-label", tr("qa.contactMenu", "Contact options"));
+    fab.setAttribute("data-i18n-aria-label", "qa.contactMenu");
+    fab.innerHTML =
+      '<svg class="qa-fab-open" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2z"/></svg>' +
+      '<svg class="qa-fab-close" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+    quickActions.appendChild(fab);
+    const setExpanded = (open) => {
+      quickActions.classList.toggle("is-expanded", open);
+      fab.setAttribute("aria-expanded", String(open));
+      if (!open) {
+        quickActions.querySelectorAll("[data-qa-item].is-open").forEach((item) => {
+          item.classList.remove("is-open");
+          item.querySelector("[data-qa-toggle]")?.setAttribute("aria-expanded", "false");
+        });
+      }
+    };
+    fab.addEventListener("click", () => setExpanded(!quickActions.classList.contains("is-expanded")));
+    document.addEventListener("click", (e) => {
+      if (quickActions.classList.contains("is-expanded") && !quickActions.contains(e.target)) setExpanded(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && quickActions.classList.contains("is-expanded")) { setExpanded(false); fab.focus(); }
+    });
+
     const qrToggle = quickActions.querySelector("[data-wa-qr-toggle]");
     const qrBox = quickActions.querySelector(".wa-qr");
     qrToggle?.addEventListener("click", () => {
@@ -1620,7 +1652,7 @@
           const dotsHtml = pairs
             .map((_, i) => `<button type="button" class="${i === 0 ? "is-active" : ""}" aria-label="Testimonial ${i + 1}"></button>`)
             .join("");
-          testimonialsEl.innerHTML = `${slidesHtml}<div class="testimonial-dots" role="tablist" aria-label="${t("detail.testimonials.chooseLabel")}">${dotsHtml}</div>`;
+          testimonialsEl.innerHTML = `${slidesHtml}<div class="testimonial-dots" role="group" aria-label="${t("detail.testimonials.chooseLabel")}">${dotsHtml}</div>`;
           initTestimonialRotator(testimonialsEl);
         }
 

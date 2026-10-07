@@ -44,6 +44,7 @@ const MLS_I18N = {
     "qa.callUs": "Call us",
     "qa.chatWhatsapp": "Chat with us on WhatsApp",
     "qa.close": "Close",
+    "qa.contactMenu": "Contact options",
     "qa.whatsapp.title": "We reply fast.",
     "qa.whatsapp.web": "WhatsApp Web",
     "qa.whatsapp.webHint": "Opens in a new browser tab",
@@ -299,7 +300,7 @@ const MLS_I18N = {
 
     /* ---------- About Us (about.html) ---------- */
     "about.brandStatement.text": "<p>With over 20 years of experience in luxury vacation property management, Mexico Luxe Stays offers exceptional properties and personalized service in two of Mexico&rsquo;s most distinctive destinations: Playa del Carmen and Valle de Guadalupe. Our focus is simple: creating seamless, memorable stays through outstanding accommodations and genuine hospitality.</p>",
-    "about.story.text": "<h3 class=\"h3\"><em>Experience &amp; Destinations</em></h3><p>Our portfolio brings together luxury residences in <strong>Playa del Carmen</strong> and <strong>Valle de Guadalupe</strong>, offering guests the opportunity to experience both the Mexican Caribbean and the heart of Mexico's renowned wine country.</p><h3 class=\"h3\"><em>Personal Service</em></h3><p>As a small, dedicated team, we provide attentive and personalized service from the first inquiry through departure. We take care of the details so every guest can enjoy a comfortable, effortless, and memorable stay.</p>",
+    "about.story.text": "<h2 class=\"h3\"><em>Experience &amp; Destinations</em></h2><p>Our portfolio brings together luxury residences in <strong>Playa del Carmen</strong> and <strong>Valle de Guadalupe</strong>, offering guests the opportunity to experience both the Mexican Caribbean and the heart of Mexico's renowned wine country.</p><h2 class=\"h3\"><em>Personal Service</em></h2><p>As a small, dedicated team, we provide attentive and personalized service from the first inquiry through departure. We take care of the details so every guest can enjoy a comfortable, effortless, and memorable stay.</p>",
     "about.hero.title": "About Mexico Luxe Stays — Luxury Villa Rentals in Playa del Carmen &amp; Valle de Guadalupe",
     "about.hero.lead": "A small, passionate team that has spent twenty years learning exactly what extraordinary feels like — and how to deliver it twice.",
     "about.hero.scroll": "Scroll",
@@ -488,6 +489,7 @@ const MLS_I18N = {
     "qa.callUs": "Llámanos",
     "qa.chatWhatsapp": "Escríbenos por WhatsApp",
     "qa.close": "Cerrar",
+    "qa.contactMenu": "Opciones de contacto",
     "qa.whatsapp.title": "Respondemos rápido.",
     "qa.whatsapp.web": "WhatsApp Web",
     "qa.whatsapp.webHint": "Se abre en una pestaña nueva",
@@ -747,7 +749,7 @@ const MLS_I18N = {
 
     /* ---------- About Us (about.html) ---------- */
     "about.brandStatement.text": "<p>Con más de 20 años de experiencia en la administración de propiedades vacacionales de lujo, Mexico Luxe Stays ofrece propiedades excepcionales y un servicio personalizado en dos de los destinos más distintivos de México: Playa del Carmen y Valle de Guadalupe. Nuestro enfoque es simple: crear estancias fluidas y memorables a través de alojamientos excepcionales y una hospitalidad genuina.</p>",
-    "about.story.text": "<h3 class=\"h3\"><em>Experiencia y destinos</em></h3><p>Nuestro portafolio reúne residencias de lujo en <strong>Playa del Carmen</strong> y <strong>Valle de Guadalupe</strong>, ofreciendo a nuestros huéspedes la oportunidad de vivir tanto el Caribe mexicano como el corazón de la reconocida región vinícola de México.</p><h3 class=\"h3\"><em>Servicio personalizado</em></h3><p>Como un equipo pequeño y dedicado, ofrecemos un servicio atento y personalizado desde la primera consulta hasta la salida. Cuidamos cada detalle para que cada huésped disfrute de una estancia cómoda, sencilla e inolvidable.</p>",
+    "about.story.text": "<h2 class=\"h3\"><em>Experiencia y destinos</em></h2><p>Nuestro portafolio reúne residencias de lujo en <strong>Playa del Carmen</strong> y <strong>Valle de Guadalupe</strong>, ofreciendo a nuestros huéspedes la oportunidad de vivir tanto el Caribe mexicano como el corazón de la reconocida región vinícola de México.</p><h2 class=\"h3\"><em>Servicio personalizado</em></h2><p>Como un equipo pequeño y dedicado, ofrecemos un servicio atento y personalizado desde la primera consulta hasta la salida. Cuidamos cada detalle para que cada huésped disfrute de una estancia cómoda, sencilla e inolvidable.</p>",
     "about.hero.title": "Sobre <em>nosotros</em>",
     "about.hero.lead": "Un equipo pequeño y apasionado que ha pasado veinte años aprendiendo exactamente cómo se siente lo extraordinario — y cómo entregarlo dos veces.",
     "about.hero.scroll": "Desliza para ver más",
@@ -959,6 +961,16 @@ const MLS_I18N = {
     const dict = MLS_I18N[lang || currentLang()] || MLS_I18N.en;
     return dict[key] != null ? dict[key] : (MLS_I18N.en[key] || key);
   }
+
+  /* This script is deferred, so the static page is already parsed here:
+     translate it now and start the hero entrance, instead of waiting for
+     DOMContentLoaded — which only fires after villas-data.js, main.js etc.
+     have also run, holding the (translated) hero title invisible meanwhile.
+     The DOMContentLoaded pass below still runs for main.js-rendered content
+     and its mls:languagechange listeners. */
+  applyLanguage(currentLang());
+  const hero = document.querySelector(".hero");
+  if (hero) requestAnimationFrame(() => hero.classList.add("is-ready"));
 
   document.addEventListener("DOMContentLoaded", () => {
     applyLanguage(currentLang());
