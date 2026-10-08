@@ -598,7 +598,7 @@ const MLS_VILLAS = [
       },
       {
         q: { en: "What payment methods do you accept, and what is the cancellation policy?", es: "¿Qué métodos de pago aceptan y cuál es la política de cancelación?" },
-        a: { en: "We accept wire transfer or credit card, in USD or MXN. Reservations are fully refundable up to 60 days before arrival. From 59 to 45 days before arrival, a 50% cancellation penalty applies. Reservations cancelled 44 days or less before arrival are non-refundable.", es: "Aceptamos transferencia bancaria o tarjeta de crédito, en USD o MXN. Las reservaciones son totalmente reembolsables hasta 60 días antes de la llegada. De 59 a 45 días antes de la llegada, aplica una penalización de cancelación del 50%. Las reservaciones canceladas 44 días o menos antes de la llegada no son reembolsables." }
+        a: { en: "We accept wire transfer or credit card, in USD or MXN. Online payments are made by card; to pay by wire transfer, contact our team and we'll arrange it. Payment is made in two parts: 50% one day after booking and the remaining 50% 45 days before arrival. Reservations are fully refundable up to 60 days before arrival. From 59 to 45 days before arrival, a 50% cancellation penalty applies. Reservations cancelled 44 days or less before arrival are non-refundable.", es: "Aceptamos transferencia bancaria o tarjeta de crédito, en USD o MXN. El pago en línea es con tarjeta; si prefieres pagar por transferencia, contacta a nuestro equipo y lo coordinamos. El pago se hace en dos partes: 50% un día después de reservar y el 50% restante 45 días antes de la llegada. Las reservaciones son totalmente reembolsables hasta 60 días antes de la llegada. De 59 a 45 días antes de la llegada, aplica una penalización de cancelación del 50%. Las reservaciones canceladas 44 días o menos antes de la llegada no son reembolsables." }
       },
       {
         q: { en: "What is the bedroom and bed configuration?", es: "¿Cuál es la configuración de recámaras y camas?" },
@@ -861,7 +861,11 @@ const MLS_VILLAS = [
       },
       {
         q: { en: "Is a security deposit required?", es: "¿Se requiere un depósito de garantía?" },
-        a: { en: "A refundable security deposit may be required, depending on the reservation. Our team will confirm the applicable amount and details before your stay.", es: "Puede requerirse un depósito de garantía reembolsable, dependiendo de la reservación. Nuestro equipo confirmará el monto y los detalles aplicables antes de tu estancia." }
+        a: { en: "A refundable security deposit of $500 USD (to be confirmed) applies. Our team will confirm the details before your stay.", es: "Aplica un depósito de garantía reembolsable de $500 USD (por confirmar). Nuestro equipo confirmará los detalles antes de tu estancia." }
+      },
+      {
+        q: { en: "What is the cancellation policy, and how is payment made?", es: "¿Cuál es la política de cancelación y cómo se paga?" },
+        a: { en: "The cancellation policy for this villa will be confirmed when you book; contact us to find out the terms. Payment is made in two parts: 50% one day after booking and the remaining 50% 45 days before arrival. We accept wire transfer or credit card, in USD or MXN. Online payments are made by card; to pay by wire transfer, contact our team and we'll arrange it.", es: "La política de cancelación de esta villa se confirmará al reservar; contáctanos para conocerla. El pago se hace en dos partes: 50% un día después de reservar y el 50% restante 45 días antes de la llegada. Aceptamos transferencia bancaria o tarjeta de crédito, en USD o MXN. El pago en línea es con tarjeta; si prefieres pagar por transferencia, contacta a nuestro equipo y lo coordinamos." }
       }
     ]
   },
@@ -1294,7 +1298,7 @@ const MLS_VILLAS = [
       },
       {
         q: { en: "What is the cancellation policy?", es: "¿Cuál es la política de cancelación?" },
-        a: { en: "The cancellation policy varies depending on the timing of the cancellation; the applicable terms are confirmed at the time of booking.", es: "La política de cancelación varía según el momento de la cancelación; los términos aplicables se confirman al momento de reservar." }
+        a: { en: "Cancellations made 90 days or more before arrival carry a 15% penalty. Between 90 and 45 days before arrival, 50% is refunded. Cancellations made less than 45 days before check-in are non-refundable. Dates from December 20 to January 4 (Christmas and New Year) are non-refundable.", es: "Las cancelaciones hechas 90 días o más antes de la llegada tienen una penalización del 15%. Entre 90 y 45 días antes de la llegada, se reembolsa el 50%. Las cancelaciones hechas menos de 45 días antes del check-in no son reembolsables. Las fechas del 20 de diciembre al 4 de enero (Navidad y Año Nuevo) no son reembolsables." }
       }
     ]
   },
@@ -1589,7 +1593,11 @@ const MLS_VILLAS = [
       },
       {
         q: { en: "Is a security deposit required?", es: "¿Se requiere un depósito de garantía?" },
-        a: { en: "Yes, a refundable security deposit of $1,000 USD is required for the stay.", es: "Sí, se requiere un depósito de garantía reembolsable de $1,000 USD para la estancia." }
+        a: { en: "Our team will confirm before your stay whether a refundable security deposit applies, and its amount.", es: "Nuestro equipo confirmará antes de tu estancia si aplica un depósito de garantía reembolsable y su monto." }
+      },
+      {
+        q: { en: "What is the cancellation policy?", es: "¿Cuál es la política de cancelación?" },
+        a: { en: "Cancellations made 90 days or more before arrival carry a 15% penalty. Between 90 and 45 days before arrival, 50% is refunded. Cancellations made less than 45 days before check-in are non-refundable. Dates from December 20 to January 4 (Christmas and New Year) are non-refundable.", es: "Las cancelaciones hechas 90 días o más antes de la llegada tienen una penalización del 15%. Entre 90 y 45 días antes de la llegada, se reembolsa el 50%. Las cancelaciones hechas menos de 45 días antes del check-in no son reembolsables. Las fechas del 20 de diciembre al 4 de enero (Navidad y Año Nuevo) no son reembolsables." }
       },
       {
         q: { en: "How does pricing work, and what's the minimum stay?", es: "¿Cómo funciona el precio y cuál es la estancia mínima?" },
