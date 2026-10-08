@@ -2684,10 +2684,20 @@
       showcaseEl.hidden = false;
     };
 
+    /* "Starting from" is Hostaway's live lowest rate (no static figure),
+       so it's also redrawn when live data lands — see renderTripShowcase. */
+    const renderTripPrice = (villa) => {
+      if (!priceValueEl) return;
+      priceValueEl.textContent = villa && typeof villa.priceFromPerNight === "number"
+        ? `$${villa.priceFromPerNight.toLocaleString("en-US")}`
+        : "—";
+    };
+
     renderTripShowcase = () => {
       const villa = typeof MLS_VILLAS !== "undefined"
         ? MLS_VILLAS.find((v) => v.slug === villaValueInput.value)
         : null;
+      renderTripPrice(villa);
       applyVillaShowcase(villa, { resetImages: false });
     };
 
@@ -2705,11 +2715,7 @@
         bedroomsStepper.dataset.max = villa ? villa.bedrooms : "";
         syncBedroomsFromAdults();
       }
-      if (priceValueEl) {
-        priceValueEl.textContent = villa && typeof villa.priceFromPerNight === "number"
-          ? `$${villa.priceFromPerNight.toLocaleString("en-US")}`
-          : "—";
-      }
+      renderTripPrice(villa);
       applyVillaShowcase(villa, { resetImages: true });
       /* Switching villas can make a previously-picked date unavailable for
          the new villa — drop it rather than silently keep a blocked date. */
