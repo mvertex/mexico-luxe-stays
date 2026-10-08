@@ -2861,7 +2861,8 @@
       email: { text: "info@mexicoluxestays.com", href: "mailto:info@mexicoluxestays.com" },
     };
     /* Messages are fixed i18n strings; {whatsapp}/{email} become real links,
-       {n} a number — built as DOM nodes, never as HTML. */
+       {n} a number — built as DOM nodes, never as HTML. vars.waText, when
+       given, pre-writes the WhatsApp chat (wa.me ?text=). */
     const setStatus = (key, vars = {}) => {
       if (!statusEl) return;
       statusEl.textContent = "";
@@ -2869,7 +2870,9 @@
         const name = part.slice(1, -1);
         if (CONTACT_LINKS[name] && part === `{${name}}`) {
           const a = document.createElement("a");
-          a.href = CONTACT_LINKS[name].href;
+          a.href = name === "whatsapp" && vars.waText
+            ? `${CONTACT_LINKS.whatsapp.href}?text=${encodeURIComponent(vars.waText)}`
+            : CONTACT_LINKS[name].href;
           a.textContent = CONTACT_LINKS[name].text;
           if (name === "whatsapp") { a.target = "_blank"; a.rel = "noopener"; }
           statusEl.appendChild(a);
@@ -2894,6 +2897,32 @@
       dates: "contact.form.datesRequired", guests: "contact.form.errInvalid",
     };
     let lastSentKey = null;
+
+    /* WhatsApp fallback when the request can't reach Hostaway: the chat opens
+       with the guest's request already written, in their language, so
+       nothing they typed is lost. */
+    const whatsappText = (payload) => {
+      const lang = payload.lang === "es" ? "es" : "en";
+      const villaName = villaOptions.find((o) => o.dataset.value === payload.villa)?.textContent.trim() || payload.villa;
+      const fmt = (iso) => {
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
+        return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])).toLocaleDateString(lang === "es" ? "es-MX" : "en-US", { day: "numeric", month: "short", year: "numeric" }) : "";
+      };
+      const dates = payload.checkin && payload.checkout ? `${fmt(payload.checkin)} → ${fmt(payload.checkout)}` : t("contact.form.wa.noDates");
+      const guests = t("contact.form.wa.guestsLine")
+        .replace("{adults}", payload.adults || 0)
+        .replace("{children}", payload.children || 0)
+        .replace("{infants}", payload.infants || 0);
+      return [
+        t(payload.intent === "book" ? "contact.form.wa.introBook" : "contact.form.wa.introQuestion"),
+        "",
+        `${t("contact.form.wa.name")}: ${`${payload.firstName} ${payload.lastName}`.trim()}`,
+        `${t("contact.form.wa.villa")}: ${villaName}`,
+        `${t("contact.form.wa.dates")}: ${dates}`,
+        `${t("contact.form.wa.guests")}: ${guests}`,
+        payload.notes ? `${t("contact.form.wa.notes")}: ${payload.notes}` : null,
+      ].filter((line) => line !== null).join("\n");
+    };
 
     contactForm.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -2985,14 +3014,14 @@
             case "closed_arrival":
             case "closed_departure": setStatus("contact.form.errClosedDates"); break;
             case "capacity": setStatus("contact.form.errCapacity", { n: data.maxGuests }); break;
-            case "rate_limited": setStatus("contact.form.errRateLimited"); break;
+            case "rate_limited": setStatus("contact.form.errRateLimited", { waText: whatsappText(payload) }); break;
             case "invalid":
               markInvalid(field(SERVER_FIELD_INPUTS[data.field]), SERVER_FIELD_MESSAGES[data.field] || "contact.form.errInvalid");
               break;
-            default: setStatus("contact.form.bookError");
+            default: setStatus("contact.form.bookError", { waText: whatsappText(payload) });
           }
         })
-        .catch(() => setStatus("contact.form.bookError"))
+        .catch(() => setStatus("contact.form.bookError", { waText: whatsappText(payload) }))
         .finally(() => setBusy(false));
     });
   }
