@@ -20,20 +20,33 @@ const round2 = (n) => Math.round(Number(n) * 100) / 100;
    not included in the total (e.g. a refundable damage deposit) is listed
    separately instead of being added. */
 function toQuote(result, nights) {
-  const components = (result.components || []).filter((c) => !c.isDeleted);
-  const included = components.filter((c) => c.isIncludedInTotalPrice);
+  const flag = (v) => v === true || Number(v) === 1;
+  const components = (result.components || []).filter((c) => !flag(c.isDeleted));
+  const included = components.filter((c) => flag(c.isIncludedInTotalPrice));
   const sum = (list) => round2(list.reduce((acc, c) => acc + Number(c.total || 0), 0));
 
-  const accommodation = included.filter((c) => c.type === "price");
-  const cleaning = included.filter((c) => c.type === "fee" && c.name === "cleaningFee");
-  const otherFees = included.filter((c) => c.type === "fee" && c.name !== "cleaningFee");
+  /* Live responses don't always tag the base rate as type "price" (the
+     docs' example does), so classify what's unambiguous — taxes, cleaning,
+     other fees, discounts — and count everything else that's included in
+     the total as accommodation (base rate, extra-guest charges…). */
+  const isDiscount = (c) => c.type === "discount" || Number(c.total) < 0;
   const taxes = included.filter((c) => c.type === "tax");
-  const discounts = included.filter((c) => c.type === "discount");
+  const cleaning = included.filter((c) => c.name === "cleaningFee");
+  const otherFees = included.filter((c) => c.type === "fee" && c.name !== "cleaningFee" && !isDiscount(c));
+  const discounts = included.filter((c) => c.type !== "tax" && isDiscount(c));
+  const accommodationParts = included.filter((c) => !taxes.includes(c) && !cleaning.includes(c) && !otherFees.includes(c) && !discounts.includes(c));
+
+  const total = round2(result.totalPrice);
+  let accommodation = sum(accommodationParts);
+  // The parts must add up to Hostaway's total; if they don't, the base
+  // rate is whatever is left once cleaning, fees, taxes and discounts are out.
+  const others = sum(taxes) + sum(cleaning) + sum(otherFees) - Math.abs(sum(discounts));
+  if (Math.abs(accommodation + others - total) > 1) accommodation = round2(total - others);
 
   return {
     nights,
-    total: round2(result.totalPrice),
-    accommodation: sum(accommodation),
+    total,
+    accommodation,
     cleaning: cleaning.length ? sum(cleaning) : null,
     taxes: taxes.length ? sum(taxes) : null,
     fees: otherFees.map((c) => ({ title: c.title || c.name, amount: round2(c.total) })),
