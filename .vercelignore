@@ -1,1 +1,16 @@
-PENDIENTES-HOSTAWAY.md
+# Allowlist: only what the website and its /api functions need is uploaded
+# to Vercel. Everything else in the repo (notes such as DESIGN.md or
+# PENDIENTES-HOSTAWAY.md, agent/tooling config, local scripts, tests) stays
+# in git but never becomes a public URL. A new top-level file or folder is
+# private until it's added here on purpose.
+/*
+!/*.html
+!/assets
+!/villas
+!/api
+!/llms.txt
+!/robots.txt
+!/sitemap.xml
+!/vercel.json
+!/package.json
+!/package-lock.json
