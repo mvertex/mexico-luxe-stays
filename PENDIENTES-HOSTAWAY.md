@@ -4,7 +4,7 @@ Documento interno (excluido del deploy por `.vercelignore`, no se publica en el 
 
 ## Pendiente
 
-- **Pago.** Las solicitudes llegan como consulta (`inquiry`), sin precio ni cobro. Opciones: Booking Engine de Hostaway con Stripe (cobra al reservar), o el equipo aprueba la consulta y envía cotización y enlace de pago desde Hostaway. Falta definir depósito y política de cancelación en Hostaway.
+- **Pago.** Decidido: cobra el Booking Engine de Hostaway. Stripe ya está conectado a Hostaway y cobra en modo real. Falta activar el Booking Engine en el subdominio `reservas.mexicoluxestays.com` (CNAME `reservas` → el valor que indique el panel de Hostaway, habitualmente `proxy3.holidayfuture.com`, en Cloudflare como "solo DNS"). Cuando funcione, se activa `MLS_BOOKING_ENGINE_URL` en `assets/js/villas-data.js` y se prueba el checkout sin pagar; ningún pago real de prueba sin OK de Diego. Mientras tanto, "Reservar" envía una consulta (`inquiry`) a Hostaway.
 - **Automatizaciones de Hostaway.** Revisar si la cuenta envía mensajes automáticos al huésped cuando entra una consulta nueva desde el sitio (canal Direct, origen "Website").
 - **Límites del formulario.** El límite de envíos por IP y el control de duplicados en memoria son por instancia de Vercel; el control de duplicados en Hostaway solo cubre envíos con fechas.
 - **Validación de teléfono.** Hostaway no documenta su regla; el sitio usa la de libphonenumber (Google). Confirmar con la próxima consulta real que Hostaway acepta los números que el sitio da por buenos.
