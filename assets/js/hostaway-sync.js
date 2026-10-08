@@ -26,7 +26,11 @@
       const res = await fetch(`/api/villa-live-data?listingId=${encodeURIComponent(villa.hostawayListingId)}`, {
         signal: controller.signal,
       });
-      if (!res.ok) throw new Error(`status ${res.status}`);
+      if (!res.ok) {
+        // Release the unread error body so the request doesn't stay open.
+        res.body?.cancel().catch(() => {});
+        throw new Error(`status ${res.status}`);
+      }
       const data = await res.json();
 
       if (data.availability && data.availability.blockedRanges) villa.availability = data.availability;

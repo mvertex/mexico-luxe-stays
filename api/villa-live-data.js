@@ -12,6 +12,7 @@ const { getListingTestimonials } = require("../lib/hostaway-reviews");
 
 /* Only these listings are proxied — the four villas in villas-data.js. */
 const KNOWN_LISTINGS = new Set(["145234", "305921", "144272", "456289"]);
+const REVIEWS_BUDGET_MS = 5000;
 
 const nextDay = (iso) => {
   const d = new Date(`${iso}T00:00:00Z`);
@@ -77,13 +78,22 @@ module.exports = async (req, res) => {
   const endDate = oneYearOut.toISOString().slice(0, 10);
 
   try {
-    // Reviews are optional: if only they fail, availability still ships.
+    // Reviews are optional: if they fail or outrun their time budget,
+    // availability still ships (the browser gives up after 8s) and the
+    // read keeps warming the cache for the next request.
+    let budgetTimer;
+    const reviewsWithinBudget = Promise.race([
+      getListingTestimonials(listingId),
+      new Promise((_, reject) => {
+        budgetTimer = setTimeout(() => reject(new Error(`exceeded ${REVIEWS_BUDGET_MS}ms`)), REVIEWS_BUDGET_MS);
+      }),
+    ]).catch((err) => {
+      console.error(`[villa-live-data] reviews for ${listingId} skipped:`, err.message);
+      return null;
+    }).finally(() => clearTimeout(budgetTimer));
     const [calendarRes, reviewsResult] = await Promise.all([
       hostawayGet(`/listings/${listingId}/calendar`, { startDate: today, endDate }),
-      getListingTestimonials(listingId).catch((err) => {
-        console.error(`[villa-live-data] reviews for ${listingId} failed:`, err.message);
-        return null;
-      }),
+      reviewsWithinBudget,
     ]);
 
     const calendarDays = calendarRes.result || [];
@@ -101,7 +111,11 @@ module.exports = async (req, res) => {
       reviewsMeta: reviewsResult ? reviewsResult.meta : null,
     };
 
-    res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=1800");
+    // Without reviews (budget exceeded or failed) cache only briefly, so the
+    // edge doesn't keep serving a reviewless page for the next half hour.
+    res.setHeader("Cache-Control", reviewsResult
+      ? "s-maxage=300, stale-while-revalidate=1800"
+      : "s-maxage=30, stale-while-revalidate=60");
     res.status(200).json(payload);
   } catch (err) {
     // Details stay in the server log; the browser only learns it failed.
