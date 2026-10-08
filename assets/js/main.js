@@ -1645,7 +1645,7 @@
           const ratingHtml = (rating) => {
             const n = Math.round(Number(rating));
             if (!Number.isFinite(n) || n < 1 || n > 5) return "";
-            return `<div class="testimonial-rating" role="img" aria-label="${n} out of 5 stars">${starsHtml(n)}</div>`;
+            return `<div class="testimonial-rating" role="img" aria-label="${t("testimonials.starsLabel").replace("{n}", n)}">${starsHtml(n)}</div>`;
           };
           const quoteHtml = (r) => `<blockquote class="testimonial-quote-block">
                 ${ratingHtml(r.rating)}
@@ -2280,11 +2280,62 @@
     }
   }
 
+  /* ---------- About page: real guest reviews ----------
+     about.html ships a snapshot of real Hostaway reviews so the cards
+     render instantly and survive an outage. Once live data lands, the
+     cards are refreshed with the same rule used for that snapshot: per
+     villa, the newest public review short enough for a card (no rating
+     filter), newest villa first. The snapshot stays if fewer reviews than
+     cards come back. Text is set with textContent — guest-written. */
+  const aboutTestimonials = document.querySelector("[data-about-testimonials]");
+  const ABOUT_QUOTE_MAX_CHARS = 200;
+  const renderAboutTestimonials = () => {
+    if (!aboutTestimonials || typeof MLS_VILLAS === "undefined") return;
+    const cards = [...aboutTestimonials.querySelectorAll(".testimonial-card")];
+    const lang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
+    const pickText = (field) => (lang === "es" && field.es) || field.en || "";
+    const monthOf = (r) => (pickText(r.context).match(/\d{4}-\d{2}/) || [""])[0];
+    const fits = (r) => pickText(r.quote).trim().length <= ABOUT_QUOTE_MAX_CHARS;
+
+    const perVilla = MLS_VILLAS
+      .map((villa) => ({ villa, reviews: (villa.testimonials || []).filter(fits) }))
+      .filter((v) => v.reviews.length);
+    const chosen = perVilla
+      .map(({ villa, reviews }) => ({ villa, review: reviews[0] }))
+      .sort((a, b) => monthOf(b.review).localeCompare(monthOf(a.review)));
+    // Fewer villas with reviews than cards: fill with each villa's next one.
+    for (let depth = 1; chosen.length < cards.length; depth++) {
+      const extra = perVilla.filter((v) => v.reviews[depth]).map(({ villa, reviews }) => ({ villa, review: reviews[depth] }));
+      if (!extra.length) break;
+      chosen.push(...extra.slice(0, cards.length - chosen.length));
+    }
+
+    if (chosen.length >= cards.length) {
+      cards.forEach((card, i) => {
+        const { villa, review } = chosen[i];
+        card.querySelector(".testimonial-quote").textContent = pickText(review.quote).trim();
+        card.querySelector(".name").textContent = review.name;
+        card.querySelector(".villa").textContent = `${villa.name}, ${(lang === "es" && villa.destinationLabelEs) || villa.destinationLabel}`;
+        const ratingEl = card.querySelector(".testimonial-rating");
+        const n = Math.round(Number(review.rating));
+        const valid = Number.isFinite(n) && n >= 1 && n <= 5;
+        ratingEl.hidden = !valid;
+        ratingEl.dataset.rating = valid ? n : "";
+        ratingEl.querySelectorAll(".star").forEach((star, s) => star.classList.toggle("is-filled", valid && s < n));
+      });
+    }
+    aboutTestimonials.querySelectorAll(".testimonial-rating[data-rating]").forEach((el) => {
+      if (el.dataset.rating) el.setAttribute("aria-label", t("testimonials.starsLabel").replace("{n}", el.dataset.rating));
+    });
+  };
+  renderAboutTestimonials();
+
   /* ---------- Re-render dynamic (data-driven) content once live Hostaway
      data lands (see hostaway-sync.js) — same render calls as a language
      change, since both mean "MLS_VILLAS data changed, redraw." ---------- */
   document.addEventListener("mls:livedata", () => {
     renderFeaturedShowcase && renderFeaturedShowcase();
+    renderAboutTestimonials();
     renderVillaGrid && renderVillaGrid();
     renderDestinationGrid && renderDestinationGrid();
     renderVillaDetail && renderVillaDetail();
@@ -2295,6 +2346,7 @@
   /* ---------- Re-render dynamic (data-driven) content when the language toggles ---------- */
   document.addEventListener("mls:languagechange", () => {
     renderFeaturedShowcase && renderFeaturedShowcase();
+    renderAboutTestimonials();
     document.querySelector("#filter-guests") && !document.querySelector("[data-guests-error]")?.hidden &&
       document.querySelector("#filter-guests").dispatchEvent(new Event("input"));
     renderVillaGrid && renderVillaGrid();

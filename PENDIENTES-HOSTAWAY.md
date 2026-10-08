@@ -8,6 +8,7 @@ Documento interno (excluido del deploy por `.vercelignore`, no se publica en el 
 - **Automatizaciones de Hostaway.** Revisar si la cuenta envía mensajes automáticos al huésped cuando entra una consulta nueva desde el sitio (canal Direct, origen "Website").
 - **Límites del formulario.** El límite de envíos por IP y el control de duplicados en memoria son por instancia de Vercel; el control de duplicados en Hostaway solo cubre envíos con fechas.
 - **Validación de teléfono.** Hostaway no documenta su regla; el sitio usa la de libphonenumber (Google). Confirmar con la próxima consulta real que Hostaway acepta los números que el sitio da por buenos.
+- **Reseñas de Casa de las Estrellas (para la dueña).** Hostaway no tiene ninguna reseña de Casa de las Estrellas (comprobado el 2026-10-08 leyendo todas las reseñas de la cuenta), así que la sección "Guest stories" de esa villa está oculta en la web. Texto para la dueña: *"Casa de las Estrellas no tiene reseñas en Hostaway, así que la página de esa villa no muestra opiniones de huéspedes. ¿Tiene reseñas en otro canal (Airbnb, Booking.com, Vrbo, Google) que no esté conectado a Hostaway? Si es así, conéctalo o dinos cuál es. Si no las tiene, conviene pedir reseña a los próximos huéspedes al terminar su estancia. En cuanto Hostaway reciba la primera reseña pública, la sección aparecerá sola, sin cambios en la web."*
 
 ## Resuelto
 
