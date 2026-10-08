@@ -4,7 +4,7 @@
    Runs on every page, after villas-data.js and before main.js. For each
    villa with a hostawayListingId set, fetches live availability, pricing
    and testimonials from /api/villa-live-data (the Vercel serverless proxy
-   in /api — see lib/hostaway.js) and overwrites that villa's placeholder
+   in /api — see api/_lib/hostaway.js) and overwrites that villa's placeholder
    fields in MLS_VILLAS in place.
 
    Static placeholder data is what's shown on first render (main.js runs

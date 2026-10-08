@@ -4,9 +4,9 @@
    cleaning, taxes and any other fees exactly as configured on the listing
    in Hostaway — the same figures the Booking Engine checkout charges.
    Read-only (it calculates, it doesn't hold or book anything), so it's a
-   cacheable GET. Credentials stay server-side (see lib/hostaway.js). */
+   cacheable GET. Credentials stay server-side (see api/_lib/hostaway.js). */
 
-const { hostawayPost } = require("../lib/hostaway");
+const { hostawayPost } = require("./_lib/hostaway");
 
 /* Same allowlist as villa-live-data.js — the four villas in villas-data.js. */
 const KNOWN_LISTINGS = new Set(["145234", "305921", "144272", "456289"]);

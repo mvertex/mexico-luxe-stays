@@ -11,7 +11,7 @@
    │ Docs: https://api.hostaway.com/documentation                        │
    │                                                                      │
    │ Guest reviews are NOT stored here: they come only from Hostaway     │
-   │ (api/villa-live-data.js → lib/hostaway-reviews.js) and the section  │
+   │ (api/villa-live-data.js → api/_lib/hostaway-reviews.js) and the section  │
    │ stays hidden on a villa with no real reviews. Never add sample or   │
    │ invented testimonials to this file.                                 │
    │                                                                      │

@@ -1,6 +1,7 @@
-/* Shared server-side Hostaway client. Lives outside /api so Vercel does not
-   treat it as its own route — only files directly under /api become
-   endpoints. Credentials come from Vercel project env vars and are never
+/* Shared server-side Hostaway client. Lives in api/_lib: Vercel turns no
+   underscore-prefixed path under /api into an endpoint, and nothing under
+   /api is served as a static file, so this source never reaches the web
+   (it used to be readable at /lib/hostaway.js). Credentials come from Vercel project env vars and are never
    exposed to the browser:
      HOSTAWAY_CLIENT_ID      Hostaway account ID (Settings → Hostaway API).
                              HOSTAWAY_ACCOUNT_ID is still read as a fallback

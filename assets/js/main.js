@@ -1624,7 +1624,7 @@
         }
 
         /* Guest testimonials: real Hostaway reviews only, loaded by
-           hostaway-sync.js (see lib/hostaway-reviews.js). The section stays
+           hostaway-sync.js (see api/_lib/hostaway-reviews.js). The section stays
            hidden until that villa has at least one review. Review text and
            names are written by guests on third-party channels, so they are
            escaped before going into the markup. */

@@ -14,15 +14,15 @@
      company     honeypot — real visitors never see or fill it
 
    Hostaway endpoints used (https://api.hostaway.com/documentation):
-     POST /v1/accessTokens                       (lib/hostaway.js)
+     POST /v1/accessTokens                       (api/_lib/hostaway.js)
      GET  /v1/listings/{id}                      personCapacity
      GET  /v1/listings/{id}/calendar             availability + minimumStay
      GET  /v1/reservations?listingId=&arrival…   duplicate check
      POST /v1/reservations?provider=Website      create the inquiry */
 
 const { parsePhoneNumberFromString } = require("libphonenumber-js/max");
-const { hostawayGet, hostawayPost } = require("../lib/hostaway");
-const { sendFallbackEmail } = require("../lib/email-fallback");
+const { hostawayGet, hostawayPost } = require("./_lib/hostaway");
+const { sendFallbackEmail } = require("./_lib/email-fallback");
 
 /* Villa slug → Hostaway listing (same IDs as hostawayListingId in
    assets/js/villas-data.js). The listing ID is resolved here, never taken

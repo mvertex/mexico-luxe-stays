@@ -3,12 +3,12 @@
    closed-to-arrival/departure days, lowest nightly price) and
    Reviews API (testimonials) for one listing, merged into the shape
    assets/js/villas-data.js already uses so the frontend needs no
-   per-field mapping. Credentials stay server-side (see lib/hostaway.js);
+   per-field mapping. Credentials stay server-side (see api/_lib/hostaway.js);
    review fetching, filtering and name shortening live in
-   lib/hostaway-reviews.js. */
+   api/_lib/hostaway-reviews.js. */
 
-const { hostawayGet } = require("../lib/hostaway");
-const { getListingTestimonials } = require("../lib/hostaway-reviews");
+const { hostawayGet } = require("./_lib/hostaway");
+const { getListingTestimonials } = require("./_lib/hostaway-reviews");
 
 /* Only these listings are proxied — the four villas in villas-data.js. */
 const KNOWN_LISTINGS = new Set(["145234", "305921", "144272", "456289"]);
