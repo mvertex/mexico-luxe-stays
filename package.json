@@ -1,0 +1,8 @@
+{
+  "name": "mexico-luxe-stays",
+  "private": true,
+  "description": "Static site + Vercel serverless functions (api/). No build step: this file only declares the functions' runtime dependencies.",
+  "dependencies": {
+    "libphonenumber-js": "^1.13.14"
+  }
+}

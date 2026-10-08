@@ -20,6 +20,7 @@
      GET  /v1/reservations?listingId=&arrival…   duplicate check
      POST /v1/reservations?provider=Website      create the inquiry */
 
+const { parsePhoneNumberFromString } = require("libphonenumber-js/max");
 const { hostawayGet, hostawayPost } = require("../lib/hostaway");
 const { sendFallbackEmail } = require("../lib/email-fallback");
 
@@ -53,6 +54,20 @@ function rateLimited(ip) {
   hits.push(now);
   recentByIp.set(ip, hits);
   return hits.length > RATE_LIMIT.max;
+}
+
+/* Phone: must be a real number for its country (Google's libphonenumber
+   rules, full metadata) — Hostaway rejects impossible numbers such as
+   +52 000 000 0000 with "Please provide a valid phone number". Returns the
+   E.164 form (+529848079475) sent to Hostaway, or null. Accepts "00" for
+   "+", and the pre-2019 Mexican mobile "+52 1" prefix guests still type. */
+function normalizePhone(raw) {
+  let s = String(raw ?? "").replace(/[^\d+]/g, "");
+  if (s.startsWith("00")) s = `+${s.slice(2)}`;
+  if (/^\+521\d{10}$/.test(s)) s = `+52${s.slice(4)}`;
+  if (!/^\+[1-9]\d{6,14}$/.test(s)) return null;
+  const parsed = parsePhoneNumberFromString(s);
+  return parsed && parsed.isValid() ? parsed.number : null;
 }
 
 const clean = (v, max = 200) => String(v ?? "").replace(/\s+/g, " ").trim().slice(0, max);
@@ -95,7 +110,9 @@ function validate(body) {
   if (!data.firstName) return { error: "firstName" };
   if (!data.lastName) return { error: "lastName" };
   if (!EMAIL_RE.test(data.email)) return { error: "email" };
-  if (data.phone.replace(/\D/g, "").length < 7) return { error: "phone" };
+  const phoneE164 = normalizePhone(data.phone);
+  if (!phoneE164) return { error: "phone" };
+  data.phone = phoneE164;
   if (intent === "question" && data.notes.length < 2) return { error: "notes" };
 
   const hasDates = !!(data.checkin || data.checkout);

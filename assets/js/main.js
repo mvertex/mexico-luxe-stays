@@ -2837,7 +2837,7 @@
     const SERVER_FIELD_INPUTS = { firstName: "#cf-first-name", lastName: "#cf-last-name", email: "#cf-email", phone: "#cf-phone", notes: "#cf-notes" };
     const SERVER_FIELD_MESSAGES = {
       firstName: "contact.form.firstNameRequired", lastName: "contact.form.lastNameRequired",
-      email: "contact.form.emailRequired", phone: "contact.form.phoneRequired",
+      email: "contact.form.emailRequired", phone: "contact.form.phoneInvalid",
       notes: "contact.form.questionRequired", villa: "contact.form.villaRequired",
       dates: "contact.form.datesRequired", guests: "contact.form.errInvalid",
     };
@@ -2869,7 +2869,14 @@
         ["#cf-first-name", (v) => v.length >= 1, "contact.form.firstNameRequired"],
         ["#cf-last-name", (v) => v.length >= 1, "contact.form.lastNameRequired"],
         ["#cf-email", (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v), "contact.form.emailRequired"],
-        ["#cf-phone", (v) => v.replace(/\D/g, "").length >= 7, "contact.form.phoneRequired"],
+        ["#cf-phone", (v) => v.length > 0, "contact.form.phoneRequired"],
+        /* Same shape the server accepts before its full per-country check
+           (api/booking-request.js normalizePhone): "+" + country code. */
+        ["#cf-phone", (v) => {
+          let p = v.replace(/[^\d+]/g, "");
+          if (p.startsWith("00")) p = `+${p.slice(2)}`;
+          return /^\+[1-9]\d{6,14}$/.test(p);
+        }, "contact.form.phoneInvalid"],
       ];
       if (intent === "question") checks.push(["#cf-notes", (v) => v.length >= 2, "contact.form.questionRequired"]);
       let firstInvalid = null;
