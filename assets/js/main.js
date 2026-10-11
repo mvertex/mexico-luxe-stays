@@ -262,34 +262,16 @@
   const roomPicker = document.querySelector("[data-room-picker]");
   if (roomPicker) {
     const listEl = roomPicker.querySelector("[data-room-picker-list]");
-    const prevBtn = roomPicker.querySelector("[data-room-picker-prev]");
-    const nextBtn = roomPicker.querySelector("[data-room-picker-next]");
     let rpLastFocused = null;
     const closeRoomPicker = () => {
       roomPicker.hidden = true;
       document.body.style.overflow = "";
       rpLastFocused?.focus();
     };
-    const updateRoomNav = () => {
-      if (!prevBtn || !nextBtn) return;
-      const max = listEl.scrollWidth - listEl.clientWidth;
-      prevBtn.disabled = listEl.scrollLeft <= 4;
-      nextBtn.disabled = max <= 4 || listEl.scrollLeft >= max - 4;
-    };
-    const scrollRoomsBy = (dir) => {
-      const card = listEl.querySelector(".room-picker-item");
-      const gap = parseFloat(getComputedStyle(listEl).columnGap) || 24;
-      const amount = card ? card.getBoundingClientRect().width + gap : listEl.clientWidth * 0.8;
-      listEl.scrollBy({ left: dir * amount, behavior: prefersReducedMotion ? "auto" : "smooth" });
-    };
-    prevBtn?.addEventListener("click", () => scrollRoomsBy(-1));
-    nextBtn?.addEventListener("click", () => scrollRoomsBy(1));
-    listEl.addEventListener("scroll", updateRoomNav);
     /* `rooms` is one cover image per bedroom: [{ src, alt }, ...]. */
     mlsOpenRoomPicker = (rooms, onPick, trigger) => {
       if (!rooms || !rooms.length) return;
       rpLastFocused = trigger || null;
-      listEl.scrollLeft = 0;
       listEl.innerHTML = rooms.map((room, i) => `
         <button type="button" class="room-picker-item" data-room-index="${i}">
           <span class="room-picker-item-media">
@@ -308,7 +290,6 @@
       roomPicker.hidden = false;
       document.body.style.overflow = "hidden";
       roomPicker.querySelector("button[data-room-picker-dismiss]")?.focus();
-      requestAnimationFrame(updateRoomNav);
     };
     roomPicker.querySelectorAll("[data-room-picker-dismiss]").forEach((el) => el.addEventListener("click", closeRoomPicker));
     document.addEventListener("keydown", (e) => {
@@ -755,14 +736,24 @@
 
     /* Valle de Guadalupe has a single villa (Kasa Kefi) — skip the villas.html
        listing and go straight to its page instead of a one-result grid. */
+    /* With dates picked, every search goes through villas.html, which
+       checks them against each villa's live Hostaway calendar. */
     heroSearchForm.addEventListener("submit", (e) => {
       if (heroGuestsHasError) {
         e.preventDefault();
         return;
       }
-      if (heroDestinationSelect?.value === "valle-de-guadalupe") {
+      const hasCheckin = !!heroDateFields.checkin?.selected;
+      const hasCheckout = !!heroDateFields.checkout?.selected;
+      if (hasCheckin !== hasCheckout) {
         e.preventDefault();
-        window.location.href = "villas/kasa-kefi.html";
+        (hasCheckin ? heroDateFields.checkout : heroDateFields.checkin).trigger.click();
+        return;
+      }
+      if (heroDestinationSelect?.value === "valle-de-guadalupe" && !hasCheckin) {
+        e.preventDefault();
+        const guests = parseInt(heroGuestsInput?.value, 10);
+        window.location.href = `villas/kasa-kefi.html${guests > 0 ? `?guests=${guests}` : ""}`;
       }
     });
   }
@@ -843,6 +834,35 @@
     renderFeaturedShowcase();
   }
 
+  /* ---------- Stay availability: can this villa take checkin → checkout?
+     Same rules as the villa page's booking form (and Hostaway itself):
+     every night free, arrival/departure days not closed, and the arrival
+     day's minimum stay met. Reads villa.availability on every call, so it
+     follows the live Hostaway calendar once hostaway-sync.js swaps it in. */
+  const mlsIsoDay = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const mlsParseIsoDay = (str) => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(str || "");
+    if (!m) return null;
+    const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    return mlsIsoDay(d) === str ? d : null;
+  };
+  const mlsAddDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+  const mlsNights = (a, b) => Math.round((b - a) / 864e5);
+  const mlsVillaCanHost = (villa, checkin, checkout) => {
+    const a = villa.availability || {};
+    const inRanges = (d, ranges) => (ranges || []).some((r) => mlsIsoDay(d) >= r.start && mlsIsoDay(d) <= r.end);
+    if (inRanges(checkin, a.closedOnArrival) || inRanges(checkout, a.closedOnDeparture)) return false;
+    for (let d = checkin; d < checkout; d = mlsAddDays(d, 1)) if (inRanges(d, a.blockedRanges)) return false;
+    const season = (a.minStayRanges || []).find((r) => mlsIsoDay(checkin) >= r.start && mlsIsoDay(checkin) <= r.end);
+    return mlsNights(checkin, checkout) >= (season ? season.nights : a.minStay || 1);
+  };
+  const mlsFormatStay = (checkin, checkout) => {
+    const locale = typeof window.mlsCurrentLang === "function" && window.mlsCurrentLang() === "es" ? "es-MX" : "en-US";
+    const opts = { month: "short", day: "numeric" };
+    const year = checkout.getFullYear() !== new Date().getFullYear() ? { year: "numeric" } : {};
+    return `${checkin.toLocaleDateString(locale, opts)} – ${checkout.toLocaleDateString(locale, { ...opts, ...year })}`;
+  };
+
   /* ---------- Villa grid + filters (Our Villas) ---------- */
   const villaGrid = document.querySelector("[data-villa-grid]");
   let renderVillaGrid = null;
@@ -894,23 +914,108 @@
     }
     validateGuests();
 
+    /* Dates from the home hero search: only kept when they make a real stay
+       (check-in today or later, check-out after it). */
+    const stayTodayDate = new Date();
+    stayTodayDate.setHours(0, 0, 0, 0);
+    let stay = null;
+    {
+      const checkin = mlsParseIsoDay(params.get("checkin"));
+      const checkout = mlsParseIsoDay(params.get("checkout"));
+      if (checkin && checkout && checkin >= stayTodayDate && checkout > checkin) stay = { checkin, checkout };
+    }
+    const stayEl = document.querySelector("[data-filter-stay]");
+    const stayTextEl = document.querySelector("[data-filter-stay-text]");
+    const clearStay = () => {
+      stay = null;
+      const url = new URL(window.location.href);
+      url.searchParams.delete("checkin");
+      url.searchParams.delete("checkout");
+      history.replaceState(null, "", url.pathname + url.search);
+    };
+    document.querySelector("[data-filter-stay-clear]")?.addEventListener("click", () => {
+      clearStay();
+      renderVillaGrid();
+    });
+    /* Links into a villa carry the searched stay so its booking form opens
+       pre-filled (see the contact-form block: ?checkin/?checkout/?guests). */
+    const stayLinkQuery = (checkin, checkout) => {
+      const q = new URLSearchParams({ checkin: mlsIsoDay(checkin), checkout: mlsIsoDay(checkout) });
+      if (guestsValue) q.set("guests", guestsValue);
+      return `?${q}#book`;
+    };
+    /* Nothing free for the searched dates: look up to 60 days either side
+       for the nearest stay of the same length each matching villa can take
+       (future dates only), closest first. */
+    const nearestOpenings = (villas, limit = 3) => {
+      const nights = mlsNights(stay.checkin, stay.checkout);
+      const found = [];
+      villas.forEach((v) => {
+        for (let off = 1; off <= 60; off++) {
+          const hit = [off, -off]
+            .map((o) => mlsAddDays(stay.checkin, o))
+            .find((ci) => ci >= stayTodayDate && mlsVillaCanHost(v, ci, mlsAddDays(ci, nights)));
+          if (hit) { found.push({ villa: v, checkin: hit, checkout: mlsAddDays(hit, nights), off }); break; }
+        }
+      });
+      return found.sort((a, b) => a.off - b.off).slice(0, limit);
+    };
+
     filterCustomSelects = [selDest, selBeds].map(mlsEnhanceSelect);
 
     renderVillaGrid = () => {
       const dest = selDest.value;
       const minGuests = guestsValue;
       const minBeds = parseInt(selBeds.value, 10) || 0;
-      const list = MLS_VILLAS.filter(
+      const matching = MLS_VILLAS.filter(
         (v) =>
           (!dest || v.destination === dest) &&
           v.guests >= minGuests &&
           v.bedrooms >= minBeds
       );
-      countEl.textContent = list.length
-        ? t("villas.count.showing").replace("{count}", list.length).replace("{total}", MLS_VILLAS.length)
-        : "";
+      const stayText = stay ? mlsFormatStay(stay.checkin, stay.checkout) : "";
+      if (stayEl) {
+        stayEl.hidden = !stay;
+        stayTextEl.textContent = stay ? t("villas.stay.label").replace("{dates}", stayText) : "";
+      }
+      /* Don't show availability from the static placeholder calendar while
+         the live Hostaway one is still loading — the mls:livedata event
+         re-runs this render once it lands. */
+      if (stay && window.mlsLiveDataSettled === false) {
+        countEl.textContent = "";
+        villaGrid.innerHTML = `<p class="villa-stay-checking">${t("villas.stay.checking").replace("{dates}", stayText)}</p>`;
+        return;
+      }
+      const list = stay ? matching.filter((v) => mlsVillaCanHost(v, stay.checkin, stay.checkout)) : matching;
+      const linkQuery = stay ? stayLinkQuery(stay.checkin, stay.checkout) : "";
+      countEl.textContent = !list.length ? ""
+        : t(stay ? "villas.count.available" : "villas.count.showing").replace("{count}", list.length).replace("{total}", MLS_VILLAS.length);
+      if (!list.length && stay && matching.length) {
+        const openings = nearestOpenings(matching);
+        villaGrid.innerHTML = `<div class="empty-state">
+             <p class="h3" style="color:var(--ink)">${t("villas.unavailable.title").replace("{dates}", stayText)}</p>
+             ${openings.length
+               ? `<p>${t("villas.unavailable.body")}</p>
+                  <ul class="stay-openings">${openings.map((o) => `
+                    <li><a class="stay-opening" href="villas/${o.villa.slug}.html${stayLinkQuery(o.checkin, o.checkout)}">
+                      <span class="stay-opening-name">${o.villa.name}</span>
+                      <span class="stay-opening-dates">${mlsFormatStay(o.checkin, o.checkout)} · ${t("villas.unavailable.nights").replace("{n}", mlsNights(o.checkin, o.checkout))}</span>
+                    </a></li>`).join("")}
+                  </ul>`
+               : `<p>${t("villas.unavailable.none")}</p>`}
+             <div class="stay-openings-actions">
+               <button type="button" class="btn btn-ghost" data-stay-show-all>${t("villas.unavailable.showAll")}</button>
+               <a class="btn btn-solid" href="contact.html">${t("villas.empty.cta")}</a>
+             </div>
+           </div>`;
+        villaGrid.querySelector("[data-stay-show-all]")?.addEventListener("click", () => {
+          clearStay();
+          renderVillaGrid();
+        });
+        return;
+      }
       villaGrid.innerHTML = list.length
-        ? list.map((v, i) => mlsVillaShowcaseRow(v, i)).join("")
+        ? list.map((v, i) => mlsVillaShowcaseRow(v, i, "", linkQuery)).join("")
         : `<div class="empty-state">
              <p class="h3" style="color:var(--ink)">${t("villas.empty.title")}</p>
              <p>${t("villas.empty.body")}</p>
@@ -926,7 +1031,7 @@
     });
     document.querySelector("[data-filter-clear]")?.addEventListener("click", () => {
       selDest.value = ""; inputGuests.value = ""; selBeds.value = "";
-      clearGuestsError(); guestsValue = 0;
+      clearGuestsError(); guestsValue = 0; stay = null;
       filterCustomSelects.forEach((cs) => cs.syncFromSelect());
       history.replaceState(null, "", window.location.pathname);
       renderVillaGrid();
@@ -1064,8 +1169,8 @@
 
   /* ---------- Property page map: brand-pin marker for this villa, plus its
      sibling villas in the same destination (e.g. Playa del Carmen's other two
-     villas), so guests see the whole area at a glance — the current villa's
-     pin is enlarged to stand out. Reuses the same lazy-loaded Leaflet as the
+     villas), so guests see the whole area at a glance — all pins share the same
+     style. Reuses the same lazy-loaded Leaflet as the
      destination map. */
   const propertyMapEls = document.querySelectorAll("[data-property-map]");
   if (propertyMapEls.length && typeof MLS_VILLAS !== "undefined") {
@@ -1077,13 +1182,13 @@
         (v) => v.destination === villa.destination && typeof v.lat === "number" && typeof v.lng === "number"
       );
 
-      function propertyPinIcon(v, isCurrent) {
+      function propertyPinIcon(v) {
         const iconSrc = v.mapIcon ? `../${v.mapIcon}` : "../assets/img/brand/icon-positive.png";
         return L.divIcon({
           className: "mls-map-pin",
-          html: `<span class="mls-map-pin-dot mls-map-pin-dot--${v.slug}${isCurrent ? " mls-map-pin-dot--current" : ""}"><img src="${iconSrc}" alt="" loading="lazy"></span>`,
-          iconSize: isCurrent ? [52, 62] : [44, 62],
-          iconAnchor: isCurrent ? [26, 60] : [22, 60]
+          html: `<span class="mls-map-pin-dot mls-map-pin-dot--${v.slug}"><img src="${iconSrc}" alt="" loading="lazy"></span>`,
+          iconSize: [44, 62],
+          iconAnchor: [22, 60]
         });
       }
 
@@ -1100,8 +1205,7 @@
         }).addTo(map);
 
         destVillas.forEach((v) => {
-          const isCurrent = v.slug === villa.slug;
-          const marker = L.marker([v.lat, v.lng], { icon: propertyPinIcon(v, isCurrent), title: v.name }).addTo(map);
+          const marker = L.marker([v.lat, v.lng], { icon: propertyPinIcon(v), title: v.name }).addTo(map);
           marker.on("click", () => window.open(mlsGoogleMapsUrl(v), "_blank", "noopener"));
         });
 
@@ -1583,13 +1687,11 @@
           saModalContent = { included: includedModalHtml, extra: extraModalHtml, amenities: amenitiesModalHtml };
 
           /* Card visual: a large rounded photo with an arrow button
-             straddling the bottom edge and a small caption chip
-             overlapping the photo. */
-          const cardHtml = (key, mainImg, mainImgPos, chipImg, chipText, title, desc) => `
+             straddling the bottom edge. */
+          const cardHtml = (key, mainImg, mainImgPos, title, desc) => `
             <button type="button" class="sa-card" data-sa-open="${key}">
               <span class="sa-card-frame">
                 <span class="sa-card-photo-clip"><img src="${mainImg}"${mlsImgAttrs(mainImg)} alt="" loading="lazy"${mainImgPos ? ` style="object-position:${mainImgPos}"` : ""}></span>
-                <span class="sa-card-chip"><img src="${chipImg}" alt="" loading="lazy"><span>${chipText}</span></span>
                 <span class="sa-card-arrow-btn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
               </span>
               <span class="sa-card-body">
@@ -1599,27 +1701,22 @@
               </span>
             </button>`;
 
-          /* Pulls from a specific gallery *category* (not just an index
-             within one category), so the amenities card's three photos —
-             and the modal photo — land in genuinely different rooms
-             instead of three near-identical angles of the same pool. */
-          const catImg = (catIndex, imgIndex = 0) => villa.gallery?.[catIndex]?.images?.[imgIndex]?.src || villaImgPath;
           const includedImgs = includedIds.map(serviceImg);
           const extraImgs = extraIds.map(serviceImg);
           const fallback = (arr, i) => arr[i] || arr[0] || villaImgPath;
 
           saCardsEl.innerHTML =
             cardHtml(
-              "included", fallback(includedImgs, 0), serviceImgPos(includedIds[0]), fallback(includedImgs, 2),
-              t("detail.sa.included.teaser"), t("detail.services.included"), t("detail.sa.included.intro")
+              "included", fallback(includedImgs, 0), serviceImgPos(includedIds[0]),
+              t("detail.services.included"), t("detail.sa.included.intro")
             ) +
             cardHtml(
-              "extra", fallback(extraImgs, 0), serviceImgPos(extraIds[0]), fallback(extraImgs, 2),
-              t("detail.sa.extra.teaser"), t("detail.services.extra"), t("detail.sa.extra.intro")
+              "extra", fallback(extraImgs, 0), serviceImgPos(extraIds[0]),
+              t("detail.services.extra"), t("detail.sa.extra.intro")
             ) +
             cardHtml(
-              "amenities", villaImgPath, "", catImg(2),
-              t("detail.sa.amenities.teaser"), t("detail.amenities.title"), t("detail.sa.amenities.intro")
+              "amenities", villaImgPath, "",
+              t("detail.amenities.title"), t("detail.sa.amenities.intro")
             );
         }
 
@@ -2491,15 +2588,48 @@
        villa's own blockedRanges; before a villa is chosen, only dates
        blocked for every villa count (same "combined availability" logic
        as the home hero search above). */
+    const chosenTripVilla = () => (typeof MLS_VILLAS !== "undefined" && villaValueInput?.value
+      ? MLS_VILLAS.find((v) => v.slug === villaValueInput.value) || null
+      : null);
     const contactDateIsUnavailable = (dateStr) => {
       if (typeof MLS_VILLAS === "undefined") return false;
-      const chosen = villaValueInput?.value
-        ? MLS_VILLAS.find((v) => v.slug === villaValueInput.value)
-        : null;
+      const chosen = chosenTripVilla();
       const villas = chosen ? [chosen] : MLS_VILLAS;
       return villas.length > 0 && villas.every((v) =>
         (v.availability?.blockedRanges || []).some((r) => dateStr >= r.start && dateStr <= r.end)
       );
+    };
+    /* With a villa chosen (always, on a villa page) the pickers follow that
+       villa's live Hostaway calendar the same way the old villa price box
+       did: check-in needs its night free and the day open to arrival;
+       check-out needs the night before free (a booking starting that
+       morning is fine), the day open to departure, and — once a check-in
+       is picked — every night in between free. Availability is read on
+       every call, so it follows hostaway-sync.js as soon as live data lands. */
+    const inDateRanges = (d, ranges) => (ranges || []).some((r) => isoDay(d) >= r.start && isoDay(d) <= r.end);
+    const addDaysTo = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+    const contactDayIsSelectable = (key, cellDate) => {
+      const villa = chosenTripVilla();
+      if (!villa) return !contactDateIsUnavailable(isoDay(cellDate));
+      const a = villa.availability || {};
+      const nightBlocked = (d) => inDateRanges(d, a.blockedRanges);
+      if (key !== "checkout") return !nightBlocked(cellDate) && !inDateRanges(cellDate, a.closedOnArrival);
+      if (inDateRanges(cellDate, a.closedOnDeparture)) return false;
+      const checkin = dateFields.checkin?.selected;
+      if (checkin) {
+        if (cellDate <= checkin) return false;
+        for (let d = checkin; d < cellDate; d = addDaysTo(d, 1)) if (nightBlocked(d)) return false;
+        return true;
+      }
+      return !nightBlocked(addDaysTo(cellDate, -1));
+    };
+    /* Hostaway applies the arrival day's minimum stay, which changes by
+       season — see minStayRanges in api/villa-live-data.js. */
+    const contactMinStayFor = (checkin) => {
+      const a = chosenTripVilla()?.availability || {};
+      const iso = isoDay(checkin);
+      const season = (a.minStayRanges || []).find((r) => iso >= r.start && iso <= r.end);
+      return season ? season.nights : a.minStay || 1;
     };
 
     const dateFields = {};
@@ -2550,7 +2680,7 @@
         }
         for (let d = 1; d <= daysInMonth; d++) {
           const cellDate = new Date(year, month, d);
-          const unavailable = contactDateIsUnavailable(isoDay(cellDate));
+          const unavailable = !contactDayIsSelectable(key, cellDate);
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "trip-calendar-day";
@@ -2619,6 +2749,13 @@
         const next = new Date(date);
         next.setDate(next.getDate() + 1);
         dateFields.checkout.setMinDate(next);
+        const out = dateFields.checkout;
+        if (out.selected && !contactDayIsSelectable("checkout", out.selected)) {
+          out.selected = null;
+          out.hiddenInput.value = "";
+          if (out.i18nKey) out.textEl.setAttribute("data-i18n", out.i18nKey);
+          out.textEl.textContent = out.i18nKey ? t(out.i18nKey) : out.defaultLabel;
+        }
       }
     }
 
@@ -2788,8 +2925,12 @@
       applyVillaShowcase(villa, { resetImages: true });
       /* Switching villas can make a previously-picked date unavailable for
          the new villa — drop it rather than silently keep a blocked date. */
-      Object.values(dateFields).forEach((api) => {
-        if (api.selected && contactDateIsUnavailable(isoDay(api.selected))) {
+      revalidateTripDates();
+    }
+    /* Checkin first: clearing it changes which checkouts are valid. */
+    function revalidateTripDates() {
+      ["checkin", "checkout"].map((k) => dateFields[k]).filter(Boolean).forEach((api) => {
+        if (api.selected && !contactDayIsSelectable(api.key, api.selected)) {
           api.selected = null;
           api.hiddenInput.value = "";
           if (api.i18nKey) api.textEl.setAttribute("data-i18n", api.i18nKey);
@@ -2798,6 +2939,7 @@
         if (!api.fieldEl.querySelector("[data-trip-calendar]").hidden) api.render();
       });
     }
+    document.addEventListener("mls:livedata", revalidateTripDates);
     if (params.get("villa") && villaValueInput) {
       const preselected = villaOptions.find((o) => o.dataset.value === params.get("villa"));
       if (preselected) selectVilla(preselected);
@@ -2903,7 +3045,9 @@
        nothing they typed is lost. */
     const whatsappText = (payload) => {
       const lang = payload.lang === "es" ? "es" : "en";
-      const villaName = villaOptions.find((o) => o.dataset.value === payload.villa)?.textContent.trim() || payload.villa;
+      const villaName = villaOptions.find((o) => o.dataset.value === payload.villa)?.textContent.trim()
+        || (typeof MLS_VILLAS !== "undefined" && MLS_VILLAS.find((v) => v.slug === payload.villa)?.name)
+        || payload.villa;
       const fmt = (iso) => {
         const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
         return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])).toLocaleDateString(lang === "es" ? "es-MX" : "en-US", { day: "numeric", month: "short", year: "numeric" }) : "";
@@ -2944,6 +3088,15 @@
         setStatus("contact.form.datesRequired");
         (hasCheckin ? dateFields.checkout : dateFields.checkin)?.trigger.click();
         return;
+      }
+      if (hasCheckin && hasCheckout) {
+        const minStay = contactMinStayFor(dateFields.checkin.selected);
+        const nights = Math.round((dateFields.checkout.selected - dateFields.checkin.selected) / 864e5);
+        if (nights < minStay) {
+          setStatus("contact.form.errMinStay", { n: minStay });
+          dateFields.checkout.trigger.click();
+          return;
+        }
       }
       /* Guest contact details — the team needs a way to reach the guest. */
       const checks = [
@@ -3023,6 +3176,107 @@
         })
         .catch(() => setStatus("contact.form.bookError", { waText: whatsappText(payload) }))
         .finally(() => setBusy(false));
+    });
+  }
+
+  /* ---------- Contact us: message form (contact-us.html) ----------
+     Emails the team via /api/contact-message — no booking, no Hostaway.
+     If it can't be sent, the status offers WhatsApp with the message
+     already written, so nothing the guest typed is lost. */
+  const messageForm = document.querySelector("[data-message-form]");
+  if (messageForm) {
+    const statusEl = messageForm.querySelector(".form-status");
+    const submitBtn = messageForm.querySelector('button[type="submit"]');
+    const consentInput = messageForm.querySelector("[data-message-consent]");
+    const LINKS = {
+      whatsapp: { text: "+52 984 807 9475", href: "https://wa.me/5219848079475" },
+      email: { text: "info@mexicoluxestays.com", href: "mailto:info@mexicoluxestays.com" },
+    };
+    /* Fixed i18n strings; {whatsapp}/{email} become links, built as DOM nodes. */
+    const setStatus = (key, waText) => {
+      statusEl.textContent = "";
+      t(key).split(/(\{whatsapp\}|\{email\})/).forEach((part) => {
+        const name = part.slice(1, -1);
+        if (LINKS[name] && part === `{${name}}`) {
+          const a = document.createElement("a");
+          a.href = name === "whatsapp" && waText ? `${LINKS.whatsapp.href}?text=${encodeURIComponent(waText)}` : LINKS[name].href;
+          a.textContent = LINKS[name].text;
+          if (name === "whatsapp") { a.target = "_blank"; a.rel = "noopener"; }
+          statusEl.appendChild(a);
+        } else if (part) {
+          statusEl.appendChild(document.createTextNode(part));
+        }
+      });
+    };
+    const INPUTS = { name: "#mf-name", email: "#mf-email", phone: "#mf-phone", message: "#mf-message" };
+    const MESSAGES = {
+      name: "message.form.nameRequired", email: "contact.form.emailRequired",
+      phone: "message.form.phoneInvalid", message: "message.form.messageRequired",
+    };
+    const markInvalid = (fieldName) => {
+      const input = messageForm.querySelector(INPUTS[fieldName]);
+      if (input) { input.setAttribute("aria-invalid", "true"); input.focus(); }
+      setStatus(MESSAGES[fieldName] || "contact.form.errInvalid");
+    };
+    let lastSentKey = null;
+
+    messageForm.addEventListener("input", (e) => {
+      if (e.target.getAttribute && e.target.getAttribute("aria-invalid") === "true") e.target.removeAttribute("aria-invalid");
+    });
+
+    messageForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (submitBtn.disabled) return;
+      const f = new FormData(messageForm);
+      const payload = {
+        name: f.get("name")?.trim() || "",
+        email: f.get("email")?.trim() || "",
+        phone: f.get("phone")?.trim() || "",
+        subject: f.get("subject")?.trim() || "",
+        message: f.get("message")?.trim() || "",
+        company: f.get("company") || "",
+        lang: typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en",
+      };
+      const checks = [
+        ["name", payload.name.length >= 1],
+        ["email", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(payload.email)],
+        ["phone", !payload.phone || /^\+?[\d\s().-]{7,25}$/.test(payload.phone)],
+        ["message", payload.message.length >= 2],
+      ];
+      const firstInvalid = checks.find(([, ok]) => !ok);
+      checks.forEach(([name, ok]) => messageForm.querySelector(INPUTS[name])?.setAttribute("aria-invalid", String(!ok)));
+      if (firstInvalid) { markInvalid(firstInvalid[0]); return; }
+      if (consentInput && !consentInput.checked) {
+        setStatus("contact.form.consentRequired");
+        consentInput.focus();
+        return;
+      }
+
+      const sendKey = JSON.stringify(payload);
+      if (sendKey === lastSentKey) { setStatus("message.form.success"); return; }
+      const waText = `${t("message.form.waIntro")}\n\n${payload.message}\n\n— ${payload.name}`;
+
+      submitBtn.disabled = true;
+      submitBtn.setAttribute("aria-busy", "true");
+      setStatus("message.form.sending");
+      fetch("/api/contact-message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+        .then(async (res) => {
+          const data = await res.json().catch(() => ({}));
+          if (res.ok && data.ok) {
+            lastSentKey = sendKey;
+            messageForm.reset();
+            setStatus("message.form.success");
+            return;
+          }
+          if (data.code === "invalid" && INPUTS[data.field]) { markInvalid(data.field); return; }
+          setStatus(data.code === "rate_limited" ? "contact.form.errRateLimited" : "message.form.error", waText);
+        })
+        .catch(() => setStatus("message.form.error", waText))
+        .finally(() => { submitBtn.disabled = false; submitBtn.setAttribute("aria-busy", "false"); });
     });
   }
 

@@ -6,6 +6,9 @@
   <title>Casa de las Estrellas — Beachfront Villa | Mexico Luxe Stays</title>
   <meta name="description" content="Casa de las Estrellas: serene Playacar villa 30 seconds from the beach. 3 ensuite suites plus studio for 10 guests, rooftop jacuzzi, plunge pool.">
   <link rel="canonical" href="https://www.mexicoluxestays.com/villas/casa-de-las-estrellas.html">
+  <link rel="alternate" hreflang="en" href="https://www.mexicoluxestays.com/villas/casa-de-las-estrellas.html">
+  <link rel="alternate" hreflang="es" href="https://www.mexicoluxestays.com/es/villas/casa-de-las-estrellas.html">
+  <link rel="alternate" hreflang="x-default" href="https://www.mexicoluxestays.com/villas/casa-de-las-estrellas.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Casa de las Estrellas — Beachfront Luxury in Playacar">
   <meta property="og:description" content="Thirty seconds from the beach — rooftop jacuzzi, heated plunge pool, ocean views. Sleeps 10.">
@@ -66,7 +69,7 @@
   <link rel="icon" type="image/png" href="../assets/img/brand/avatar-green.png">
   <link rel="preload" href="../assets/fonts/cormorant-garamond-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../assets/css/styles.css?v=22">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=27">
 </head>
 <body>
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
@@ -116,7 +119,7 @@
       </div>
     </section>
 
-    <!-- ============ Specs + description (left) / availability calendar (right) — rendered from villas-data.js ============ -->
+    <!-- ============ Specs + description (centered) / booking form below — specs rendered from villas-data.js ============ -->
     <div class="container detail-layout">
       <div class="specs-bar" data-villa-specs></div>
       <div class="detail-intro-grid">
@@ -127,73 +130,165 @@
           </div>
         </div>
 
-        <!-- Standalone price + check-in/check-out + guests widget — see the
-             price-box block in main.js. Prices are Hostaway's (live "from"
-             rate, then /api/villa-quote for the picked stay). Check In/Check Out fields open a
-             mini calendar (data-price-calendar) whose disabled/blocked days
-             read villa.availability.blockedRanges — same real-availability
-             source the old standalone calendar used, so this stays linked to
-             live Hostaway data once that feed lands. -->
-        <div class="villa-price-box" data-price-box>
-          <div class="villa-price-amount-row">
-            <span class="villa-price-from" data-i18n="detail.book.from">From</span>
-            <span class="villa-price-amount" data-price-amount>—</span>
-            <span class="villa-price-unit" data-i18n="detail.book.perNight">/ night</span>
-          </div>
-          <div class="villa-price-dates">
-            <div class="villa-price-date-field" data-price-date-field="checkin">
-              <button type="button" class="villa-price-date-trigger" data-price-date-trigger aria-haspopup="dialog" aria-expanded="false">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M7 3v3M17 3v3M4 9h16M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z"/></svg>
-                <span data-price-date-text data-i18n="detail.book.checkin">Check In</span>
-              </button>
-              <div class="trip-calendar" data-price-calendar hidden>
-                <div class="trip-calendar-header">
-                  <button type="button" class="trip-calendar-nav" data-price-cal-prev aria-label="Previous month">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
-                  </button>
-                  <span class="trip-calendar-month" data-price-cal-month></span>
-                  <button type="button" class="trip-calendar-nav" data-price-cal-next aria-label="Next month">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
-                  </button>
+        <div class="trip-panel detail-trip-panel" id="book">
+          <h2 class="trip-title" data-i18n="contact.form.title">Plan your trip</h2>
+
+          <!-- Same booking form as contact.html (handled by the contact-form
+               block in main.js), with the villa fixed to this page's — no
+               villa picker. POSTs to /api/booking-request. -->
+          <form data-contact-form novalidate>
+            <!-- Two columns on desktop: the stay (villa, dates, guests, price)
+                 on the left, the guest's contact details on the right, so the
+                 whole request fits in one view. -->
+            <div class="trip-col trip-col--stay">
+            <input type="hidden" name="villa" value="casa-de-las-estrellas" data-villa-value>
+
+            <div class="trip-dates">
+              <div class="trip-date-field" data-trip-date-field="checkin">
+                <button type="button" class="trip-date-pill" data-date-trigger="checkin" aria-haspopup="dialog" aria-expanded="false">
+                  <span class="trip-date-text" data-trip-date-text="checkin" data-i18n="contact.form.checkin">Check-In</span>
+                  <svg class="trip-date-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M7 3v3M17 3v3M4 9h16M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z"/></svg>
+                </button>
+                <div class="trip-calendar" data-trip-calendar="checkin" hidden>
+                  <div class="trip-calendar-header">
+                    <button type="button" class="trip-calendar-nav" data-cal-prev aria-label="Previous month">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
+                    </button>
+                    <span class="trip-calendar-month" data-cal-month></span>
+                    <button type="button" class="trip-calendar-nav" data-cal-next aria-label="Next month">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
+                    </button>
+                  </div>
+                  <div class="trip-calendar-weekdays" data-cal-weekdays></div>
+                  <div class="trip-calendar-days" data-cal-days></div>
                 </div>
-                <div class="trip-calendar-weekdays" data-price-cal-weekdays></div>
-                <div class="trip-calendar-days" data-price-cal-days></div>
+                <input type="hidden" name="checkin" data-date-value>
+              </div>
+              <div class="trip-date-field" data-trip-date-field="checkout">
+                <button type="button" class="trip-date-pill" data-date-trigger="checkout" aria-haspopup="dialog" aria-expanded="false">
+                  <span class="trip-date-text" data-trip-date-text="checkout" data-i18n="contact.form.checkout">Check-Out</span>
+                  <svg class="trip-date-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M7 3v3M17 3v3M4 9h16M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z"/></svg>
+                </button>
+                <div class="trip-calendar" data-trip-calendar="checkout" hidden>
+                  <div class="trip-calendar-header">
+                    <button type="button" class="trip-calendar-nav" data-cal-prev aria-label="Previous month">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
+                    </button>
+                    <span class="trip-calendar-month" data-cal-month></span>
+                    <button type="button" class="trip-calendar-nav" data-cal-next aria-label="Next month">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
+                    </button>
+                  </div>
+                  <div class="trip-calendar-weekdays" data-cal-weekdays></div>
+                  <div class="trip-calendar-days" data-cal-days></div>
+                </div>
+                <input type="hidden" name="checkout" data-date-value>
               </div>
             </div>
-            <div class="villa-price-date-field" data-price-date-field="checkout">
-              <button type="button" class="villa-price-date-trigger" data-price-date-trigger aria-haspopup="dialog" aria-expanded="false">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M7 3v3M17 3v3M4 9h16M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z"/></svg>
-                <span data-price-date-text data-i18n="detail.book.checkout">Check Out</span>
-              </button>
-              <div class="trip-calendar" data-price-calendar hidden>
-                <div class="trip-calendar-header">
-                  <button type="button" class="trip-calendar-nav" data-price-cal-prev aria-label="Previous month">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
-                  </button>
-                  <span class="trip-calendar-month" data-price-cal-month></span>
-                  <button type="button" class="trip-calendar-nav" data-price-cal-next aria-label="Next month">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
-                  </button>
+
+            <div class="trip-steppers">
+              <div class="trip-stepper" data-trip-stepper data-name="bedrooms" data-min="1" data-value="1">
+                <span class="trip-stepper-label" data-i18n="contact.form.bedrooms">Bedrooms</span>
+                <div class="trip-stepper-controls">
+                  <button type="button" class="trip-stepper-btn" data-stepper-dec aria-label="Decrease bedrooms">&minus;</button>
+                  <span class="trip-stepper-value" data-stepper-value>1</span>
+                  <button type="button" class="trip-stepper-btn" data-stepper-inc aria-label="Increase bedrooms">+</button>
                 </div>
-                <div class="trip-calendar-weekdays" data-price-cal-weekdays></div>
-                <div class="trip-calendar-days" data-price-cal-days></div>
+                <input type="hidden" name="bedrooms" value="1" data-stepper-input>
+              </div>
+              <div class="trip-stepper" data-trip-stepper data-name="adults" data-min="1" data-value="1">
+                <span class="trip-stepper-label" data-i18n="contact.form.adults">Adults</span>
+                <div class="trip-stepper-controls">
+                  <button type="button" class="trip-stepper-btn" data-stepper-dec aria-label="Decrease adults">&minus;</button>
+                  <span class="trip-stepper-value" data-stepper-value>1</span>
+                  <button type="button" class="trip-stepper-btn" data-stepper-inc aria-label="Increase adults">+</button>
+                </div>
+                <input type="hidden" name="adults" value="1" data-stepper-input>
+              </div>
+              <div class="trip-stepper" data-trip-stepper data-name="children" data-min="0" data-value="0">
+                <span class="trip-stepper-label">
+                  <span data-i18n="contact.form.children">Children</span>
+                  <small class="trip-stepper-sub" data-i18n="contact.form.childrenAges">Ages 2 – 12</small>
+                </span>
+                <div class="trip-stepper-controls">
+                  <button type="button" class="trip-stepper-btn" data-stepper-dec aria-label="Decrease children">&minus;</button>
+                  <span class="trip-stepper-value" data-stepper-value>0</span>
+                  <button type="button" class="trip-stepper-btn" data-stepper-inc aria-label="Increase children">+</button>
+                </div>
+                <input type="hidden" name="children" value="0" data-stepper-input>
+              </div>
+              <div class="trip-stepper" data-trip-stepper data-name="infants" data-min="0" data-value="0">
+                <span class="trip-stepper-label">
+                  <span data-i18n="contact.form.infants">Infants</span>
+                  <small class="trip-stepper-sub" data-i18n="contact.form.infantsAges">Ages 0 – 2</small>
+                </span>
+                <div class="trip-stepper-controls">
+                  <button type="button" class="trip-stepper-btn" data-stepper-dec aria-label="Decrease infants">&minus;</button>
+                  <span class="trip-stepper-value" data-stepper-value>0</span>
+                  <button type="button" class="trip-stepper-btn" data-stepper-inc aria-label="Increase infants">+</button>
+                </div>
+                <input type="hidden" name="infants" value="0" data-stepper-input>
               </div>
             </div>
+
+            <p class="trip-capacity-notice" data-trip-capacity-notice hidden></p>
+
+            <div class="trip-price" data-trip-price>
+              <p class="trip-price-label" data-i18n="contact.form.priceLabel">Starting from</p>
+              <p class="trip-price-value"><span data-trip-price-value>—</span> <span class="trip-price-unit" data-i18n="contact.form.priceUnit">usd/night</span></p>
+              <p class="trip-price-note" data-i18n="contact.form.priceNote">Lowest nightly rate in our booking system — the total for your dates is confirmed with your request.</p>
+              <p class="trip-price-note" data-i18n-html="detail.book.cancelDirect">Cancellation: full refund up to 60 days before arrival; 50% penalty from 59 to 45 days; non-refundable 44 days or less — see <a href="../terms.html#cancellation-policy">full policy</a>.</p>
+            </div>
+            </div>
+
+            <div class="trip-col trip-col--guest">
+            <div class="trip-contact-fields">
+              <div class="trip-text-field">
+                <label class="trip-notes-label" for="cf-first-name" data-i18n="contact.form.firstName">First name</label>
+                <input class="trip-text-input" type="text" id="cf-first-name" name="firstName" autocomplete="given-name" required>
+              </div>
+              <div class="trip-text-field">
+                <label class="trip-notes-label" for="cf-last-name" data-i18n="contact.form.lastName">Last name</label>
+                <input class="trip-text-input" type="text" id="cf-last-name" name="lastName" autocomplete="family-name" required>
+              </div>
+              <div class="trip-text-field">
+                <label class="trip-notes-label" for="cf-email" data-i18n="contact.form.email">Email</label>
+                <input class="trip-text-input" type="email" id="cf-email" name="email" autocomplete="email" inputmode="email" required>
+              </div>
+              <div class="trip-text-field">
+                <label class="trip-notes-label" for="cf-phone" data-i18n="contact.form.phone">Phone / WhatsApp, with country code</label>
+                <input class="trip-text-input" type="tel" id="cf-phone" name="phone" autocomplete="tel" inputmode="tel" required placeholder="+52 984 123 4567" data-i18n-placeholder="contact.form.phonePlaceholder">
+              </div>
+            </div>
+
+            <!-- Spam trap: hidden from people and assistive tech; bots that
+                 fill every field get a silent fake success (api/booking-request.js). -->
+            <div class="trip-honeypot" aria-hidden="true">
+              <label for="cf-company">Company</label>
+              <input type="text" id="cf-company" name="company" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="trip-notes-field">
+              <label class="trip-notes-label" for="cf-notes" data-i18n="contact.form.notes">Tell us about your group</label>
+              <textarea class="trip-notes-textarea" id="cf-notes" name="notes" rows="3" data-i18n-placeholder="contact.form.notesPlaceholder" placeholder="Celebrating an anniversary, need extra cribs, traveling with pets…"></textarea>
+            </div>
+
+            <div class="trip-consent-field">
+              <input type="checkbox" id="cf-consent" name="consent" data-trip-consent>
+              <label class="trip-consent-label" for="cf-consent" data-i18n-html="contact.form.consent">I agree to the <a href="../privacy.html" target="_blank" rel="noopener">Privacy Notice</a>.</label>
+            </div>
+
+            <div class="trip-actions">
+              <button class="trip-book-btn" type="submit" data-trip-intent="book" data-i18n="contact.form.book">Book Now</button>
+              <button class="trip-inquire-btn" type="submit" data-trip-intent="inquire" data-i18n="contact.form.inquire">Inquire for more info</button>
+            </div>
+            <p class="form-status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+
+          <div class="trip-phone-cta">
+            <p data-i18n-html="contact.form.curator">We are the local experts. Speak to an Experience Curator today: <a class="trip-phone-link" href="tel:+529848079475">+52 (984) 807 94 75</a></p>
           </div>
-          <div class="villa-price-guests">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M10 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <span class="villa-price-guests-label"><span data-price-guests-value>1</span> <span data-i18n="detail.book.guests">Guests</span></span>
-            <span class="villa-price-guests-controls">
-              <button type="button" class="villa-price-guests-btn" data-price-guests-dec aria-label="Decrease guests">&minus;</button>
-              <button type="button" class="villa-price-guests-btn" data-price-guests-inc aria-label="Increase guests">+</button>
-            </span>
-          </div>
-          <div class="villa-price-notes">
-            <label class="villa-price-notes-label" for="price-notes-estrellas" data-i18n="contact.form.notes">Tell us about your group</label>
-            <textarea class="villa-price-notes-textarea" id="price-notes-estrellas" rows="3" data-price-notes data-i18n-placeholder="contact.form.notesPlaceholder" placeholder="Celebrating an anniversary, need extra cribs, traveling with pets…"></textarea>
-          </div>
-          <p class="villa-price-note" data-i18n="detail.book.note">Live rates from our booking system — the checkout shows the final amount before you pay.</p>
-          <p class="villa-price-note" data-i18n-html="detail.book.cancelStrict">Cancellation: 15% penalty 90 days or more before arrival; 50% refund between 90 and 45 days; non-refundable under 45 days and for dates from December 20 to January 4 — see <a href="../terms.html#cancellation-policy">full policy</a>.</p>
         </div>
       </div>
 
@@ -396,21 +491,13 @@
     </button>
     <div class="room-picker-inner">
       <h3 class="room-picker-title" data-i18n="detail.gallery.roomPicker.title">Choose a bedroom</h3>
-      <div class="room-picker-track">
-        <button type="button" class="room-picker-nav room-picker-prev" data-room-picker-prev aria-label="Previous bedroom" data-i18n-aria-label="detail.gallery.roomPicker.prev">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></svg>
-        </button>
-        <div class="room-picker-list" data-room-picker-list></div>
-        <button type="button" class="room-picker-nav room-picker-next" data-room-picker-next aria-label="Next bedroom" data-i18n-aria-label="detail.gallery.roomPicker.next">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/></svg>
-        </button>
-      </div>
+      <div class="room-picker-list" data-room-picker-list></div>
     </div>
   </div>
 
-  <script src="../assets/js/i18n.js?v=26" defer></script>
-  <script src="../assets/js/villas-data.js?v=26" defer></script>
-  <script src="../assets/js/hostaway-sync.js?v=23" defer></script>
-  <script src="../assets/js/main.js?v=24" defer></script>
+  <script src="../assets/js/i18n.js?v=29" defer></script>
+  <script src="../assets/js/villas-data.js?v=27" defer></script>
+  <script src="../assets/js/hostaway-sync.js?v=24" defer></script>
+  <script src="../assets/js/main.js?v=28" defer></script>
 </body>
 </html>

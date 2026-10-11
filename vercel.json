@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "/assets/img/(.*)",
+      "source": "/(es/)?assets/img/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -10,7 +10,7 @@
       ]
     },
     {
-      "source": "/assets/video/(.*)",
+      "source": "/(es/)?assets/video/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -19,13 +19,19 @@
       ]
     },
     {
-      "source": "/assets/fonts/(.*)",
+      "source": "/(es/)?assets/fonts/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/es/assets/:path*",
+      "destination": "/assets/:path*"
     }
   ]
 }

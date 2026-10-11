@@ -1,10 +1,14 @@
-/* Optional email backup for booking requests (Resend, https://resend.com).
-   OFF by default: requests go to Hostaway (see api/booking-request.js).
-   This only runs when Hostaway fails AND all of these are set in Vercel:
-     BOOKING_EMAIL_FALLBACK=1
+/* Email via Resend (https://resend.com), to the team inbox.
+   Needs, in Vercel:
      RESEND_API_KEY
      RESEND_FROM_EMAIL   sender on a domain verified in Resend
-   Never throws — the caller already has its own error response. */
+
+   Two uses:
+   - sendEmail: the "Contact us" message form (api/contact-message.js).
+   - sendFallbackEmail: optional backup for booking requests, OFF by default
+     (requests go to Hostaway, see api/booking-request.js). It only runs when
+     Hostaway fails AND BOOKING_EMAIL_FALLBACK=1 is also set.
+   Never throws — callers already have their own error response. */
 
 const TO_EMAIL = "info@mexicoluxestays.com";
 
@@ -14,15 +18,19 @@ function escapeHtml(value) {
   ));
 }
 
-function emailFallbackEnabled() {
-  return process.env.BOOKING_EMAIL_FALLBACK === "1" && !!process.env.RESEND_API_KEY && !!process.env.RESEND_FROM_EMAIL;
+function emailConfigured() {
+  return !!process.env.RESEND_API_KEY && !!process.env.RESEND_FROM_EMAIL;
 }
 
-async function sendFallbackEmail({ subject, rows, replyTo }) {
-  if (!emailFallbackEnabled()) return false;
-  const text = rows.map(([label, value]) => `${label}: ${value}`).join("\n");
-  const html = `<h2>${escapeHtml(subject)}</h2><p>Hostaway could not be reached, so this request was emailed instead. Please add it to Hostaway manually.</p><table cellpadding="6" cellspacing="0">${rows
-    .map(([label, value]) => `<tr><td><strong>${escapeHtml(label)}</strong></td><td>${escapeHtml(value)}</td></tr>`)
+function emailFallbackEnabled() {
+  return process.env.BOOKING_EMAIL_FALLBACK === "1" && emailConfigured();
+}
+
+async function sendEmail({ subject, intro, rows, replyTo, logTag = "email" }) {
+  if (!emailConfigured()) return false;
+  const text = [intro, "", ...rows.map(([label, value]) => `${label}: ${value}`)].filter((l) => l !== undefined).join("\n");
+  const html = `<h2>${escapeHtml(subject)}</h2>${intro ? `<p>${escapeHtml(intro)}</p>` : ""}<table cellpadding="6" cellspacing="0">${rows
+    .map(([label, value]) => `<tr><td valign="top"><strong>${escapeHtml(label)}</strong></td><td style="white-space:pre-wrap">${escapeHtml(value)}</td></tr>`)
     .join("")}</table>`;
   try {
     const res = await fetch("https://api.resend.com/emails", {
@@ -31,14 +39,25 @@ async function sendFallbackEmail({ subject, rows, replyTo }) {
       body: JSON.stringify({ from: process.env.RESEND_FROM_EMAIL, to: TO_EMAIL, reply_to: replyTo, subject, text, html }),
     });
     if (!res.ok) {
-      console.error("[booking-request] email fallback failed", res.status, (await res.text()).slice(0, 500));
+      console.error(`[${logTag}] email failed`, res.status, (await res.text()).slice(0, 500));
       return false;
     }
     return true;
   } catch (err) {
-    console.error("[booking-request] email fallback error", err.message);
+    console.error(`[${logTag}] email error`, err.message);
     return false;
   }
 }
 
-module.exports = { sendFallbackEmail, emailFallbackEnabled };
+async function sendFallbackEmail({ subject, rows, replyTo }) {
+  if (!emailFallbackEnabled()) return false;
+  return sendEmail({
+    subject,
+    rows,
+    replyTo,
+    intro: "Hostaway could not be reached, so this request was emailed instead. Please add it to Hostaway manually.",
+    logTag: "booking-request",
+  });
+}
+
+module.exports = { sendEmail, sendFallbackEmail, emailConfigured, emailFallbackEnabled };

@@ -6,6 +6,9 @@
   <title>Contact Us — Plan Your Stay | Mexico Luxe Stays</title>
   <meta name="description" content="Contact Mexico Luxe Stays to plan your villa stay in Playa del Carmen or Valle de Guadalupe. Call, WhatsApp +52 984 807 9475, or email us.">
   <link rel="canonical" href="https://www.mexicoluxestays.com/contact.html">
+  <link rel="alternate" hreflang="en" href="https://www.mexicoluxestays.com/contact.html">
+  <link rel="alternate" hreflang="es" href="https://www.mexicoluxestays.com/es/contact.html">
+  <link rel="alternate" hreflang="x-default" href="https://www.mexicoluxestays.com/contact.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Contact Us — Mexico Luxe Stays">
   <meta property="og:description" content="Tell us your dates and your dream — we handle the rest. Call, WhatsApp, or write.">
@@ -17,9 +20,9 @@
   <link rel="icon" type="image/png" href="assets/img/brand/avatar-green.png">
   <link rel="preload" href="assets/fonts/cormorant-garamond-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/styles.css?v=22">
+  <link rel="stylesheet" href="assets/css/styles.css?v=27">
 </head>
-<body class="has-hero">
+<body>
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
 
   <!-- ============ COMPONENT: header (keep identical across pages) ============ -->
@@ -49,22 +52,10 @@
 
   <main id="main">
 
-    <!-- ============ Page hero ============ -->
-    <section class="hero hero--page" aria-label="Contact us" style="height:52svh;min-height:52svh">
-      <div class="hero-media">
-        <img src="assets/img/cta-infinity-pool.webp" srcset="assets/img/cta-infinity-pool-800w.webp 800w, assets/img/cta-infinity-pool.webp 1536w" sizes="(max-width: 780px) 100vw, 1536px"
-             alt="An infinity edge waiting for your first morning" fetchpriority="high" width="2000" height="1333">
-      </div>
-      <div class="container">
-        <h1 class="display no-italic" data-hero-reveal="1" data-i18n-html="contact.hero.title">Contact <em>us</em></h1>
-        <p class="lead" data-hero-reveal="2" data-i18n="contact.hero.lead">Tell us your dates and your dream. We'll handle everything between.</p>
-      </div>
-      <a class="hero-scroll-hint" href="#contact-options" data-i18n="home.scroll">Scroll</a>
-    </section>
-
     <!-- ============ Channels + form ============ -->
     <section class="section" id="contact-options" aria-label="Contact options">
       <div class="container contact-layout" data-contact-layout>
+        <h1 class="visually-hidden" data-i18n-html="contact.hero.title">Contact <em>us</em></h1>
 
         <!-- Shown once a specific villa is chosen in "Plan your trip" below;
              built from MLS_VILLAS (see villas-data.js — HOSTAWAY swap point). -->
@@ -96,6 +87,10 @@
                in [data-trip-price-value] should come from the live pricing
                API for the selected villa + dates instead of villa.priceFromPerNight. -->
           <form data-contact-form novalidate>
+            <!-- Two columns on desktop: the stay (villa, dates, guests, price)
+                 on the left, the guest's contact details on the right, so the
+                 whole request fits in one view. -->
+            <div class="trip-col trip-col--stay">
             <div class="trip-villa-field" data-trip-villa-field>
               <span id="cf-villa-label" class="visually-hidden" data-i18n="contact.form.villa">Which villa?</span>
               <button type="button" class="trip-villa-trigger" data-villa-trigger aria-haspopup="listbox" aria-expanded="false" aria-labelledby="cf-villa-label cf-villa-value">
@@ -202,6 +197,14 @@
 
             <p class="trip-capacity-notice" data-trip-capacity-notice hidden></p>
 
+            <div class="trip-price" data-trip-price>
+              <p class="trip-price-label" data-i18n="contact.form.priceLabel">Starting from</p>
+              <p class="trip-price-value"><span data-trip-price-value>—</span> <span class="trip-price-unit" data-i18n="contact.form.priceUnit">usd/night</span></p>
+              <p class="trip-price-note" data-i18n="contact.form.priceNote">Lowest nightly rate in our booking system — the total for your dates is confirmed with your request.</p>
+            </div>
+            </div>
+
+            <div class="trip-col trip-col--guest">
             <div class="trip-contact-fields">
               <div class="trip-text-field">
                 <label class="trip-notes-label" for="cf-first-name" data-i18n="contact.form.firstName">First name</label>
@@ -233,12 +236,6 @@
               <textarea class="trip-notes-textarea" id="cf-notes" name="notes" rows="3" data-i18n-placeholder="contact.form.notesPlaceholder" placeholder="Celebrating an anniversary, need extra cribs, traveling with pets…"></textarea>
             </div>
 
-            <div class="trip-price" data-trip-price>
-              <p class="trip-price-label" data-i18n="contact.form.priceLabel">Starting from</p>
-              <p class="trip-price-value"><span data-trip-price-value>—</span> <span class="trip-price-unit" data-i18n="contact.form.priceUnit">usd/night</span></p>
-              <p class="trip-price-note" data-i18n="contact.form.priceNote">Lowest nightly rate in our booking system — the total for your dates is confirmed with your request.</p>
-            </div>
-
             <div class="trip-consent-field">
               <input type="checkbox" id="cf-consent" name="consent" data-trip-consent>
               <label class="trip-consent-label" for="cf-consent" data-i18n-html="contact.form.consent">I agree to the <a href="privacy.html" target="_blank" rel="noopener">Privacy Notice</a>.</label>
@@ -249,6 +246,7 @@
               <button class="trip-inquire-btn" type="submit" data-trip-intent="inquire" data-i18n="contact.form.inquire">Inquire for more info</button>
             </div>
             <p class="form-status" role="status" aria-live="polite"></p>
+            </div>
           </form>
 
           <div class="trip-phone-cta">
@@ -367,9 +365,9 @@
   </div>
   <!-- ============ /COMPONENT: footer ============ -->
 
-  <script src="assets/js/i18n.js?v=26" defer></script>
-  <script src="assets/js/villas-data.js?v=26" defer></script>
-  <script src="assets/js/hostaway-sync.js?v=23" defer></script>
-  <script src="assets/js/main.js?v=24" defer></script>
+  <script src="assets/js/i18n.js?v=29" defer></script>
+  <script src="assets/js/villas-data.js?v=27" defer></script>
+  <script src="assets/js/hostaway-sync.js?v=24" defer></script>
+  <script src="assets/js/main.js?v=28" defer></script>
 </body>
 </html>

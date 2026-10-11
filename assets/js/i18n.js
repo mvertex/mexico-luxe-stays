@@ -109,6 +109,15 @@ const MLS_I18N = {
     "villas.empty.title": "No residence matches that combination — yet.",
     "villas.empty.body": "Tell us what you're dreaming of and we'll open doors that aren't listed.",
     "villas.empty.cta": "Contact our team",
+    "villas.count.available": "{count} of {total} residences available for your dates",
+    "villas.stay.label": "Your dates: {dates}",
+    "villas.stay.clear": "Clear dates",
+    "villas.stay.checking": "Checking live availability for {dates}…",
+    "villas.unavailable.title": "Nothing is available for {dates}.",
+    "villas.unavailable.body": "Try other dates. These are the closest openings for your group:",
+    "villas.unavailable.none": "We couldn't find an opening nearby. Tell us your plans and we'll find options for you.",
+    "villas.unavailable.showAll": "See all residences",
+    "villas.unavailable.nights": "{n} nights",
     "villas.showcase.explore": "Explore the villa",
     "villas.showcase.prevPhoto": "Previous photo",
     "villas.showcase.nextPhoto": "Next photo",
@@ -169,9 +178,6 @@ const MLS_I18N = {
     "detail.sa.included.intro": "Already part of your rate — nothing extra to pay.",
     "detail.sa.extra.intro": "Available for an additional fee, arranged directly with our team.",
     "detail.sa.amenities.intro": "A full look at every space and feature, room by room.",
-    "detail.sa.included.teaser": "Already in your rate",
-    "detail.sa.extra.teaser": "Arranged with our team",
-    "detail.sa.amenities.teaser": "Everything included",
     "detail.sa.viewCta": "View details",
     "detail.sa.contactCta": "Contact us",
     "detail.sa.close": "Close",
@@ -372,10 +378,9 @@ const MLS_I18N = {
 
     /* ---------- Privacy Notice (privacy.html) ---------- */
     "legal.privacy.hero.title": "Privacy <em>Notice</em>",
-    "legal.privacy.updated": "Last updated: August 2026",
-    "legal.privacy.pending": "This notice currently identifies Mexico Luxe Stays by its trade name. Once the operating entity's legal name, tax ID (RFC), and registered address are provided, this section will be updated to include them.",
+    "legal.privacy.updated": "Last updated: October 2026",
     "legal.privacy.intro.title": "Who is responsible for your data",
-    "legal.privacy.intro.body": "<strong>Mexico Luxe Stays</strong> (\"we\", \"us\"), reachable at <a href=\"mailto:info@mexicoluxestays.com\">info@mexicoluxestays.com</a> or <a href=\"tel:+529848079475\">+52 (984) 807 94 75</a>, is responsible for the personal data you share with us, in accordance with Mexico's Federal Law on Protection of Personal Data Held by Private Parties (LFPDPPP).",
+    "legal.privacy.intro.body": "<strong>FLASH WORKS CUN</strong> (RFC FWC240319AV6), operating under the trade name <strong>Mexico Luxe Stays</strong>, with registered address at Calle Gema No. 23, Manzana 2, Supermanzana 524, C.P. 77534, Cancún, Quintana Roo, Mexico (\"we\", \"us\"), reachable at <a href=\"mailto:info@mexicoluxestays.com\">info@mexicoluxestays.com</a> or <a href=\"tel:+529848079475\">+52 (984) 807 94 75</a>, is responsible for the personal data you share with us, in accordance with Mexico's Federal Law on Protection of Personal Data Held by Private Parties (LFPDPPP).",
     "legal.privacy.data.title": "What personal data we collect",
     "legal.privacy.data.body": "When you inquire about or book a villa — through our website, WhatsApp, phone, or email — we may collect: your name, phone number, email address, travel dates, number of guests, villa preferences, and any other information you choose to share with us in the course of planning your stay. Our website's trip planner does not store this data on a server; submitting it opens a pre-filled WhatsApp message that you send to us directly.",
     "legal.privacy.purposes.title": "What we use it for",
@@ -393,10 +398,9 @@ const MLS_I18N = {
 
     /* ---------- Terms & Conditions (terms.html) ---------- */
     "legal.terms.hero.title": "Terms & <em>Conditions</em>",
-    "legal.terms.updated": "Last updated: August 2026",
-    "legal.terms.pending": "These terms currently identify Mexico Luxe Stays by its trade name. Once the operating entity's legal name, tax ID (RFC), and registered address are provided, this section will be updated to include them.",
+    "legal.terms.updated": "Last updated: October 2026",
     "legal.terms.intro.title": "About these terms",
-    "legal.terms.intro.body": "These Terms &amp; Conditions govern every reservation made with <strong>Mexico Luxe Stays</strong>, reachable at <a href=\"mailto:info@mexicoluxestays.com\">info@mexicoluxestays.com</a> or <a href=\"tel:+529848079475\">+52 (984) 807 94 75</a>. By requesting a booking, you agree to them.",
+    "legal.terms.intro.body": "These Terms &amp; Conditions govern every reservation made with <strong>FLASH WORKS CUN</strong> (RFC FWC240319AV6), operating under the trade name <strong>Mexico Luxe Stays</strong>, with registered address at Calle Gema No. 23, Manzana 2, Supermanzana 524, C.P. 77534, Cancún, Quintana Roo, Mexico, and reachable at <a href=\"mailto:info@mexicoluxestays.com\">info@mexicoluxestays.com</a> or <a href=\"tel:+529848079475\">+52 (984) 807 94 75</a>. By requesting a booking, you agree to them.",
     "legal.terms.booking.title": "Reservation process",
     "legal.terms.booking.body": "Send us your dates, group size, and preferred villa — by form, email, or WhatsApp. We confirm availability, hold the villa while you decide, and secure the reservation once a deposit is paid and a booking agreement is signed. Rates for your dates come live from our booking system, and the final amount is shown before you confirm.",
     "legal.terms.payment.title": "Payment",
@@ -490,7 +494,30 @@ const MLS_I18N = {
     "contact.locations.playaDesc": "Riviera Maya · Quintana Roo · 45 min from Cancún International (CUN)",
     "contact.locations.valleMap": "Map — Valle de Guadalupe<br>Ensenada, Baja California",
     "contact.locations.valleName": "Valle de Guadalupe",
-    "contact.locations.valleDesc": "Baja California · 90 min from Tijuana (TIJ) / San Diego border"
+    "contact.locations.valleDesc": "Baja California · 90 min from Tijuana (TIJ) / San Diego border",
+
+    /* ---------- Contact us — message form (contact-us.html) ---------- */
+    "message.hero.title": "Contact <em>us</em>",
+    "message.form.title": "Send us a message",
+    "message.form.name": "Full name",
+    "message.form.phone": "Phone (optional)",
+    "message.form.subject": "Subject (optional)",
+    "message.form.message": "Your message",
+    "message.form.messagePlaceholder": "Tell us how we can help…",
+    "message.form.send": "Send message",
+    "message.form.sending": "Sending your message…",
+    "message.form.success": "Thank you — your message is on its way. Our team will reply by email shortly.",
+    "message.form.error": "We couldn’t send your message right now. Please message us on WhatsApp {whatsapp} or email {email}.",
+    "message.form.nameRequired": "Please tell us your name.",
+    "message.form.messageRequired": "Please write your message.",
+    "message.form.phoneInvalid": "That phone number doesn’t look right. Include your country code, e.g. +52 984 123 4567 — or leave it empty.",
+    "message.form.waIntro": "Hello Mexico Luxe Stays! I tried to send this message from your website, but it didn’t go through:",
+    "message.channels.title": "Prefer to talk?",
+    "message.channels.lead": "Reach our team directly — we reply fast.",
+    "message.channels.whatsappHint": "Chat with us — opens WhatsApp",
+    "message.channels.sms": "Text message",
+    "message.channels.smsHint": "Opens Messages — iPhone or Android",
+    "message.channels.phone": "Phone"
   },
 
   es: {
@@ -589,6 +616,15 @@ const MLS_I18N = {
     "villas.empty.title": "Ninguna residencia coincide con esa combinación — todavía.",
     "villas.empty.body": "Cuéntanos qué estás buscando y te abriremos puertas que no están listadas.",
     "villas.empty.cta": "Contacta a nuestro equipo",
+    "villas.count.available": "{count} de {total} residencias disponibles en tus fechas",
+    "villas.stay.label": "Tus fechas: {dates}",
+    "villas.stay.clear": "Quitar fechas",
+    "villas.stay.checking": "Consultando disponibilidad en tiempo real para {dates}…",
+    "villas.unavailable.title": "No hay disponibilidad para {dates}.",
+    "villas.unavailable.body": "Prueba otras fechas. Estas son las opciones más cercanas para tu grupo:",
+    "villas.unavailable.none": "No encontramos fechas libres cercanas. Cuéntanos tus planes y buscamos opciones para ti.",
+    "villas.unavailable.showAll": "Ver todas las residencias",
+    "villas.unavailable.nights": "{n} noches",
     "villas.showcase.explore": "Explorar la villa",
     "villas.showcase.prevPhoto": "Foto anterior",
     "villas.showcase.nextPhoto": "Foto siguiente",
@@ -649,9 +685,6 @@ const MLS_I18N = {
     "detail.sa.included.intro": "Ya están incluidos en tu tarifa — sin costo adicional.",
     "detail.sa.extra.intro": "Disponibles por un costo adicional, coordinados directamente con nuestro equipo.",
     "detail.sa.amenities.intro": "Un vistazo completo a cada espacio y detalle de la villa.",
-    "detail.sa.included.teaser": "Ya incluido en tu tarifa",
-    "detail.sa.extra.teaser": "Se coordina con nuestro equipo",
-    "detail.sa.amenities.teaser": "Todo lo que incluye",
     "detail.sa.viewCta": "Ver detalle",
     "detail.sa.contactCta": "Contáctanos",
     "detail.sa.close": "Cerrar",
@@ -856,10 +889,9 @@ const MLS_I18N = {
 
     /* ---------- Aviso de Privacidad (privacy.html) ---------- */
     "legal.privacy.hero.title": "Aviso de <em>Privacidad</em>",
-    "legal.privacy.updated": "Última actualización: agosto de 2026",
-    "legal.privacy.pending": "Este aviso identifica actualmente a Mexico Luxe Stays por su nombre comercial. En cuanto se proporcionen la razón social, el RFC y el domicilio fiscal de la entidad operadora, esta sección se actualizará para incluirlos.",
+    "legal.privacy.updated": "Última actualización: octubre de 2026",
     "legal.privacy.intro.title": "Quién es responsable de tus datos",
-    "legal.privacy.intro.body": "<strong>Mexico Luxe Stays</strong> (\"nosotros\"), con contacto en <a href=\"mailto:info@mexicoluxestays.com\">info@mexicoluxestays.com</a> o <a href=\"tel:+529848079475\">+52 (984) 807 94 75</a>, es responsable de los datos personales que nos compartes, conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).",
+    "legal.privacy.intro.body": "<strong>FLASH WORKS CUN</strong> (RFC FWC240319AV6), que opera bajo el nombre comercial <strong>Mexico Luxe Stays</strong>, con domicilio en Calle Gema No. 23, Manzana 2, Supermanzana 524, C.P. 77534, Cancún, Quintana Roo, México (\"nosotros\"), y con contacto en <a href=\"mailto:info@mexicoluxestays.com\">info@mexicoluxestays.com</a> o <a href=\"tel:+529848079475\">+52 (984) 807 94 75</a>, es responsable de los datos personales que nos compartes, conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).",
     "legal.privacy.data.title": "Qué datos personales recabamos",
     "legal.privacy.data.body": "Cuando preguntas por una villa o haces una reservación — a través de nuestro sitio, WhatsApp, teléfono o correo — podemos recabar: tu nombre, teléfono, correo electrónico, fechas de viaje, número de huéspedes, preferencias de villa, y cualquier otra información que decidas compartirnos al planear tu estancia. El planeador de viaje de nuestro sitio no guarda estos datos en un servidor; al enviarlo se abre un mensaje de WhatsApp prellenado que tú nos envías directamente.",
     "legal.privacy.purposes.title": "Para qué los usamos",
@@ -877,10 +909,9 @@ const MLS_I18N = {
 
     /* ---------- Términos y Condiciones (terms.html) ---------- */
     "legal.terms.hero.title": "Términos y <em>Condiciones</em>",
-    "legal.terms.updated": "Última actualización: agosto de 2026",
-    "legal.terms.pending": "Estos términos identifican actualmente a Mexico Luxe Stays por su nombre comercial. En cuanto se proporcionen la razón social, el RFC y el domicilio fiscal de la entidad operadora, esta sección se actualizará para incluirlos.",
+    "legal.terms.updated": "Última actualización: octubre de 2026",
     "legal.terms.intro.title": "Sobre estos términos",
-    "legal.terms.intro.body": "Estos Términos y Condiciones rigen toda reservación hecha con <strong>Mexico Luxe Stays</strong>, con contacto en <a href=\"mailto:info@mexicoluxestays.com\">info@mexicoluxestays.com</a> o <a href=\"tel:+529848079475\">+52 (984) 807 94 75</a>. Al solicitar una reservación, aceptas estos términos.",
+    "legal.terms.intro.body": "Estos Términos y Condiciones rigen toda reservación hecha con <strong>FLASH WORKS CUN</strong> (RFC FWC240319AV6), que opera bajo el nombre comercial <strong>Mexico Luxe Stays</strong>, con domicilio en Calle Gema No. 23, Manzana 2, Supermanzana 524, C.P. 77534, Cancún, Quintana Roo, México, y con contacto en <a href=\"mailto:info@mexicoluxestays.com\">info@mexicoluxestays.com</a> o <a href=\"tel:+529848079475\">+52 (984) 807 94 75</a>. Al solicitar una reservación, aceptas estos términos.",
     "legal.terms.booking.title": "Proceso de reservación",
     "legal.terms.booking.body": "Envíanos tus fechas, tamaño de grupo y villa preferida — por formulario, correo o WhatsApp. Confirmamos disponibilidad, apartamos la villa mientras decides, y aseguramos la reservación una vez pagado un depósito y firmado un acuerdo de reservación. Las tarifas para tus fechas vienen en vivo de nuestro sistema de reservas, y el monto final se muestra antes de que confirmes.",
     "legal.terms.payment.title": "Forma de pago",
@@ -974,7 +1005,30 @@ const MLS_I18N = {
     "contact.locations.playaDesc": "Riviera Maya · Quintana Roo · 45 min desde el Aeropuerto Internacional de Cancún (CUN)",
     "contact.locations.valleMap": "Mapa — Valle de Guadalupe<br>Ensenada, Baja California",
     "contact.locations.valleName": "Valle de Guadalupe",
-    "contact.locations.valleDesc": "Baja California · 90 min desde Tijuana (TIJ) / frontera con San Diego"
+    "contact.locations.valleDesc": "Baja California · 90 min desde Tijuana (TIJ) / frontera con San Diego",
+
+    /* ---------- Contáctanos — formulario de mensaje (contact-us.html) ---------- */
+    "message.hero.title": "Contácta<em>nos</em>",
+    "message.form.title": "Envíanos un mensaje",
+    "message.form.name": "Nombre completo",
+    "message.form.phone": "Teléfono (opcional)",
+    "message.form.subject": "Asunto (opcional)",
+    "message.form.message": "Tu mensaje",
+    "message.form.messagePlaceholder": "Cuéntanos cómo podemos ayudarte…",
+    "message.form.send": "Enviar mensaje",
+    "message.form.sending": "Enviando tu mensaje…",
+    "message.form.success": "Gracias — recibimos tu mensaje. Nuestro equipo te responderá por correo muy pronto.",
+    "message.form.error": "No pudimos enviar tu mensaje en este momento. Escríbenos por WhatsApp al {whatsapp} o a {email}.",
+    "message.form.nameRequired": "Por favor escribe tu nombre.",
+    "message.form.messageRequired": "Por favor escribe tu mensaje.",
+    "message.form.phoneInvalid": "Ese número no parece correcto. Incluye la lada de tu país, p. ej. +52 984 123 4567 — o déjalo vacío.",
+    "message.form.waIntro": "¡Hola Mexico Luxe Stays! Intenté enviar este mensaje desde su sitio web, pero no se envió:",
+    "message.channels.title": "¿Prefieres hablar?",
+    "message.channels.lead": "Contacta directamente a nuestro equipo — respondemos rápido.",
+    "message.channels.whatsappHint": "Chatea con nosotros — abre WhatsApp",
+    "message.channels.sms": "Mensaje de texto (SMS)",
+    "message.channels.smsHint": "Abre Mensajes — iPhone o Android",
+    "message.channels.phone": "Teléfono"
   }
 };
 
@@ -982,8 +1036,28 @@ const MLS_I18N = {
 (function () {
   "use strict";
 
+  /* Each language has its own URLs: English at /page.html, Spanish at
+     /es/page.html (generated by scripts/build-es.mjs). The page's language
+     comes from its path; the stored preference only steers the toggle. */
+  const ES_PREFIX = /^\/es(\/|$)/;
+  const PAGE_LANG = ES_PREFIX.test(location.pathname) ? "es" : "en";
+
   function currentLang() {
-    return localStorage.getItem("mlsLang") || "en";
+    return PAGE_LANG;
+  }
+
+  function urlFor(lang) {
+    const enPath = location.pathname.replace(ES_PREFIX, "/");
+    return (lang === "es" ? "/es" + enPath : enPath) + location.search + location.hash;
+  }
+
+  /* i18n strings link pages relative to the site root ("privacy.html");
+     pages one folder down (villas/) need "../" in front. */
+  const UP = "../".repeat(location.pathname.replace(ES_PREFIX, "/").split("/").length - 2);
+  const fixLinks = (html) => (UP ? html.replace(/href="(?![a-z]+:|\/|#|\.\.\/)/g, `href="${UP}`) : html);
+
+  function storePref(lang) {
+    try { localStorage.setItem("mlsLang", lang); } catch (e) { /* storage blocked */ }
   }
 
   function applyLanguage(lang) {
@@ -996,7 +1070,7 @@ const MLS_I18N = {
     });
     document.querySelectorAll("[data-i18n-html]").forEach((el) => {
       const key = el.getAttribute("data-i18n-html");
-      if (dict[key] != null) el.innerHTML = dict[key];
+      if (dict[key] != null) el.innerHTML = fixLinks(dict[key]);
     });
     document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
       const key = el.getAttribute("data-i18n-placeholder");
@@ -1023,7 +1097,6 @@ const MLS_I18N = {
       });
     });
 
-    localStorage.setItem("mlsLang", lang);
     document.dispatchEvent(new CustomEvent("mls:languagechange", { detail: { lang } }));
   }
 
@@ -1045,7 +1118,11 @@ const MLS_I18N = {
   document.addEventListener("DOMContentLoaded", () => {
     applyLanguage(currentLang());
     document.querySelectorAll("[data-lang-option]").forEach((btn) => {
-      btn.addEventListener("click", () => applyLanguage(btn.getAttribute("data-lang-option")));
+      btn.addEventListener("click", () => {
+        const lang = btn.getAttribute("data-lang-option");
+        storePref(lang);
+        if (lang !== PAGE_LANG) location.href = urlFor(lang);
+      });
     });
   });
 

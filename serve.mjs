@@ -17,10 +17,11 @@ createServer(async (req, res) => {
   try {
     let path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
     if (path.endsWith('/')) path += 'index.html';
+    path = path.replace(/^\/es\/assets\//, '/assets/'); // mirrors the rewrite in vercel.json
     const file = normalize(join(ROOT, path));
     if (!file.startsWith(ROOT)) throw new Error('forbidden');
     const data = await readFile(file);
-    res.writeHead(200, { 'Content-Type': MIME[extname(file)] || 'application/octet-stream' });
+    res.writeHead(200, { 'Content-Type': MIME[extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
     res.end(data);
   } catch {
     res.writeHead(404, { 'Content-Type': 'text/plain' });

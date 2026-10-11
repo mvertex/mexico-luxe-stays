@@ -1,0 +1,10 @@
+#!/bin/sh
+# Rebuilds the Spanish pages (es/) and sitemap.xml before every commit and adds
+# them to it, so the Spanish site never falls behind the English pages.
+# Enabled per clone with: git config core.hooksPath .githooks
+
+npm run build:es --silent || {
+  echo "pre-commit: building the Spanish pages failed — commit stopped." >&2
+  exit 1
+}
+git add -A es sitemap.xml

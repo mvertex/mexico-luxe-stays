@@ -1631,7 +1631,10 @@ const MLS_SERVICE_DEFS = {
 /* Renders one alternating showcase row (Our Villas page) — a photo carousel
    on one side, name/description/specs/CTA on the other. `index` decides
    which side the photo sits on (even = left, odd = right). */
-function mlsVillaShowcaseRow(villa, index, basePath = "") {
+/* linkQuery (optional) rides along on every link to the villa page — the
+   villas.html search passes "?checkin=…&checkout=…&guests=…#book" so the
+   villa's booking form opens pre-filled with the searched stay. */
+function mlsVillaShowcaseRow(villa, index, basePath = "", linkQuery = "") {
   const lang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
   const t = typeof window.mlsT === "function" ? window.mlsT : (key) => key;
   const destinationLabel = (lang === "es" && villa.destinationLabelEs) || villa.destinationLabel;
@@ -1676,19 +1679,19 @@ function mlsVillaShowcaseRow(villa, index, basePath = "") {
     <article class="villa-row reveal${index % 2 === 1 ? " villa-row--reverse" : ""}" data-villa-row>
       <div class="villa-row-media" data-carousel>
         <span class="villa-location">${destinationLabel}</span>
-        <a class="villa-row-slides" href="${basePath}villas/${villa.slug}.html" aria-label="${villa.name}">${slidesHtml}</a>
+        <a class="villa-row-slides" href="${basePath}villas/${villa.slug}.html${linkQuery}" aria-label="${villa.name}">${slidesHtml}</a>
         ${arrowsHtml}
         ${dotsHtml}
       </div>
       <div class="villa-row-body">
-        <h2 class="h2"><a href="${basePath}villas/${villa.slug}.html">${villa.name}</a></h2>
+        <h2 class="h2"><a href="${basePath}villas/${villa.slug}.html${linkQuery}">${villa.name}</a></h2>
         <p class="villa-row-desc">${short}</p>
         <div class="villa-row-specs">
           <span>${lang === "es" ? `${villa.area} m&sup2;` : `${Math.round(villa.area * 10.7639).toLocaleString("en-US")} ${t("card.sqft", lang)}`}</span>
           <span>${villa.bedrooms} ${t("card.bedrooms", lang)}</span>
           <span>${villa.guests} ${t("card.guests", lang)}</span>
         </div>
-        <a class="btn btn-solid" href="${basePath}villas/${villa.slug}.html">${t("villas.showcase.explore", lang)}</a>
+        <a class="btn btn-solid" href="${basePath}villas/${villa.slug}.html${linkQuery}">${t("villas.showcase.explore", lang)}</a>
       </div>
     </article>`;
 }

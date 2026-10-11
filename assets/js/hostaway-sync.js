@@ -14,8 +14,13 @@
    to re-render with whatever came back.
    ========================================================================== */
 
+/* window.mlsLiveDataSettled: false while the live fetches are in flight,
+   true once they've settled (or there was nothing to fetch) — lets pages
+   that must not show stale availability (villas.html date search) wait. */
+window.mlsLiveDataSettled = false;
+
 (function () {
-  if (typeof MLS_VILLAS === "undefined") return;
+  if (typeof MLS_VILLAS === "undefined") { window.mlsLiveDataSettled = true; return; }
 
   const FETCH_TIMEOUT_MS = 8000;
 
@@ -45,9 +50,10 @@
   };
 
   const villasToSync = MLS_VILLAS.filter((v) => v.hostawayListingId);
-  if (!villasToSync.length) return;
+  if (!villasToSync.length) { window.mlsLiveDataSettled = true; return; }
 
   Promise.allSettled(villasToSync.map(fetchLiveData)).then(() => {
+    window.mlsLiveDataSettled = true;
     document.dispatchEvent(new CustomEvent("mls:livedata"));
   });
 })();

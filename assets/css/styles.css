@@ -643,15 +643,15 @@ button { font: inherit; cursor: pointer; }
 .villa-story-media {
   position: relative; margin: 0 auto 0 0;
   --wall-shift: calc((100vw - min(100vw, var(--container))) / 2 + var(--pad-x));
-  width: calc(380px + var(--wall-shift));
-  margin-left: calc(-1 * var(--wall-shift));
+  width: calc(460px + var(--wall-shift));
+  margin-left: calc(-1 * var(--wall-shift) - 2px);
 }
 .villa-story-media-main {
-  margin: 0 auto 0 0; width: 100%; height: calc(380px * 5 / 4);
+  margin: 0 auto 0 0; width: 100%; height: calc(460px * 5 / 4);
 }
 .villa-story-media-main img {
   width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;
-  border-radius: var(--radius);
+  border-radius: 0 var(--radius) var(--radius) 0;
 }
 @media (max-width: 680px) {
   .villa-story { grid-template-columns: 1fr; gap: clamp(2.5rem, 10vw, 3.5rem); }
@@ -659,6 +659,7 @@ button { font: inherit; cursor: pointer; }
   .villa-story-copy p { max-width: none; }
   .villa-story-media { margin-inline: auto; width: auto; max-width: 320px; }
   .villa-story-media-main { height: auto; aspect-ratio: 4 / 5; }
+  .villa-story-media-main img { border-radius: var(--radius); }
 }
 @media (max-width: 900px) and (min-width: 681px) {
   .villa-story { grid-template-columns: .9fr 1.1fr; gap: clamp(2rem, 5vw, 3rem); }
@@ -824,23 +825,6 @@ button { font: inherit; cursor: pointer; }
 .mls-map-pin-dot--casa-de-las-estrellas img,
 .leaflet-container .leaflet-marker-pane .mls-map-pin-dot--casa-de-las-estrellas img {
   max-width: 28px !important; max-height: 28px !important;
-}
-
-/* Property page map: the current villa's pin is enlarged and gold-bordered
-   so it reads as "you are here" against its sibling villas' plain pins. */
-.mls-map-pin-dot--current {
-  width: 52px; height: 60px;
-  border-color: var(--gold);
-  border-width: 2px;
-  box-shadow: 0 12px 22px -8px rgba(20, 26, 19, .5);
-}
-.mls-map-pin-dot--current img,
-.leaflet-container .leaflet-marker-pane .mls-map-pin-dot--current img {
-  max-width: 30px !important; max-height: 25px !important;
-}
-.mls-map-pin-dot--current.mls-map-pin-dot--casa-de-las-estrellas img,
-.leaflet-container .leaflet-marker-pane .mls-map-pin-dot--current.mls-map-pin-dot--casa-de-las-estrellas img {
-  max-width: 34px !important; max-height: 34px !important;
 }
 
 @media (max-width: 640px) {
@@ -1011,7 +995,7 @@ button { font: inherit; cursor: pointer; }
   text-align: center; padding: 1rem clamp(1.5rem, 5vw, 4rem);
 }
 .cta-split-col .h2 { color: var(--cream); max-width: 15ch; }
-.cta-split-col .btn { min-width: 220px; }
+.cta-split-col .btn { min-width: 220px; margin-top: auto; }
 .cta-split-col:first-child { border-right: 1px solid rgba(246, 244, 239, .18); }
 
 @media (max-width: 780px) {
@@ -1066,10 +1050,6 @@ button { font: inherit; cursor: pointer; }
    readable document layout, reused by both pages. ---------- */
 .legal-content { max-width: 68ch; margin: 0 auto; }
 .legal-updated { font-size: .8rem; color: var(--stone-text); margin: 0 0 1.6rem; }
-.legal-pending {
-  background: var(--sage-tint); border-radius: 4px; padding: .9rem 1.2rem;
-  font-size: .86rem; line-height: 1.6; color: var(--sage); margin: 0 0 2.6rem;
-}
 .legal-content h2 {
   font-family: var(--font-sans); font-size: 1.05rem; font-weight: 600;
   color: var(--ink); margin: 2.4rem 0 .8rem;
@@ -1306,6 +1286,30 @@ button { font: inherit; cursor: pointer; }
   border-radius: var(--radius); color: var(--stone-text);
 }
 
+/* Home-search dates on villas.html: removable chip, live-check placeholder,
+   and the "closest openings" list shown when nothing fits the dates. */
+.filter-stay {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .4rem 1rem;
+  margin: -.8rem 0 1.6rem; font-size: .9rem; color: var(--ink);
+}
+.filter-stay[hidden] { display: none; }
+.filter-stay-clear {
+  background: none; border: none; padding: 0; font: inherit; font-size: .82rem; color: var(--stone-text);
+  text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+}
+.filter-stay-clear:hover { color: var(--ink); }
+.villa-stay-checking { text-align: center; padding: 4rem 1rem; font-family: var(--font-display); font-style: italic; color: var(--stone-text); }
+.stay-openings { list-style: none; padding: 0; margin: 1.6rem auto; max-width: 460px; display: grid; gap: .7rem; }
+.stay-opening {
+  display: flex; flex-direction: column; gap: .2rem; padding: .9rem 1.2rem; text-align: left;
+  border: 1px solid rgba(20,20,20,.18); border-radius: 8px; background: var(--cream); color: var(--ink);
+  text-decoration: none; transition: border-color .2s ease, transform .2s ease;
+}
+.stay-opening:hover { border-color: var(--sage); transform: translateY(-1px); }
+.stay-opening-name { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; }
+.stay-opening-dates { font-size: .85rem; color: var(--stone-text); }
+.stay-openings-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; margin-top: 1.6rem; }
+
 /* ---------- Villa detail ---------- */
 .detail-hero {
   position: relative; color: var(--ink); padding-top: 7.5rem; padding-bottom: clamp(1rem, 2vw, 1.5rem); background: var(--cream);
@@ -1476,15 +1480,12 @@ button { font: inherit; cursor: pointer; }
   .detail-layout > .specs-bar .spec::before { content: none; }
 }
 
-.detail-intro-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 3vw, 2.5rem);
-  align-items: stretch;
-}
-.detail-intro-copy { display: flex; flex-direction: column; height: 100%; }
-.detail-intro-copy .residence-split-copy { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-@media (max-width: 900px) { .detail-intro-copy { height: auto; } }
-.detail-intro-grid .residence-split-copy { text-align: left; margin-inline: 0; max-width: none; }
-@media (max-width: 900px) { .detail-intro-grid { grid-template-columns: 1fr; } }
+/* Villa intro: description centered across the page, booking form below. */
+.detail-intro-grid { display: flex; flex-direction: column; align-items: center; gap: clamp(1.5rem, 3vw, 2.5rem); }
+.detail-intro-copy { width: 100%; }
+.detail-intro-grid .residence-split-copy { text-align: center; margin-inline: auto; max-width: 900px; }
+.detail-intro-grid .residence-split-copy p:last-child { margin-bottom: 0; }
+.detail-trip-panel { width: 100%; max-width: 960px; box-shadow: var(--shadow-card); scroll-margin-top: 110px; }
 
 /* ---------- Price box: price + check-in/check-out date pickers + guests
    stepper, styled as pill controls (see reference mock). Self-contained —
@@ -1740,30 +1741,26 @@ button { font: inherit; cursor: pointer; }
   font-family: var(--font-display); font-style: italic; color: var(--ink); text-align: center;
   font-size: clamp(1.8rem, 4vw, 2.5rem); margin: 0 0 clamp(1.8rem, 4vw, 2.8rem);
 }
-/* Single scrollable row (not a wrapping grid) so bedroom count never
-   crowds the cards — nav arrows plus native touch/trackpad swipe both
-   move it, with scroll-snap so a slide always lands on a full card. */
-.room-picker-track { position: relative; }
+/* Two-per-row grid (2 + 2 + ...) so every bedroom is visible at once —
+   no arrows or sideways scrolling needed to find the rest. Capped width
+   keeps the two cards a comfortable size instead of stretching across
+   the whole screen; an odd last card sits centred under the pair. */
 .room-picker-list {
-  display: flex; gap: clamp(1.1rem, 2vw, 1.75rem); align-items: flex-start;
-  overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth;
-  scrollbar-width: none; padding-block: .25rem;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  max-width: 860px; margin-inline: auto; padding-block: .25rem;
 }
-.room-picker-list::-webkit-scrollbar { display: none; }
-/* Each bedroom is a proper card — photo on top, name in a solid card
-   body below it — rather than text overlaid on the image. Taller than
-   wide so the row fills more of the page height (less empty cream
-   below it), and a soft single shadow instead of --shadow-lift, whose
-   big dark blur read as a smudge sitting on the same cream background. */
+.room-picker-list > .room-picker-item:last-child:nth-child(odd) {
+  grid-column: 1 / -1; justify-self: center;
+  width: calc(50% - clamp(1rem, 2.5vw, 1.75rem) / 2);
+}
 .room-picker-item {
-  flex: 0 0 auto; scroll-snap-align: start;
-  width: clamp(260px, 22vw, 340px);
   display: flex; flex-direction: column; text-align: left;
   border: 0; padding: 0; background: var(--cream); cursor: pointer; font: inherit;
   border-radius: var(--radius); box-shadow: 0 2px 10px rgba(20, 26, 19, .1); overflow: hidden;
 }
 .room-picker-item-media {
-  position: relative; aspect-ratio: 3 / 4; overflow: hidden; display: block;
+  position: relative; aspect-ratio: 4 / 3; overflow: hidden; display: block;
 }
 .room-picker-item-media img {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
@@ -1776,22 +1773,6 @@ button { font: inherit; cursor: pointer; }
   font-family: var(--font-display); color: var(--ink); font-size: clamp(1.1rem, 1.5vw, 1.3rem);
 }
 .room-picker-item:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-.room-picker-nav {
-  position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
-  width: 3rem; height: 3rem; border-radius: 50%; border: 0;
-  background: var(--cream); color: var(--ink); cursor: pointer;
-  display: grid; place-items: center; box-shadow: var(--shadow-lift);
-  transition: background-color .2s ease, opacity .2s ease;
-}
-.room-picker-nav:hover { background: var(--gold); }
-.room-picker-nav:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-.room-picker-nav svg { width: 20px; height: 20px; display: block; }
-.room-picker-nav[disabled] { opacity: 0; pointer-events: none; }
-.room-picker-prev { left: -1.4rem; }
-.room-picker-next { right: -1.4rem; }
-@media (max-width: 720px) {
-  .room-picker-nav { display: none; }
-}
 
 /* Property location map: a live Google Maps embed pinned to the villa's
    coordinates. Sits on the same cream background as the section above it
@@ -1821,14 +1802,6 @@ button { font: inherit; cursor: pointer; }
    this site skew older. ---------- */
 .sa-section { position: relative; }
 .sa-section .container { max-width: 1280px; }
-/* Faint hexagon texture behind the section, echoing the reference's
-   background pattern — kept subtle so it never competes with the photos. */
-.sa-section::before {
-  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  opacity: .5;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='146' viewBox='0 0 84 146'%3E%3Cpath d='M42 0 84 24v73L42 121 0 97V24z' fill='none' stroke='%234E5D4B' stroke-opacity='0.08' stroke-width='1'/%3E%3C/svg%3E");
-  background-position: center top;
-}
 .sa-section .container { position: relative; z-index: 1; }
 .sa-title { font-family: var(--font-display); font-size: var(--text-section-title); line-height: 1.06; }
 .property-map-section .h3,
@@ -1856,14 +1829,6 @@ button { font: inherit; cursor: pointer; }
 .sa-card-photo-clip img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s var(--ease-out); }
 .sa-card:hover .sa-card-photo-clip img, .sa-card:focus-visible .sa-card-photo-clip img { transform: scale(1.05); }
 
-.sa-card-chip {
-  position: absolute; right: 8px; bottom: 46px; z-index: 2;
-  display: flex; align-items: center; gap: .5rem; text-align: left;
-  max-width: 70%; background: var(--cream); border-radius: 13px; padding: .4rem .8rem .4rem .4rem;
-  box-shadow: 0 14px 30px -10px rgba(20, 20, 20, .35);
-}
-.sa-card-chip img { width: 30px; height: 30px; border-radius: 8px; object-fit: cover; flex: none; display: block; }
-.sa-card-chip span { font-family: var(--font-sans); font-size: .68rem; line-height: 1.25; color: var(--ink); font-weight: 500; }
 
 .sa-card-arrow-btn {
   position: absolute; left: 50%; bottom: -2px; transform: translateX(-50%);
@@ -2073,19 +2038,29 @@ body.sa-modal-open { overflow: hidden; }
 .faq-answer-inner { padding: 0 3.5rem 1.8rem .2rem; font-weight: 300; color: rgba(20,20,20,.75); font-size: .95rem; }
 
 /* ---------- Contact ---------- */
+/* The panel's form runs in two columns (stay | guest details) so the whole
+   request fits in one view; once a villa is chosen, the showcase (carousel +
+   specs) joins on the far left. Everything stacks below 900px. */
 .contact-layout { display: flex; justify-content: center; }
-.contact-layout .trip-panel { width: 100%; max-width: 480px; transition: max-width .3s var(--ease-out); }
+.contact-layout .trip-panel { width: 100%; max-width: 860px; transition: max-width .3s var(--ease-out); }
 
-/* Once a specific villa is chosen, the panel gains a showcase companion
-   (carousel + specs) to its left, and the pair centers as a wider pair. */
 .contact-layout.has-showcase {
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: start; gap: clamp(2rem, 5vw, 3.5rem);
-  max-width: 1080px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  align-items: start; gap: clamp(1.5rem, 3vw, 2.5rem);
+  max-width: 1320px; margin: 0 auto; width: 100%;
 }
 .contact-layout.has-showcase .trip-panel { max-width: none; }
+.contact-layout.has-showcase .trip-showcase { position: sticky; top: 110px; gap: 1.1rem; }
+@media (max-width: 1100px) {
+  .contact-layout.has-showcase { grid-template-columns: 1fr; max-width: 860px; }
+  .contact-layout.has-showcase .trip-showcase {
+    position: static; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start; gap: 1.5rem;
+  }
+}
 @media (max-width: 900px) {
-  .contact-layout.has-showcase { grid-template-columns: 1fr; max-width: 560px; }
+  .contact-layout.has-showcase { max-width: 560px; }
+  .contact-layout.has-showcase .trip-showcase { display: flex; }
   .contact-layout.has-showcase .trip-panel { order: 1; }
   .contact-layout.has-showcase .trip-showcase { order: 2; }
 }
@@ -2120,7 +2095,7 @@ body.sa-modal-open { overflow: hidden; }
 
 .trip-showcase-location { font-size: .64rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone-text); margin: 0; }
 .trip-showcase-name { font-family: var(--font-display); font-size: clamp(1.5rem, 2.8vw, 1.9rem); font-weight: 600; color: var(--ink); margin: .3rem 0 0; }
-.trip-showcase-specs { display: flex; flex-wrap: wrap; gap: 1.6rem; margin-top: 1.1rem; }
+.trip-showcase-specs { display: flex; flex-wrap: wrap; gap: clamp(.6rem, 1.4vw, 1.6rem); margin-top: 1.1rem; }
 .trip-showcase-specs .spec { width: 5rem; padding: .7rem; gap: .35rem; border-color: rgba(78, 93, 75, .28); }
 .trip-showcase-specs .spec-icon { width: 1.1rem; height: 1.1rem; margin-bottom: .3rem; }
 .trip-showcase-specs .spec-num { font-family: var(--font-sans); font-size: 1.3rem; line-height: 1; color: var(--sage); }
@@ -2132,7 +2107,16 @@ body.sa-modal-open { overflow: hidden; }
   border-radius: 14px; padding: clamp(1.8rem, 4vw, 2.8rem);
 }
 .trip-title { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.5rem, 2.6vw, 1.9rem); text-align: center; margin: 0 0 1.6rem; }
-.trip-panel form { display: flex; flex-direction: column; gap: 1.7rem; }
+.trip-panel form {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.5rem clamp(1.5rem, 3.5vw, 2.75rem); align-items: start;
+}
+.trip-col { display: flex; flex-direction: column; gap: 1.4rem; min-width: 0; }
+.trip-col--guest { gap: 1.1rem; }
+@media (max-width: 900px) {
+  .trip-panel form { grid-template-columns: 1fr; gap: 1.7rem; }
+  .trip-col--guest { border-top: 1px solid rgba(20,20,20,.14); padding-top: 1.7rem; }
+}
 
 .trip-villa-field { position: relative; margin-top: -.6rem; }
 .trip-villa-trigger {
@@ -2295,15 +2279,79 @@ body.sa-modal-open { overflow: hidden; }
 }
 .trip-book-btn:hover { background: var(--green); transform: translateY(-1px); }
 .trip-inquire-btn {
-  background: none; border: none; color: var(--stone-text); font: inherit; font-size: .9rem;
-  text-align: center; max-width: 150px; cursor: pointer; transition: color .2s ease;
+  background: none; border: none; padding: .4rem 0; color: var(--stone-text); font: inherit; font-size: .9rem;
+  white-space: nowrap; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px;
+  cursor: pointer; transition: color .2s ease;
 }
 .trip-inquire-btn:hover { color: var(--ink); }
 
-.trip-phone-cta { border-top: 1px solid rgba(20,20,20,.14); padding-top: 1.5rem; text-align: center; }
+/* Inside the two-column form the columns set the width and rhythm, so the
+   single-column 320px caps and top margins step aside. */
+.trip-col .trip-steppers, .trip-col .trip-contact-fields, .trip-col .trip-notes-field,
+.trip-col .trip-consent-field, .trip-col .trip-capacity-notice { max-width: none; margin: 0; }
+.trip-col .trip-steppers { padding-inline: .3rem; }
+.trip-col .trip-price { padding-top: 1.2rem; border-top: 1px solid rgba(20,20,20,.14); }
+.trip-col .trip-actions { justify-content: flex-start; margin-top: .3rem; }
+.trip-col .form-status { margin: 0; text-align: left; }
+@media (max-width: 900px) {
+  .trip-col .trip-actions { justify-content: center; }
+  .trip-col .form-status { text-align: center; }
+}
+
+.trip-phone-cta { border-top: 1px solid rgba(20,20,20,.14); padding-top: 1.5rem; margin-top: 1.5rem; text-align: center; }
 .trip-phone-cta p { font-size: .9rem; color: var(--stone-text); margin: 0; line-height: 1.6; }
 .trip-phone-link { color: var(--ink); font-weight: 700; text-decoration: none; }
 .trip-phone-link:hover { color: var(--sage); }
+
+/* ---------- Contact us — message form + direct channels (contact-us.html) ----------
+   Form reuses the trip-panel field styles; channels sit to its right. */
+/* No hero on this page: clear the fixed header, and keep the whole form
+   inside one laptop-height viewport (no scrolling to fill it in). */
+.message-section { padding-top: calc(94px + clamp(1.5rem, 3vh, 2.5rem)); padding-bottom: clamp(3rem, 6vw, 5rem); }
+.message-layout {
+  display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: clamp(1.8rem, 4vw, 4rem); align-items: start; max-width: 1300px;
+}
+.message-panel { box-shadow: var(--shadow-card); padding: clamp(1.5rem, 3vw, 2.2rem) clamp(1.5rem, 3.5vw, 2.6rem); }
+.message-panel .trip-title { margin-bottom: 1.1rem; }
+.message-panel form { display: flex; flex-direction: column; align-items: stretch; gap: 1rem; }
+.message-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem 1.2rem; }
+.message-panel .trip-notes-field, .message-panel .trip-consent-field { max-width: none; margin: 0; }
+.message-panel .trip-notes-textarea { min-height: 6.5rem; }
+.message-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem 1.5rem; flex-wrap: wrap; }
+.message-footer .trip-consent-field { width: auto; flex: 1 1 220px; }
+.message-panel .form-status { margin: 0; text-align: left; min-height: 0; }
+.message-panel .form-status:empty { display: none; }
+.message-channels { display: flex; flex-direction: column; gap: .9rem; padding-top: .4rem; }
+.message-channels-title { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.5rem, 2.6vw, 1.9rem); margin: 0; }
+.message-channels-lead { font-size: .92rem; line-height: 1.6; color: var(--stone-text); margin: 0 0 .3rem; }
+.message-channel {
+  display: flex; align-items: flex-start; gap: 1rem; padding: 1.05rem 1.2rem;
+  background: var(--cream); border: 1px solid rgba(20,20,20,.14); border-radius: var(--radius);
+  color: var(--ink); text-decoration: none;
+  transition: border-color .2s ease, transform .3s var(--ease-out), box-shadow .3s var(--ease-out);
+}
+a.message-channel:hover { border-color: var(--sage); transform: translateY(-2px); box-shadow: var(--shadow-card); }
+a.message-channel:focus-visible { outline: 2px solid var(--sage); outline-offset: 3px; }
+a.message-channel:active { transform: translateY(0); }
+.message-channel-icon {
+  flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--green); color: var(--cream);
+}
+.message-channel-icon svg { width: 20px; height: 20px; }
+.message-channel-body { display: flex; flex-direction: column; gap: .2rem; min-width: 0; }
+.message-channel-label { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--stone-text); }
+.message-channel-value { font-size: .98rem; font-weight: 600; color: var(--ink); text-decoration: none; overflow-wrap: anywhere; }
+a.message-channel-value:hover { color: var(--sage); }
+a.message-channel-value:focus-visible { outline: 2px solid var(--sage); outline-offset: 2px; border-radius: 2px; }
+.message-channel-hint { font-size: .8rem; color: var(--stone-text); }
+@media (max-width: 900px) {
+  .message-layout { grid-template-columns: 1fr; max-width: 640px; }
+}
+@media (max-width: 560px) {
+  .message-grid { grid-template-columns: 1fr; }
+  .message-panel .trip-book-btn { width: 100%; }
+}
 
 .map-placeholder {
   border-radius: var(--arch); overflow: hidden; position: relative; aspect-ratio: 16 / 10;
@@ -2480,7 +2528,7 @@ body.sa-modal-open { overflow: hidden; }
   .eyebrow, .trip-stepper-sub, .trip-notes-label, .trip-price-label, .wa-option-hint,
   .villa-price-note, .wa-qr-hint, .qr-popover-hint, .hero-calendar-note,
   .villa-book-status,
-  .sa-card-cta, .sa-card-chip span { font-size: .75rem; }
+  .sa-card-cta { font-size: .75rem; }
 }
 
 @media (max-width: 900px) {
