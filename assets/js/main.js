@@ -217,6 +217,9 @@
     const counter = lightbox.querySelector("[data-lightbox-counter]");
     let lbImages = [];
     let lbIndex = 0;
+    /* Optional callback run after the lightbox closes — the room picker uses
+       it so closing a bedroom's photos lands back on the bedroom list. */
+    let lbOnClose = null;
 
     const renderLightbox = () => {
       const current = lbImages[lbIndex];
@@ -227,13 +230,17 @@
     const closeLightbox = () => {
       lightbox.hidden = true;
       document.body.style.overflow = "";
+      const onClose = lbOnClose;
+      lbOnClose = null;
+      onClose?.();
     };
     const nextImage = () => { lbIndex = (lbIndex + 1) % lbImages.length; renderLightbox(); };
     const prevImage = () => { lbIndex = (lbIndex - 1 + lbImages.length) % lbImages.length; renderLightbox(); };
 
-    mlsOpenLightbox = (images, startIndex) => {
+    mlsOpenLightbox = (images, startIndex, onClose) => {
       if (!images || !images.length) return;
       lbImages = images;
+      lbOnClose = onClose || null;
       lbIndex = startIndex || 0;
       renderLightbox();
       lightbox.hidden = false;
@@ -247,7 +254,12 @@
     mlsOnSwipe(lightbox, (dir) => (dir > 0 ? nextImage() : prevImage()));
     document.addEventListener("keydown", (e) => {
       if (lightbox.hidden) return;
-      if (e.key === "Escape") closeLightbox();
+      if (e.key === "Escape") {
+        /* Stop here so the room picker's own Escape handler doesn't close
+           the picker this same keypress just reopened. */
+        e.stopImmediatePropagation();
+        closeLightbox();
+      }
       if (e.key === "ArrowRight") nextImage();
       if (e.key === "ArrowLeft") prevImage();
     });
@@ -1848,6 +1860,10 @@
           if (eyebrowEl && i18nKey) eyebrowEl.textContent = t("detail." + i18nKey + ".eyebrow");
           if (descEl && i18nKey) descEl.textContent = t("detail." + i18nKey + ".lead");
           const pickImg = (im) => ({ src: im.src, alt: (lang === "es" && im.altEs) || im.alt });
+          /* Only villas whose room photos are sorted per bedroom (a non-empty
+             roomImages list) get the bedroom picker; the rest open every room
+             photo in one lightbox, like any other category. */
+          const mlsHasRoomSets = (g) => Array.isArray(g.roomImages) && g.roomImages.some((set) => set && set.length);
 
           const SLOT_KEYS = ["outdoor", "living", "kitchen", "rooms", "interiors", "multipurpose"];
           const categories = SLOT_KEYS.map((key) => villa.gallery.find((g) => g.key === key)).filter(Boolean);
@@ -1866,7 +1882,7 @@
                  reach touch devices) — so it gets a badge that's visible
                  without hovering, telling people there's more than one room
                  to browse behind this tile. */
-              const roomsBadge = g.key === "rooms"
+              const roomsBadge = g.key === "rooms" && mlsHasRoomSets(g)
                 ? `<span class="villa-gallery-tile-badge">${t("detail.gallery.roomsBadge").replace("{n}", villa.bedrooms)}</span>`
                 : "";
               return `
@@ -1888,17 +1904,16 @@
               const cat = categories[i];
               /* The "Rooms" tile opens a bedroom picker first (Bedroom 1,
                  Bedroom 2, ...) instead of dumping every room photo into one
-                 lightbox — see cat.roomImages in villas-data.js. A room whose
-                 photos aren't sorted yet (empty array) falls back to the
-                 full pooled set so nothing looks broken in the meantime. */
-              if (cat.key === "rooms" && typeof mlsOpenRoomPicker === "function") {
+                 lightbox — see cat.roomImages in villas-data.js. */
+              if (cat.key === "rooms" && mlsHasRoomSets(cat) && typeof mlsOpenRoomPicker === "function") {
                 const roomImageSets = Array.from({ length: villa.bedrooms }, (_, r) => {
                   const idxList = cat.roomImages?.[r];
                   return idxList && idxList.length ? idxList.map((imgIndex) => cat.images[imgIndex]) : cat.images;
                 });
-                mlsOpenRoomPicker(roomImageSets.map((set) => pickImg(set[0])), (roomIndex) => {
-                  if (typeof mlsOpenLightbox === "function") mlsOpenLightbox(roomImageSets[roomIndex].map(pickImg));
+                const openPicker = () => mlsOpenRoomPicker(roomImageSets.map((set) => pickImg(set[0])), (roomIndex) => {
+                  if (typeof mlsOpenLightbox === "function") mlsOpenLightbox(roomImageSets[roomIndex].map(pickImg), 0, openPicker);
                 }, btn);
+                openPicker();
               } else if (typeof mlsOpenLightbox === "function") {
                 mlsOpenLightbox(cat.images.map(pickImg));
               }

@@ -540,9 +540,7 @@ const MLS_VILLAS = [
           alt: "A bathroom vanity with rainforest views at Villa Aqua", altEs: "Un tocador con vista a la selva en Villa Aqua" },
         { src: "../assets/img/villas/villa-aqua-rooms-80.webp",
           alt: "A bathroom at Villa Aqua — photo 26", altEs: "Un baño en Villa Aqua — foto 26" }
-      ],
-        // Per-bedroom split for the room picker — fill with image indices (into `images` above) once each bedroom's photos are sorted; empty arrays fall back to the full "rooms" list.
-        roomImages: [[], [], [], [], [], []]
+      ]
       },
       { key: "interiors", images: [
         { src: "../assets/img/villas/villa-aqua-interiors-01.webp",
