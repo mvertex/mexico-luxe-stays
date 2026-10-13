@@ -3007,10 +3007,13 @@
       if (e.target.getAttribute && e.target.getAttribute("aria-invalid") === "true") e.target.removeAttribute("aria-invalid");
     });
 
-    /* Submit: "Book Now" sends a booking request, "Inquire" a question;
-       both go to /api/booking-request, which files them in Hostaway as an
-       inquiry (no calendar block, nothing confirmed). The server re-checks
-       everything below plus live availability, minimum stay and capacity. */
+    /* Submit: "Book Now" goes to the villa's Hostaway Booking Engine
+       checkout (MLS_BOOKING_ENGINE_URL in villas-data.js), which takes the
+       guest's details and the card. "Inquire" — and "Book Now" while no
+       engine is set — go to /api/booking-request, which files them in
+       Hostaway as an inquiry (no calendar block, nothing confirmed). The
+       server re-checks everything below plus live availability, minimum
+       stay and capacity. */
     const statusEl = contactForm.querySelector(".form-status");
     const submitBtns = [...contactForm.querySelectorAll('button[type="submit"]')];
     const CONTACT_LINKS = {
@@ -3087,7 +3090,8 @@
       e.preventDefault();
       if (submitBtns.some((b) => b.disabled)) return; // a request is already in flight
       const intent = e.submitter?.dataset.tripIntent === "book" ? "book" : "question";
-      if (consentInput && !consentInput.checked) {
+      const toCheckout = intent === "book" && typeof MLS_BOOKING_ENGINE_URL !== "undefined" && !!MLS_BOOKING_ENGINE_URL;
+      if (consentInput && !consentInput.checked && !toCheckout) {
         setStatus("contact.form.consentRequired");
         consentInput.focus();
         return;
@@ -3112,6 +3116,13 @@
           dateFields.checkout.trigger.click();
           return;
         }
+      }
+      if (toCheckout) {
+        const f = new FormData(contactForm);
+        const villa = MLS_VILLAS.find((v) => v.slug === f.get("villa"));
+        const guests = (Number(f.get("adults")) || 1) + (Number(f.get("children")) || 0);
+        const engineUrl = mlsBookingEngineUrl(villa, f.get("checkin"), f.get("checkout"), guests);
+        if (engineUrl) { window.location.href = engineUrl; return; }
       }
       /* Guest contact details — the team needs a way to reach the guest. */
       const checks = [
