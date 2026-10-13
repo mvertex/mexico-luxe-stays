@@ -2575,12 +2575,12 @@
       setStepperValue(stepper, Number(stepper.dataset.value || 0));
       stepper.querySelector("[data-stepper-dec]")?.addEventListener("click", () => {
         setStepperValue(stepper, Number(stepper.dataset.value) - 1);
-        if (stepper === adultsStepper || stepper === childrenStepper) syncGuestCapacity();
+        if (stepper === adultsStepper || stepper === childrenStepper) { syncGuestCapacity(); renderTripPrice(); }
         if (stepper === adultsStepper) syncBedroomsFromAdults();
       });
       stepper.querySelector("[data-stepper-inc]")?.addEventListener("click", () => {
         setStepperValue(stepper, Number(stepper.dataset.value) + 1);
-        if (stepper === adultsStepper || stepper === childrenStepper) syncGuestCapacity();
+        if (stepper === adultsStepper || stepper === childrenStepper) { syncGuestCapacity(); renderTripPrice(); }
         if (stepper === adultsStepper) syncBedroomsFromAdults();
       });
     });
@@ -2760,6 +2760,7 @@
     });
 
     function onDateSelected(key, date) {
+      queueMicrotask(renderTripPrice); // after the check-out reset below
       if (key === "checkin" && dateFields.checkout) {
         const next = new Date(date);
         next.setDate(next.getDate() + 1);
@@ -2905,14 +2906,61 @@
       showcaseEl.hidden = false;
     };
 
-    /* "Starting from" is Hostaway's live lowest rate (no static figure),
-       so it's also redrawn when live data lands — see renderTripShowcase. */
-    const renderTripPrice = (villa) => {
+    /* Price block. With villa + both dates picked it shows Hostaway's
+       total for the stay (/api/villa-quote — the same figures the Booking
+       Engine checkout charges); otherwise, or if the quote fails, "Starting
+       from" Hostaway's live lowest nightly rate. Redrawn on villa, date,
+       guest, live-data and language changes — see renderTripShowcase. While
+       a total is shown its texts drop data-i18n (they carry {n}), so the
+       language switch re-renders them here instead. */
+    const priceLabelEl = contactForm.querySelector(".trip-price-label");
+    const priceUnitEl = contactForm.querySelector(".trip-price-unit");
+    const priceNoteEl = contactForm.querySelector(".trip-price-note");
+    const tripQuote = { key: "", status: "idle", data: null };
+    const setPriceText = (el, key, text) => {
+      if (!el) return;
+      if (text === undefined) { el.setAttribute("data-i18n", key); el.textContent = t(key); }
+      else { el.removeAttribute("data-i18n"); el.textContent = text; }
+    };
+    function renderTripPrice() {
       if (!priceValueEl) return;
+      const villa = chosenTripVilla();
+      const f = new FormData(contactForm);
+      const checkin = f.get("checkin") || "";
+      const checkout = f.get("checkout") || "";
+      const guests = (Number(f.get("adults")) || 1) + (Number(f.get("children")) || 0);
+      const nights = checkin && checkout ? Math.round((new Date(`${checkout}T00:00`) - new Date(`${checkin}T00:00`)) / 864e5) : 0;
+      const key = villa?.hostawayListingId && nights > 0 ? `${villa.hostawayListingId}_${checkin}_${checkout}_${guests}` : "";
+
+      if (key && key !== tripQuote.key) {
+        Object.assign(tripQuote, { key, status: "loading", data: null });
+        const qs = new URLSearchParams({ listingId: villa.hostawayListingId, checkin, checkout, guests });
+        fetch(`/api/villa-quote?${qs}`)
+          .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`))))
+          .then((data) => { if (tripQuote.key === key) Object.assign(tripQuote, { status: "ok", data }); })
+          .catch(() => { if (tripQuote.key === key) tripQuote.status = "error"; })
+          .finally(() => { if (tripQuote.key === key) renderTripPrice(); });
+      }
+
+      const showTotal = key && key === tripQuote.key && tripQuote.status !== "error";
+      if (showTotal) {
+        const total = tripQuote.data?.total;
+        setPriceText(priceLabelEl, "", t(nights === 1 ? "contact.form.priceTotalOne" : "contact.form.priceTotal").replace("{n}", nights));
+        priceValueEl.textContent = tripQuote.status === "ok"
+          ? `$${Number(total).toLocaleString("en-US", Number(total) % 1 ? { minimumFractionDigits: 2, maximumFractionDigits: 2 } : {})}`
+          : "…";
+        setPriceText(priceUnitEl, "", "usd");
+        setPriceText(priceNoteEl, "", t("contact.form.priceTotalNote"));
+        return;
+      }
+      if (!key) tripQuote.key = "";
+      setPriceText(priceLabelEl, "contact.form.priceLabel");
+      setPriceText(priceUnitEl, "contact.form.priceUnit");
+      setPriceText(priceNoteEl, "contact.form.priceNote");
       priceValueEl.textContent = villa && typeof villa.priceFromPerNight === "number"
         ? `$${villa.priceFromPerNight.toLocaleString("en-US")}`
         : "—";
-    };
+    }
 
     renderTripShowcase = () => {
       const villa = typeof MLS_VILLAS !== "undefined"
