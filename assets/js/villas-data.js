@@ -51,10 +51,10 @@ function mlsSrcAttrs(src) {
    "Book now" sends guests to the owner's Hostaway Booking Engine checkout
    for the villa, with dates and guests prefilled — the same URL Hostaway's
    own calendar widget builds: {base}checkout/{listingId}?start=&end=&numberOfGuests=
-   null until the owner publishes the Booking Engine (on its own subdomain,
-   e.g. "https://reservas.mexicoluxestays.com/"); until then Book now falls
-   back to the contact page's booking request. */
-const MLS_BOOKING_ENGINE_URL = null;
+   Hostaway's free subdomain for now; switch to
+   "https://reservas.mexicoluxestays.com/" once its CNAME is in the DNS.
+   null falls back to the contact page's booking request. */
+const MLS_BOOKING_ENGINE_URL = "https://reservas-mls.holidayfuture.com/";
 function mlsBookingEngineUrl(villa, checkin, checkout, guests) {
   if (!MLS_BOOKING_ENGINE_URL || !villa || !villa.hostawayListingId) return null;
   const url = new URL(`checkout/${villa.hostawayListingId}`, MLS_BOOKING_ENGINE_URL);
