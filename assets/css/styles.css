@@ -827,6 +827,52 @@ button { font: inherit; cursor: pointer; }
   max-width: 28px !important; max-height: 28px !important;
 }
 
+/* Property page: this villa's pin is spotlit — scaled up, filled brand green
+   with a gold ring, a name tag above, and a pulse that plays when the map
+   scrolls into view (.is-spotlit, added by main.js). Sibling villas' pins
+   stay visible for context but recede. */
+.mls-map-pin--sibling .mls-map-pin-dot { opacity: .72; transform: scale(.88); transform-origin: 50% 100%; }
+.mls-map-pin--current .mls-map-pin-dot {
+  transform: scale(1.25); transform-origin: 50% 100%;
+  border: 2.5px solid var(--gold);
+  box-shadow: 0 0 0 4px rgba(194, 168, 120, .35), 0 12px 22px -8px rgba(20, 26, 19, .55);
+}
+.mls-map-pin--current .mls-map-pin-dot::before {
+  content: ""; position: absolute; inset: -4px;
+  border-radius: inherit; border: 2px solid var(--gold);
+  opacity: 0; pointer-events: none;
+}
+.mls-map-pin-label {
+  position: absolute; bottom: calc(100% + 24px); left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap; padding: .3rem .7rem; border-radius: 999px;
+  background: var(--green); color: #fff;
+  font: 600 .78rem/1.2 var(--font-sans); letter-spacing: .02em;
+  box-shadow: 0 6px 14px -6px rgba(20, 26, 19, .5);
+  pointer-events: none;
+}
+.mls-map-pin-label::after {
+  content: ""; position: absolute; top: 100%; left: 50%;
+  border: 5px solid transparent; border-top-color: var(--green);
+  transform: translateX(-50%);
+}
+.is-spotlit .mls-map-pin--current .mls-map-pin-dot { animation: mls-pin-drop .7s var(--ease-out, ease-out) both; }
+.is-spotlit .mls-map-pin--current .mls-map-pin-dot::before { animation: mls-pin-pulse 1.6s ease-out .5s 3; }
+.is-spotlit .mls-map-pin-label { animation: mls-pin-label-in .5s ease-out .45s both; }
+@keyframes mls-pin-drop {
+  0% { transform: translateY(-28px) scale(1.25); opacity: 0; }
+  60% { transform: translateY(4px) scale(1.25); opacity: 1; }
+  100% { transform: translateY(0) scale(1.25); }
+}
+@keyframes mls-pin-pulse {
+  0% { opacity: .9; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.6); }
+}
+@keyframes mls-pin-label-in {
+  from { opacity: 0; transform: translate(-50%, 6px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
 @media (max-width: 640px) {
   .destination-map { height: clamp(320px, 90vw, 400px); }
 }
@@ -2095,11 +2141,12 @@ body.sa-modal-open { overflow: hidden; }
 
 .trip-showcase-location { font-size: .64rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone-text); margin: 0; }
 .trip-showcase-name { font-family: var(--font-display); font-size: clamp(1.5rem, 2.8vw, 1.9rem); font-weight: 600; color: var(--ink); margin: .3rem 0 0; }
-.trip-showcase-specs { display: flex; flex-wrap: wrap; gap: clamp(.6rem, 1.4vw, 1.6rem); margin-top: 1.1rem; }
-.trip-showcase-specs .spec { width: 5rem; padding: .7rem; gap: .35rem; border-color: rgba(78, 93, 75, .28); }
+.trip-showcase-specs { --spec-gap: clamp(.8rem, 1.6vw, 1.4rem); display: flex; flex-wrap: nowrap; gap: var(--spec-gap); margin-top: 1.1rem; max-width: 30rem; }
+.trip-showcase-specs .spec { width: auto; min-width: 0; flex: 1 1 0; padding: .7rem 0; gap: .35rem; border-color: rgba(78, 93, 75, .28); }
+.trip-showcase-specs .spec + .spec::before { left: calc(var(--spec-gap) / -2); }
 .trip-showcase-specs .spec-icon { width: 1.1rem; height: 1.1rem; margin-bottom: .3rem; }
 .trip-showcase-specs .spec-num { font-family: var(--font-sans); font-size: 1.3rem; line-height: 1; color: var(--sage); }
-.trip-showcase-specs .spec-label { font-size: .62rem; letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--stone-text); margin-top: .3rem; }
+.trip-showcase-specs .spec-label { font-size: .6rem; letter-spacing: .12em; white-space: nowrap; text-transform: uppercase; color: var(--stone-text); margin-top: .3rem; }
 .trip-showcase-desc { font-size: .92rem; font-weight: 300; line-height: 1.7; color: rgba(20,20,20,.75); margin-top: 1.1rem; }
 
 .trip-panel {

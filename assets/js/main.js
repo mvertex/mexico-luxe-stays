@@ -1194,11 +1194,15 @@
         (v) => v.destination === villa.destination && typeof v.lat === "number" && typeof v.lng === "number"
       );
 
+      /* This villa's own pin is spotlit (larger, gold pulse ring, name tag)
+         and its siblings recede, so guests instantly see which pin is "here". */
       function propertyPinIcon(v) {
         const iconSrc = v.mapIcon ? `../${v.mapIcon}` : "../assets/img/brand/icon-positive.png";
+        const isCurrent = v.slug === villa.slug;
         return L.divIcon({
-          className: "mls-map-pin",
-          html: `<span class="mls-map-pin-dot mls-map-pin-dot--${v.slug}"><img src="${iconSrc}" alt="" loading="lazy"></span>`,
+          className: `mls-map-pin ${isCurrent ? "mls-map-pin--current" : "mls-map-pin--sibling"}`,
+          html: `<span class="mls-map-pin-dot mls-map-pin-dot--${v.slug}"><img src="${iconSrc}" alt="" loading="lazy"></span>` +
+            (isCurrent ? `<span class="mls-map-pin-label">${v.name}</span>` : ""),
           iconSize: [44, 62],
           iconAnchor: [22, 60]
         });
@@ -1217,7 +1221,11 @@
         }).addTo(map);
 
         destVillas.forEach((v) => {
-          const marker = L.marker([v.lat, v.lng], { icon: propertyPinIcon(v), title: v.name }).addTo(map);
+          const marker = L.marker([v.lat, v.lng], {
+            icon: propertyPinIcon(v),
+            title: v.name,
+            zIndexOffset: v.slug === villa.slug ? 1000 : 0
+          }).addTo(map);
           marker.on("click", () => window.open(mlsGoogleMapsUrl(v), "_blank", "noopener"));
         });
 
@@ -1228,6 +1236,22 @@
         }
 
         window.addEventListener("resize", () => map.invalidateSize());
+
+        /* Replay the spotlight each time the map scrolls well into view, so
+           the highlight happens while the guest is actually looking at it. */
+        if (!prefersReducedMotion && "IntersectionObserver" in window) {
+          new IntersectionObserver(
+            (entries) => {
+              entries.forEach((e) => {
+                if (!e.isIntersecting) return;
+                el.classList.remove("is-spotlit");
+                void el.offsetWidth;
+                el.classList.add("is-spotlit");
+              });
+            },
+            { threshold: 0.6 }
+          ).observe(el);
+        }
       }
 
       function loadLeafletThenInitProperty() {
