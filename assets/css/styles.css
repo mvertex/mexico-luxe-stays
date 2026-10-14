@@ -2238,6 +2238,14 @@ body.sa-modal-open { overflow: hidden; }
 .trip-text-input:hover { border-color: rgba(20,20,20,.35); }
 .trip-text-input:focus-visible { outline: none; border-color: var(--sage); }
 .trip-text-input[aria-invalid="true"] { border-color: var(--error); }
+/* Phone: country picker (sets the dial code) + number on one line. */
+.trip-phone-row { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: .5rem; }
+.trip-phone-country {
+  appearance: none; -webkit-appearance: none; cursor: pointer; text-overflow: ellipsis; padding-right: 1.9rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23141414' stroke-width='1.3'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right .8rem center;
+}
+@media (max-width: 420px) { .trip-phone-row { grid-template-columns: 1fr; } }
 .trip-contact-fields + .trip-notes-field { margin-top: 0; }
 .trip-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 .trip-notes-field { max-width: 320px; margin: 1.3rem auto 0; width: 100%; text-align: left; }
@@ -2278,12 +2286,14 @@ body.sa-modal-open { overflow: hidden; }
   transition: background-color .2s ease, transform .2s ease;
 }
 .trip-book-btn:hover { background: var(--green); transform: translateY(-1px); }
+/* Secondary action: same shape as Book Now, outlined instead of filled. */
 .trip-inquire-btn {
-  background: none; border: none; padding: .4rem 0; color: var(--stone-text); font: inherit; font-size: .9rem;
-  white-space: nowrap; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px;
-  cursor: pointer; transition: color .2s ease;
+  background: transparent; color: var(--sage); border: 1.5px solid var(--sage); border-radius: 8px;
+  padding: calc(.95rem - 1.5px) 2.4rem; font: inherit; font-size: .95rem; font-weight: 600; white-space: nowrap;
+  cursor: pointer; transition: background-color .2s ease, color .2s ease, transform .2s ease;
 }
-.trip-inquire-btn:hover { color: var(--ink); }
+.trip-inquire-btn:hover { background: var(--sage); color: var(--cream); transform: translateY(-1px); }
+.trip-book-btn:focus-visible, .trip-inquire-btn:focus-visible { outline: 2px solid var(--sage); outline-offset: 3px; }
 
 /* Inside the two-column form the columns set the width and rhythm, so the
    single-column 320px caps and top margins step aside. */
@@ -2291,8 +2301,30 @@ body.sa-modal-open { overflow: hidden; }
 .trip-col .trip-consent-field, .trip-col .trip-capacity-notice { max-width: none; margin: 0; }
 .trip-col .trip-steppers { padding-inline: .3rem; }
 .trip-col .trip-price { padding-top: 1.2rem; border-top: 1px solid rgba(20,20,20,.14); }
-.trip-col .trip-actions { justify-content: flex-start; margin-top: .3rem; }
+.trip-col .trip-actions { justify-content: flex-start; margin-top: .3rem; flex-wrap: nowrap; gap: .75rem; }
+/* Book Now + Inquire share the column side by side, equal widths. */
+.trip-col .trip-book-btn, .trip-col .trip-inquire-btn { flex: 1 1 0; min-width: 0; padding-inline: 1rem; white-space: normal; line-height: 1.25; }
 .trip-col .form-status { margin: 0; text-align: left; }
+.trip-book { display: flex; flex-direction: column; gap: .6rem; }
+.trip-col .trip-book .trip-book-btn { flex: none; width: 100%; }
+.trip-book-note { font-size: .8rem; color: var(--stone-text); text-align: center; margin: 0; }
+/* Book / Inquire toggle: Book is the stay column alone, centered;
+   Inquire is both columns without the Book Now block. */
+.trip-mode {
+  grid-column: 1 / -1; justify-self: center; display: flex; padding: 4px;
+  border: 1px solid rgba(20,20,20,.18); border-radius: 999px;
+}
+.trip-mode[hidden] { display: none; }
+.trip-mode-btn {
+  font: inherit; font-size: .9rem; font-weight: 600; color: var(--sage);
+  background: transparent; border: 0; border-radius: 999px; padding: .55rem 2rem; cursor: pointer;
+  transition: background-color .2s ease, color .2s ease;
+}
+.trip-mode-btn[aria-pressed="true"] { background: var(--sage); color: var(--cream); }
+.trip-mode-btn:focus-visible { outline: 2px solid var(--sage); outline-offset: 2px; }
+.trip-panel form[data-trip-mode="book"] { grid-template-columns: minmax(0, 1fr); max-width: 480px; margin-inline: auto; }
+.trip-panel form[data-trip-mode="book"] .trip-col--guest,
+.trip-panel form[data-trip-mode="inquire"] .trip-book { display: none; }
 @media (max-width: 900px) {
   .trip-col .trip-actions { justify-content: center; }
   .trip-col .form-status { text-align: center; }

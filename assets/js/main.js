@@ -2907,8 +2907,9 @@
     };
 
     /* Price block. With villa + both dates picked it shows Hostaway's
-       total for the stay (/api/villa-quote — the same figures the Booking
-       Engine checkout charges); otherwise, or if the quote fails, "Starting
+       price for those nights (/api/villa-quote: the accommodation, after
+       any discount) — taxes, cleaning and fees are left for the Booking
+       Engine checkout, as the note says; otherwise, or if the quote fails, "Starting
        from" Hostaway's live lowest nightly rate. Redrawn on villa, date,
        guest, live-data and language changes — see renderTripShowcase. While
        a total is shown its texts drop data-i18n (they carry {n}), so the
@@ -2944,13 +2945,14 @@
 
       const showTotal = key && key === tripQuote.key && tripQuote.status !== "error";
       if (showTotal) {
-        const total = tripQuote.data?.total;
-        setPriceText(priceLabelEl, "", t(nights === 1 ? "contact.form.priceTotalOne" : "contact.form.priceTotal").replace("{n}", nights));
+        const q = tripQuote.data || {};
+        const total = Number(q.accommodation) + (q.discounts || []).reduce((acc, d) => acc + Number(d.amount || 0), 0);
+        setPriceText(priceLabelEl, "", t(nights === 1 ? "contact.form.priceNightsOne" : "contact.form.priceNights").replace("{n}", nights));
         priceValueEl.textContent = tripQuote.status === "ok"
           ? `$${Number(total).toLocaleString("en-US", Number(total) % 1 ? { minimumFractionDigits: 2, maximumFractionDigits: 2 } : {})}`
           : "…";
         setPriceText(priceUnitEl, "", "usd");
-        setPriceText(priceNoteEl, "", t("contact.form.priceTotalNote"));
+        setPriceText(priceNoteEl, "", t("contact.form.priceNightsNote"));
         return;
       }
       if (!key) tripQuote.key = "";
@@ -3062,7 +3064,109 @@
        Hostaway as an inquiry (no calendar block, nothing confirmed). The
        server re-checks everything below plus live availability, minimum
        stay and capacity. */
-    const statusEl = contactForm.querySelector(".form-status");
+    /* Two status lines: under Book Now and under Inquire. Each submit
+       writes to the one next to the button used and clears the other. */
+    const bookStatusEl = contactForm.querySelector("[data-book-status]");
+    const inquireStatusEl = contactForm.querySelector(".form-status:not([data-book-status])");
+    let statusEl = inquireStatusEl;
+
+    /* Book / Inquire toggle (data-trip-mode on the form; CSS shows the
+       chosen path). Without a Booking Engine, Book Now would need the
+       contact fields, so the form stays on Inquire and the toggle hides. */
+    const modeBtns = [...contactForm.querySelectorAll("[data-trip-mode-btn]")];
+    const setMode = (mode) => {
+      contactForm.dataset.tripMode = mode;
+      modeBtns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tripModeBtn === mode)));
+      [bookStatusEl, inquireStatusEl].forEach((el) => { if (el) el.textContent = ""; });
+    };
+    modeBtns.forEach((b) => b.addEventListener("click", () => setMode(b.dataset.tripModeBtn)));
+    if (modeBtns.length && !(typeof MLS_BOOKING_ENGINE_URL !== "undefined" && MLS_BOOKING_ENGINE_URL)) {
+      modeBtns[0].parentElement.hidden = true;
+      setMode("inquire");
+    }
+    /* ---------- Phone country picker: choosing a country writes its dial
+       code into the phone field; typing "+<code>" picks the country back.
+       Dial codes come from libphonenumber-js (the same metadata the server
+       validates with, api/booking-request.js); names are localized by the
+       browser (Intl.DisplayNames). The phone itself is optional. ---------- */
+    const PHONE_DIAL = Object.fromEntries((
+      "AC247 AD376 AE971 AF93 AG1 AI1 AL355 AM374 AO244 AR54 AS1 AT43 AU61 AW297 AX358 AZ994 BA387 BB1 " +
+      "BD880 BE32 BF226 BG359 BH973 BI257 BJ229 BL590 BM1 BN673 BO591 BQ599 BR55 BS1 BT975 BW267 BY375 " +
+      "BZ501 CA1 CC61 CD243 CF236 CG242 CH41 CI225 CK682 CL56 CM237 CN86 CO57 CR506 CU53 CV238 CW599 " +
+      "CX61 CY357 CZ420 DE49 DJ253 DK45 DM1 DO1 DZ213 EC593 EE372 EG20 EH212 ER291 ES34 ET251 FI358 " +
+      "FJ679 FK500 FM691 FO298 FR33 GA241 GB44 GD1 GE995 GF594 GG44 GH233 GI350 GL299 GM220 GN224 GP590 " +
+      "GQ240 GR30 GT502 GU1 GW245 GY592 HK852 HN504 HR385 HT509 HU36 ID62 IE353 IL972 IM44 IN91 IO246 " +
+      "IQ964 IR98 IS354 IT39 JE44 JM1 JO962 JP81 KE254 KG996 KH855 KI686 KM269 KN1 KP850 KR82 KW965 KY1 " +
+      "KZ7 LA856 LB961 LC1 LI423 LK94 LR231 LS266 LT370 LU352 LV371 LY218 MA212 MC377 MD373 ME382 MF590 " +
+      "MG261 MH692 MK389 ML223 MM95 MN976 MO853 MP1 MQ596 MR222 MS1 MT356 MU230 MV960 MW265 MX52 MY60 " +
+      "MZ258 NA264 NC687 NE227 NF672 NG234 NI505 NL31 NO47 NP977 NR674 NU683 NZ64 OM968 PA507 PE51 " +
+      "PF689 PG675 PH63 PK92 PL48 PM508 PR1 PS970 PT351 PW680 PY595 QA974 RE262 RO40 RS381 RU7 RW250 " +
+      "SA966 SB677 SC248 SD249 SE46 SG65 SH290 SI386 SJ47 SK421 SL232 SM378 SN221 SO252 SR597 SS211 " +
+      "ST239 SV503 SX1 SY963 SZ268 TA290 TC1 TD235 TG228 TH66 TJ992 TK690 TL670 TM993 TN216 TO676 TR90 " +
+      "TT1 TV688 TW886 TZ255 UA380 UG256 US1 UY598 UZ998 VA39 VC1 VE58 VG1 VI1 VN84 VU678 WF681 WS685 " +
+      "XK383 YE967 YT262 ZA27 ZM260 ZW263"
+    ).split(" ").map((e) => [e.slice(0, 2), e.slice(2)]));
+    const PHONE_TOP = ["MX", "US", "CA"];
+    /* Main country for codes several share (+1, +7, +44…). */
+    const PHONE_MAIN = ["US", "RU", "GB", "AU", "IT", "NO", "FI", "FR", "MA", "CW", "GP", "RE", "SH"];
+    const phoneInput = contactForm.querySelector("#cf-phone");
+    const phoneCountry = contactForm.querySelector("#cf-phone-country");
+    const phoneFlag = (cc) => String.fromCodePoint(...[...cc].map((c) => 0x1f1a5 + c.charCodeAt(0)));
+    const phonePrefix = () => (phoneCountry?.value ? `+${PHONE_DIAL[phoneCountry.value]} ` : "");
+    /* The guest's region from their browser language (es-MX → MX, en-US → US). */
+    const guessPhoneCountry = () => {
+      for (const tag of navigator.languages || [navigator.language || ""]) {
+        const region = (/-([A-Za-z]{2})\b/.exec(tag) || [])[1]?.toUpperCase();
+        if (region && PHONE_DIAL[region]) return region;
+      }
+      return /^es\b/i.test(navigator.language || "") ? "MX" : "US";
+    };
+    const renderPhoneCountries = () => {
+      if (!phoneCountry) return;
+      const lang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
+      let names = null;
+      try { names = new Intl.DisplayNames([lang], { type: "region" }); } catch { /* old browser: codes only */ }
+      const nameOf = (cc) => { try { return names?.of(cc) || cc; } catch { return cc; } };
+      const option = (cc) => new Option(`${phoneFlag(cc)} ${nameOf(cc)} (+${PHONE_DIAL[cc]})`, cc);
+      const current = phoneCountry.value || guessPhoneCountry();
+      const rest = Object.keys(PHONE_DIAL).filter((cc) => !PHONE_TOP.includes(cc))
+        .sort((a, b) => nameOf(a).localeCompare(nameOf(b), lang));
+      const divider = new Option("──────────", "");
+      divider.disabled = true;
+      phoneCountry.replaceChildren(...PHONE_TOP.map(option), divider, ...rest.map(option));
+      phoneCountry.value = current;
+    };
+    if (phoneCountry && phoneInput) {
+      renderPhoneCountries();
+      document.addEventListener("mls:languagechange", renderPhoneCountries);
+      let lastDial = PHONE_DIAL[phoneCountry.value];
+      phoneCountry.addEventListener("change", () => {
+        const national = phoneInput.value.trim().replace(new RegExp(`^\\+${lastDial}\\s*`), "");
+        phoneInput.value = phonePrefix() + national.replace(/^\+\d*\s*/, "");
+        lastDial = PHONE_DIAL[phoneCountry.value];
+        phoneInput.focus();
+      });
+      phoneInput.addEventListener("focus", () => { if (!phoneInput.value.trim()) phoneInput.value = phonePrefix(); });
+      phoneInput.addEventListener("blur", () => { if (phoneInput.value.trim() === phonePrefix().trim()) phoneInput.value = ""; });
+      /* Typed or pasted a full international number: follow its code
+         (longest match; a code the current country already has is kept). */
+      phoneInput.addEventListener("input", () => {
+        const digits = (/^\s*(?:\+|00)(\d{1,4})/.exec(phoneInput.value) || [])[1];
+        if (!digits || digits.startsWith(lastDial)) return;
+        for (let n = Math.min(3, digits.length); n >= 1; n--) {
+          const code = digits.slice(0, n);
+          const match = PHONE_MAIN.find((cc) => PHONE_DIAL[cc] === code)
+            || Object.keys(PHONE_DIAL).find((cc) => PHONE_DIAL[cc] === code);
+          if (match) { phoneCountry.value = match; lastDial = code; return; }
+        }
+      });
+    }
+    /* What gets sent: empty when the guest left only the dial code. */
+    const phoneValue = () => {
+      const v = phoneInput?.value.trim() || "";
+      return v === phonePrefix().trim() ? "" : v;
+    };
+
     const submitBtns = [...contactForm.querySelectorAll('button[type="submit"]')];
     const CONTACT_LINKS = {
       whatsapp: { text: "+52 984 807 9475", href: "https://wa.me/5219848079475" },
@@ -3137,8 +3241,11 @@
     contactForm.addEventListener("submit", (e) => {
       e.preventDefault();
       if (submitBtns.some((b) => b.disabled)) return; // a request is already in flight
-      const intent = e.submitter?.dataset.tripIntent === "book" ? "book" : "question";
+      const mode = contactForm.dataset.tripMode || e.submitter?.dataset.tripIntent;
+      const intent = mode === "book" ? "book" : "question";
       const toCheckout = intent === "book" && typeof MLS_BOOKING_ENGINE_URL !== "undefined" && !!MLS_BOOKING_ENGINE_URL;
+      statusEl = (intent === "book" && bookStatusEl) || inquireStatusEl;
+      [bookStatusEl, inquireStatusEl].forEach((el) => { if (el && el !== statusEl) el.textContent = ""; });
       if (consentInput && !consentInput.checked && !toCheckout) {
         setStatus("contact.form.consentRequired");
         consentInput.focus();
@@ -3177,13 +3284,15 @@
         ["#cf-first-name", (v) => v.length >= 1, "contact.form.firstNameRequired"],
         ["#cf-last-name", (v) => v.length >= 1, "contact.form.lastNameRequired"],
         ["#cf-email", (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v), "contact.form.emailRequired"],
-        ["#cf-phone", (v) => v.length > 0, "contact.form.phoneRequired"],
-        /* Same shape the server accepts before its full per-country check
-           (api/booking-request.js normalizePhone): "+" + country code. */
-        ["#cf-phone", (v) => {
+        /* Optional. When given: the rough shape the server accepts before its
+           full per-country check (api/booking-request.js normalizePhone) —
+           an international number, or a local one for the chosen country. */
+        ["#cf-phone", () => {
+          const v = phoneValue();
+          if (!v) return true;
           let p = v.replace(/[^\d+]/g, "");
           if (p.startsWith("00")) p = `+${p.slice(2)}`;
-          return /^\+[1-9]\d{6,14}$/.test(p);
+          return /^\+[1-9]\d{6,14}$/.test(p) || (!!phoneCountry?.value && /^\d{4,15}$/.test(p));
         }, "contact.form.phoneInvalid"],
       ];
       if (intent === "question") checks.push(["#cf-notes", (v) => v.length >= 2, "contact.form.questionRequired"]);
@@ -3210,7 +3319,8 @@
         firstName: f.get("firstName")?.trim() || "",
         lastName: f.get("lastName")?.trim() || "",
         email: f.get("email")?.trim() || "",
-        phone: f.get("phone")?.trim() || "",
+        phone: phoneValue(),
+        phoneCountry: phoneCountry?.value || "",
         notes: f.get("notes")?.trim() || "",
         company: f.get("company") || "",
         lang: typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en",

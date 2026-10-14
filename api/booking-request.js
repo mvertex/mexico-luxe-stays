@@ -10,7 +10,7 @@
      villa       villa slug (mapped to the Hostaway listing below)
      checkin, checkout   YYYY-MM-DD (required for "book", optional for "question")
      adults, children, infants, bedrooms
-     firstName, lastName, email, phone, notes, lang
+     firstName, lastName, email, phone (optional), phoneCountry, notes, lang
      company     honeypot — real visitors never see or fill it
 
    Hostaway endpoints used (https://api.hostaway.com/documentation):
@@ -56,17 +56,21 @@ function rateLimited(ip) {
   return hits.length > RATE_LIMIT.max;
 }
 
-/* Phone: must be a real number for its country (Google's libphonenumber
-   rules, full metadata) — Hostaway rejects impossible numbers such as
-   +52 000 000 0000 with "Please provide a valid phone number". Returns the
-   E.164 form (+529848079475) sent to Hostaway, or null. Accepts "00" for
-   "+", and the pre-2019 Mexican mobile "+52 1" prefix guests still type. */
-function normalizePhone(raw) {
+/* Phone (optional): when given, must be a real number for its country
+   (Google's libphonenumber rules, full metadata) — Hostaway rejects
+   impossible numbers such as +52 000 000 0000 with "Please provide a valid
+   phone number". Returns the E.164 form (+529848079475) sent to Hostaway, or
+   null. Accepts "00" for "+", the pre-2019 Mexican mobile "+52 1" prefix
+   guests still type, and a local number for the country picked in the form
+   (two-letter code, e.g. "MX"). */
+function normalizePhone(raw, country) {
   let s = String(raw ?? "").replace(/[^\d+]/g, "");
   if (s.startsWith("00")) s = `+${s.slice(2)}`;
   if (/^\+521\d{10}$/.test(s)) s = `+52${s.slice(4)}`;
-  if (!/^\+[1-9]\d{6,14}$/.test(s)) return null;
-  const parsed = parsePhoneNumberFromString(s);
+  const cc = /^[A-Z]{2}$/.test(country || "") ? country : undefined;
+  if (!/^\+[1-9]\d{6,14}$/.test(s) && !(cc && /^\d{4,15}$/.test(s))) return null;
+  let parsed;
+  try { parsed = parsePhoneNumberFromString(s, cc); } catch { return null; }
   return parsed && parsed.isValid() ? parsed.number : null;
 }
 
@@ -96,6 +100,7 @@ function validate(body) {
     lastName: clean(body.lastName, 80),
     email: clean(body.email, 120).toLowerCase(),
     phone: clean(body.phone, 40),
+    phoneCountry: clean(body.phoneCountry, 2).toUpperCase(),
     notes: String(body.notes ?? "").trim().slice(0, 2000),
     lang: body.lang === "es" ? "es" : "en",
     checkin: clean(body.checkin, 10),
@@ -110,9 +115,11 @@ function validate(body) {
   if (!data.firstName) return { error: "firstName" };
   if (!data.lastName) return { error: "lastName" };
   if (!EMAIL_RE.test(data.email)) return { error: "email" };
-  const phoneE164 = normalizePhone(data.phone);
-  if (!phoneE164) return { error: "phone" };
-  data.phone = phoneE164;
+  if (data.phone) {
+    const phoneE164 = normalizePhone(data.phone, data.phoneCountry);
+    if (!phoneE164) return { error: "phone" };
+    data.phone = phoneE164;
+  }
   if (intent === "question" && data.notes.length < 2) return { error: "notes" };
 
   const hasDates = !!(data.checkin || data.checkout);
@@ -237,7 +244,7 @@ module.exports = async (req, res) => {
       guestFirstName: data.firstName,
       guestLastName: data.lastName,
       guestEmail: data.email,
-      phone: data.phone,
+      ...(data.phone ? { phone: data.phone } : {}),
       guestLocale: data.lang,
       numberOfGuests: data.adults + data.children,
       adults: data.adults,
@@ -261,7 +268,7 @@ module.exports = async (req, res) => {
       subject: `${data.intent === "book" ? "Booking request" : "Guest question"} — ${data.firstName} ${data.lastName} — ${data.villa.name}`,
       replyTo: data.email,
       rows: [
-        ["Guest", `${data.firstName} ${data.lastName}`], ["Email", data.email], ["Phone / WhatsApp", data.phone],
+        ["Guest", `${data.firstName} ${data.lastName}`], ["Email", data.email], ["Phone / WhatsApp", data.phone || "—"],
         ["Villa", data.villa.name], ["Dates", data.hasDates ? `${data.checkin} to ${data.checkout}` : "—"],
         ["Adults", data.adults], ["Children (2-12)", data.children], ["Infants (0-2)", data.infants],
         ["Bedrooms", data.bedrooms || "—"], ["Message", data.notes || "—"],

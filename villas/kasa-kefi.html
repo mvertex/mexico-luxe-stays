@@ -69,7 +69,7 @@
   <link rel="icon" type="image/png" href="../assets/img/brand/avatar-green.png">
   <link rel="preload" href="../assets/fonts/cormorant-garamond-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="../assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../assets/css/styles.css?v=27">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=30">
 </head>
 <body>
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
@@ -136,7 +136,15 @@
           <!-- Same booking form as contact.html (handled by the contact-form
                block in main.js), with the villa fixed to this page's — no
                villa picker. POSTs to /api/booking-request. -->
-          <form data-contact-form novalidate>
+          <form data-contact-form data-trip-mode="book" novalidate>
+            <!-- Book or Inquire, chosen up front: the form shows only the
+                 fields that path uses (main.js sets data-trip-mode). Book
+                 needs just the stay — the Hostaway checkout takes the guest's
+                 details and card; Inquire adds the contact fields. -->
+            <div class="trip-mode" role="group" aria-label="Book or inquire" data-i18n-aria-label="contact.form.modeLabel">
+              <button type="button" class="trip-mode-btn" data-trip-mode-btn="book" aria-pressed="true" data-i18n="contact.form.modeBook">Book</button>
+              <button type="button" class="trip-mode-btn" data-trip-mode-btn="inquire" aria-pressed="false" data-i18n="contact.form.modeInquire">Inquire</button>
+            </div>
             <!-- Two columns on desktop: the stay (villa, dates, guests, price)
                  on the left, the guest's contact details on the right, so the
                  whole request fits in one view. -->
@@ -237,7 +245,16 @@
               <p class="trip-price-label" data-i18n="contact.form.priceLabel">Starting from</p>
               <p class="trip-price-value"><span data-trip-price-value>—</span> <span class="trip-price-unit" data-i18n="contact.form.priceUnit">usd/night</span></p>
               <p class="trip-price-note" data-i18n="contact.form.priceNote">Lowest nightly rate in our booking system — the total for your dates is confirmed with your request.</p>
-              <p class="trip-price-note" data-i18n-html="detail.book.cancelDirect">Cancellation: full refund up to 60 days before arrival; 50% penalty from 59 to 45 days; non-refundable 44 days or less — see <a href="../terms.html#cancellation-policy">full policy</a>.</p>
+              <p class="trip-price-note" data-i18n-html="detail.book.cancelKefi">Cancellation (flexible rate): more than 30 days before arrival, 100% refund if paid by wire transfer or 95% if paid by card; 50% refund 15 to 30 days before; non-refundable under 15 days. Non-refundable rate saves 8% — see <a href="../terms.html#cancellation-policy">full policy</a>.</p>
+            </div>
+
+            <!-- Book Now goes straight to the Hostaway checkout, which asks for
+                 the guest's details and card itself — so it sits with the stay,
+                 so it lives with the stay (hidden in Inquire mode). -->
+            <div class="trip-book">
+              <button class="trip-book-btn" type="submit" data-trip-intent="book" data-i18n="contact.form.book">Book Now</button>
+              <p class="trip-book-note" data-i18n="contact.form.bookNote">You'll enter your details and payment on our secure checkout.</p>
+              <p class="form-status" role="status" aria-live="polite" data-book-status></p>
             </div>
             </div>
 
@@ -256,8 +273,11 @@
                 <input class="trip-text-input" type="email" id="cf-email" name="email" autocomplete="email" inputmode="email" required>
               </div>
               <div class="trip-text-field">
-                <label class="trip-notes-label" for="cf-phone" data-i18n="contact.form.phone">Phone / WhatsApp, with country code</label>
-                <input class="trip-text-input" type="tel" id="cf-phone" name="phone" autocomplete="tel" inputmode="tel" required placeholder="+52 984 123 4567" data-i18n-placeholder="contact.form.phonePlaceholder">
+                <label class="trip-notes-label" for="cf-phone" data-i18n="contact.form.phone">Phone / WhatsApp (optional)</label>
+                <div class="trip-phone-row">
+                  <select class="trip-text-input trip-phone-country" id="cf-phone-country" aria-label="Country code" data-i18n-aria-label="contact.form.phoneCountry"></select>
+                  <input class="trip-text-input" type="tel" id="cf-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="984 123 4567" data-i18n-placeholder="contact.form.phonePlaceholder">
+                </div>
               </div>
             </div>
 
@@ -279,7 +299,6 @@
             </div>
 
             <div class="trip-actions">
-              <button class="trip-book-btn" type="submit" data-trip-intent="book" data-i18n="contact.form.book">Book Now</button>
               <button class="trip-inquire-btn" type="submit" data-trip-intent="inquire" data-i18n="contact.form.inquire">Inquire for more info</button>
             </div>
             <p class="form-status" role="status" aria-live="polite"></p>
@@ -495,9 +514,9 @@
     </div>
   </div>
 
-  <script src="../assets/js/i18n.js?v=30" defer></script>
+  <script src="../assets/js/i18n.js?v=31" defer></script>
   <script src="../assets/js/villas-data.js?v=29" defer></script>
   <script src="../assets/js/hostaway-sync.js?v=24" defer></script>
-  <script src="../assets/js/main.js?v=32" defer></script>
+  <script src="../assets/js/main.js?v=33" defer></script>
 </body>
 </html>
