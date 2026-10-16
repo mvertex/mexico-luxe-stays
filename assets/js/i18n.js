@@ -55,7 +55,7 @@ const MLS_I18N = {
     "qa.faq.label": "Frequently asked questions",
 
     /* ---------- Home ---------- */
-    "home.hero.title": "Welcome to<br><img class=\"hero-logo\" src=\"assets/img/brand/wordmark-negative.png\" srcset=\"assets/img/brand/wordmark-negative-800w.png 800w, assets/img/brand/wordmark-negative-1200w.png 1200w, assets/img/brand/wordmark-negative.png 2696w\" sizes=\"(max-width: 780px) 350px, 580px\" alt=\"Mexico Luxe Stays\" width=\"386\" height=\"40\"><span class=\"visually-hidden\"> — Luxury Villa Rentals in Playa del Carmen &amp; Valle de Guadalupe</span>",
+    "home.hero.title": "Welcome to<br><img class=\"hero-logo\" src=\"/assets/img/brand/wordmark-negative.png\" srcset=\"/assets/img/brand/wordmark-negative-800w.png 800w, /assets/img/brand/wordmark-negative-1200w.png 1200w, /assets/img/brand/wordmark-negative.png 2696w\" sizes=\"(max-width: 780px) 350px, 580px\" alt=\"Mexico Luxe Stays\" width=\"386\" height=\"40\"><span class=\"visually-hidden\"> — Luxury Villa Rentals in Playa del Carmen &amp; Valle de Guadalupe</span>",
     "home.search.destination": "Destination or villa",
     "home.search.checkin": "Check in",
     "home.search.checkout": "Check out",
@@ -300,6 +300,7 @@ const MLS_I18N = {
     "services.concierge.body": "A dedicated concierge on call for the length of your stay — reservations, requests, and anything that comes up, handled without you lifting a phone.",
     "services.itinerary.tag": "Included",
     "services.itinerary.title": "Itinerary Planning",
+    "services.itinerary.titleValle": "Personalized Itinerary Planning",
     "services.itinerary.body": "Tell us how you like to travel and we'll shape the days around it — beaches, ruins, restaurants, downtime — all mapped out before you land.",
     "services.itinerary.bodyValle": "Tell us how you like to travel, and we’ll tailor each day to your style — from vineyard tours and exceptional dining to in-villa spa treatments, private chef dinners, and time to simply unwind. Every detail thoughtfully planned before you arrive.",
     "services.spa.tag": "In villa",
@@ -583,7 +584,7 @@ const MLS_I18N = {
     "qa.faq.label": "Preguntas frecuentes",
 
     /* ---------- Home ---------- */
-    "home.hero.title": "Bienvenido a<br><img class=\"hero-logo\" src=\"assets/img/brand/wordmark-negative.png\" srcset=\"assets/img/brand/wordmark-negative-800w.png 800w, assets/img/brand/wordmark-negative-1200w.png 1200w, assets/img/brand/wordmark-negative.png 2696w\" sizes=\"(max-width: 780px) 350px, 580px\" alt=\"Mexico Luxe Stays\" width=\"386\" height=\"40\"><span class=\"visually-hidden\"> — Villas de Lujo en Renta en Playa del Carmen y Valle de Guadalupe</span>",
+    "home.hero.title": "Bienvenido a<br><img class=\"hero-logo\" src=\"/assets/img/brand/wordmark-negative.png\" srcset=\"/assets/img/brand/wordmark-negative-800w.png 800w, /assets/img/brand/wordmark-negative-1200w.png 1200w, /assets/img/brand/wordmark-negative.png 2696w\" sizes=\"(max-width: 780px) 350px, 580px\" alt=\"Mexico Luxe Stays\" width=\"386\" height=\"40\"><span class=\"visually-hidden\"> — Villas de Lujo en Renta en Playa del Carmen y Valle de Guadalupe</span>",
     "home.search.destination": "Destino o villa",
     "home.search.checkin": "Llegada",
     "home.search.checkout": "Salida",
@@ -832,6 +833,7 @@ const MLS_I18N = {
     "services.concierge.body": "Un concierge dedicado disponible durante toda tu estancia — reservaciones, solicitudes y cualquier imprevisto, resuelto sin que tengas que hacer una sola llamada.",
     "services.itinerary.tag": "Incluido",
     "services.itinerary.title": "Planeación de Itinerario",
+    "services.itinerary.titleValle": "Planeación de Itinerario Personalizada",
     "services.itinerary.body": "Cuéntanos cómo te gusta viajar y diseñamos tus días alrededor de eso — playas, ruinas, restaurantes, tiempo libre — todo listo antes de que aterrices.",
     "services.itinerary.bodyValle": "Cuéntanos cómo te gusta viajar y diseñaremos cada día a tu estilo — desde recorridos por viñedos y experiencias gastronómicas excepcionales hasta tratamientos de spa en la villa, cenas con chef privado y tiempo para simplemente relajarte. Cada detalle cuidadosamente planeado antes de tu llegada.",
     "services.spa.tag": "En la villa",

@@ -11,9 +11,9 @@
 
   /* srcset/sizes for photos that have mobile-sized copies (see
      MLS_IMG_VARIANTS / mlsSrcAttrs in villas-data.js). */
-  const mlsImgAttrs = (src) => (typeof mlsSrcAttrs === "function" ? mlsSrcAttrs(src) : "");
-  function mlsSetImg(img, src) {
-    const attrs = /srcset="([^"]+)" sizes="([^"]+)"/.exec(mlsImgAttrs(src));
+  const mlsImgAttrs = (src, sizes) => (typeof mlsSrcAttrs === "function" ? mlsSrcAttrs(src, sizes) : "");
+  function mlsSetImg(img, src, sizes = "(max-width: 780px) 100vw, 60vw") {
+    const attrs = /srcset="([^"]+)" sizes="([^"]+)"/.exec(mlsImgAttrs(src, sizes));
     if (attrs) { img.sizes = attrs[2]; img.srcset = attrs[1]; } else { img.removeAttribute("srcset"); }
     img.src = src;
   }
@@ -498,10 +498,6 @@
       );
     }
   }
-
-  /* ---------- Hero entrance ---------- */
-  const hero = document.querySelector(".hero");
-  if (hero) requestAnimationFrame(() => hero.classList.add("is-ready"));
 
   /* ---------- Hero background video ----------
      Only wired up on wide viewports, without prefers-reduced-motion, and off
@@ -1160,7 +1156,7 @@
     let mapMarkers = [];
 
     function mlsBrandPinIcon(villa) {
-      const iconSrc = villa.mapIcon || "assets/img/brand/icon-positive.png";
+      const iconSrc = villa.mapIcon || "/assets/img/brand/icon-positive.png";
       return L.divIcon({
         className: "mls-map-pin",
         html: `<span class="mls-map-pin-dot mls-map-pin-dot--${villa.slug}"><img src="${iconSrc}" alt="" loading="lazy"></span>`,
@@ -1259,7 +1255,7 @@
       /* This villa's own pin is spotlit (larger, gold pulse ring, name tag)
          and its siblings recede, so guests instantly see which pin is "here". */
       function propertyPinIcon(v) {
-        const iconSrc = v.mapIcon ? `../${v.mapIcon}` : "../assets/img/brand/icon-positive.png";
+        const iconSrc = v.mapIcon || "/assets/img/brand/icon-positive.png";
         const isCurrent = v.slug === villa.slug;
         return L.divIcon({
           className: `mls-map-pin ${isCurrent ? "mls-map-pin--current" : "mls-map-pin--sibling"}`,
@@ -1514,7 +1510,7 @@
         };
         const play = () => {
           if (prefersReducedMotion) return;
-          testimonialTimer = setInterval(() => show(current + 1), 7000);
+          testimonialTimer = setInterval(() => show(current + 1), 12000);
         };
         tDots.forEach((dot, i) =>
           dot.addEventListener("click", () => {
@@ -1710,7 +1706,7 @@
           });
           const activeCategories = MLS_AMENITY_CATEGORY_ORDER.filter((cat) => groups[cat] && groups[cat].length);
           const amenityRowHtml = (item) => `<li><span>${pick(item)}</span></li>`;
-          const villaImgPath = "../" + villa.image;
+          const villaImgPath = villa.image;
 
           const amenitiesModalHtml = `
             <h2 class="sa-modal-title">${t("detail.amenities.title")}</h2>
@@ -1739,19 +1735,19 @@
              "go explore the area" — see startSaRotation below for how the
              rotation itself is driven. */
           const SA_SHARED_IMAGES = {
-            concierge: "../assets/img/services/concierge-bell.webp",
-            transfer: "../assets/img/services/transfer-suv.webp",
-            spa: "../assets/img/services/spa-massage.webp"
+            concierge: "/assets/img/services/concierge-bell.webp",
+            transfer: "/assets/img/services/transfer-suv.webp",
+            spa: "/assets/img/services/spa-massage.webp"
           };
           const SA_EXCURSION_PHOTOS = [
-            "../assets/img/services/excursions/cenote.webp",
-            "../assets/img/services/excursions/snorkel.webp",
-            "../assets/img/services/excursions/zipline.webp"
+            "/assets/img/services/excursions/cenote.webp",
+            "/assets/img/services/excursions/snorkel.webp",
+            "/assets/img/services/excursions/zipline.webp"
           ];
           const serviceImg = (id) => SA_SHARED_IMAGES[id] || (villa.serviceImages && villa.serviceImages[id]) || villaImgPath;
           const serviceImgPos = (id) => (villa.serviceImagePositions && villa.serviceImagePositions[id]) || "";
           const serviceItemHtml = (id) => {
-            const title = t("services." + id + ".title");
+            const title = t((villa.serviceTitleKeys && villa.serviceTitleKeys[id]) || "services." + id + ".title");
             const pos = serviceImgPos(id);
             const photoHtml =
               id === "excursions"
@@ -1790,7 +1786,7 @@
           const cardHtml = (key, mainImg, mainImgPos, title, desc) => `
             <button type="button" class="sa-card" data-sa-open="${key}">
               <span class="sa-card-frame">
-                <span class="sa-card-photo-clip"><img src="${mainImg}"${mlsImgAttrs(mainImg)} alt="" loading="lazy"${mainImgPos ? ` style="object-position:${mainImgPos}"` : ""}></span>
+                <span class="sa-card-photo-clip"><img src="${mainImg}"${mlsImgAttrs(mainImg, "(max-width: 780px) 100vw, 340px")} alt="" loading="lazy"${mainImgPos ? ` style="object-position:${mainImgPos}"` : ""}></span>
                 <span class="sa-card-arrow-btn" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
               </span>
               <span class="sa-card-body">
@@ -1865,7 +1861,7 @@
           const dotsHtml = pairs
             .map((_, i) => `<button type="button" class="${i === 0 ? "is-active" : ""}" aria-label="Testimonial ${i + 1}"></button>`)
             .join("");
-          testimonialsEl.innerHTML = `${slidesHtml}<div class="testimonial-dots" role="group" aria-label="${t("detail.testimonials.chooseLabel")}">${dotsHtml}</div>`;
+          testimonialsEl.innerHTML = `<div class="testimonial-stage">${slidesHtml}</div><div class="testimonial-dots" role="group" aria-label="${t("detail.testimonials.chooseLabel")}">${dotsHtml}</div>`;
           initTestimonialRotator(testimonialsEl);
         }
 
@@ -1974,7 +1970,7 @@
                 : "";
               return `
               <button type="button" class="villa-gallery-tile" data-slot="${positions[i]}" data-cat-index="${i}" aria-haspopup="dialog">
-                <img src="${cover.src}"${mlsImgAttrs(cover.src)} alt="${cover.alt}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>
+                <img src="${cover.src}"${mlsImgAttrs(cover.src, "(max-width: 780px) 100vw, 35vw")} alt="${cover.alt}" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>
                 <span class="villa-gallery-tile-scrim" aria-hidden="true"></span>
                 ${roomsBadge}
                 <span class="villa-gallery-tile-label">

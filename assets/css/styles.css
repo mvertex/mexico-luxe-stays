@@ -413,16 +413,15 @@ button { font: inherit; cursor: pointer; }
 /* Page hero (inner pages — shorter) */
 .hero--page { min-height: 62svh; }
 
-/* Entrance choreography (gated by prefers-reduced-motion at bottom) */
-.hero [data-hero-reveal] { opacity: 0; transform: translateY(28px); }
-.hero.is-ready [data-hero-reveal] {
-  opacity: 1; transform: none;
-  transition: opacity .9s var(--ease-out), transform .9s var(--ease-out);
-}
-.hero.is-ready [data-hero-reveal="2"] { transition-delay: .15s; }
-.hero.is-ready [data-hero-reveal="3"] { transition-delay: .3s; }
-.hero.is-ready [data-hero-reveal="4"] { transition-delay: .45s; }
-.hero.is-ready [data-hero-reveal="5"] { transition-delay: .6s; }
+/* Entrance choreography (gated by prefers-reduced-motion at bottom). Pure CSS,
+   so it starts on first paint instead of waiting for main.js — the hero title
+   is the mobile LCP element. */
+@keyframes hero-reveal { from { opacity: 0; transform: translateY(28px); } }
+.hero [data-hero-reveal] { animation: hero-reveal .9s var(--ease-out) both; }
+.hero [data-hero-reveal="2"] { animation-delay: .15s; }
+.hero [data-hero-reveal="3"] { animation-delay: .3s; }
+.hero [data-hero-reveal="4"] { animation-delay: .45s; }
+.hero [data-hero-reveal="5"] { animation-delay: .6s; }
 
 /* ---------- Hero search (liquid glass) ---------- */
 .hero-search {
@@ -955,6 +954,11 @@ button { font: inherit; cursor: pointer; }
 .testimonial-attr .villa { font-size: .78rem; color: var(--cream-60); margin-top: .3rem; }
 .testimonial-slide { display: none; }
 .testimonial-slide.is-active { display: block; animation: fadeIn .6s var(--ease-out); }
+/* Every slide shares one grid cell, so the stage is always as tall as the
+   longest review — rotating never resizes the section or shifts the FAQ below. */
+.testimonial-stage { display: grid; }
+.testimonial-stage > .testimonial-slide { display: block; grid-area: 1 / 1; visibility: hidden; opacity: 0; }
+.testimonial-stage > .testimonial-slide.is-active { visibility: visible; opacity: 1; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 .testimonial-pair {
   display: flex; align-items: flex-start; justify-content: center;
@@ -2558,6 +2562,7 @@ a.message-channel-value:focus-visible { outline: 2px solid var(--sage); outline-
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   .hero [data-hero-reveal], .reveal { opacity: 1; transform: none; }
+  .hero [data-hero-reveal] { animation: none; }
 }
 
 /* ==========================================================================
