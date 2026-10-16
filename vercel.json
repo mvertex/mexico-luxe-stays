@@ -33,5 +33,27 @@
       "source": "/es/assets/:path*",
       "destination": "/assets/:path*"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/villas/casa-corazon-luxe.html",
+      "destination": "/villas/casa-corazon.html",
+      "permanent": true
+    },
+    {
+      "source": "/villas/casa-corazon-luxe",
+      "destination": "/villas/casa-corazon.html",
+      "permanent": true
+    },
+    {
+      "source": "/es/villas/casa-corazon-luxe.html",
+      "destination": "/es/villas/casa-corazon.html",
+      "permanent": true
+    },
+    {
+      "source": "/es/villas/casa-corazon-luxe",
+      "destination": "/es/villas/casa-corazon.html",
+      "permanent": true
+    }
   ]
 }

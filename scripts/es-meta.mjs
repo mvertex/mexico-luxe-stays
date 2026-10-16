@@ -42,9 +42,9 @@ export const PAGES = {
   },
   "playa-del-carmen.html": {
     title: "Villas en Playa del Carmen — Riviera Maya | Mexico Luxe Stays",
-    description: "Villas de lujo seleccionadas en Playa del Carmen, Riviera Maya: residencias frente al mar con alberca privada, personal completo y servicio de concierge de Mexico Luxe Stays.",
+    description: "Villas de lujo seleccionadas en Playa del Carmen, Riviera Maya: residencias con alberca privada, personal completo y servicio de concierge de Mexico Luxe Stays.",
     og: "Villas en Playa del Carmen — Mexico Luxe Stays",
-    ogDesc: "Villas frente al mar seleccionadas en Playa del Carmen, Riviera Maya."
+    ogDesc: "Villas de lujo seleccionadas en Playa del Carmen, Riviera Maya."
   },
   "valle-de-guadalupe.html": {
     title: "Villas entre Viñedos en Valle de Guadalupe | Mexico Luxe Stays",
@@ -64,10 +64,10 @@ export const PAGES = {
     og: "Términos y Condiciones — Mexico Luxe Stays",
     ogDesc: "Términos de reservación, pago y cancelación de las villas de Mexico Luxe Stays."
   },
-  "villas/casa-corazon-luxe.html": {
-    title: "Casa Corazon Luxe — Gran Villa Frente al Mar | Mexico Luxe Stays",
-    description: "Casa Corazon Luxe: gran residencia frente al mar en Playa del Carmen para hasta 22 huéspedes. 11 recámaras con baño, alberca infinita, cine en casa, chef privado y mayordomo.",
-    og: "Casa Corazon Luxe — Gran Lujo Frente al Mar en Playa del Carmen",
+  "villas/casa-corazon.html": {
+    title: "Casa Corazon — Gran Villa Frente al Mar | Mexico Luxe Stays",
+    description: "Casa Corazon: gran residencia frente al mar en Playa del Carmen para hasta 22 huéspedes. 11 recámaras con baño, alberca infinita, cine en casa, chef privado y mayordomo.",
+    og: "Casa Corazon — Gran Lujo Frente al Mar en Playa del Carmen",
     ogDesc: "Once suites con baño frente al Caribe, alberca infinita, cine en casa y personal completo. Hasta 22 huéspedes.",
     ldDesc: "Gran villa de once recámaras frente al mar en Playa del Carmen, con una sala bajo palapa que se abre a la alberca y al Caribe."
   },

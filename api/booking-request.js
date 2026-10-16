@@ -31,7 +31,7 @@ const { sendFallbackEmail } = require("./_lib/email-fallback");
 const VILLAS = {
   "villa-aqua": { listingMapId: 145234, name: "Villa Aqua", maxGuests: 18 },
   "kasa-kefi": { listingMapId: 305921, name: "Kasa Kefi", maxGuests: 12 },
-  "casa-corazon-luxe": { listingMapId: 144272, name: "Casa Corazon Luxe", maxGuests: 22 },
+  "casa-corazon": { listingMapId: 144272, name: "Casa Corazon", maxGuests: 22 },
   "casa-de-las-estrellas": { listingMapId: 456289, name: "Casa de las Estrellas", maxGuests: 10 },
 };
 

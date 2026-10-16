@@ -1313,6 +1313,25 @@ button { font: inherit; cursor: pointer; }
   background: var(--sage-tint); outline: none;
 }
 .custom-select-list li[aria-selected="true"] { color: var(--gold); font-style: italic; }
+/* Home hero: villas listed under their destination in the same dropdown */
+.custom-select-list li.is-destination-option { font-weight: 600; }
+.custom-select-list li.is-villa-option { padding: .5rem 1rem .5rem 2rem; font-size: .95rem; }
+/* One column per destination, its villas stacked underneath (each li gets
+   its grid-column from main.js; dense flow pulls later columns up to the top
+   row). The empty "clear" option spans the full width above them. */
+.hero-search .custom-select-list:has(.is-destination-option) {
+  display: grid; grid-template-columns: repeat(var(--dest-columns, 2), max-content);
+  grid-auto-flow: row dense; column-gap: .5rem; align-content: start;
+  right: auto; width: max-content; max-height: none;
+}
+.hero-search .custom-select-list:has(.is-destination-option)[hidden] { display: none; }
+.hero-search .custom-select-list li[data-value=""] { grid-column: 1 / -1; }
+@media (max-width: 780px) {
+  .hero-search .custom-select-list:has(.is-destination-option) { display: block; left: -1.2rem; right: -1.2rem; width: auto; max-height: 280px; }
+  .hero-search .custom-select-list:has(.is-destination-option)[hidden] { display: none; }
+  .hero-search .custom-select-list li { grid-column: auto !important; }
+  .custom-select-list li.is-destination-option:not(:first-child) { margin-top: .35rem; }
+}
 .filter-clear {
   flex: none; display: flex; align-items: center; justify-content: center;
   padding: 0 2.6rem; background: var(--green); border: 0; color: var(--cream);
@@ -1961,6 +1980,8 @@ body.sa-modal-open { overflow: hidden; }
 
 .sa-contact-cta { margin-top: 2rem; padding-top: 1.6rem; border-top: 1px solid rgba(20, 20, 20, .12); text-align: center; }
 .sa-contact-cta p { font-size: .92rem; color: var(--ink); margin: 0 0 1rem; }
+.sa-contact-cta .sa-contact-alt { margin: 1rem 0 0; font-size: .85rem; color: var(--ink-soft, var(--ink)); }
+.sa-contact-cta .sa-contact-alt a { text-decoration: underline; text-underline-offset: 3px; }
 
 .sa-amenities-groups { display: flex; flex-direction: column; gap: 1.8rem; }
 .sa-amenity-category h4 {

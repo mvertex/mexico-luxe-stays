@@ -109,6 +109,8 @@
       li.setAttribute("role", "option");
       li.tabIndex = -1;
       li.dataset.value = opt.value;
+      if (opt.className) li.className = opt.className;
+      if (opt.dataset.column) li.style.gridColumn = opt.dataset.column;
       li.textContent = opt.textContent;
       list.appendChild(li);
     });
@@ -560,9 +562,37 @@
   /* ---------- Home hero search: submits a plain GET to villas.html, which
      already reads ?destination/?guests to pre-fill its own filters (see the
      villa grid block below); ?checkin/?checkout ride along for later. */
+  /* The destination dropdown also lists each villa, indented under its
+     destination, so guests arriving from a villa's own social media can jump
+     straight to it. Villa options carry "villa:<slug>" values and are built
+     from MLS_VILLAS so new villas show up without touching the HTML. Each
+     destination gets its own column in the open list (data-column → the
+     li's grid-column; see .hero-search .custom-select-list). */
+  const heroDestSelectEl = document.querySelector(".hero-search #hs-destination");
+  let heroDestColumns = 0;
+  if (heroDestSelectEl && typeof MLS_VILLAS !== "undefined") {
+    [...heroDestSelectEl.options].forEach((destOpt) => {
+      if (!destOpt.value) return;
+      const column = String(++heroDestColumns);
+      destOpt.className = "is-destination-option";
+      destOpt.dataset.column = column;
+      let anchor = destOpt;
+      MLS_VILLAS.filter((v) => v.destination === destOpt.value).forEach((v) => {
+        const opt = new Option(v.name, `villa:${v.slug}`);
+        opt.className = "is-villa-option";
+        opt.dataset.column = column;
+        anchor.after(opt);
+        anchor = opt;
+      });
+    });
+  }
   const heroSearchSelects = document.querySelector(".hero-search")
     ? [...document.querySelectorAll(".hero-search select")].map(mlsEnhanceSelect)
     : [];
+  if (heroDestColumns) {
+    heroDestSelectEl.nextElementSibling?.querySelector(".custom-select-list")
+      ?.style.setProperty("--dest-columns", heroDestColumns);
+  }
   /* ---------- Home hero search: check-in/check-out calendar popovers ----------
      Same pattern as the contact page's trip-calendar date pickers, wired to
      each destination's combined villa availability so already-booked dates
@@ -578,7 +608,14 @@
     const heroToday = new Date();
     heroToday.setHours(0, 0, 0, 0);
 
+    /* The villa picked in the destination dropdown, if any (value "villa:<slug>"). */
+    const heroSelectedVilla = () => {
+      const value = heroDestinationSelect ? heroDestinationSelect.value : "";
+      return value.startsWith("villa:") ? MLS_VILLAS.find((v) => v.slug === value.slice(6)) || null : null;
+    };
     const heroVillasInScope = () => {
+      const villa = heroSelectedVilla();
+      if (villa) return [villa];
       const dest = heroDestinationSelect ? heroDestinationSelect.value : "";
       return MLS_VILLAS.filter((v) => !dest || v.destination === dest);
     };
@@ -699,10 +736,12 @@
       }
     }
 
-    /* Switching destination changes which villas' availability applies —
-       re-render so blocked/available shading stays accurate. */
+    /* Switching destination (or villa) changes which villas' availability
+       applies — re-render so blocked/available shading stays accurate, and
+       re-check the guest count against the new capacity. */
     heroDestinationSelect?.addEventListener("change", () => {
       Object.values(heroDateFields).forEach((api) => api.render());
+      heroGuestsInput?.dispatchEvent(new Event("input"));
     });
 
     document.addEventListener("click", (e) => {
@@ -714,14 +753,15 @@
     });
 
     /* Guests accepts free-form numeric input instead of preset options —
-       validated against the largest villa in the collection, same pattern as
-       the villas.html filter bar (#filter-guests). */
+       validated against the largest villa in scope (just the picked villa,
+       if one is chosen), same pattern as the villas.html filter bar
+       (#filter-guests). */
     const heroGuestsInput = heroSearchForm.querySelector("#hs-guests");
     const heroGuestsField = heroGuestsInput?.closest(".hero-search-field");
     const heroGuestsErrorEl = heroSearchForm.querySelector("[data-hero-guests-error]");
     let heroGuestsHasError = false;
     if (heroGuestsInput) {
-      const heroMaxGuests = Math.max(...MLS_VILLAS.map((v) => v.guests));
+      const heroMaxGuests = () => Math.max(...heroVillasInScope().map((v) => v.guests));
       const heroClearGuestsError = () => {
         heroGuestsHasError = false;
         heroGuestsErrorEl.hidden = true;
@@ -730,8 +770,12 @@
       };
       const heroShowGuestsError = (overMax) => {
         heroGuestsHasError = true;
+        const villa = heroSelectedVilla();
+        const maxMsg = villa
+          ? t("home.search.guestsMaxErrorVilla").replace("{villa}", villa.name).replace("{max}", heroMaxGuests())
+          : t("home.search.guestsMaxError").replace("{max}", heroMaxGuests());
         heroGuestsErrorEl.innerHTML = overMax
-          ? `${t("home.search.guestsMaxError").replace("{max}", heroMaxGuests)}<br><a href="contact.html">${t("home.search.guestsContactCta")}</a>`
+          ? `${maxMsg}<br><a href="contact.html">${t("home.search.guestsContactCta")}</a>`
           : t("home.search.guestsInvalidError");
         heroGuestsErrorEl.hidden = false;
         heroGuestsField.classList.add("has-error");
@@ -741,7 +785,7 @@
         heroGuestsField.classList.toggle("has-value", !!raw);
         if (!raw) { heroClearGuestsError(); return; }
         if (!/^\d+$/.test(raw)) { heroShowGuestsError(false); return; }
-        if (parseInt(raw, 10) > heroMaxGuests) { heroShowGuestsError(true); return; }
+        if (parseInt(raw, 10) > heroMaxGuests()) { heroShowGuestsError(true); return; }
         heroClearGuestsError();
       });
     }
@@ -760,6 +804,22 @@
       if (hasCheckin !== hasCheckout) {
         e.preventDefault();
         (hasCheckin ? heroDateFields.checkout : heroDateFields.checkin).trigger.click();
+        return;
+      }
+      /* A specific villa was picked: go straight to its page, carrying the
+         dates and guests so its booking form opens pre-filled. */
+      const pickedVilla = heroSelectedVilla();
+      if (pickedVilla) {
+        e.preventDefault();
+        const q = new URLSearchParams();
+        if (hasCheckin) {
+          q.set("checkin", heroDateFields.checkin.hiddenInput.value);
+          q.set("checkout", heroDateFields.checkout.hiddenInput.value);
+        }
+        const guests = parseInt(heroGuestsInput?.value, 10);
+        if (guests > 0) q.set("guests", guests);
+        const qs = q.toString();
+        window.location.href = `villas/${pickedVilla.slug}.html${qs ? `?${qs}` : ""}${hasCheckin ? "#book" : ""}`;
         return;
       }
       if (heroDestinationSelect?.value === "valle-de-guadalupe" && !hasCheckin) {
@@ -1416,7 +1476,7 @@
   const MLS_VILLA_I18N_KEY = {
     "villa-aqua": "aqua",
     "kasa-kefi": "kefi",
-    "casa-corazon-luxe": "corazon",
+    "casa-corazon": "corazon",
     "casa-de-las-estrellas": "estrellas"
   };
   const detailRoot = document.querySelector("[data-villa-slug]");
@@ -1701,7 +1761,7 @@
               ${photoHtml}
               <div class="sa-item-text">
                 <h4>${title}</h4>
-                <p>${t("services." + id + ".body")}</p>
+                <p>${t((villa.serviceBodyKeys && villa.serviceBodyKeys[id]) || "services." + id + ".body")}</p>
               </div>
             </div>`;
           };
@@ -1717,7 +1777,8 @@
             <div class="sa-item-grid">${extraIds.map(serviceItemHtml).join("")}</div>
             <div class="sa-contact-cta">
               <p>${t("detail.services.contactNote")}</p>
-              <a class="btn btn-solid" href="../contact.html">${t("detail.sa.contactCta")}</a>
+              <a class="btn btn-solid" href="#book" data-sa-inquire>${t("detail.sa.contactCta")}</a>
+              <p class="sa-contact-alt">${t("detail.sa.contactAlt")} <a href="https://wa.me/5219848079475?text=${encodeURIComponent(t("detail.sa.inquireNote").replace("{villa}", villa.name))}" target="_blank" rel="noopener">WhatsApp</a></p>
             </div>`;
 
           saModalContent = { included: includedModalHtml, extra: extraModalHtml, amenities: amenitiesModalHtml };
@@ -1996,6 +2057,22 @@
         openSaModal(card.dataset.saOpen, card);
       });
       saModal?.querySelectorAll("[data-sa-modal-dismiss]").forEach((el) => el.addEventListener("click", closeSaModal));
+      /* Extra-cost "Contact us": rather than leaving for contact.html (a
+         booking form), close the modal and jump to this villa's own form on
+         Inquire, with a note naming the services already written in. */
+      saModalBody?.addEventListener("click", (e) => {
+        const link = e.target.closest("[data-sa-inquire]");
+        if (!link) return;
+        e.preventDefault();
+        closeSaModal();
+        const form = document.querySelector("#book [data-contact-form]");
+        if (!form) return;
+        form.querySelector('[data-trip-mode-btn="inquire"]')?.click();
+        const notes = form.querySelector('textarea[name="notes"]');
+        if (notes && !notes.value.trim()) notes.value = t("detail.sa.inquireNote").replace("{villa}", villa.name);
+        document.getElementById("book")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        notes?.focus({ preventScroll: true });
+      });
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeSaModal();
       });
@@ -2317,8 +2394,15 @@
           bookErrorEl.textContent = showIssue ? (issue.text || t(issue.key)) : "";
           bookPanel.classList.toggle("has-issue", Boolean(issue));
 
+          /* The Hostaway checkout opens in a new tab: its own "Back" goes to
+             the Booking Engine's home, so the villa page stays open here. */
           const href = bookHref();
-          document.querySelectorAll("[data-book-cta]").forEach((a) => { a.href = href; });
+          const external = /^https?:/.test(href);
+          document.querySelectorAll("[data-book-cta]").forEach((a) => {
+            a.href = href;
+            if (external) { a.target = "_blank"; a.rel = "noopener"; }
+            else { a.removeAttribute("target"); a.removeAttribute("rel"); }
+          });
 
           const fmt = (d) => d.toLocaleDateString(locale(), { month: "short", day: "numeric" });
           barAmountEl.textContent = q ? money(q.total) : from !== null ? `${t("detail.book.from")} ${money(from)}` : "—";
@@ -3301,7 +3385,13 @@
         const villa = MLS_VILLAS.find((v) => v.slug === f.get("villa"));
         const guests = (Number(f.get("adults")) || 1) + (Number(f.get("children")) || 0);
         const engineUrl = mlsBookingEngineUrl(villa, f.get("checkin"), f.get("checkout"), guests);
-        if (engineUrl) { window.location.href = engineUrl; return; }
+        // New tab, like the villa pages' Book now; same tab if it's blocked.
+        if (engineUrl) {
+          const tab = window.open(engineUrl, "_blank");
+          if (tab) tab.opener = null;
+          else window.location.href = engineUrl;
+          return;
+        }
       }
       /* Guest contact details — the team needs a way to reach the guest. */
       const checks = [
