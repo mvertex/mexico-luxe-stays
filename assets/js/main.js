@@ -943,6 +943,8 @@
     const selDest = document.querySelector("#filter-destination");
     const inputGuests = document.querySelector("#filter-guests");
     const guestsField = inputGuests.closest(".filter-field");
+    // Filters apply live; Enter in the guests box must not submit the form.
+    inputGuests.form?.addEventListener("submit", (e) => e.preventDefault());
     const guestsErrorEl = document.querySelector("[data-guests-error]");
     const selBeds = document.querySelector("#filter-bedrooms");
     const countEl = document.querySelector("[data-filter-count]");
