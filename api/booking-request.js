@@ -164,6 +164,23 @@ async function checkAvailability(listingMapId, checkin, checkout, nights) {
   return { ok: true };
 }
 
+/* An inquiry still has to sit on real nights, and Hostaway refuses one that
+   overlaps a reservation (403 "Requested dates are not available …
+   conflicting with reservations"). So a question without usable dates goes
+   on the first free night from today on; the host note says they're
+   placeholders. null if nothing is free in the window. */
+const PLACEHOLDER_SEARCH_DAYS = 365;
+async function firstFreeNight(listingMapId) {
+  const start = isoToday();
+  const res = await hostawayGet(`/listings/${listingMapId}/calendar`, { startDate: start, endDate: addDaysIso(start, PLACEHOLDER_SEARCH_DAYS) });
+  const days = Array.isArray(res?.result) ? res.result : [];
+  const free = days
+    .filter((d) => d.date >= start && d.status === "available" && Number(d.isAvailable) !== 0)
+    .map((d) => d.date)
+    .sort();
+  return free[0] || null;
+}
+
 /* Same guest + villa + dates already in Hostaway (e.g. sent twice, or the
    first attempt timed out after Hostaway had saved it) → don't create again. */
 async function alreadyInHostaway(data, arrivalDate, departureDate) {
@@ -208,10 +225,11 @@ module.exports = async (req, res) => {
   const { data, error } = validate(body);
   if (error) return fail(res, 400, "invalid", { field: error });
 
-  const today = isoToday();
-  const arrivalDate = data.hasDates ? data.checkin : addDaysIso(today, -1);
-  const departureDate = data.hasDates ? data.checkout : today;
-  const dedupeKey = [data.email, data.villa.listingMapId, data.hasDates ? `${arrivalDate}/${departureDate}` : "nodates", data.intent].join("|");
+  let arrivalDate = data.hasDates ? data.checkin : null;
+  let departureDate = data.hasDates ? data.checkout : null;
+  let placeholderDates = !data.hasDates;
+  let askedDatesTaken = false;
+  const dedupeKey = [data.email, data.villa.listingMapId, data.hasDates ? `${data.checkin}/${data.checkout}` : "nodates", data.intent].join("|");
   const seenAt = recentSubmissions.get(dedupeKey);
   if (seenAt && Date.now() - seenAt < DEDUPE_WINDOW_MS) {
     res.status(200).json({ ok: true, duplicate: true });
@@ -225,9 +243,25 @@ module.exports = async (req, res) => {
     if (data.intent === "book") {
       const availability = await checkAvailability(data.villa.listingMapId, data.checkin, data.checkout, data.nights);
       if (!availability.ok) return fail(res, 409, availability.code, availability.minNights ? { minNights: availability.minNights } : {});
+    } else if (data.hasDates) {
+      /* A question about nights that are already booked would be refused by
+         Hostaway; send it anyway on placeholder nights, noting the dates asked. */
+      const availability = await checkAvailability(data.villa.listingMapId, data.checkin, data.checkout, data.nights)
+        .catch(() => ({ ok: true }));
+      if (!availability.ok && availability.code === "unavailable") {
+        placeholderDates = true;
+        askedDatesTaken = true;
+      }
     }
 
-    if (data.hasDates && (await alreadyInHostaway(data, arrivalDate, departureDate))) {
+    if (placeholderDates) {
+      const night = await firstFreeNight(data.villa.listingMapId);
+      if (!night) throw Object.assign(new Error("No free night for a placeholder inquiry"), { status: 409, path: "calendar" });
+      arrivalDate = night;
+      departureDate = addDaysIso(night, 1);
+    }
+
+    if (!placeholderDates && (await alreadyInHostaway(data, arrivalDate, departureDate))) {
       recentSubmissions.set(dedupeKey, Date.now());
       res.status(200).json({ ok: true, duplicate: true });
       return;
@@ -238,7 +272,8 @@ module.exports = async (req, res) => {
       `${kind} from the website contact form (mexicoluxestays.com).`,
       data.intent === "book" ? "Status: inquiry — not confirmed, calendar not blocked. Approve or decline in Hostaway." : "Question only — no stay requested.",
       data.bedrooms ? `Bedrooms requested: ${data.bedrooms}` : null,
-      data.hasDates ? null : "No dates given (dates shown are placeholders).",
+      askedDatesTaken ? `Dates asked about: ${data.checkin} to ${data.checkout} — not available in the calendar, so the dates shown are placeholders.` : null,
+      !data.hasDates ? "No dates given (dates shown are placeholders)." : null,
     ].filter(Boolean).join("\n");
 
     const reservation = {
@@ -257,7 +292,7 @@ module.exports = async (req, res) => {
       infants: data.infants,
       arrivalDate,
       departureDate,
-      ...(data.hasDates ? {} : { isDatesUnspecified: 1 }),
+      ...(placeholderDates ? { isDatesUnspecified: 1 } : {}),
       guestNote: data.notes || null,
       hostNote,
     };
