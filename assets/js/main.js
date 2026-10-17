@@ -3340,6 +3340,45 @@
       ].filter((line) => line !== null).join("\n");
     };
 
+    /* A question that went through swaps the form for a clear thank-you:
+       a line of small text under the button was easy to miss, and guests
+       thought nothing had happened. "Send another question" brings the
+       form back with the message box cleared. */
+    const showQuestionSent = (firstName) => {
+      let panel = contactForm.parentElement.querySelector("[data-question-sent]");
+      if (!panel) {
+        panel = document.createElement("div");
+        panel.className = "trip-sent";
+        panel.setAttribute("data-question-sent", "");
+        panel.setAttribute("role", "status");
+        panel.tabIndex = -1;
+        panel.innerHTML = `
+          <svg class="trip-sent-icon" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 24.5l6 6 12-13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3 class="trip-sent-title" data-question-sent-title></h3>
+          <p class="trip-sent-body" data-question-sent-body></p>
+          <button type="button" class="trip-inquire-btn" data-question-sent-again></button>`;
+        contactForm.after(panel);
+        panel.querySelector("[data-question-sent-again]").addEventListener("click", () => {
+          panel.hidden = true;
+          contactForm.hidden = false;
+          const notes = contactForm.querySelector("#cf-notes");
+          if (notes) { notes.value = ""; notes.focus(); }
+          lastSentKey = "";
+          if (statusEl) statusEl.textContent = "";
+        });
+      }
+      const name = (firstName || "").trim();
+      panel.querySelector("[data-question-sent-title]").textContent = name
+        ? t("contact.form.sentTitleName").replace("{name}", name)
+        : t("contact.form.sentTitle");
+      panel.querySelector("[data-question-sent-body]").textContent = t("contact.form.sentBody");
+      panel.querySelector("[data-question-sent-again]").textContent = t("contact.form.sentAgain");
+      contactForm.hidden = true;
+      panel.hidden = false;
+      panel.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "center" });
+      panel.focus({ preventScroll: true });
+    };
+
     contactForm.addEventListener("submit", (e) => {
       e.preventDefault();
       if (submitBtns.some((b) => b.disabled)) return; // a request is already in flight
@@ -3449,6 +3488,7 @@
           if (res.ok && data.ok) {
             lastSentKey = sendKey;
             setStatus(successKey);
+            if (intent === "question") showQuestionSent(payload.firstName);
             return;
           }
           switch (data.code) {

@@ -2365,6 +2365,13 @@ body.sa-modal-open { overflow: hidden; }
   cursor: pointer; transition: background-color .2s ease, color .2s ease, transform .2s ease;
 }
 .trip-inquire-btn:hover { background: var(--sage); color: var(--cream); transform: translateY(-1px); }
+
+/* Thank-you that replaces the trip form once a question is sent (main.js showQuestionSent). */
+.trip-sent { text-align: center; max-width: 440px; margin: 0 auto; padding: 1rem 0 1.6rem; outline: none; }
+.trip-sent[hidden], .trip-panel form[hidden] { display: none; }
+.trip-sent-icon { width: 56px; height: 56px; color: var(--sage); margin-bottom: 1rem; }
+.trip-sent-title { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.5rem, 2.6vw, 1.9rem); color: var(--ink); margin: 0 0 .6rem; }
+.trip-sent-body { color: var(--stone-text); line-height: 1.6; margin: 0 0 1.6rem; }
 .trip-book-btn:focus-visible, .trip-inquire-btn:focus-visible { outline: 2px solid var(--sage); outline-offset: 3px; }
 
 /* Inside the two-column form the columns set the width and rhythm, so the
