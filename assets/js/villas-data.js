@@ -552,7 +552,7 @@ const MLS_VILLAS = [
         { src: "/assets/img/villas/villa-aqua-interiors-03.webp",
           alt: "The laundry room, fully equipped for longer stays", altEs: "El cuarto de lavado, totalmente equipado para estancias largas" }
       ] },
-      { key: "multipurpose", images: [
+      { key: "multipurpose", labelKey: "detail.gallery.multipurposeAqua", images: [
         { src: "/assets/img/villas/villa-aqua-multipurpose-01.webp",
           alt: "The private squash court", altEs: "La cancha de squash privada" },
         { src: "/assets/img/villas/villa-aqua-multipurpose-02.webp",
@@ -682,10 +682,10 @@ const MLS_VILLAS = [
     imageAlt: "Aerial view of Kasa Kefi's concrete silhouette above the Valle de Guadalupe vineyards",
     imageAltEs: "Vista aérea de la silueta de concreto de Kasa Kefi sobre los viñedos del Valle de Guadalupe",
     showcaseImages: [
-      { src: "/assets/img/villas/kasa-kefi-outdoor-01.webp", alt: "Aerial view of Kasa Kefi's concrete silhouette above the Valle de Guadalupe vineyards", altEs: "Vista aérea de la silueta de concreto de Kasa Kefi sobre los viñedos del Valle de Guadalupe" },
-      { src: "/assets/img/villas/kasa-kefi-outdoor-02.webp", alt: "Kasa Kefi seen from above, set into the hillside among the vine rows", altEs: "Kasa Kefi vista desde el aire, asentada en la ladera entre las hileras de vid" },
-      { src: "/assets/img/villas/kasa-kefi-outdoor-04.webp", alt: "The plunge pool at Kasa Kefi overlooking the valley", altEs: "La alberca tipo plunge pool en Kasa Kefi con vista al valle" },
-      { src: "/assets/img/villas/kasa-kefi-outdoor-07.webp", alt: "The master suite terrace at Kasa Kefi at golden hour", altEs: "La terraza de la suite master en Kasa Kefi a la hora dorada" }
+      { src: "/assets/img/villas/kasa-kefi-outdoor-01.webp", alt: "Aerial view of Kasa Kefi, a modern concrete villa above the vineyards of Valle de Guadalupe", altEs: "Vista aérea de Kasa Kefi, villa moderna de concreto sobre los viñedos del Valle de Guadalupe" },
+      { src: "/assets/img/villas/kasa-kefi-outdoor-02.webp", alt: "Kasa Kefi set into a hillside above rows of young vines at golden hour", altEs: "Kasa Kefi asentada en la ladera sobre hileras de vid joven a la hora dorada" },
+      { src: "/assets/img/villas/kasa-kefi-outdoor-04.webp", alt: "Sunken lounge with a fire pit beside the glass-walled plunge pool at sunset, Kasa Kefi", altEs: "Sala hundida con fogata junto a la alberca de vidrio al atardecer en Kasa Kefi" },
+      { src: "/assets/img/villas/kasa-kefi-outdoor-07.webp", alt: "Aerial view of the rooftop terrace with sun loungers, dining table and plunge pool at Kasa Kefi", altEs: "Vista aérea de la terraza con camastros, comedor exterior y alberca en Kasa Kefi" }
     ],
     amenities: [
       { en: "Infinity plunge pool", es: "Alberca infinita tipo plunge pool", cat: "outdoor" },
@@ -741,80 +741,80 @@ const MLS_VILLAS = [
     },
     gallery: [
       { key: "outdoor", images: [
-        { src: "/assets/img/villas/kasa-kefi-outdoor-01.webp", alt: "Aerial view of Kasa Kefi", altEs: "Vista aérea de Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-outdoor-02.webp", alt: "Aerial view of Kasa Kefi — photo 2", altEs: "Vista aérea de Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-outdoor-03.webp", alt: "Aerial view of Kasa Kefi — photo 3", altEs: "Vista aérea de Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-outdoor-04.webp", alt: "The plunge pool at Kasa Kefi", altEs: "La alberca tipo plunge pool en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-outdoor-05.webp", alt: "The plunge pool at Kasa Kefi — photo 2", altEs: "La alberca tipo plunge pool en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-outdoor-06.webp", alt: "The plunge pool at Kasa Kefi — photo 3", altEs: "La alberca tipo plunge pool en Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-outdoor-07.webp", alt: "The master suite terrace at Kasa Kefi", altEs: "La terraza de la suite master en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-outdoor-08.webp", alt: "The master suite terrace at Kasa Kefi — photo 2", altEs: "La terraza de la suite master en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-outdoor-09.webp", alt: "The master suite terrace at Kasa Kefi — photo 3", altEs: "La terraza de la suite master en Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-outdoor-10.webp", alt: "The master suite terrace at Kasa Kefi — photo 4", altEs: "La terraza de la suite master en Kasa Kefi — foto 4" }
+        { src: "/assets/img/villas/kasa-kefi-outdoor-01.webp", alt: "Aerial view of Kasa Kefi, a modern concrete villa above the vineyards of Valle de Guadalupe", altEs: "Vista aérea de Kasa Kefi, villa moderna de concreto sobre los viñedos del Valle de Guadalupe" },
+        { src: "/assets/img/villas/kasa-kefi-outdoor-02.webp", alt: "Kasa Kefi set into a hillside above rows of young vines at golden hour", altEs: "Kasa Kefi asentada en la ladera sobre hileras de vid joven a la hora dorada" },
+        { src: "/assets/img/villas/kasa-kefi-outdoor-03.webp", alt: "Bird's-eye view of Kasa Kefi surrounded by vineyards and mountains in Valle de Guadalupe", altEs: "Vista desde lo alto de Kasa Kefi rodeada de viñedos y montañas en el Valle de Guadalupe" },
+        { src: "/assets/img/villas/kasa-kefi-outdoor-04.webp", alt: "Sunken lounge with a fire pit beside the glass-walled plunge pool at sunset, Kasa Kefi", altEs: "Sala hundida con fogata junto a la alberca de vidrio al atardecer en Kasa Kefi" },
+        { src: "/assets/img/villas/kasa-kefi-outdoor-05.webp", alt: "Fire pit between built-in sofas facing the plunge pool under a pink sunset sky", altEs: "Fogata entre sillones empotrados frente a la alberca bajo un cielo rosado al atardecer" },
+        { src: "/assets/img/villas/kasa-kefi-outdoor-06.webp", alt: "Main terrace with plunge pool and sunken lounge next to the glass-walled living room, Kasa Kefi", altEs: "Terraza principal con alberca y sala hundida junto a la sala de cristal en Kasa Kefi" },
+        { src: "/assets/img/villas/kasa-kefi-outdoor-07.webp", alt: "Aerial view of the rooftop terrace with sun loungers, dining table and plunge pool at Kasa Kefi", altEs: "Vista aérea de la terraza con camastros, comedor exterior y alberca en Kasa Kefi" },
+        { src: "/assets/img/villas/kasa-kefi-outdoor-08.webp", alt: "Sun loungers lined up along the glass railing of Kasa Kefi's terrace, seen from above", altEs: "Camastros alineados junto al barandal de vidrio de la terraza de Kasa Kefi, vista desde arriba" },
+        { src: "/assets/img/villas/kasa-kefi-outdoor-09.webp", alt: "Shaded outdoor lounge with daybeds and a fire table on the terrace at Kasa Kefi", altEs: "Sala exterior con camastros dobles, sombrilla y mesa de fuego en la terraza de Kasa Kefi" },
+        { src: "/assets/img/villas/kasa-kefi-outdoor-10.webp", alt: "Terrace lounge with glass railing overlooking the valley and vineyards at sunset", altEs: "Sala en la terraza con barandal de vidrio y vista al valle y los viñedos al atardecer" }
       ] },
       { key: "rooms", images: [
-        { src: "/assets/img/villas/kasa-kefi-rooms-01.webp", alt: "The master suite bedroom at Kasa Kefi", altEs: "La recámara de la suite master en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-02.webp", alt: "The master suite bedroom at Kasa Kefi — photo 2", altEs: "La recámara de la suite master en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-03.webp", alt: "The master suite bedroom at Kasa Kefi — photo 3", altEs: "La recámara de la suite master en Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-04.webp", alt: "Suite 2's bedroom at Kasa Kefi", altEs: "La recámara de la Suite 2 en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-05.webp", alt: "Suite 2's bedroom at Kasa Kefi — photo 2", altEs: "La recámara de la Suite 2 en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-06.webp", alt: "Suite 2's bedroom at Kasa Kefi — photo 3", altEs: "La recámara de la Suite 2 en Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-07.webp", alt: "Suite 2's bedroom at Kasa Kefi — photo 4", altEs: "La recámara de la Suite 2 en Kasa Kefi — foto 4" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-08.webp", alt: "Suite 3's bedroom at Kasa Kefi", altEs: "La recámara de la Suite 3 en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-09.webp", alt: "Suite 3's bedroom at Kasa Kefi — photo 2", altEs: "La recámara de la Suite 3 en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-10.webp", alt: "Suite 3's bedroom at Kasa Kefi — photo 3", altEs: "La recámara de la Suite 3 en Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-11.webp", alt: "Suite 3's bedroom at Kasa Kefi — photo 4", altEs: "La recámara de la Suite 3 en Kasa Kefi — foto 4" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-12.webp", alt: "Suite 3's bedroom at Kasa Kefi — photo 5", altEs: "La recámara de la Suite 3 en Kasa Kefi — foto 5" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-13.webp", alt: "The studio suite at Kasa Kefi", altEs: "El estudio en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-14.webp", alt: "The studio suite at Kasa Kefi — photo 2", altEs: "El estudio en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-rooms-15.webp", alt: "The studio suite at Kasa Kefi — photo 3", altEs: "El estudio en Kasa Kefi — foto 3" }
+        { src: "/assets/img/villas/kasa-kefi-rooms-01.webp", alt: "Master suite at Kasa Kefi with king bed, armchairs and warm cove lighting", altEs: "Suite principal de Kasa Kefi con cama king, sillones y luz cálida indirecta" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-02.webp", alt: "Master suite bed facing floor-to-ceiling windows and mountain views", altEs: "Cama de la suite principal frente a ventanales de piso a techo con vista a las montañas" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-03.webp", alt: "Red wine and a cheese board by the fire pit on the master suite balcony at dusk", altEs: "Vino tinto y tabla de quesos junto a la fogata del balcón de la suite principal al anochecer" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-04.webp", alt: "Suite 2 at Kasa Kefi with king bed, reading chairs and a picture window onto the hills", altEs: "Suite 2 de Kasa Kefi con cama king, sillones de lectura y ventanal hacia los cerros" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-05.webp", alt: "Suite 2 bedroom with walk-in closet and en-suite bathroom", altEs: "Recámara de la Suite 2 con vestidor y baño privado" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-06.webp", alt: "Suite 2 at sunset with corner windows framing the valley", altEs: "Suite 2 al atardecer con ventanales en esquina que enmarcan el valle" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-07.webp", alt: "Suite 2 king bed with walnut headboard and pendant lights", altEs: "Cama king de la Suite 2 con cabecera de nogal y lámparas colgantes" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-08.webp", alt: "Suite 3 at Kasa Kefi with sliding glass doors open to the terrace and mountains", altEs: "Suite 3 de Kasa Kefi con puertas de cristal abiertas a la terraza y las montañas" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-09.webp", alt: "Suite 3 with two queen beds and a window seat facing the hillside", altEs: "Suite 3 con dos camas queen y banca junto a la ventana frente a la ladera" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-10.webp", alt: "Two queen beds and swivel armchairs in Suite 3", altEs: "Dos camas queen y sillones giratorios en la Suite 3" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-11.webp", alt: "Suite 3 seating area with armchairs, side tables and wall-mounted TV", altEs: "Área de estar de la Suite 3 con sillones, mesas laterales y pantalla" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-12.webp", alt: "Suite 3 with open closet, TV niche and bathroom entrance", altEs: "Suite 3 con clóset abierto, nicho de TV y acceso al baño" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-13.webp", alt: "Studio suite at Kasa Kefi with sofa, desk and a full-height window onto the valley", altEs: "Estudio de Kasa Kefi con sofá, escritorio y ventanal con vista al valle" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-14.webp", alt: "Studio suite desk and wall-mounted TV beside the glass-walled bathroom", altEs: "Escritorio y pantalla del estudio junto al baño con muros de cristal" },
+        { src: "/assets/img/villas/kasa-kefi-rooms-15.webp", alt: "Studio suite sofa bed facing mountain views", altEs: "Sofá cama del estudio con vista a las montañas" }
       ] },
       { key: "kitchen", images: [
-        { src: "/assets/img/villas/kasa-kefi-kitchen-01.webp", alt: "The full kitchen at Kasa Kefi", altEs: "La cocina completa en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-kitchen-02.webp", alt: "The full kitchen at Kasa Kefi — photo 2", altEs: "La cocina completa en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-kitchen-03.webp", alt: "The full kitchen at Kasa Kefi — photo 3", altEs: "La cocina completa en Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-kitchen-04.webp", alt: "The full kitchen at Kasa Kefi — photo 4", altEs: "La cocina completa en Kasa Kefi — foto 4" },
-        { src: "/assets/img/villas/kasa-kefi-kitchen-05.webp", alt: "The full kitchen at Kasa Kefi — photo 5", altEs: "La cocina completa en Kasa Kefi — foto 5" },
-        { src: "/assets/img/villas/kasa-kefi-kitchen-06.webp", alt: "The ground-floor kitchenette at Kasa Kefi", altEs: "La cocineta de planta baja en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-kitchen-07.webp", alt: "The ground-floor kitchenette at Kasa Kefi — photo 2", altEs: "La cocineta de planta baja en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-kitchen-08.webp", alt: "The ground-floor kitchenette at Kasa Kefi — photo 3", altEs: "La cocineta de planta baja en Kasa Kefi — foto 3" }
+        { src: "/assets/img/villas/kasa-kefi-kitchen-01.webp", alt: "Chef's kitchen at Kasa Kefi with live-edge wood bar, four stools and valley views", altEs: "Cocina de Kasa Kefi con barra de madera natural, cuatro bancos y vista al valle" },
+        { src: "/assets/img/villas/kasa-kefi-kitchen-02.webp", alt: "Kitchen island with breakfast bar, walnut cabinetry and stainless appliances", altEs: "Isla de cocina con barra desayunador, gabinetes de nogal y electrodomésticos de acero" },
+        { src: "/assets/img/villas/kasa-kefi-kitchen-03.webp", alt: "Galley side of the kitchen with open shelving and windows onto the terrace", altEs: "Lado de trabajo de la cocina con repisas abiertas y ventanales hacia la terraza" },
+        { src: "/assets/img/villas/kasa-kefi-kitchen-04.webp", alt: "Breakfast bar with live-edge wood counter and lit open shelves", altEs: "Barra desayunador con cubierta de madera natural y repisas iluminadas" },
+        { src: "/assets/img/villas/kasa-kefi-kitchen-05.webp", alt: "Gas cooktop island looking toward the dining table, wine rack and living room", altEs: "Isla con parrilla de gas con vista al comedor, la cava y la sala" },
+        { src: "/assets/img/villas/kasa-kefi-living-09.webp", alt: "Dining table for eight under a sculptural pendant lamp, with valley views", altEs: "Comedor para ocho bajo una lámpara escultórica, con vista al valle" },
+        { src: "/assets/img/villas/kasa-kefi-living-10.webp", alt: "Dining room facing a wall of glass and the mountains of Valle de Guadalupe", altEs: "Comedor frente a un muro de cristal y las montañas del Valle de Guadalupe" },
+        { src: "/assets/img/villas/kasa-kefi-living-11.webp", alt: "Dining table with upholstered chairs, wine rack and kitchen behind", altEs: "Mesa de comedor con sillas tapizadas, cava y la cocina al fondo" },
+        { src: "/assets/img/villas/kasa-kefi-living-12.webp", alt: "Open-plan dining room and kitchen bathed in afternoon light", altEs: "Comedor y cocina de concepto abierto con luz de la tarde" },
+        { src: "/assets/img/villas/kasa-kefi-kitchen-06.webp", alt: "Ground-floor lounge with round dining table, kitchenette and TV wall", altEs: "Sala de planta baja con mesa redonda, cocineta y muro de TV" },
+        { src: "/assets/img/villas/kasa-kefi-kitchen-07.webp", alt: "Ground-floor kitchenette with mini fridge, sink and built-in media wall", altEs: "Cocineta de planta baja con frigobar, tarja y mueble de TV empotrado" },
+        { src: "/assets/img/villas/kasa-kefi-kitchen-08.webp", alt: "Round table for four next to the ground-floor kitchenette", altEs: "Mesa redonda para cuatro junto a la cocineta de planta baja" }
       ] },
       { key: "living", images: [
-        { src: "/assets/img/villas/kasa-kefi-living-01.webp", alt: "The ground-floor living area at Kasa Kefi", altEs: "La sala de planta baja en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-living-02.webp", alt: "The ground-floor living area at Kasa Kefi — photo 2", altEs: "La sala de planta baja en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-living-03.webp", alt: "The ground-floor living area at Kasa Kefi — photo 3", altEs: "La sala de planta baja en Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-living-04.webp", alt: "The ground-floor living area at Kasa Kefi — photo 4", altEs: "La sala de planta baja en Kasa Kefi — foto 4" },
-        { src: "/assets/img/villas/kasa-kefi-living-05.webp", alt: "The main living room at Kasa Kefi", altEs: "La sala principal en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-living-06.webp", alt: "The main living room at Kasa Kefi — photo 2", altEs: "La sala principal en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-living-07.webp", alt: "The main living room at Kasa Kefi — photo 3", altEs: "La sala principal en Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-living-08.webp", alt: "The main living room at Kasa Kefi — photo 4", altEs: "La sala principal en Kasa Kefi — foto 4" },
-        { src: "/assets/img/villas/kasa-kefi-living-09.webp", alt: "The main dining room at Kasa Kefi", altEs: "El comedor principal en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-living-10.webp", alt: "The main dining room at Kasa Kefi — photo 2", altEs: "El comedor principal en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-living-11.webp", alt: "The main dining room at Kasa Kefi — photo 3", altEs: "El comedor principal en Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-living-12.webp", alt: "The main dining room at Kasa Kefi — photo 4", altEs: "El comedor principal en Kasa Kefi — foto 4" }
+        { src: "/assets/img/villas/kasa-kefi-living-01.webp", alt: "Ground-floor living room with sectional sofa and abstract art", altEs: "Sala de planta baja con sofá modular y arte abstracto" },
+        { src: "/assets/img/villas/kasa-kefi-living-02.webp", alt: "Ground-floor lounge with sofa, media wall and dining nook", altEs: "Estancia de planta baja con sofá, mueble de TV y rincón de comedor" },
+        { src: "/assets/img/villas/kasa-kefi-living-03.webp", alt: "Ground-floor living room with picture window onto the hills at dusk", altEs: "Sala de planta baja con ventanal hacia los cerros al atardecer" },
+        { src: "/assets/img/villas/kasa-kefi-living-04.webp", alt: "Plush sectional and wood coffee table in the ground-floor living room", altEs: "Sofá modular y mesa de centro de madera en la sala de planta baja" },
+        { src: "/assets/img/villas/kasa-kefi-living-05.webp", alt: "Main living room at Kasa Kefi with deep sectional and floor-to-ceiling windows onto the valley", altEs: "Sala principal de Kasa Kefi con sofá amplio y ventanales de piso a techo hacia el valle" },
+        { src: "/assets/img/villas/kasa-kefi-living-06.webp", alt: "Main living room open to the dining area and kitchen", altEs: "Sala principal abierta al comedor y la cocina" },
+        { src: "/assets/img/villas/kasa-kefi-living-07.webp", alt: "Main living room with large sectional, walnut media wall and wine rack", altEs: "Sala principal con sofá modular, muro de nogal con pantalla y cava" },
+        { src: "/assets/img/villas/kasa-kefi-living-08.webp", alt: "Main living room with fireplace, framed TV and wood stump tables", altEs: "Sala principal con chimenea, pantalla enmarcada y mesas de tronco" }
       ] },
-      { key: "interiors", images: [
-        { src: "/assets/img/villas/kasa-kefi-interiors-01.webp", alt: "The master suite bathroom at Kasa Kefi", altEs: "El baño de la suite master en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-02.webp", alt: "The master suite bathroom at Kasa Kefi — photo 2", altEs: "El baño de la suite master en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-03.webp", alt: "The master suite bathroom at Kasa Kefi — photo 3", altEs: "El baño de la suite master en Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-04.webp", alt: "The master suite bathroom at Kasa Kefi — photo 4", altEs: "El baño de la suite master en Kasa Kefi — foto 4" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-05.webp", alt: "Suite 2's bathroom at Kasa Kefi", altEs: "El baño de la Suite 2 en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-06.webp", alt: "Suite 2's bathroom at Kasa Kefi — photo 2", altEs: "El baño de la Suite 2 en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-07.webp", alt: "Suite 2's bathroom at Kasa Kefi — photo 3", altEs: "El baño de la Suite 2 en Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-08.webp", alt: "Suite 3's bathroom at Kasa Kefi", altEs: "El baño de la Suite 3 en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-09.webp", alt: "Suite 3's bathroom at Kasa Kefi — photo 2", altEs: "El baño de la Suite 3 en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-10.webp", alt: "Suite 3's bathroom at Kasa Kefi — photo 3", altEs: "El baño de la Suite 3 en Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-11.webp", alt: "The studio suite's bathroom at Kasa Kefi", altEs: "El baño del estudio en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-12.webp", alt: "The studio suite's bathroom at Kasa Kefi — photo 2", altEs: "El baño del estudio en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-13.webp", alt: "The studio suite's bathroom at Kasa Kefi — photo 3", altEs: "El baño del estudio en Kasa Kefi — foto 3" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-14.webp", alt: "The half bathroom at Kasa Kefi", altEs: "El medio baño en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-15.webp", alt: "The half bathroom at Kasa Kefi — photo 2", altEs: "El medio baño en Kasa Kefi — foto 2" },
-        { src: "/assets/img/villas/kasa-kefi-interiors-16.webp", alt: "The half bathroom at Kasa Kefi — photo 3", altEs: "El medio baño en Kasa Kefi — foto 3" }
+      { key: "interiors", labelKey: "detail.gallery.interiorsKefi", images: [
+        { src: "/assets/img/villas/kasa-kefi-interiors-01.webp", alt: "Master bathroom with travertine double vanity, rain shower and walk-in closet", altEs: "Baño principal con doble lavabo de travertino, regadera de lluvia y vestidor" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-02.webp", alt: "Master bathroom rain shower with floor-to-ceiling window onto the mountains", altEs: "Regadera de lluvia del baño principal con ventanal de piso a techo hacia las montañas" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-03.webp", alt: "Master suite walk-in closet with coffee station and walnut cabinetry", altEs: "Vestidor de la suite principal con estación de café y gabinetes de nogal" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-04.webp", alt: "Master bathroom double vanity with a wooden bench and garden window", altEs: "Doble lavabo del baño principal con banco de madera y ventana al jardín" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-05.webp", alt: "Suite 2 bathroom with travertine vanity and glass shower overlooking the valley", altEs: "Baño de la Suite 2 con lavabo de travertino y regadera de cristal con vista al valle" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-06.webp", alt: "Suite 2 bathroom vanity and shower with mountain views", altEs: "Lavabo y regadera del baño de la Suite 2 con vista a las montañas" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-07.webp", alt: "Suite 2 bathroom with backlit mirrors and walk-in glass shower", altEs: "Baño de la Suite 2 con espejos retroiluminados y regadera de cristal" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-08.webp", alt: "Suite 3 bathroom with backlit mirrors and travertine double vanity", altEs: "Baño de la Suite 3 con espejos retroiluminados y doble lavabo de travertino" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-09.webp", alt: "Suite 3 bathroom vanity with wooden stool", altEs: "Lavabo del baño de la Suite 3 con banco de madera" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-10.webp", alt: "Suite 3 walk-in shower with bathrobe and makeup mirror", altEs: "Regadera de la Suite 3 con bata de baño y espejo de aumento" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-11.webp", alt: "Studio suite bathroom with backlit mirror and glass shower", altEs: "Baño del estudio con espejo retroiluminado y regadera de cristal" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-12.webp", alt: "Studio suite bathroom vanity, toiletries and rain shower", altEs: "Lavabo, amenidades y regadera de lluvia en el baño del estudio" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-13.webp", alt: "Full bathroom in the studio suite with corner glass shower", altEs: "Baño completo del estudio con regadera de cristal en esquina" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-14.webp", alt: "Half bathroom with black stone vanity and round mirror", altEs: "Medio baño con lavabo de piedra negra y espejo redondo" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-15.webp", alt: "Half bathroom with concrete walls and copper pendant lights", altEs: "Medio baño con muros de concreto y lámparas colgantes de cobre" },
+        { src: "/assets/img/villas/kasa-kefi-interiors-16.webp", alt: "Black vanity and backlit round mirror in the half bathroom", altEs: "Lavabo negro y espejo redondo iluminado en el medio baño" }
       ] },
-      { key: "multipurpose", images: [
-        { src: "/assets/img/villas/kasa-kefi-multipurpose-01.webp", alt: "The parking access to the upper level at Kasa Kefi", altEs: "El acceso de estacionamiento al nivel superior en Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-multipurpose-02.webp", alt: "The welcome entrance at the upper level of Kasa Kefi", altEs: "La entrada de bienvenida en el nivel superior de Kasa Kefi" },
-        { src: "/assets/img/villas/kasa-kefi-multipurpose-03.webp", alt: "The ground-floor parking area at Kasa Kefi", altEs: "El estacionamiento en planta baja de Kasa Kefi" }
+      { key: "multipurpose", labelKey: "detail.gallery.multipurposeKefi", images: [
+        { src: "/assets/img/villas/kasa-kefi-multipurpose-01.webp", alt: "Paved driveway leading to the upper-level entrance of Kasa Kefi", altEs: "Acceso adoquinado que lleva a la entrada del nivel superior de Kasa Kefi" },
+        { src: "/assets/img/villas/kasa-kefi-multipurpose-02.webp", alt: "Entrance hall at Kasa Kefi with bench, pendant lights and the front door open to the hillside", altEs: "Recibidor de Kasa Kefi con banca, lámparas colgantes y la puerta abierta hacia la ladera" },
+        { src: "/assets/img/villas/kasa-kefi-multipurpose-03.webp", alt: "Paved parking area beside the ground floor of Kasa Kefi, with mountain views", altEs: "Estacionamiento adoquinado junto a la planta baja de Kasa Kefi con vista a las montañas" }
       ] }
     ],
     /* First 5 faqs are the curated "most important" set shown in the
@@ -1225,7 +1225,7 @@ const MLS_VILLAS = [
         { src: "/assets/img/villas/casa-corazon-luxe-interiors-35.webp",
           alt: "A stone courtyard nook along the entrance walkway", altEs: "Un rincón de piedra junto al pasillo de entrada" }
       ] },
-      { key: "multipurpose", images: [
+      { key: "multipurpose", labelKey: "detail.gallery.multipurposeCorazon", images: [
         { src: "/assets/img/villas/casa-corazon-luxe-multipurpose-01.webp",
           alt: "The home cinema, ready for movie night", altEs: "El cine en casa, listo para noche de película" },
         { src: "/assets/img/villas/casa-corazon-luxe-multipurpose-02.webp",
@@ -1530,7 +1530,7 @@ const MLS_VILLAS = [
         { src: "/assets/img/villas/casa-de-las-estrellas-interiors-08.webp",
           alt: "The covered carport and front entrance, framed by palms", altEs: "La cochera techada y la entrada principal, enmarcadas por palmeras" }
       ] },
-      { key: "multipurpose", images: [
+      { key: "multipurpose", labelKey: "detail.gallery.multipurposeEstrellas", images: [
         { src: "/assets/img/villas/casa-de-las-estrellas-multipurpose-01.webp",
           alt: "The independent studio's kitchenette, with its own dining table", altEs: "La kitchenette del estudio independiente, con su propia mesa de comedor" },
         { src: "/assets/img/villas/casa-de-las-estrellas-multipurpose-02.webp",

@@ -1974,7 +1974,7 @@
                 <span class="villa-gallery-tile-scrim" aria-hidden="true"></span>
                 ${roomsBadge}
                 <span class="villa-gallery-tile-label">
-                  <span class="villa-gallery-tile-name">${t("detail.gallery." + g.key)}</span>
+                  <span class="villa-gallery-tile-name">${t(g.labelKey || "detail.gallery." + g.key)}</span>
                   <span class="villa-gallery-tile-view" aria-hidden="true">${t("detail.gallery.viewGallery")}</span>
                 </span>
               </button>`;
@@ -2392,15 +2392,11 @@
           bookErrorEl.textContent = showIssue ? (issue.text || t(issue.key)) : "";
           bookPanel.classList.toggle("has-issue", Boolean(issue));
 
-          /* The Hostaway checkout opens in a new tab: its own "Back" goes to
-             the Booking Engine's home, so the villa page stays open here. */
+          /* The Hostaway checkout opens in this same tab: a new tab on a phone
+             reads as being sent to another site. The browser's back button
+             returns guests to the villa page. */
           const href = bookHref();
-          const external = /^https?:/.test(href);
-          document.querySelectorAll("[data-book-cta]").forEach((a) => {
-            a.href = href;
-            if (external) { a.target = "_blank"; a.rel = "noopener"; }
-            else { a.removeAttribute("target"); a.removeAttribute("rel"); }
-          });
+          document.querySelectorAll("[data-book-cta]").forEach((a) => { a.href = href; });
 
           const fmt = (d) => d.toLocaleDateString(locale(), { month: "short", day: "numeric" });
           barAmountEl.textContent = q ? money(q.total) : from !== null ? `${t("detail.book.from")} ${money(from)}` : "—";
@@ -3383,11 +3379,9 @@
         const villa = MLS_VILLAS.find((v) => v.slug === f.get("villa"));
         const guests = (Number(f.get("adults")) || 1) + (Number(f.get("children")) || 0);
         const engineUrl = mlsBookingEngineUrl(villa, f.get("checkin"), f.get("checkout"), guests);
-        // New tab, like the villa pages' Book now; same tab if it's blocked.
+        // Same tab, like the villa pages' Book now.
         if (engineUrl) {
-          const tab = window.open(engineUrl, "_blank");
-          if (tab) tab.opener = null;
-          else window.location.href = engineUrl;
+          window.location.href = engineUrl;
           return;
         }
       }

@@ -193,12 +193,28 @@ const entries = [...readFileSync(sitemapPath, "utf8").matchAll(/<url>([\s\S]*?)<
   }))
   .filter((e) => !e.loc.startsWith(`${SITE}/es/`));
 
+/* Villa photos live behind the JS gallery/lightbox, so crawlers rarely find them on the
+   page — list every one under its villa URL (Google only reads image:loc nowadays). */
+const VILLAS = vm.runInNewContext(`${readFileSync(join(ROOT, "assets/js/villas-data.js"), "utf8")}; MLS_VILLAS`);
+const villaImages = new Map(VILLAS.map((v) => {
+  const srcs = [
+    v.image,
+    ...(v.showcaseImages || []).map((im) => im.src),
+    ...v.gallery.flatMap((g) => [...g.images, ...(g.roomImages || []).flat()].map((im) => im.src)),
+    ...Object.values(v.serviceImages || {})
+  ];
+  return [`villas/${v.slug}.html`, [...new Set(srcs.filter(Boolean))]];
+}));
+const imagesXml = (page) => (villaImages.get(page) || [])
+  .map((src) => `    <image:image><image:loc>${SITE}${encodeURI(src)}</image:loc></image:image>`);
+
 const urlXml = (loc, e, page) => [
   "  <url>",
   `    <loc>${loc}</loc>`,
   `    <xhtml:link rel="alternate" hreflang="en" href="${enUrl(page)}"/>`,
   `    <xhtml:link rel="alternate" hreflang="es" href="${esUrl(page)}"/>`,
   `    <xhtml:link rel="alternate" hreflang="x-default" href="${enUrl(page)}"/>`,
+  ...imagesXml(page),
   e.changefreq && `    <changefreq>${e.changefreq}</changefreq>`,
   e.priority && `    <priority>${e.priority}</priority>`,
   "  </url>"
@@ -212,7 +228,7 @@ for (const e of entries) {
 }
 writeFileSync(sitemapPath, [
   '<?xml version="1.0" encoding="UTF-8"?>',
-  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
   ...blocks,
   "</urlset>",
   ""
