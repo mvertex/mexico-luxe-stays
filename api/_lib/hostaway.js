@@ -25,13 +25,13 @@ class HostawayError extends Error {
   }
 }
 
-async function fetchWithTimeout(url, options = {}) {
+async function fetchWithTimeout(url, options = {}, timeoutMs = REQUEST_TIMEOUT_MS) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     return await fetch(url, { ...options, signal: controller.signal });
   } catch (err) {
-    if (err.name === "AbortError") throw new HostawayError(`Hostaway timed out after ${REQUEST_TIMEOUT_MS}ms`, { status: 504, path: String(url) });
+    if (err.name === "AbortError") throw new HostawayError(`Hostaway timed out after ${timeoutMs}ms`, { status: 504, path: String(url) });
     throw new HostawayError(`Hostaway network error: ${err.message}`, { status: 503, path: String(url) });
   } finally {
     clearTimeout(timer);
@@ -69,7 +69,7 @@ async function getAccessToken({ forceRefresh = false } = {}) {
   return cachedToken;
 }
 
-async function hostawayRequest(method, path, { searchParams, body } = {}) {
+async function hostawayRequest(method, path, { searchParams, body, timeoutMs } = {}) {
   const url = new URL(`${HOSTAWAY_BASE_URL}${path}`);
   if (searchParams) {
     Object.entries(searchParams).forEach(([key, value]) => {
@@ -84,7 +84,7 @@ async function hostawayRequest(method, path, { searchParams, body } = {}) {
       ...(body ? { "Content-type": "application/json" } : {}),
     },
     body: body ? JSON.stringify(body) : undefined,
-  });
+  }, timeoutMs);
 
   let res = await send(await getAccessToken());
   // A revoked/expired token comes back as 403; get a fresh one and retry once.
@@ -100,6 +100,8 @@ async function hostawayRequest(method, path, { searchParams, body } = {}) {
 }
 
 const hostawayGet = (path, searchParams) => hostawayRequest("GET", path, { searchParams });
-const hostawayPost = (path, body, searchParams) => hostawayRequest("POST", path, { body, searchParams });
+/* timeoutMs: creating a reservation can take Hostaway well over the default
+   8s (it still saves it), so callers that write can allow longer. */
+const hostawayPost = (path, body, searchParams, { timeoutMs } = {}) => hostawayRequest("POST", path, { body, searchParams, timeoutMs });
 
 module.exports = { hostawayGet, hostawayPost, HostawayError };

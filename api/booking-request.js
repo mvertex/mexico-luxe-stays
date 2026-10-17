@@ -184,6 +184,11 @@ async function alreadyInHostaway(data, arrivalDate, departureDate) {
   }
 }
 
+/* Hostaway often takes longer than the default 8s to create a reservation,
+   and still saves it — so the create call gets more room (see maxDuration
+   for this function in vercel.json). */
+const CREATE_TIMEOUT_MS = 25000;
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -257,12 +262,20 @@ module.exports = async (req, res) => {
       hostNote,
     };
 
-    const created = await hostawayPost("/reservations", reservation, { provider: "Website" });
+    const created = await hostawayPost("/reservations", reservation, { provider: "Website" }, { timeoutMs: CREATE_TIMEOUT_MS });
     const result = created?.result || {};
     recentSubmissions.set(dedupeKey, Date.now());
     console.info("[booking-request] created", JSON.stringify({ id: result.id, status: result.status, listingMapId: result.listingMapId, arrivalDate: result.arrivalDate, departureDate: result.departureDate, source: result.source }));
     res.status(200).json({ ok: true, status: result.status || null, reference: result.id || null });
   } catch (err) {
+    /* A slow create often still lands in Hostaway after we gave up waiting:
+       look for it before telling the guest it failed. */
+    if (err.status === 504 && err.path && err.path.includes("/reservations") && (await alreadyInHostaway(data, arrivalDate, departureDate))) {
+      recentSubmissions.set(dedupeKey, Date.now());
+      console.info("[booking-request] create timed out but the reservation is in Hostaway", JSON.stringify({ listingMapId: data.villa.listingMapId, arrivalDate, departureDate }));
+      res.status(200).json({ ok: true, late: true });
+      return;
+    }
     console.error("[booking-request] Hostaway failure", JSON.stringify({ message: err.message, status: err.status, path: err.path, body: err.body }));
     const emailed = await sendFallbackEmail({
       subject: `${data.intent === "book" ? "Booking request" : "Guest question"} — ${data.firstName} ${data.lastName} — ${data.villa.name}`,
