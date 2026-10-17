@@ -97,6 +97,7 @@ const MLS_I18N = {
 
     /* ---------- Our Villas (villas.html) ---------- */
     "villas.hero.title": "Our villas<span class=\"visually-hidden\"> — Luxury Villa Collection in Playa del Carmen &amp; Valle de Guadalupe</span>",
+    "villas.hero.alt": "Aerial view of Villa Aqua among the jungle and golf course of Playacar, with the Caribbean Sea on the horizon",
     "villas.hero.lead": "Every residence is handpicked, privately managed, and staffed to the standard we'd demand ourselves.",
     "villas.filter.destination": "Destination",
     "villas.filter.allDestinations": "All destinations",
@@ -514,7 +515,7 @@ const MLS_I18N = {
     "contact.form.errInvalid": "Please check the highlighted field and try again.",
     "contact.form.errRateLimited": "You’ve sent several requests in a short time. Please wait a few minutes, or reach us on WhatsApp {whatsapp} or at {email}.",
     "contact.form.bookError": "We couldn’t send your request right now. Please message us on WhatsApp {whatsapp} or email {email} — we’ll take it from there.",
-    "contact.form.curator": "We are the local experts. Speak to an Experience Curator today: <a class=\"trip-phone-link\" href=\"tel:+529848079475\">+52 (984) 807 94 75</a><br><a class=\"trip-phone-link\" href=\"tel:+15415149312\">+1 (541) 514 9312</a>",
+    "contact.form.curator": "We are the local experts. Speak to an Experience Curator today:<span class=\"trip-phone-numbers\"><a class=\"trip-phone-link\" href=\"tel:+529848079475\"><span class=\"trip-phone-label\">Mexico</span>+52 (984) 807 94 75</a><a class=\"trip-phone-link\" href=\"tel:+15415149312\"><span class=\"trip-phone-label\">USA</span>+1 (541) 514 9312</a></span>",
     "contact.form.status": "Opening your email app — write us your question and hit send.",
     "contact.form.showcasePhoto": "Photo",
     "contact.locations.eyebrow": "Where to find us",
@@ -635,6 +636,7 @@ const MLS_I18N = {
 
     /* ---------- Our Villas (villas.html) ---------- */
     "villas.hero.title": "Nuestras villas<span class=\"visually-hidden\"> — Colección de Villas de Lujo en Playa del Carmen y Valle de Guadalupe</span>",
+    "villas.hero.alt": "Vista aérea de Villa Aqua entre la selva y el campo de golf de Playacar, con el mar Caribe en el horizonte",
     "villas.hero.lead": "Cada residencia es seleccionada a mano, administrada de forma privada, y atendida con el estándar que exigiríamos para nosotros mismos.",
     "villas.filter.destination": "Destino",
     "villas.filter.allDestinations": "Todos los destinos",
@@ -1056,7 +1058,7 @@ const MLS_I18N = {
     "contact.form.errInvalid": "Revisa el campo marcado e inténtalo de nuevo.",
     "contact.form.errRateLimited": "Has enviado varias solicitudes en poco tiempo. Espera unos minutos o escríbenos por WhatsApp al {whatsapp} o a {email}.",
     "contact.form.bookError": "No pudimos enviar tu solicitud en este momento. Escríbenos por WhatsApp al {whatsapp} o a {email} y lo resolvemos.",
-    "contact.form.curator": "Somos los expertos locales. Habla hoy con un Experience Curator: <a class=\"trip-phone-link\" href=\"tel:+529848079475\">+52 (984) 807 94 75</a><br><a class=\"trip-phone-link\" href=\"tel:+15415149312\">+1 (541) 514 9312</a>",
+    "contact.form.curator": "Somos los expertos locales. Habla hoy con un Experience Curator:<span class=\"trip-phone-numbers\"><a class=\"trip-phone-link\" href=\"tel:+529848079475\"><span class=\"trip-phone-label\">México</span>+52 (984) 807 94 75</a><a class=\"trip-phone-link\" href=\"tel:+15415149312\"><span class=\"trip-phone-label\">EE. UU.</span>+1 (541) 514 9312</a></span>",
     "contact.form.status": "Abriendo tu app de correo — escríbenos tu pregunta y envíala.",
     "contact.form.showcasePhoto": "Foto",
     "contact.locations.eyebrow": "Dónde encontrarnos",

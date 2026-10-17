@@ -2912,6 +2912,7 @@
       closeVillaListbox();
       villaTrigger.focus();
       syncTripVilla();
+      villaValueInput.dispatchEvent(new Event("change"));
     };
 
     if (villaTrigger) {
@@ -3182,10 +3183,19 @@
       [bookStatusEl, inquireStatusEl].forEach((el) => { if (el) el.textContent = ""; });
     };
     modeBtns.forEach((b) => b.addEventListener("click", () => setMode(b.dataset.tripModeBtn)));
-    if (modeBtns.length && !(typeof MLS_BOOKING_ENGINE_URL !== "undefined" && MLS_BOOKING_ENGINE_URL)) {
-      modeBtns[0].parentElement.hidden = true;
-      setMode("inquire");
-    }
+    /* Inquire only — no Book/Inquire choice — when there's no checkout, or
+       for villas that take questions only (inquireOnly in villas-data.js).
+       Re-checked whenever the contact page's villa picker changes. */
+    const bookingEngineOn = typeof MLS_BOOKING_ENGINE_URL !== "undefined" && !!MLS_BOOKING_ENGINE_URL;
+    const applyVillaMode = () => {
+      if (!modeBtns.length) return;
+      const villa = typeof MLS_VILLAS !== "undefined" ? MLS_VILLAS.find((v) => v.slug === villaValueInput?.value) : null;
+      const inquireOnly = !bookingEngineOn || !!villa?.inquireOnly;
+      modeBtns[0].parentElement.hidden = inquireOnly;
+      if (inquireOnly) setMode("inquire");
+    };
+    villaValueInput?.addEventListener("change", applyVillaMode);
+    applyVillaMode();
     /* ---------- Phone country picker: choosing a country writes its dial
        code into the phone field; typing "+<code>" picks the country back.
        Dial codes come from libphonenumber-js (the same metadata the server

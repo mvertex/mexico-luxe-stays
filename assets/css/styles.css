@@ -2411,7 +2411,11 @@ body.sa-modal-open { overflow: hidden; }
 
 .trip-phone-cta { border-top: 1px solid rgba(20,20,20,.14); padding-top: 1.5rem; margin-top: 1.5rem; text-align: center; }
 .trip-phone-cta p { font-size: .9rem; color: var(--stone-text); margin: 0; line-height: 1.6; }
-.trip-phone-link { color: var(--ink); font-weight: 700; text-decoration: none; }
+/* Each number on one unbroken line, labeled by country; side by side when
+   they fit, stacked on narrow screens. */
+.trip-phone-numbers { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem 2rem; margin-top: .8rem; }
+.trip-phone-link { color: var(--ink); font-weight: 700; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: baseline; gap: .5rem; }
+.trip-phone-label { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--stone-text); }
 .trip-phone-link:hover { color: var(--sage); }
 
 /* ---------- Contact us — message form + direct channels (contact-us.html) ----------
