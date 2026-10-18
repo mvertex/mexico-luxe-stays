@@ -21,3 +21,5 @@ node_modules/
 
 # Internal notes (kept locally, never pushed)
 PENDIENTES-HOSTAWAY.md
+.vercel
+.env*

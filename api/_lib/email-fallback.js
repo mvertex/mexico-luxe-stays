@@ -3,11 +3,10 @@
      RESEND_API_KEY
      RESEND_FROM_EMAIL   sender on a domain verified in Resend
 
-   Two uses:
-   - sendEmail: the "Contact us" message form (api/contact-message.js).
-   - sendFallbackEmail: optional backup for booking requests, OFF by default
-     (requests go to Hostaway, see api/booking-request.js). It only runs when
-     Hostaway fails AND BOOKING_EMAIL_FALLBACK=1 is also set.
+   sendFallbackEmail: optional backup for booking requests and Contact us
+   messages, OFF by default (they all go to Hostaway, see
+   api/booking-request.js). It only runs when Hostaway fails AND
+   BOOKING_EMAIL_FALLBACK=1 is also set.
    Never throws — callers already have their own error response. */
 
 const TO_EMAIL = "info@mexicoluxestays.com";

@@ -1,6 +1,8 @@
 {
   "functions": {
-    "api/booking-request.js": { "maxDuration": 60 }
+    "api/booking-request.js": {
+      "maxDuration": 60
+    }
   },
   "headers": [
     {
@@ -117,6 +119,21 @@
           "value": "public, max-age=31536000, immutable"
         }
       ]
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?<sub>.*)\\.vercel\\.app"
+        }
+      ],
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
     }
   ],
   "rewrites": [
@@ -144,6 +161,111 @@
     {
       "source": "/es/villas/casa-corazon-luxe",
       "destination": "/es/villas/casa-corazon.html",
+      "permanent": true
+    },
+    {
+      "source": "/about-us",
+      "destination": "/about.html",
+      "permanent": true
+    },
+    {
+      "source": "/service",
+      "destination": "/about.html",
+      "permanent": true
+    },
+    {
+      "source": "/contact-us",
+      "destination": "/contact-us.html",
+      "permanent": true
+    },
+    {
+      "source": "/reserve",
+      "destination": "/contact.html",
+      "permanent": true
+    },
+    {
+      "source": "/properties",
+      "destination": "/villas.html",
+      "permanent": true
+    },
+    {
+      "source": "/property-list-new",
+      "destination": "/villas.html",
+      "permanent": true
+    },
+    {
+      "source": "/galleries",
+      "destination": "/villas.html",
+      "permanent": true
+    },
+    {
+      "source": "/special-offer",
+      "destination": "/villas.html",
+      "permanent": true
+    },
+    {
+      "source": "/special-offers",
+      "destination": "/villas.html",
+      "permanent": true
+    },
+    {
+      "source": "/properties/detail/:slug*",
+      "destination": "/villas.html",
+      "permanent": true
+    },
+    {
+      "source": "/properties/location/playa-del-carmen",
+      "destination": "/playa-del-carmen.html",
+      "permanent": true
+    },
+    {
+      "source": "/properties/location/valle-de-guadalupe",
+      "destination": "/valle-de-guadalupe.html",
+      "permanent": true
+    },
+    {
+      "source": "/attractions/location/playa-del-carmen",
+      "destination": "/playa-del-carmen.html",
+      "permanent": true
+    },
+    {
+      "source": "/attractions/location/valle-de-guadalupe",
+      "destination": "/valle-de-guadalupe.html",
+      "permanent": true
+    },
+    {
+      "source": "/attractions/detail/:slug(adobe-guadalupe|adobe-guadalupe-1|animalon|baron-balche|bodegas-de-santo-tom.*|bruma-wine-garden|casa-magoni|cavas-del-mogor|decantos-vinicola|deckmans-en-el-mogor|el-cielo-resort-winery|el-cielo-winery-resort|fauna|finca-la-carrodilla|horseback-riding-through-the-vineyards|hot-air-balloon-rides|l-a-cetto-boutique|la-cocina-de-dona-esthela|las-nubes-winery|lechuza-vineyard|monte-xanic-bodega-vinicola|monte-xanic-winery|museum-of-the-vine-and-wine|visit-the-museum-of-the-vine-and-wine|quinta-alegria|rondo-del-valle|trevista-vineyards|vena-cava|wine-tasting-tours|xecue-vinicola)",
+      "destination": "/valle-de-guadalupe.html",
+      "permanent": true
+    },
+    {
+      "source": "/attractions/:path*",
+      "destination": "/playa-del-carmen.html",
+      "permanent": true
+    },
+    {
+      "source": "/attractions",
+      "destination": "/playa-del-carmen.html",
+      "permanent": true
+    },
+    {
+      "source": "/terms-and-conditions",
+      "destination": "/terms.html",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/privacy.html",
+      "permanent": true
+    },
+    {
+      "source": "/blogs",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/:path*",
+      "destination": "/",
       "permanent": true
     }
   ]

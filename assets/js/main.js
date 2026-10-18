@@ -3520,7 +3520,8 @@
   }
 
   /* ---------- Contact us: message form (contact-us.html) ----------
-     Emails the team via /api/contact-message — no booking, no Hostaway.
+     Filed in Hostaway as a question via /api/booking-request (source
+     "contact-us"; no villa picked → a general message) — no booking.
      If it can't be sent, the status offers WhatsApp with the message
      already written, so nothing the guest typed is lost. */
   const messageForm = document.querySelector("[data-message-form]");
@@ -3548,10 +3549,11 @@
         }
       });
     };
-    const INPUTS = { name: "#mf-name", email: "#mf-email", phone: "#mf-phone", message: "#mf-message" };
+    /* Keys are the API's field names (api/booking-request.js). */
+    const INPUTS = { firstName: "#mf-first-name", lastName: "#mf-last-name", email: "#mf-email", phone: "#mf-phone", notes: "#mf-message" };
     const MESSAGES = {
-      name: "message.form.nameRequired", email: "contact.form.emailRequired",
-      phone: "message.form.phoneInvalid", message: "message.form.messageRequired",
+      firstName: "contact.form.firstNameRequired", lastName: "contact.form.lastNameRequired",
+      email: "contact.form.emailRequired", phone: "message.form.phoneInvalid", notes: "message.form.messageRequired",
     };
     const markInvalid = (fieldName) => {
       const input = messageForm.querySelector(INPUTS[fieldName]);
@@ -3569,19 +3571,25 @@
       if (submitBtn.disabled) return;
       const f = new FormData(messageForm);
       const payload = {
-        name: f.get("name")?.trim() || "",
+        source: "contact-us",
+        intent: "question",
+        villa: f.get("villa") || "",
+        firstName: f.get("firstName")?.trim() || "",
+        lastName: f.get("lastName")?.trim() || "",
         email: f.get("email")?.trim() || "",
         phone: f.get("phone")?.trim() || "",
         subject: f.get("subject")?.trim() || "",
-        message: f.get("message")?.trim() || "",
+        notes: f.get("message")?.trim() || "",
+        adults: 1,
         company: f.get("company") || "",
         lang: typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en",
       };
       const checks = [
-        ["name", payload.name.length >= 1],
+        ["firstName", payload.firstName.length >= 1],
+        ["lastName", payload.lastName.length >= 1],
         ["email", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(payload.email)],
         ["phone", !payload.phone || /^\+?[\d\s().-]{7,25}$/.test(payload.phone)],
-        ["message", payload.message.length >= 2],
+        ["notes", payload.notes.length >= 2],
       ];
       const firstInvalid = checks.find(([, ok]) => !ok);
       checks.forEach(([name, ok]) => messageForm.querySelector(INPUTS[name])?.setAttribute("aria-invalid", String(!ok)));
@@ -3594,12 +3602,12 @@
 
       const sendKey = JSON.stringify(payload);
       if (sendKey === lastSentKey) { setStatus("message.form.success"); return; }
-      const waText = `${t("message.form.waIntro")}\n\n${payload.message}\n\n— ${payload.name}`;
+      const waText = `${t("message.form.waIntro")}\n\n${payload.notes}\n\n— ${payload.firstName} ${payload.lastName}`;
 
       submitBtn.disabled = true;
       submitBtn.setAttribute("aria-busy", "true");
       setStatus("message.form.sending");
-      fetch("/api/contact-message", {
+      fetch("/api/booking-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

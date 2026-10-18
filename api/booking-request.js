@@ -1,5 +1,6 @@
 /* POST /api/booking-request
-   Website "Book Now" requests and guest questions → Hostaway, as an inquiry
+   Website "Book Now" requests, guest questions and "Contact us" messages
+   → Hostaway, as an inquiry
    on the villa's listing (POST /v1/reservations, status "inquiry" — per the
    Hostaway docs "a guest question which doesn't block the calendar"). The
    team sees it, with its conversation, in the owner's Hostaway account and
@@ -12,6 +13,9 @@
      adults, children, infants, bedrooms
      firstName, lastName, email, phone (optional), phoneCountry, notes, lang
      company     honeypot — real visitors never see or fill it
+     source      "contact-us" from contact-us.html: always a question, with an
+                 optional subject; villa may be empty (general message, filed
+                 under GENERAL_MESSAGE_VILLA since Hostaway needs a listing)
 
    Hostaway endpoints used (https://api.hostaway.com/documentation):
      POST /v1/accessTokens                       (api/_lib/hostaway.js)
@@ -23,6 +27,7 @@
 const { parsePhoneNumberFromString } = require("libphonenumber-js/max");
 const { hostawayGet, hostawayPost } = require("./_lib/hostaway");
 const { sendFallbackEmail } = require("./_lib/email-fallback");
+const { crossSite } = require("./_lib/same-origin");
 
 /* Villa slug → Hostaway listing (same IDs as hostawayListingId in
    assets/js/villas-data.js). The listing ID is resolved here, never taken
@@ -34,6 +39,10 @@ const VILLAS = {
   "casa-corazon": { listingMapId: 144272, name: "Casa Corazon", maxGuests: 22 },
   "casa-de-las-estrellas": { listingMapId: 456289, name: "Casa de las Estrellas", maxGuests: 10 },
 };
+
+/* "Contact us" messages not about a specific villa still need a listing in
+   Hostaway; they land here, flagged as general in the host note. */
+const GENERAL_MESSAGE_VILLA = "villa-aqua";
 
 const CONTACT = { whatsapp: "+52 984 807 9475", email: "info@mexicoluxestays.com" };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -90,12 +99,17 @@ function fail(res, status, code, extra = {}) {
 }
 
 function validate(body) {
-  const intent = body.intent === "question" ? "question" : "book";
-  const villa = VILLAS[body.villa];
+  const fromContactPage = body.source === "contact-us";
+  const intent = fromContactPage || body.intent === "question" ? "question" : "book";
+  const general = fromContactPage && !VILLAS[body.villa];
+  const villa = VILLAS[general ? GENERAL_MESSAGE_VILLA : body.villa];
   const data = {
     intent,
+    fromContactPage,
+    general,
     villaSlug: body.villa,
     villa,
+    subject: fromContactPage ? clean(body.subject, 150) : "",
     firstName: clean(body.firstName, 80),
     lastName: clean(body.lastName, 80),
     email: clean(body.email, 120).toLowerCase(),
@@ -212,6 +226,7 @@ module.exports = async (req, res) => {
     res.status(405).json({ ok: false, code: "method" });
     return;
   }
+  if (crossSite(req)) return fail(res, 403, "forbidden");
   const body = req.body && typeof req.body === "object" ? req.body : {};
 
   // Honeypot filled → pretend success, create nothing.
@@ -269,7 +284,11 @@ module.exports = async (req, res) => {
 
     const kind = data.intent === "book" ? "Booking request" : "Guest question";
     const hostNote = [
-      `${kind} from the website contact form (mexicoluxestays.com).`,
+      data.fromContactPage
+        ? "Message from the website's Contact us page (mexicoluxestays.com)."
+        : `${kind} from the website contact form (mexicoluxestays.com).`,
+      data.general ? `General message, not about a specific villa — filed under ${data.villa.name} only because Hostaway needs a listing.` : null,
+      data.subject ? `Subject: ${data.subject}` : null,
       data.intent === "book" ? "Status: inquiry — not confirmed, calendar not blocked. Approve or decline in Hostaway." : "Question only — no stay requested.",
       data.bedrooms ? `Bedrooms requested: ${data.bedrooms}` : null,
       askedDatesTaken ? `Dates asked about: ${data.checkin} to ${data.checkout} — not available in the calendar, so the dates shown are placeholders.` : null,
@@ -313,13 +332,13 @@ module.exports = async (req, res) => {
     }
     console.error("[booking-request] Hostaway failure", JSON.stringify({ message: err.message, status: err.status, path: err.path, body: err.body }));
     const emailed = await sendFallbackEmail({
-      subject: `${data.intent === "book" ? "Booking request" : "Guest question"} — ${data.firstName} ${data.lastName} — ${data.villa.name}`,
+      subject: `${data.intent === "book" ? "Booking request" : "Guest question"} — ${data.firstName} ${data.lastName} — ${data.general ? "General message" : data.villa.name}`,
       replyTo: data.email,
       rows: [
         ["Guest", `${data.firstName} ${data.lastName}`], ["Email", data.email], ["Phone / WhatsApp", data.phone || "—"],
         ["Villa", data.villa.name], ["Dates", data.hasDates ? `${data.checkin} to ${data.checkout}` : "—"],
         ["Adults", data.adults], ["Children (2-12)", data.children], ["Infants (0-2)", data.infants],
-        ["Bedrooms", data.bedrooms || "—"], ["Message", data.notes || "—"],
+        ["Bedrooms", data.bedrooms || "—"], ["Subject", data.subject || "—"], ["Message", data.notes || "—"],
       ],
     });
     if (emailed) {

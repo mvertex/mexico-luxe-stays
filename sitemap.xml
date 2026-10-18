@@ -958,36 +958,4 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-  <url>
-    <loc>https://www.mexicoluxestays.com/privacy.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.mexicoluxestays.com/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.mexicoluxestays.com/es/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.mexicoluxestays.com/privacy.html"/>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://www.mexicoluxestays.com/es/privacy.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.mexicoluxestays.com/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.mexicoluxestays.com/es/privacy.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.mexicoluxestays.com/privacy.html"/>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://www.mexicoluxestays.com/terms.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.mexicoluxestays.com/terms.html"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.mexicoluxestays.com/es/terms.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.mexicoluxestays.com/terms.html"/>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://www.mexicoluxestays.com/es/terms.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.mexicoluxestays.com/terms.html"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.mexicoluxestays.com/es/terms.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.mexicoluxestays.com/terms.html"/>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
 </urlset>

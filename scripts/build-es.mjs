@@ -7,7 +7,8 @@
    - bakes the Spanish strings from i18n.js into every data-i18n* element,
    - swaps the <head> metadata for scripts/es-meta.mjs and translates JSON-LD,
    - writes the result to es/<same path>.
-   It also adds hreflang links to both language versions and rewrites sitemap.xml.
+   It also adds hreflang links to both language versions, bakes the villa content
+   into the static HTML of both (scripts/prerender.mjs) and rewrites sitemap.xml.
    Never edit files in es/ by hand: they are overwritten on every run. */
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, rmSync } from "node:fs";
@@ -16,6 +17,7 @@ import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 import { parse } from "node-html-parser";
 import { PAGES, LD_STRINGS } from "./es-meta.mjs";
+import { createPrerender } from "./prerender.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://www.mexicoluxestays.com";
@@ -25,6 +27,8 @@ const OUT = join(ROOT, "es");
 const i18nSrc = readFileSync(join(ROOT, "assets/js/i18n.js"), "utf8");
 const dataSrc = i18nSrc.slice(0, i18nSrc.indexOf("/* ---------- Engine"));
 const { en: EN, es: ES } = vm.runInNewContext(`${dataSrc}; MLS_I18N`);
+
+const prerender = createPrerender(ROOT, { en: EN, es: ES });
 
 const stripTags = (s) => s.replace(/<[^>]+>/g, "");
 const escapeText = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -150,9 +154,7 @@ function buildEs(page, enHtml) {
   html = setMeta(html, "name", "twitter:description", meta.ogDesc);
   html = html.replace(/(<link rel="canonical" href=")[^"]*(">)/, `$1${esUrl(page)}$2`);
   html = html.replace(/(<meta property="og:url" content=")[^"]*(">)/, `$1${esUrl(page)}$2`);
-  if (!html.includes('property="og:locale"')) {
-    html = html.replace(/^([ \t]*)(<meta property="og:type"[^>]*>\n)/m, `$1$2$1<meta property="og:locale" content="es_MX">\n`);
-  }
+  html = html.replace(/(<meta property="og:locale" content=")[^"]*(">)/, "$1es_MX$2");
   html = withHreflang(html, page);
 
   /* Static asset paths become root-absolute so they don't depend on the /es/ depth.
@@ -175,12 +177,12 @@ for (const page of pages) {
   const srcPath = join(ROOT, page);
   const enHtml = readFileSync(srcPath, "utf8");
 
-  const enWithLinks = withHreflang(enHtml, page);
+  const enWithLinks = prerender(withHreflang(enHtml, page), "en");
   if (enWithLinks !== enHtml) writeFileSync(srcPath, enWithLinks);
 
   const outPath = join(OUT, page);
   mkdirSync(dirname(outPath), { recursive: true });
-  writeFileSync(outPath, buildEs(page, enWithLinks));
+  writeFileSync(outPath, prerender(buildEs(page, enWithLinks), "es"));
 }
 
 /* ---------- Sitemap: every English URL plus its Spanish twin, linked by hreflang ---------- */
@@ -220,9 +222,15 @@ const urlXml = (loc, e, page) => [
   "  </url>"
 ].filter(Boolean).join("\n");
 
+/* Pages marked noindex (privacy, terms) are dropped from the sitemap. Since the
+   sitemap is also this list's source, a page that later loses its noindex has
+   to be added back to sitemap.xml by hand (one <url><loc>…</loc></url>). */
+const isNoindex = (page) => pages.includes(page) && /<meta name="robots" content="noindex/.test(readFileSync(join(ROOT, page), "utf8"));
+
 const blocks = [];
 for (const e of entries) {
   const page = e.loc === `${SITE}/` ? "index.html" : e.loc.slice(SITE.length + 1);
+  if (isNoindex(page)) continue;
   blocks.push(urlXml(e.loc, e, page));
   if (pages.includes(page)) blocks.push(urlXml(esUrl(page), e, page));
 }
