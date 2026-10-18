@@ -2388,6 +2388,15 @@ body.sa-modal-open { overflow: hidden; }
 .trip-sent-icon { width: 56px; height: 56px; color: var(--sage); margin-bottom: 1rem; }
 .trip-sent-title { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.5rem, 2.6vw, 1.9rem); color: var(--ink); margin: 0 0 .6rem; }
 .trip-sent-body { color: var(--stone-text); line-height: 1.6; margin: 0 0 1.6rem; }
+/* Contact us: the thank-you fills the whole card, with larger type so
+   nobody misses that the message went through. */
+.trip-sent--message { max-width: 520px; padding: clamp(1.5rem, 4vw, 3rem) 0; animation: trip-sent-in .5s var(--ease-out) both; }
+.trip-sent--message .trip-sent-icon { width: 84px; height: 84px; margin-bottom: 1.3rem; }
+.trip-sent--message .trip-sent-title { font-size: clamp(1.9rem, 3.4vw, 2.5rem); margin-bottom: .9rem; }
+.trip-sent--message .trip-sent-body { font-size: 1.15rem; color: var(--ink); margin-bottom: 2rem; }
+.message-panel .trip-title[hidden] { display: none; }
+@keyframes trip-sent-in { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .trip-sent--message { animation: none; } }
 .trip-book-btn:focus-visible, .trip-inquire-btn:focus-visible { outline: 2px solid var(--sage); outline-offset: 3px; }
 
 /* Inside the two-column form the columns set the width and rhythm, so the

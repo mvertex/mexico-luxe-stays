@@ -3562,6 +3562,47 @@
     };
     let lastSentKey = null;
 
+    /* Sent: the whole card turns into a large thank-you (same look as the
+       trip form's, sized up) — a line under the button went unnoticed,
+       especially by older guests. "Send another message" brings back an
+       empty form. */
+    const messageTitle = messageForm.parentElement.querySelector(".trip-title");
+    const showMessageSent = (firstName) => {
+      let panel = messageForm.parentElement.querySelector("[data-message-sent]");
+      if (!panel) {
+        panel = document.createElement("div");
+        panel.className = "trip-sent trip-sent--message";
+        panel.setAttribute("data-message-sent", "");
+        panel.setAttribute("role", "status");
+        panel.tabIndex = -1;
+        panel.innerHTML = `
+          <svg class="trip-sent-icon" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15 24.5l6 6 12-13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3 class="trip-sent-title" data-message-sent-title></h3>
+          <p class="trip-sent-body" data-message-sent-body></p>
+          <button type="button" class="trip-inquire-btn" data-message-sent-again></button>`;
+        messageForm.after(panel);
+        panel.querySelector("[data-message-sent-again]").addEventListener("click", () => {
+          panel.hidden = true;
+          messageForm.hidden = false;
+          if (messageTitle) messageTitle.hidden = false;
+          lastSentKey = null;
+          statusEl.textContent = "";
+          messageForm.querySelector("#mf-first-name")?.focus();
+        });
+      }
+      const name = (firstName || "").trim();
+      panel.querySelector("[data-message-sent-title]").textContent = name
+        ? t("contact.form.sentTitleName").replace("{name}", name)
+        : t("contact.form.sentTitle");
+      panel.querySelector("[data-message-sent-body]").textContent = t("message.form.sentBody");
+      panel.querySelector("[data-message-sent-again]").textContent = t("message.form.sentAgain");
+      messageForm.hidden = true;
+      if (messageTitle) messageTitle.hidden = true;
+      panel.hidden = false;
+      panel.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "center" });
+      panel.focus({ preventScroll: true });
+    };
+
     messageForm.addEventListener("input", (e) => {
       if (e.target.getAttribute && e.target.getAttribute("aria-invalid") === "true") e.target.removeAttribute("aria-invalid");
     });
@@ -3601,7 +3642,7 @@
       }
 
       const sendKey = JSON.stringify(payload);
-      if (sendKey === lastSentKey) { setStatus("message.form.success"); return; }
+      if (sendKey === lastSentKey) { showMessageSent(payload.firstName); return; }
       const waText = `${t("message.form.waIntro")}\n\n${payload.notes}\n\n— ${payload.firstName} ${payload.lastName}`;
 
       submitBtn.disabled = true;
@@ -3617,7 +3658,8 @@
           if (res.ok && data.ok) {
             lastSentKey = sendKey;
             messageForm.reset();
-            setStatus("message.form.success");
+            statusEl.textContent = "";
+            showMessageSent(payload.firstName);
             return;
           }
           if (data.code === "invalid" && INPUTS[data.field]) { markInvalid(data.field); return; }
