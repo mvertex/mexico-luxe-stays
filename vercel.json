@@ -144,6 +144,24 @@
   ],
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "(www\\.)?villaaqua\\.com(\\.mx)?" }],
+      "destination": "https://www.mexicoluxestays.com/villas/villa-aqua.html",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "(www\\.)?casacorazonpdc\\.com" }],
+      "destination": "https://www.mexicoluxestays.com/villas/casa-corazon.html",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "(www\\.)?kasakefi\\.mx" }],
+      "destination": "https://www.mexicoluxestays.com/villas/kasa-kefi.html",
+      "permanent": true
+    },
+    {
       "source": "/villas/casa-corazon-luxe.html",
       "destination": "/villas/casa-corazon.html",
       "permanent": true
