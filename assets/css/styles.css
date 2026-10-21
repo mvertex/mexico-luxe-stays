@@ -1839,7 +1839,9 @@ button { font: inherit; cursor: pointer; }
   width: calc(50% - clamp(1rem, 2.5vw, 1.75rem) / 2);
 }
 .room-picker-item {
-  display: flex; flex-direction: column; text-align: left;
+  /* stretch: Chrome lines a left-aligned <button>'s flex items up at the
+     start, which collapses the photo box (only absolute children) to 0 wide. */
+  display: flex; flex-direction: column; align-items: stretch; text-align: left;
   border: 0; padding: 0; background: var(--cream); cursor: pointer; font: inherit;
   border-radius: var(--radius); box-shadow: 0 2px 10px rgba(20, 26, 19, .1); overflow: hidden;
 }
