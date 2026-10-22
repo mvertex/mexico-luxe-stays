@@ -41,11 +41,19 @@ for (const [key, value] of Object.entries(EN)) {
 }
 
 /* ---------- URLs ---------- */
-const enUrl = (page) => `${SITE}/${page === "index.html" ? "" : page}`;
-const esUrl = (page) => `${SITE}/es/${page === "index.html" ? "" : page}`;
+/* Villa pages whose own domain is live: that domain is their URL (served by
+   middleware.js, which holds the same list). */
+const VILLA_DOMAINS = {
+  "villas/casa-corazon.html": "https://www.casacorazonpdc.com",
+  "villas/kasa-kefi.html": "https://www.kasakefi.mx"
+};
+const enUrl = (page) => VILLA_DOMAINS[page] ? `${VILLA_DOMAINS[page]}/` : `${SITE}/${page === "index.html" ? "" : page}`;
+const esUrl = (page) => VILLA_DOMAINS[page] ? `${VILLA_DOMAINS[page]}/es/` : `${SITE}/es/${page === "index.html" ? "" : page}`;
 
 /* A site page URL in JSON-LD (not an asset) → its Spanish counterpart. */
 function toEsUrl(url) {
+  const villaPage = Object.keys(VILLA_DOMAINS).find((page) => url === enUrl(page));
+  if (villaPage) return esUrl(villaPage);
   if (!url.startsWith(`${SITE}/`) || url.startsWith(`${SITE}/es/`)) return url;
   const path = url.slice(SITE.length + 1);
   return path === "" || path.endsWith(".html") ? `${SITE}/es/${path}` : url;
@@ -193,7 +201,7 @@ const entries = [...readFileSync(sitemapPath, "utf8").matchAll(/<url>([\s\S]*?)<
     changefreq: (body.match(/<changefreq>([^<]+)<\/changefreq>/) || [])[1],
     priority: (body.match(/<priority>([^<]+)<\/priority>/) || [])[1]
   }))
-  .filter((e) => !e.loc.startsWith(`${SITE}/es/`));
+  .filter((e) => !e.loc.startsWith(`${SITE}/es/`) && !e.loc.endsWith("/es/"));
 
 /* Villa photos live behind the JS gallery/lightbox, so crawlers rarely find them on the
    page — list every one under its villa URL (Google only reads image:loc nowadays). */
@@ -229,9 +237,10 @@ const isNoindex = (page) => pages.includes(page) && /<meta name="robots" content
 
 const blocks = [];
 for (const e of entries) {
-  const page = e.loc === `${SITE}/` ? "index.html" : e.loc.slice(SITE.length + 1);
+  const villaPage = Object.keys(VILLA_DOMAINS).find((page) => e.loc === enUrl(page));
+  const page = villaPage || (e.loc === `${SITE}/` ? "index.html" : e.loc.slice(SITE.length + 1));
   if (isNoindex(page)) continue;
-  blocks.push(urlXml(e.loc, e, page));
+  blocks.push(urlXml(enUrl(page), e, page));
   if (pages.includes(page)) blocks.push(urlXml(esUrl(page), e, page));
 }
 writeFileSync(sitemapPath, [
