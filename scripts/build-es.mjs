@@ -45,7 +45,8 @@ for (const [key, value] of Object.entries(EN)) {
    middleware.js, which holds the same list). */
 const VILLA_DOMAINS = {
   "villas/casa-corazon.html": "https://www.casacorazonpdc.com",
-  "villas/kasa-kefi.html": "https://www.kasakefi.mx"
+  "villas/kasa-kefi.html": "https://www.kasakefi.mx",
+  "villas/villa-aqua.html": "https://www.villaaqua.com"
 };
 const enUrl = (page) => VILLA_DOMAINS[page] ? `${VILLA_DOMAINS[page]}/` : `${SITE}/${page === "index.html" ? "" : page}`;
 const esUrl = (page) => VILLA_DOMAINS[page] ? `${VILLA_DOMAINS[page]}/es/` : `${SITE}/es/${page === "index.html" ? "" : page}`;

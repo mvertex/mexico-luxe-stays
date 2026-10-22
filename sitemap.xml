@@ -33,10 +33,10 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.mexicoluxestays.com/villas/villa-aqua.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.mexicoluxestays.com/villas/villa-aqua.html"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.mexicoluxestays.com/es/villas/villa-aqua.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.mexicoluxestays.com/villas/villa-aqua.html"/>
+    <loc>https://www.villaaqua.com/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.villaaqua.com/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.villaaqua.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.villaaqua.com/"/>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/villa-aqua-1.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/villa-aqua-2.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/villa-aqua-3.webp</image:loc></image:image>
@@ -144,10 +144,10 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.mexicoluxestays.com/es/villas/villa-aqua.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.mexicoluxestays.com/villas/villa-aqua.html"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.mexicoluxestays.com/es/villas/villa-aqua.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.mexicoluxestays.com/villas/villa-aqua.html"/>
+    <loc>https://www.villaaqua.com/es/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.villaaqua.com/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.villaaqua.com/es/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.villaaqua.com/"/>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/villa-aqua-1.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/villa-aqua-2.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/villa-aqua-3.webp</image:loc></image:image>
