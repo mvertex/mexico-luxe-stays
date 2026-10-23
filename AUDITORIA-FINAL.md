@@ -84,17 +84,17 @@ El script de "volver a la web" del checkout no hay que tocarlo. Ya apunta a `htt
 
 | # | Qué | Dónde | Quién |
 |---|---|---|---|
-| 1 | Terminar el dominio del checkout | Sección 3 | Diego |
-| 2 | **Pruebas reales:** solicitud de reserva desde una villa (debe llegar a Hostaway con fechas), mensaje desde "Contact us", escanear el QR de WhatsApp, llamar a los dos teléfonos, revisar en un iPhone | Web en vivo | Diego / equipo |
-| 3 | **Webs viejas de Hostaway que reclaman nuestros dominios:** "MLS" (`www.mexicoluxestays.com`) y "kasakefi" (`www.kasakefi.mx`). Los dominios ya apuntan a Vercel, así que hoy no afectan, pero conviene despublicarlas o quitarles el dominio. Confirmar antes con la dueña que no las usa. "CasaCorazonpdc.com" figura en `booking.casacorazonpdc.com`, pero ese registro no existe en el DNS. | Hostaway → Booking Website | Diego + dueña |
-| 4 | **Políticas de cancelación en Hostaway:** el checkout de Villa Aqua y el de Kasa Kefi muestran "92% refund up to 30 days / 50% up to 15 days", que no es la política de la dueña (la correcta está en la web, Términos y FAQ de cada villa). Corregir en el canal *Direct* sin tocar las de otros canales. | Hostaway → Listings → la villa → Edit → Cancellation policy | Diego |
-| 5 | **Kasa Kefi, tarifa no reembolsable 8%:** la dueña quiere un cupón (sugerido `NONREFUNDABLE8`, en Reservations → Coupons, limitado a Kasa Kefi). Falta que se cree y que ella decida si con esa tarifa se cobra el 100% al reservar. El aviso de "no reembolsable" irá en la página de Kasa Kefi junto al código. | Hostaway + web | Dueña → Diego |
-| 6 | **Textos de Hostaway en el checkout:** el extra "Late Check Out Fee" de Kasa Kefi sale en inglés en el checkout en español (falta su traducción). En el extra de Casa Corazón (inglés), "Cancelation Fee" debe ser "Cancellation Fee" y "aplies", "applies". Opcional: el título ES de Villa Aqua ("Villa Aqua Luxe") no coincide con el EN. El título ES de Kasa Kefi ("Kasa Kava…") es correcto: Kasa Kefi está dentro del viñedo Kasa Kava. | Hostaway → Listings → la villa (traducción / extras) | Diego o dueña |
-| 7 | **Teléfono:** confirmar con la próxima consulta real que Hostaway acepta los números que la web da por válidos (la web valida con libphonenumber). | Hostaway | Diego |
-| 8 | Opcional: `http://mexicoluxestays.com` llega a www en 2 saltos, y el HSTS no incluye subdominios. Son ajustes de dominio en Vercel; no urgen. | Vercel | — |
+| 1 | Terminar el dominio del checkout: **en espera de que Hostaway emita el SSL** | Sección 3 | Hostaway → Diego |
+| 2 | **Pruebas reales:** (una vez publicada la web) solicitud de reserva desde una villa (debe llegar a Hostaway con fechas), mensaje desde "Contact us", escanear el QR de WhatsApp, llamar a los dos teléfonos, revisar en un iPhone | Web en vivo | Diego / equipo |
 
 **Decidido, no es pendiente:**
 
+- Sin cupón `NONREFUNDABLE8` ni tarifa no reembolsable en Kasa Kefi: se descartó.
+- Políticas de cancelación de Villa Aqua y Kasa Kefi: ya subidas a Hostaway.
+- Webs viejas de Hostaway ("MLS" y "kasakefi"): se despublican solas al publicar la nueva web.
+- Textos de Hostaway en el checkout ("Late Check Out Fee" de Kasa Kefi sin traducir, "Cancelation Fee" y "aplies" en Casa Corazón): se quedan como están, no se hará.
+- Redirección `http` a `www` en 2 saltos y HSTS sin subdominios: no se hará.
+- Teléfonos: se comprobará con la primera consulta real; no requiere acción previa.
 - El límite de peticiones a la API va en el código (sección 5). La regla del Firewall de Vercel solo hará falta si aparecen señales: precios que no cargan o consultas raras.
 - La animación del hero se queda como está: el LCP móvil real medido es de ~2,0 s.
 - Search Console y la analítica son un proyecto de SEO aparte.
