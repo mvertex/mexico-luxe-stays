@@ -144,14 +144,14 @@
   ],
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",
           "value": "mexico-luxe-stays.vercel.app"
         }
       ],
-      "destination": "https://www.mexicoluxestays.com/:path*",
+      "destination": "https://www.mexicoluxestays.com/$1",
       "permanent": true
     },
     {
