@@ -9,16 +9,16 @@
    Same domain list as VILLA_DOMAINS in scripts/build-es.mjs (canonical URLs). */
 
 /* `live`: the domain already points at this Vercel project. Only live domains
-   receive visitors from the main site (villaaqua.com.mx is still on its old host). */
+   receive visitors from the main site. */
 const VILLAS = [
   { page: "casa-corazon", host: "www.casacorazonpdc.com", match: /^(www\.)?casacorazonpdc\.com$/, live: true },
   { page: "kasa-kefi", host: "www.kasakefi.mx", match: /^(www\.)?kasakefi\.mx$/, live: true },
   { page: "villa-aqua", host: "www.villaaqua.com", match: /^(www\.)?villaaqua\.com(\.mx)?$/, live: true },
 ];
 
-/* Main site. Change to www.mexicoluxestays.com once that domain points at Vercel. */
-const MAIN_HOST = "mexico-luxe-stays.vercel.app";
-const MAIN_HOSTS = [MAIN_HOST, "mexicoluxestays.com", "www.mexicoluxestays.com"];
+/* Main site. */
+const MAIN_HOST = "www.mexicoluxestays.com";
+const MAIN_HOSTS = [MAIN_HOST, "mexicoluxestays.com", "mexico-luxe-stays.vercel.app"];
 
 export const config = { matcher: ["/((?!api/|assets/|es/assets/).*)"] };
 
