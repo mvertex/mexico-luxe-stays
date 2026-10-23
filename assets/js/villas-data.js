@@ -479,6 +479,7 @@ const MLS_VILLAS = [
   },
   {
     slug: "kasa-kefi",
+    inquireOnly: true, // no online booking: the trip form offers Inquire only
     name: "Kasa Kefi",
     destination: "valle-de-guadalupe",
     destinationLabel: "Valle de Guadalupe",
