@@ -92,7 +92,7 @@ Las claves nunca van en el código ni en git (`.env*` está en `.gitignore`).
 | **Vercel** (proyecto `mexico-luxe-stays`) | Hosting, funciones `api/`, dominios | Equipo de la web |
 | **GitHub** (`mvertex/mexico-luxe-stays`) | Código fuente | Equipo de la web |
 | **GoDaddy** | Registro y DNS de los dominios | Propietaria |
-| **Hostaway** | Reservas, calendario, precios, reseñas, inquiries y Booking Engine (checkout en `reservas-mls.holidayfuture.com`) | Propietaria |
+| **Hostaway** | Reservas, calendario, precios, reseñas, inquiries y Booking Engine (checkout en `reservas.mexicoluxestays.com`; ver AUDITORIA-FINAL.md, sección 3) | Propietaria |
 | **Stripe** (vía Hostaway) | Pagos con tarjeta en el checkout | Propietaria |
 | **Google Workspace** | Correo `info@mexicoluxestays.com` | Propietaria |
 | **Resend** | Solo para el correo de respaldo (opcional, hoy desactivado) | — |

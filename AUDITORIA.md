@@ -1,3 +1,5 @@
+> **Sustituida por [AUDITORIA-FINAL.md](AUDITORIA-FINAL.md) (23-oct-2026).** Se conserva como registro de la auditoría del 16 de octubre.
+
 # Auditoría previa a la entrega — Mexico Luxe Stays
 
 - **Negocio:** renta de villas de lujo (Playa del Carmen y Valle de Guadalupe), México. Público en inglés y español.
