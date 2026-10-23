@@ -3,7 +3,7 @@
    posting here is rejected; requests without Origin (curl, server-to-server)
    still go through the honeypot, validation and rate limit as before.
    Compares against the request's own host, so it works the same on the real
-   domain, the vercel.app URL, previews and `vercel dev`. */
+   domain, the villa domains, previews and `vercel dev`. */
 function crossSite(req) {
   const origin = req.headers.origin;
   if (!origin) return false;

@@ -1,6 +1,9 @@
 # Raw/unprocessed brand source images (76MB) — not used directly by the site;
 # optimized versions already live in assets/img/. Keep the repo lean.
 Componentes marca/
+# Owner's original Villa Aqua photo proposal (JPGs, 59MB); the site uses the
+# optimized WebP copies in assets/img/villas/.
+Villa Aqua - Propuesta de fotos/
 
 # Tooling-specific local state (Claude Code / agents), not part of the site
 .claude/

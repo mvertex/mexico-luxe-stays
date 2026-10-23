@@ -5,19 +5,19 @@
 
 export const PAGES = {
   "index.html": {
-    title: "Mexico Luxe Stays — Villas de Lujo en Playa del Carmen y Valle de Guadalupe",
+    title: "Villas de Lujo en Playa del Carmen y Valle de Guadalupe",
     description: "Renta de villas de lujo en Playa del Carmen y Valle de Guadalupe. Chef privado, servicio de concierge y más de 20 años de experiencia. Reserva directo.",
     og: "Mexico Luxe Stays — Renta de Villas de Lujo en México",
     ogDesc: "Villas de lujo seleccionadas en Playa del Carmen y Valle de Guadalupe. Donde se unen el lujo, el confort y la exclusividad."
   },
   "villas.html": {
-    title: "Nuestras Villas — Colección de Villas de Lujo | Mexico Luxe Stays",
+    title: "Nuestras Villas — Colección de Lujo | Mexico Luxe Stays",
     description: "Descubre villas de lujo seleccionadas en Playa del Carmen y Valle de Guadalupe. Filtra por destino, número de huéspedes y recámaras.",
     og: "Nuestras Villas — Mexico Luxe Stays",
     ogDesc: "Villas de lujo seleccionadas en Playa del Carmen y Valle de Guadalupe."
   },
   "about.html": {
-    title: "Nosotros — Más de 20 Años de Hospitalidad de Lujo | Mexico Luxe Stays",
+    title: "Sobre Mexico Luxe Stays — 20+ Años de Hospitalidad de Lujo",
     description: "Renta de villas de lujo en Playa del Carmen y Valle de Guadalupe. Más de 20 años de experiencia y atención personal desde tu primera consulta hasta tu salida.",
     og: "Nosotros — Mexico Luxe Stays",
     ogDesc: "Un equipo pequeño y apasionado con más de 20 años administrando las mejores casas vacacionales de México."
@@ -30,24 +30,24 @@ export const PAGES = {
   },
   "contact.html": {
     title: "Contáctanos — Planea tu Estancia | Mexico Luxe Stays",
-    description: "Contacta a Mexico Luxe Stays para planear tu estancia en una villa en Playa del Carmen o Valle de Guadalupe. Llámanos, escríbenos por WhatsApp al +52 984 807 9475 o por correo.",
+    description: "Planea tu estancia en una villa en Playa del Carmen o Valle de Guadalupe. Llámanos, escríbenos por WhatsApp al +52 984 807 9475 o por correo.",
     og: "Contáctanos — Mexico Luxe Stays",
     ogDesc: "Cuéntanos tus fechas y lo que sueñas; nosotros nos encargamos del resto. Llámanos, escríbenos por WhatsApp o por correo."
   },
   "contact-us.html": {
     title: "Contáctanos | Mexico Luxe Stays",
-    description: "¿Tienes preguntas sobre nuestras villas en Playa del Carmen o Valle de Guadalupe? Envíale un mensaje a Mexico Luxe Stays o escríbenos por WhatsApp al +52 984 807 9475.",
+    description: "¿Preguntas sobre nuestras villas en Playa del Carmen o Valle de Guadalupe? Envíanos un mensaje o escríbenos por WhatsApp al +52 984 807 9475.",
     og: "Contáctanos — Mexico Luxe Stays",
     ogDesc: "Escríbenos, llámanos o mándanos un WhatsApp; nuestro equipo te responde personalmente."
   },
   "playa-del-carmen.html": {
-    title: "Villas en Playa del Carmen — Riviera Maya | Mexico Luxe Stays",
+    title: "Villas en Playa del Carmen, Riviera Maya | Mexico Luxe Stays",
     description: "Villas de lujo seleccionadas en Playa del Carmen, Riviera Maya: residencias con alberca privada, personal completo y servicio de concierge de Mexico Luxe Stays.",
     og: "Villas en Playa del Carmen — Mexico Luxe Stays",
     ogDesc: "Villas de lujo seleccionadas en Playa del Carmen, Riviera Maya."
   },
   "valle-de-guadalupe.html": {
-    title: "Villas entre Viñedos en Valle de Guadalupe | Mexico Luxe Stays",
+    title: "Villas entre Viñedos, Valle de Guadalupe | Mexico Luxe Stays",
     description: "Villa de lujo en Valle de Guadalupe, Baja California: alberca infinita sobre los viñedos, terrazas con fogata y servicio de concierge.",
     og: "Villas en Valle de Guadalupe — Mexico Luxe Stays",
     ogDesc: "Una villa de lujo seleccionada en la principal región vinícola de México, Valle de Guadalupe."
@@ -66,13 +66,13 @@ export const PAGES = {
   },
   "villas/casa-corazon.html": {
     title: "Casa Corazon — Gran Villa Frente al Mar | Mexico Luxe Stays",
-    description: "Casa Corazon: gran residencia frente al mar en Playa del Carmen para hasta 22 huéspedes. 11 recámaras con baño, alberca infinita, cine en casa, chef privado y mayordomo.",
+    description: "Casa Corazon: gran residencia frente al mar en Playa del Carmen para 22 huéspedes. 11 recámaras con baño, alberca infinita, cine, chef y mayordomo.",
     og: "Casa Corazon — Gran Lujo Frente al Mar en Playa del Carmen",
     ogDesc: "Once suites con baño frente al Caribe, alberca infinita, cine en casa y personal completo. Hasta 22 huéspedes.",
     ldDesc: "Gran villa de once recámaras frente al mar en Playa del Carmen, con una sala bajo palapa que se abre a la alberca y al Caribe."
   },
   "villas/casa-de-las-estrellas.html": {
-    title: "Casa de las Estrellas — Villa Frente al Mar | Mexico Luxe Stays",
+    title: "Casa de las Estrellas — Frente al Mar | Mexico Luxe Stays",
     description: "Casa de las Estrellas: tranquila villa en Playacar a 30 segundos de la playa. 3 suites con baño más estudio para 10 huéspedes, jacuzzi en la azotea y alberca.",
     og: "Casa de las Estrellas — Lujo Frente al Mar en Playacar",
     ogDesc: "A treinta segundos de la playa: jacuzzi en la azotea, alberca climatizada y vista al mar. Hasta 10 huéspedes.",
@@ -86,8 +86,8 @@ export const PAGES = {
     ldDesc: "Villa entre viñedos en Valle de Guadalupe, Baja California, con tres suites y un estudio, y arquitectura de concreto y acero corten sobre las hileras de vid."
   },
   "villas/villa-aqua.html": {
-    title: "Villa Aqua — Villa de Lujo con Personal Completo | Mexico Luxe Stays",
-    description: "Villa Aqua: villa de lujo de 6 recámaras con personal completo en Playacar, Playa del Carmen. Alberca, jacuzzi, cancha de squash, gimnasio, chef y mayordomo para hasta 18 huéspedes.",
+    title: "Villa Aqua — Lujo con Personal Completo | Mexico Luxe Stays",
+    description: "Villa Aqua: 6 recámaras con personal completo en Playacar, Playa del Carmen. Alberca, jacuzzi, squash, gimnasio, chef y mayordomo para 18 huéspedes.",
     og: "Villa Aqua — Lujo con Personal Completo en Playacar",
     ogDesc: "Alberca y jacuzzi privados, cancha de squash, gimnasio, chef y mayordomo incluidos. Hasta 18 huéspedes.",
     ldDesc: "Villa de lujo de seis recámaras con personal completo en Playacar, Playa del Carmen, con alberca de forma libre y concierge 24/7."

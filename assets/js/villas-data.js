@@ -21,7 +21,7 @@
    └─────────────────────────────────────────────────────────────────────┘
 
    Content sourced from the client's Hostaway listings (July 2026).
-   Images are verified stock PLACEHOLDERS — replace with real photography.
+   Photos are the villas' own photography (assets/img/villas/).
 
    Villa names are proper nouns and stay identical in both languages;
    `*Es` fields hold the Spanish counterpart used by the language toggle.
@@ -53,13 +53,23 @@ function mlsSrcAttrs(src, sizes = "(max-width: 780px) 100vw, 50vw") {
    "Book now" sends guests to the owner's Hostaway Booking Engine checkout
    for the villa, with dates and guests prefilled — the same URL Hostaway's
    own calendar widget builds: {base}checkout/{listingId}?start=&end=&numberOfGuests=
-   Hostaway's free subdomain for now; switch to
-   "https://reservas.mexicoluxestays.com/" once its CNAME is in the DNS.
-   null falls back to the contact page's booking request. */
-const MLS_BOOKING_ENGINE_URL = "https://reservas-mls.holidayfuture.com/";
+   Own subdomain: CNAME reservas → proxy3.holidayfuture.com in GoDaddy, set in
+   Hostaway under Booking Website → RESERVAS MLS → Settings → Domain & Security.
+   null falls back to the contact page's booking request.
+   The checkout opens in the page's language, always named in the path
+   (/es/ or /en/): without it Hostaway reuses the last language the guest
+   saw there (its NEXT_LOCALE cookie). Spanish is active in the Booking
+   Engine's Translations; its head script sends guests back to the site in
+   the same language. */
+/* TEMPORARY (2026-10-23): null until Hostaway issues the SSL certificate for
+   reservas.mexicoluxestays.com (up to 48h after the DNS change); meanwhile
+   Book Now sends a booking request. Then set it back to
+   "https://reservas.mexicoluxestays.com/". */
+const MLS_BOOKING_ENGINE_URL = null;
 function mlsBookingEngineUrl(villa, checkin, checkout, guests) {
   if (!MLS_BOOKING_ENGINE_URL || !villa || !villa.hostawayListingId) return null;
-  const url = new URL(`checkout/${villa.hostawayListingId}`, MLS_BOOKING_ENGINE_URL);
+  const lang = typeof window.mlsCurrentLang === "function" && window.mlsCurrentLang() === "es" ? "es" : "en";
+  const url = new URL(`${lang}/checkout/${villa.hostawayListingId}`, MLS_BOOKING_ENGINE_URL);
   if (checkin) url.searchParams.set("start", checkin);
   if (checkout) url.searchParams.set("end", checkout);
   url.searchParams.set("numberOfGuests", String(guests || 1));

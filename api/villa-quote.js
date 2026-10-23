@@ -7,6 +7,11 @@
    cacheable GET. Credentials stay server-side (see api/_lib/hostaway.js). */
 
 const { hostawayPost } = require("./_lib/hostaway");
+const { clientIp, createRateLimiter } = require("./_lib/rate-limit");
+
+/* Each new combination of dates/guests is a live call to Hostaway: 30 quotes
+   per IP per minute is far above what a guest picking dates ever sends. */
+const rateLimited = createRateLimiter({ windowMs: 60 * 1000, max: 30 });
 
 /* Same allowlist as villa-live-data.js — the four villas in villas-data.js. */
 const KNOWN_LISTINGS = new Set(["145234", "305921", "144272", "456289"]);
@@ -58,6 +63,11 @@ function toQuote(result, nights) {
 }
 
 module.exports = async (req, res) => {
+  if (rateLimited(clientIp(req))) {
+    res.setHeader("Cache-Control", "no-store");
+    res.status(429).json({ error: "Too many requests" });
+    return;
+  }
   const listingId = String(req.query.listingId || "");
   const { checkin, checkout } = req.query;
   const guests = Number(req.query.guests);

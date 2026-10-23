@@ -28,6 +28,7 @@ const { parsePhoneNumberFromString } = require("libphonenumber-js/max");
 const { hostawayGet, hostawayPost } = require("./_lib/hostaway");
 const { sendFallbackEmail } = require("./_lib/email-fallback");
 const { crossSite } = require("./_lib/same-origin");
+const { clientIp, createRateLimiter } = require("./_lib/rate-limit");
 
 /* Villa slug → Hostaway listing (same IDs as hostawayListingId in
    assets/js/villas-data.js). The listing ID is resolved here, never taken
@@ -49,21 +50,12 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MAX_NIGHTS = 90;
 
-/* Basic abuse limits. In-memory, so per warm serverless instance — enough
-   to stop a double-click or a naive bot loop; Hostaway-side duplicate check
-   below covers repeats that land on another instance. */
-const RATE_LIMIT = { windowMs: 10 * 60 * 1000, max: 5 };
-const recentByIp = new Map();
+/* Basic abuse limits (api/_lib/rate-limit.js): 5 submissions per IP every
+   10 minutes; the Hostaway-side duplicate check below covers repeats that
+   land on another instance. */
+const rateLimited = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 5 });
 const recentSubmissions = new Map(); // dedupe key → timestamp
 const DEDUPE_WINDOW_MS = 30 * 60 * 1000;
-
-function rateLimited(ip) {
-  const now = Date.now();
-  const hits = (recentByIp.get(ip) || []).filter((t) => now - t < RATE_LIMIT.windowMs);
-  hits.push(now);
-  recentByIp.set(ip, hits);
-  return hits.length > RATE_LIMIT.max;
-}
 
 /* Phone (optional): when given, must be a real number for its country
    (Google's libphonenumber rules, full metadata) — Hostaway rejects
@@ -234,8 +226,7 @@ module.exports = async (req, res) => {
     res.status(200).json({ ok: true });
     return;
   }
-  const ip = String(req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "unknown").split(",")[0].trim();
-  if (rateLimited(ip)) return fail(res, 429, "rate_limited");
+  if (rateLimited(clientIp(req))) return fail(res, 429, "rate_limited");
 
   const { data, error } = validate(body);
   if (error) return fail(res, 400, "invalid", { field: error });

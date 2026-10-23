@@ -9,6 +9,12 @@
 
 const { hostawayGet } = require("./_lib/hostaway");
 const { getListingTestimonials } = require("./_lib/hostaway-reviews");
+const { clientIp, createRateLimiter } = require("./_lib/rate-limit");
+
+/* Normally served from the edge cache; a client that keeps missing it
+   (e.g. junk query strings) would call Hostaway every time. A page view
+   needs one or two of these. */
+const rateLimited = createRateLimiter({ windowMs: 60 * 1000, max: 60 });
 
 /* Only these listings are proxied — the four villas in villas-data.js. */
 const KNOWN_LISTINGS = new Set(["145234", "305921", "144272", "456289"]);
@@ -65,6 +71,11 @@ function toMinStay(calendarDays) {
 }
 
 module.exports = async (req, res) => {
+  if (rateLimited(clientIp(req))) {
+    res.setHeader("Cache-Control", "no-store");
+    res.status(429).json({ error: "Too many requests" });
+    return;
+  }
   const listingId = String(req.query.listingId || "");
   if (!KNOWN_LISTINGS.has(listingId)) {
     res.setHeader("Cache-Control", "no-store");

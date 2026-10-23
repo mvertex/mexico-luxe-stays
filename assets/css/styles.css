@@ -1497,8 +1497,10 @@ button { font: inherit; cursor: pointer; }
   position: absolute; top: 1rem; right: 1rem; z-index: 1;
   background: var(--cream); color: var(--green-deep);
   padding: .5rem .9rem; border-radius: 999px; font-size: .68rem; font-weight: 600;
-  letter-spacing: var(--track-caps); text-transform: uppercase; white-space: nowrap;
+  letter-spacing: var(--track-caps); text-transform: uppercase;
   box-shadow: var(--shadow-lift);
+  /* Narrow tiles (tablet, phone landscape): wrap instead of clipping. */
+  max-width: calc(100% - 2rem); text-align: center;
 }
 @media (max-width: 520px) {
   .villa-gallery-tile-badge { font-size: .62rem; padding: .45rem .75rem; right: .75rem; top: .75rem; }
@@ -2215,7 +2217,7 @@ body.sa-modal-open { overflow: hidden; }
   padding: .85rem 1.2rem; cursor: pointer; transition: border-color .2s ease;
 }
 .trip-villa-trigger:hover { border-color: var(--sage); }
-.trip-villa-trigger:focus-visible { outline: none; border-color: var(--sage); }
+.trip-villa-trigger:focus-visible { border-color: var(--sage); }
 .trip-villa-chevron { width: 16px; height: 16px; color: var(--stone-text); flex: none; transition: transform .2s ease; }
 .trip-villa-trigger[aria-expanded="true"] .trip-villa-chevron { transform: rotate(180deg); }
 
@@ -2663,6 +2665,16 @@ a.message-channel-value:focus-visible { outline: 2px solid var(--sage); outline-
     max-width: calc(100vw - 1.8rem - 46px - 1rem);
   }
 }
+/* Desktop browser zoom ≥150% (.qa-compact, set by main.js): the same single
+   button as on phones. */
+.quick-actions.qa-compact .qa-fab { display: grid; }
+.quick-actions.qa-compact .qa-item {
+  transition: opacity .25s var(--ease-out), transform .25s var(--ease-out), visibility 0s linear .25s;
+}
+.quick-actions.qa-compact:not(.is-expanded) .qa-item {
+  opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(14px) scale(.9);
+}
+.quick-actions.qa-compact.is-expanded .qa-item { transition-delay: 0s; }
 
 @media (max-width: 900px) {
   /* Small labels and captions: 12px floor so nothing drops below legible size. */

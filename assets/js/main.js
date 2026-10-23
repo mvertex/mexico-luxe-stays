@@ -436,6 +436,20 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && quickActions.classList.contains("is-expanded")) { setExpanded(false); fab.focus(); }
     });
+    /* Desktop browser zoom (≥150%) shrinks the page around the stack, so it
+       collapses behind the same single button as on phones. Zoom shows as
+       the window's width in screen pixels over its width in CSS pixels;
+       normal desktop use (100%) keeps the three buttons. */
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const syncZoomCompact = () => {
+      const zoom = window.innerWidth ? window.outerWidth / window.innerWidth : 1;
+      const compact = finePointer.matches && zoom >= 1.5;
+      if (compact === quickActions.classList.contains("qa-compact")) return;
+      quickActions.classList.toggle("qa-compact", compact);
+      setExpanded(false);
+    };
+    syncZoomCompact();
+    window.addEventListener("resize", syncZoomCompact);
 
     const qrToggle = quickActions.querySelector("[data-wa-qr-toggle]");
     const qrBox = quickActions.querySelector(".wa-qr");
@@ -484,18 +498,23 @@
 
     const toggle = header.querySelector(".nav-toggle");
     if (toggle) {
+      const closeNav = () => {
+        header.classList.remove("nav-open");
+        toggle.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+      };
       toggle.addEventListener("click", () => {
         const open = header.classList.toggle("nav-open");
         toggle.setAttribute("aria-expanded", open);
         document.body.style.overflow = open ? "hidden" : "";
       });
-      header.querySelectorAll(".main-nav a").forEach((a) =>
-        a.addEventListener("click", () => {
-          header.classList.remove("nav-open");
-          toggle.setAttribute("aria-expanded", "false");
-          document.body.style.overflow = "";
-        })
-      );
+      header.querySelectorAll(".main-nav a").forEach((a) => a.addEventListener("click", closeNav));
+      /* Escape closes the menu; so does growing past the mobile layout
+         (styles.css, max-width: 900px) — otherwise the page stays locked. */
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && header.classList.contains("nav-open")) { closeNav(); toggle.focus(); }
+      });
+      window.matchMedia("(min-width: 901px)").addEventListener("change", (e) => { if (e.matches) closeNav(); });
     }
   }
 
@@ -856,6 +875,7 @@
   if (featuredShowcase && typeof MLS_VILLAS !== "undefined") {
     const list = featuredShowcase.querySelector("[data-featured-list]");
     const imgEl = featuredShowcase.querySelector("[data-featured-img]");
+    const villaAlt = (villa) => (typeof window.mlsCurrentLang === "function" && window.mlsCurrentLang() === "es" && villa.imageAltEs) || villa.imageAlt;
     let swapTimer = null;
 
     const previewVilla = (villa) => {
@@ -864,7 +884,7 @@
       imgEl.style.opacity = "0";
       swapTimer = setTimeout(() => {
         mlsSetImg(imgEl, villa.image);
-        imgEl.alt = villa.imageAlt;
+        imgEl.alt = villaAlt(villa);
         imgEl.style.opacity = "1";
       }, prefersReducedMotion ? 0 : 220);
     };
@@ -886,7 +906,7 @@
         .join("");
 
       mlsSetImg(imgEl, villas[0].image);
-      imgEl.alt = villas[0].imageAlt;
+      imgEl.alt = villaAlt(villas[0]);
 
       const items = list.querySelectorAll(".featured-item");
       items.forEach((item, i) => {
@@ -974,8 +994,8 @@
     };
 
     /* Pre-fill from query string (home search widget lands here).
-       HOSTAWAY: checkin/checkout params are captured below — feed them to the
-       availability endpoint once connected; today they only inform the inquiry. */
+       checkin/checkout narrow the list to villas free on those nights, using
+       the live Hostaway calendar (mlsVillaCanHost). */
     const params = new URLSearchParams(window.location.search);
     if (params.get("destination")) selDest.value = params.get("destination");
     if (params.get("guests")) {
@@ -1172,7 +1192,7 @@
       mapMarkers = mapVillas.map((villa) => {
         const marker = L.marker([villa.lat, villa.lng], { icon: mlsBrandPinIcon(villa), title: villa.name })
           .addTo(leafletMap);
-        marker.on("click", () => window.open(mlsGoogleMapsUrl(villa), "_blank", "noopener"));
+        marker.on("click", () => window.open(mlsGoogleMapsUrl(villa), "_blank", "noopener,noreferrer"));
         return marker;
       });
     }
@@ -1183,7 +1203,7 @@
       leafletMap = L.map(destinationMapEl, { scrollWheelZoom: false });
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>'
       }).addTo(leafletMap);
 
       renderMapMarkers();
@@ -1275,7 +1295,7 @@
         });
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           maxZoom: 19,
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>'
         }).addTo(map);
 
         destVillas.forEach((v) => {
@@ -1284,7 +1304,7 @@
             title: v.name,
             zIndexOffset: v.slug === villa.slug ? 1000 : 0
           }).addTo(map);
-          marker.on("click", () => window.open(mlsGoogleMapsUrl(v), "_blank", "noopener"));
+          marker.on("click", () => window.open(mlsGoogleMapsUrl(v), "_blank", "noopener,noreferrer"));
         });
 
         if (destVillas.length > 1) {
@@ -1776,7 +1796,7 @@
             <div class="sa-contact-cta">
               <p>${t("detail.services.contactNote")}</p>
               <a class="btn btn-solid" href="#book" data-sa-inquire>${t("detail.sa.contactCta")}</a>
-              <p class="sa-contact-alt">${t("detail.sa.contactAlt")} <a href="https://wa.me/5219848079475?text=${encodeURIComponent(t("detail.sa.inquireNote").replace("{villa}", villa.name))}" target="_blank" rel="noopener">WhatsApp</a></p>
+              <p class="sa-contact-alt">${t("detail.sa.contactAlt")} <a href="https://wa.me/529848079475?text=${encodeURIComponent(t("detail.sa.inquireNote").replace("{villa}", villa.name))}" target="_blank" rel="noopener noreferrer">WhatsApp</a></p>
             </div>`;
 
           saModalContent = { included: includedModalHtml, extra: extraModalHtml, amenities: amenitiesModalHtml };
@@ -1859,7 +1879,7 @@
             )
             .join("");
           const dotsHtml = pairs
-            .map((_, i) => `<button type="button" class="${i === 0 ? "is-active" : ""}" aria-label="Testimonial ${i + 1}"></button>`)
+            .map((_, i) => `<button type="button" class="${i === 0 ? "is-active" : ""}" aria-label="${t("a11y.testimonialDot").replace("{n}", i + 1)}"></button>`)
             .join("");
           testimonialsEl.innerHTML = `<div class="testimonial-stage">${slidesHtml}</div><div class="testimonial-dots" role="group" aria-label="${t("detail.testimonials.chooseLabel")}">${dotsHtml}</div>`;
           initTestimonialRotator(testimonialsEl);
@@ -2650,7 +2670,7 @@
       }
       const msg = t("contact.form.capacityNotice").replace("{max}", currentVillaGuests);
       capacityNoticeEl.innerHTML =
-        `${msg} <a href="https://wa.me/5219848079475" target="_blank" rel="noopener">${t("contact.form.capacityNoticeCta")}</a>.`;
+        `${msg} <a href="https://wa.me/529848079475" target="_blank" rel="noopener noreferrer">${t("contact.form.capacityNoticeCta")}</a>.`;
       capacityNoticeEl.hidden = false;
     };
     /* Adults + children combined can't exceed the selected villa's real
@@ -3281,7 +3301,7 @@
 
     const submitBtns = [...contactForm.querySelectorAll('button[type="submit"]')];
     const CONTACT_LINKS = {
-      whatsapp: { text: "+52 984 807 9475", href: "https://wa.me/5219848079475" },
+      whatsapp: { text: "+52 984 807 9475", href: "https://wa.me/529848079475" },
       email: { text: "info@mexicoluxestays.com", href: "mailto:info@mexicoluxestays.com" },
     };
     /* Messages are fixed i18n strings; {whatsapp}/{email} become real links,
@@ -3530,7 +3550,7 @@
     const submitBtn = messageForm.querySelector('button[type="submit"]');
     const consentInput = messageForm.querySelector("[data-message-consent]");
     const LINKS = {
-      whatsapp: { text: "+52 984 807 9475", href: "https://wa.me/5219848079475" },
+      whatsapp: { text: "+52 984 807 9475", href: "https://wa.me/529848079475" },
       email: { text: "info@mexicoluxestays.com", href: "mailto:info@mexicoluxestays.com" },
     };
     /* Fixed i18n strings; {whatsapp}/{email} become links, built as DOM nodes. */
@@ -3684,7 +3704,7 @@
         `Name: ${f.get("name")}`,
         `Mobile: ${f.get("phone")}`
       ];
-      window.open("https://wa.me/5219848079475?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener");
+      window.open("https://wa.me/529848079475?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener,noreferrer");
       const status = form.querySelector("[data-form-status]");
       if (status) status.textContent = t("detail.bookingCta.status");
     });

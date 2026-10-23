@@ -18,7 +18,7 @@ const VILLAS = [
 
 /* Main site. */
 const MAIN_HOST = "www.mexicoluxestays.com";
-const MAIN_HOSTS = [MAIN_HOST, "mexicoluxestays.com", "mexico-luxe-stays.vercel.app"];
+const MAIN_HOSTS = [MAIN_HOST, "mexicoluxestays.com"];
 
 export const config = { matcher: ["/((?!api/|assets/|es/assets/).*)"] };
 

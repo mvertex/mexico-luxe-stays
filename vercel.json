@@ -144,6 +144,17 @@
   ],
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "mexico-luxe-stays.vercel.app"
+        }
+      ],
+      "destination": "https://www.mexicoluxestays.com/:path*",
+      "permanent": true
+    },
+    {
       "source": "/villas/casa-corazon-luxe.html",
       "destination": "/villas/casa-corazon.html",
       "permanent": true
@@ -161,6 +172,26 @@
     {
       "source": "/es/villas/casa-corazon-luxe",
       "destination": "/es/villas/casa-corazon.html",
+      "permanent": true
+    },
+    {
+      "source": "/:page(about|villas|faq|contact|terms|privacy|playa-del-carmen|valle-de-guadalupe)",
+      "destination": "/:page.html",
+      "permanent": true
+    },
+    {
+      "source": "/es/:page(about|villas|faq|contact|terms|privacy|playa-del-carmen|valle-de-guadalupe)",
+      "destination": "/es/:page.html",
+      "permanent": true
+    },
+    {
+      "source": "/villas/casa-de-las-estrellas",
+      "destination": "/villas/casa-de-las-estrellas.html",
+      "permanent": true
+    },
+    {
+      "source": "/es/villas/casa-de-las-estrellas",
+      "destination": "/es/villas/casa-de-las-estrellas.html",
       "permanent": true
     },
     {
