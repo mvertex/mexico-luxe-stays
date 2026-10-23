@@ -61,11 +61,7 @@ function mlsSrcAttrs(src, sizes = "(max-width: 780px) 100vw, 50vw") {
    saw there (its NEXT_LOCALE cookie). Spanish is active in the Booking
    Engine's Translations; its head script sends guests back to the site in
    the same language. */
-/* TEMPORARY (2026-10-23): null until Hostaway issues the SSL certificate for
-   reservas.mexicoluxestays.com (up to 48h after the DNS change); meanwhile
-   Book Now sends a booking request. Then set it back to
-   "https://reservas.mexicoluxestays.com/". */
-const MLS_BOOKING_ENGINE_URL = null;
+const MLS_BOOKING_ENGINE_URL = "https://reservas.mexicoluxestays.com/";
 function mlsBookingEngineUrl(villa, checkin, checkout, guests) {
   if (!MLS_BOOKING_ENGINE_URL || !villa || !villa.hostawayListingId) return null;
   const lang = typeof window.mlsCurrentLang === "function" && window.mlsCurrentLang() === "es" ? "es" : "en";
