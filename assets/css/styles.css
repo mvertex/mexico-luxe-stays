@@ -980,7 +980,17 @@ button { font: inherit; cursor: pointer; }
   gap: clamp(2.5rem, 5vw, 5rem);
 }
 .testimonial-quote-block { flex: 1 1 0; min-width: 0; max-width: 26em; }
-.testimonial-quote-block .testimonial-quote { font-size: clamp(1.2rem, 2.2vw, 1.7rem); }
+.testimonial-quote-block .testimonial-quote {
+  font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; line-clamp: 6; overflow: hidden;
+}
+.testimonial-quote-block.is-expanded .testimonial-quote { display: block; -webkit-line-clamp: unset; line-clamp: none; overflow: visible; }
+.testimonial-more {
+  margin-top: 1.1rem; padding: .35rem 0; border: 0; background: none; cursor: pointer;
+  font-size: .72rem; font-weight: 600; letter-spacing: var(--track-caps); text-transform: uppercase;
+  color: var(--gold); text-decoration: underline; text-underline-offset: .35em;
+}
+.testimonial-more[hidden] { display: none; }
 @media (max-width: 720px) {
   .testimonial-pair { flex-direction: column; gap: 2.75rem; }
   .testimonial-quote-block { max-width: 100%; }

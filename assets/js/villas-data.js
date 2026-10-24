@@ -181,6 +181,8 @@ const MLS_VILLAS = [
     serviceImagePositions: { chef: "center 22%" },
     gallery: [
       { key: "outdoor", images: [
+        { src: "/assets/img/villas/villa-aqua-outdoor-58.webp",
+          alt: "Aerial view of the villa's white towers, solar roof and free-form pool among the trees", altEs: "Vista aérea de las torres blancas de la villa, su techo solar y la alberca de forma libre entre los árboles" },
         { src: "/assets/img/villas/villa-aqua-outdoor-59.webp",
           alt: "The curved glass towers rising above the free-form pool", altEs: "Las torres curvas de cristal sobre la alberca de forma libre" },
         { src: "/assets/img/villas/villa-aqua-outdoor-55.webp",
@@ -189,8 +191,6 @@ const MLS_VILLAS = [
           alt: "Aerial view of Villa Aqua beside the Playacar golf course, with the Caribbean on the horizon", altEs: "Vista aérea de Villa Aqua junto al campo de golf de Playacar, con el Caribe en el horizonte" },
         { src: "/assets/img/villas/villa-aqua-outdoor-57.webp",
           alt: "Overhead view of the pool curving around the villa, edged by jungle", altEs: "Vista cenital de la alberca rodeando la villa, junto a la selva" },
-        { src: "/assets/img/villas/villa-aqua-outdoor-58.webp",
-          alt: "Aerial view of the villa's white towers, solar roof and free-form pool among the trees", altEs: "Vista aérea de las torres blancas de la villa, su techo solar y la alberca de forma libre entre los árboles" },
         { src: "/assets/img/villas/villa-aqua-outdoor-60.webp",
           alt: "The glass facade reflected in the still pool", altEs: "La fachada de cristal reflejada en la alberca" },
         { src: "/assets/img/villas/villa-aqua-outdoor-01.webp",

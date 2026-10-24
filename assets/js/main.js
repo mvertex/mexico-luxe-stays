@@ -1515,13 +1515,21 @@
          rebuilds the slide markup from scratch) rather than queried once at
          page load, so the dots/interval never point at detached nodes. */
       let testimonialTimer = null;
+      let testimonialResize = null;
       const initTestimonialRotator = (scope) => {
         clearInterval(testimonialTimer);
         const tSlides = scope.querySelectorAll(".testimonial-slide");
         const tDots = scope.querySelectorAll(".testimonial-dots button");
         if (!tSlides.length) return;
         let current = 0;
+        const collapseAll = () => scope.querySelectorAll(".testimonial-quote-block.is-expanded").forEach((block) => {
+          block.classList.remove("is-expanded");
+          const btn = block.querySelector(".testimonial-more");
+          btn.setAttribute("aria-expanded", "false");
+          btn.textContent = t("detail.testimonials.readMore");
+        });
         const show = (i) => {
+          collapseAll();
           tSlides[current].classList.remove("is-active");
           tDots[current]?.classList.remove("is-active");
           current = (i + tSlides.length) % tSlides.length;
@@ -1539,6 +1547,33 @@
             play();
           })
         );
+        /* Long reviews are clamped to a few lines (CSS) so one essay doesn't
+           stretch the whole section; "Read more" only shows on the ones that
+           actually overflow, and reading one pauses the rotation. */
+        const syncMoreButtons = () => scope.querySelectorAll(".testimonial-quote-block:not(.is-expanded)").forEach((block) => {
+          const quote = block.querySelector(".testimonial-quote");
+          block.querySelector(".testimonial-more").hidden = quote.scrollHeight <= quote.clientHeight + 1;
+        });
+        scope.querySelectorAll(".testimonial-more").forEach((btn) =>
+          btn.addEventListener("click", () => {
+            const block = btn.closest(".testimonial-quote-block");
+            const expand = !block.classList.contains("is-expanded");
+            if (!expand) {
+              collapseAll();
+              play();
+              return;
+            }
+            clearInterval(testimonialTimer);
+            block.classList.add("is-expanded");
+            btn.setAttribute("aria-expanded", "true");
+            btn.textContent = t("detail.testimonials.readLess");
+          })
+        );
+        syncMoreButtons();
+        document.fonts?.ready.then(syncMoreButtons);
+        window.removeEventListener("resize", testimonialResize);
+        testimonialResize = syncMoreButtons;
+        window.addEventListener("resize", testimonialResize);
         play();
       };
 
@@ -1862,6 +1897,7 @@
           const quoteHtml = (r) => `<blockquote class="testimonial-quote-block">
                 ${ratingHtml(r.rating)}
                 <p class="testimonial-quote">${escapeText(pick(r.quote))}</p>
+                <button type="button" class="testimonial-more" aria-expanded="false" hidden>${t("detail.testimonials.readMore")}</button>
                 <footer class="testimonial-attr">
                   <div class="name">${escapeText(r.name || t("testimonials.verifiedGuest"))}</div>
                   <div class="villa">${escapeText(pick(r.context))}</div>
