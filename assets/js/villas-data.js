@@ -55,19 +55,16 @@ function mlsSrcAttrs(src, sizes = "(max-width: 780px) 100vw, 50vw") {
    own calendar widget builds: {base}checkout/{listingId}?start=&end=&numberOfGuests=
    Own subdomain: CNAME reservas → proxy3.holidayfuture.com in GoDaddy, set in
    Hostaway under Booking Website → RESERVAS MLS → Settings → Domain & Security.
-   null falls back to the contact page's booking request.
+   null — or a villa marked inquireOnly — falls back to the contact page's
+   booking request.
    The checkout opens in the page's language, always named in the path
    (/es/ or /en/): without it Hostaway reuses the last language the guest
    saw there (its NEXT_LOCALE cookie). Spanish is active in the Booking
    Engine's Translations; its head script sends guests back to the site in
    the same language. */
-/* TEMPORARY (2026-10-23): null until Hostaway issues the SSL certificate for
-   reservas.mexicoluxestays.com (up to 48h after the DNS change); meanwhile
-   Book Now sends a booking request. Then set it back to
-   "https://reservas.mexicoluxestays.com/". */
-const MLS_BOOKING_ENGINE_URL = null;
+const MLS_BOOKING_ENGINE_URL = "https://reservas.mexicoluxestays.com/";
 function mlsBookingEngineUrl(villa, checkin, checkout, guests) {
-  if (!MLS_BOOKING_ENGINE_URL || !villa || !villa.hostawayListingId) return null;
+  if (!MLS_BOOKING_ENGINE_URL || !villa || !villa.hostawayListingId || villa.inquireOnly) return null;
   const lang = typeof window.mlsCurrentLang === "function" && window.mlsCurrentLang() === "es" ? "es" : "en";
   const url = new URL(`${lang}/checkout/${villa.hostawayListingId}`, MLS_BOOKING_ENGINE_URL);
   if (checkin) url.searchParams.set("start", checkin);
@@ -425,7 +422,7 @@ const MLS_VILLAS = [
       },
       {
         q: { en: "What payment methods do you accept, and what is the cancellation policy?", es: "¿Qué métodos de pago aceptan y cuál es la política de cancelación?" },
-        a: { en: "We accept wire transfer or credit card, in USD or MXN. Online payments are made by card; to pay by wire transfer, contact our team and we'll arrange it. Payment is made in two parts: 50% one day after booking and the remaining 50% 45 days before arrival; bookings made less than 45 days before arrival are paid in full at booking. Reservations are fully refundable up to 60 days before arrival. From 59 to 45 days before arrival, a 50% cancellation penalty applies. Reservations cancelled 44 days or less before arrival are non-refundable.", es: "Aceptamos transferencia bancaria o tarjeta de crédito, en USD o MXN. El pago en línea es con tarjeta; si prefieres pagar por transferencia, contacta a nuestro equipo y lo coordinamos. El pago se hace en dos partes: 50% un día después de reservar y el 50% restante 45 días antes de la llegada; las reservas hechas con menos de 45 días de anticipación se pagan completas al reservar. Las reservaciones son totalmente reembolsables hasta 60 días antes de la llegada. De 59 a 45 días antes de la llegada, aplica una penalización de cancelación del 50%. Las reservaciones canceladas 44 días o menos antes de la llegada no son reembolsables." }
+        a: { en: "We accept wire transfer or credit card, in USD or MXN. Online payments are made by card; to pay by wire transfer, contact our team and we'll arrange it. Payment is made in two parts: 50% one day after booking and the remaining 50% 45 days before arrival; bookings made less than 45 days before arrival are paid in full at booking. The cancellation policy is shown before you pay, on the checkout page or in the booking confirmation from our team, and it is the one that applies to your reservation.", es: "Aceptamos transferencia bancaria o tarjeta de crédito, en USD o MXN. El pago en línea es con tarjeta; si prefieres pagar por transferencia, contacta a nuestro equipo y lo coordinamos. El pago se hace en dos partes: 50% un día después de reservar y el 50% restante 45 días antes de la llegada; las reservas hechas con menos de 45 días de anticipación se pagan completas al reservar. La política de cancelación se muestra antes de pagar, en la página de pago o en la confirmación de reserva de nuestro equipo, y es la que aplica a tu reservación." }
       },
       {
         q: { en: "What is the bedroom and bed configuration?", es: "¿Cuál es la configuración de recámaras y camas?" },
@@ -703,7 +700,7 @@ const MLS_VILLAS = [
       },
       {
         q: { en: "What is the cancellation policy, and how is payment made?", es: "¿Cuál es la política de cancelación y cómo se paga?" },
-        a: { en: "On our flexible rate, cancelling more than 30 days before arrival gets you a 100% refund if you paid by bank wire transfer, or 95% if you paid by credit card. Cancelling 15 to 30 days before arrival refunds 50%, and cancellations less than 15 days before arrival are non-refundable. Our Non-Refundable Rate saves 8%: full payment is required at the time of booking, and voluntary cancellations are non-refundable. This rate is available on request, so please consult our team. All cancellation requests must be submitted in writing. The applicable cancellation terms are confirmed at the time of booking, and all terms are subject to applicable law. On the flexible rate, payment is made in two parts: 50% one day after booking and the remaining 50% 45 days before arrival; bookings made less than 45 days before arrival are paid in full at booking. We accept wire transfer or credit card, in USD or MXN. Online payments are made by card; to pay by wire transfer, contact our team and we'll arrange it.", es: "Con nuestra tarifa flexible, si cancelas con más de 30 días de anticipación a la llegada recibes un reembolso del 100% si pagaste por transferencia bancaria, o del 95% si pagaste con tarjeta de crédito. Si cancelas entre 15 y 30 días antes de la llegada se reembolsa el 50%, y las cancelaciones con menos de 15 días de anticipación no son reembolsables. Nuestra tarifa no reembolsable ahorra 8%: se paga el total al momento de reservar y las cancelaciones voluntarias no son reembolsables. Esta tarifa está disponible a petición; consulta con nuestro equipo. Toda solicitud de cancelación debe hacerse por escrito. Los términos de cancelación aplicables se confirman al momento de reservar y todos los términos están sujetos a la ley aplicable. Con la tarifa flexible, el pago se hace en dos partes: 50% un día después de reservar y el 50% restante 45 días antes de la llegada; las reservas hechas con menos de 45 días de anticipación se pagan completas al reservar. Aceptamos transferencia bancaria o tarjeta de crédito, en USD o MXN. El pago en línea es con tarjeta; si prefieres pagar por transferencia, contacta a nuestro equipo y lo coordinamos." }
+        a: { en: "The cancellation policy is shown before you pay, on the checkout page or in the booking confirmation from our team, and it is the one that applies to your reservation. All cancellation requests must be submitted in writing. Payment is made in two parts: 50% one day after booking and the remaining 50% 45 days before arrival; bookings made less than 45 days before arrival are paid in full at booking. We accept wire transfer or credit card, in USD or MXN. Online payments are made by card; to pay by wire transfer, contact our team and we'll arrange it.", es: "La política de cancelación se muestra antes de pagar, en la página de pago o en la confirmación de reserva de nuestro equipo, y es la que aplica a tu reservación. Toda solicitud de cancelación debe hacerse por escrito. El pago se hace en dos partes: 50% un día después de reservar y el 50% restante 45 días antes de la llegada; las reservas hechas con menos de 45 días de anticipación se pagan completas al reservar. Aceptamos transferencia bancaria o tarjeta de crédito, en USD o MXN. El pago en línea es con tarjeta; si prefieres pagar por transferencia, contacta a nuestro equipo y lo coordinamos." }
       }
     ]
   },
@@ -1137,7 +1134,7 @@ const MLS_VILLAS = [
       },
       {
         q: { en: "What is the cancellation policy?", es: "¿Cuál es la política de cancelación?" },
-        a: { en: "Cancellations made 90 days or more before arrival carry a 15% penalty. From 89 to 45 days before arrival, 50% is refunded. Cancellations made less than 45 days before check-in are non-refundable. Nights from December 20 to January 4 (Christmas and New Year) are non-refundable; any other nights in the same reservation follow this policy. Penalties are calculated on the total amount of the reservation or on the amount paid to date, as applicable.", es: "Las cancelaciones hechas 90 días o más antes de la llegada tienen una penalización del 15%. De 89 a 45 días antes de la llegada, se reembolsa el 50%. Las cancelaciones hechas menos de 45 días antes del check-in no son reembolsables. Las noches del 20 de diciembre al 4 de enero (Navidad y Año Nuevo) no son reembolsables; las demás noches de la misma reservación siguen esta política. Las penalizaciones se calculan sobre el monto total de la reservación o sobre lo pagado hasta el momento, según corresponda." }
+        a: { en: "The cancellation policy is shown before you pay, on the checkout page or in the booking confirmation from our team, and it is the one that applies to your reservation.", es: "La política de cancelación se muestra antes de pagar, en la página de pago o en la confirmación de reserva de nuestro equipo, y es la que aplica a tu reservación." }
       }
     ]
   },
@@ -1437,7 +1434,7 @@ const MLS_VILLAS = [
       },
       {
         q: { en: "What is the cancellation policy?", es: "¿Cuál es la política de cancelación?" },
-        a: { en: "Cancellations made 90 days or more before arrival carry a 15% penalty. From 89 to 45 days before arrival, 50% is refunded. Cancellations made less than 45 days before check-in are non-refundable. Nights from December 20 to January 4 (Christmas and New Year) are non-refundable; any other nights in the same reservation follow this policy. Penalties are calculated on the total amount of the reservation or on the amount paid to date, as applicable.", es: "Las cancelaciones hechas 90 días o más antes de la llegada tienen una penalización del 15%. De 89 a 45 días antes de la llegada, se reembolsa el 50%. Las cancelaciones hechas menos de 45 días antes del check-in no son reembolsables. Las noches del 20 de diciembre al 4 de enero (Navidad y Año Nuevo) no son reembolsables; las demás noches de la misma reservación siguen esta política. Las penalizaciones se calculan sobre el monto total de la reservación o sobre lo pagado hasta el momento, según corresponda." }
+        a: { en: "The cancellation policy is shown before you pay, on the checkout page or in the booking confirmation from our team, and it is the one that applies to your reservation.", es: "La política de cancelación se muestra antes de pagar, en la página de pago o en la confirmación de reserva de nuestro equipo, y es la que aplica a tu reservación." }
       },
       {
         q: { en: "How does pricing work, and what's the minimum stay?", es: "¿Cómo funciona el precio y cuál es la estancia mínima?" },

@@ -10,7 +10,7 @@ Este documento sustituye a [AUDITORIA.md](AUDITORIA.md) (16 de octubre). Resume 
 
 La web está publicada y verificada. Sin errores en el navegador, en móvil y escritorio, en las páginas EN y ES. Lighthouse da 100 en accesibilidad, buenas prácticas y SEO, y 88–100 en rendimiento.
 
-**Lo único abierto con impacto:** "Book Now" envía una **solicitud de reserva** en lugar de llevar al pago. El SSL de `reservas.mexicoluxestays.com` ya está emitido (24 de octubre), pero el pago directo no se activa hasta que las políticas de cancelación del checkout de Hostaway coincidan con las de la web (pendiente 4). Ver la sección 3.
+**Pago en línea activo desde el 24 de octubre** para Villa Aqua y Kasa Kefi: "Book Now" lleva al checkout de Hostaway en `reservas.mexicoluxestays.com`. Casa Corazón y Casa de las Estrellas siguen como solo consultas (`inquireOnly` en `villas-data.js`). La web ya no publica porcentajes de cancelación: dice que la política se muestra antes de pagar y que esa es la que aplica, de modo que manda la que esté configurada en Hostaway.
 
 ---
 
@@ -32,7 +32,7 @@ node serve.mjs                        # http://localhost:3000 (solo estáticos)
 
 ## 3. URGENTE: terminar el dominio del checkout
 
-> **Actualización 24 de octubre:** el certificado SSL ya está emitido (Let's Encrypt) y el checkout carga en las cuatro villas, en EN y ES. Antes de seguir los pasos de "Cuando el SSL funcione", corregir las políticas de cancelación en Hostaway (sección 4, pendiente 4): hoy el checkout muestra "92% refund up to 60 days / 42% up to 30 days" (Villa Aqua: 92% / 30 días, 50% / 15 días), que contradice los Términos de la web.
+> **Actualización 24 de octubre: hecho.** SSL emitido y pago en línea activado (`villas-data.js?v=38`). Las políticas de cancelación de la web se sustituyeron por "se muestra antes de pagar y es la que aplica", así que no hay que tocar las de Hostaway. Lo que sigue queda como referencia.
 
 **Qué se hizo el 23 de octubre:**
 
@@ -86,10 +86,10 @@ El script de "volver a la web" del checkout no hay que tocarlo. Ya apunta a `htt
 
 | # | Qué | Dónde | Quién |
 |---|---|---|---|
-| 1 | Terminar el dominio del checkout | Sección 3 | Diego |
+| 1 | ~~Terminar el dominio del checkout~~ — **hecho** (24 de octubre). Falta solo un pago de prueba real, cancelándolo después en Hostaway. | Web en vivo | Diego |
 | 2 | **Pruebas reales:** solicitud de reserva desde una villa (debe llegar a Hostaway con fechas), mensaje desde "Contact us", escanear el QR de WhatsApp, llamar a los dos teléfonos, revisar en un iPhone | Web en vivo | Diego / equipo |
 | 3 | **Webs viejas de Hostaway que reclaman nuestros dominios:** "MLS" (`www.mexicoluxestays.com`) y "kasakefi" (`www.kasakefi.mx`). Los dominios ya apuntan a Vercel, así que hoy no afectan, pero conviene despublicarlas o quitarles el dominio. Confirmar antes con la dueña que no las usa. "CasaCorazonpdc.com" figura en `booking.casacorazonpdc.com`, pero ese registro no existe en el DNS. | Hostaway → Booking Website | Diego + dueña |
-| 4 | **Políticas de cancelación en Hostaway:** el checkout de Villa Aqua y el de Kasa Kefi muestran "92% refund up to 30 days / 50% up to 15 days", que no es la política de la dueña (la correcta está en la web, Términos y FAQ de cada villa). Corregir en el canal *Direct* sin tocar las de otros canales. | Hostaway → Listings → la villa → Edit → Cancellation policy | Diego |
+| 4 | ~~Políticas de cancelación en Hostaway~~ — **resuelto en la web** (24 de octubre): la web ya no publica porcentajes; aplica la política del checkout de Hostaway. | — | — |
 | 5 | ~~Cupón `NONREFUNDABLE8` de Kasa Kefi~~ — **descartado** (24 de octubre): la dueña no envió la información. | — | — |
 | 6 | **Textos de Hostaway en el checkout:** el extra "Late Check Out Fee" de Kasa Kefi sale en inglés en el checkout en español (falta su traducción). Los errores del extra de Casa Corazón ya no aparecen (revisado el 24 de octubre). | Hostaway → Listings → Kasa Kefi → extras / traducción | Diego o dueña |
 | 7 | **Teléfono:** confirmar con la próxima consulta real que Hostaway acepta los números que la web da por válidos (la web valida con libphonenumber). | Hostaway | Diego |
