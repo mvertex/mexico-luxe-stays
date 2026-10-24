@@ -10,7 +10,7 @@ Este documento sustituye a [AUDITORIA.md](AUDITORIA.md) (16 de octubre). Resume 
 
 La web está publicada y verificada. Sin errores en el navegador, en móvil y escritorio, en las páginas EN y ES. Lighthouse da 100 en accesibilidad, buenas prácticas y SEO, y 88–100 en rendimiento.
 
-**Pago en línea activo desde el 24 de octubre** para Villa Aqua y Kasa Kefi: "Book Now" lleva al checkout de Hostaway en `reservas.mexicoluxestays.com`. Casa Corazón y Casa de las Estrellas siguen como solo consultas (`inquireOnly` en `villas-data.js`). La web ya no publica porcentajes de cancelación: dice que la política se muestra antes de pagar y que esa es la que aplica, de modo que manda la que esté configurada en Hostaway.
+**Pago en línea activo desde el 24 de octubre** en las cuatro villas: "Book Now" lleva al checkout de Hostaway en `reservas.mexicoluxestays.com`. La web ya no publica porcentajes de cancelación ni plazos de pago: dice que la política se muestra antes de pagar y que eso es lo que aplica, de modo que manda lo que esté configurado en Hostaway.
 
 ---
 
