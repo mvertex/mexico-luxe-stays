@@ -12,14 +12,17 @@
    scale is detected per channel from the data instead of assumed — a
    channel whose ratings go above 5 is on a 10-point scale and is halved
    to stars; otherwise its ratings are already stars. Checked in
-   production: Airbnb (2018) and channel 2013 both rate out of 10. A review
-   without a rating is shown without stars rather than defaulting to five. */
+   production: Airbnb (2018) and channel 2013 both rate out of 10.
+
+   Only reviews of MIN_STARS or more are shown (owner's decision, 24 Oct
+   2026); a review without a rating can't be checked, so it isn't shown. */
 
 const { hostawayGet } = require("./hostaway");
 
 const PAGE_SIZE = 500;
 const MAX_PAGES = 50;
 const CACHE_MS = 10 * 60 * 1000;
+const MIN_STARS = 4;
 
 let cachedReviews = null;
 let cachedAt = 0;
@@ -99,7 +102,8 @@ async function getListingTestimonials(listingId) {
         quote: { en: text, es: text },
         context: { en: context, es: context },
       };
-    });
+    })
+    .filter((t) => t.rating !== null && t.rating >= MIN_STARS);
   /* Non-personal summary so the detected scale can be checked against
      live data: reviews read account-wide and each channel's scale. */
   const meta = {
