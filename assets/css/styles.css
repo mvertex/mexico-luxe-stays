@@ -1623,7 +1623,7 @@ button { font: inherit; cursor: pointer; }
 }
 .villa-price-notes-textarea::placeholder { color: rgba(20,20,20,.4); }
 .villa-price-notes-textarea:hover { border-color: rgba(20, 20, 20, .3); }
-.villa-price-notes-textarea:focus-visible { outline: none; border-color: var(--sage); }
+.villa-price-notes-textarea:focus-visible { outline: none; border-color: var(--sage); box-shadow: 0 0 0 1px var(--sage); }
 .villa-price-note { font-size: .74rem; line-height: 1.5; color: var(--stone-text); text-align: center; margin: 1rem 0 0; }
 
 /* ---------- Villa booking: price breakdown + Book now under the guests
@@ -2327,7 +2327,7 @@ body.sa-modal-open { overflow: hidden; }
   padding: .7rem .9rem; transition: border-color .2s ease;
 }
 .trip-text-input:hover { border-color: rgba(20,20,20,.35); }
-.trip-text-input:focus-visible { outline: none; border-color: var(--sage); }
+.trip-text-input:focus-visible { outline: none; border-color: var(--sage); box-shadow: 0 0 0 1px var(--sage); }
 .trip-text-input[aria-invalid="true"] { border-color: var(--error); }
 /* Phone: country picker (sets the dial code) + number on one line. */
 .trip-phone-row { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: .5rem; }
@@ -2350,7 +2350,7 @@ body.sa-modal-open { overflow: hidden; }
 }
 .trip-notes-textarea::placeholder { color: rgba(20,20,20,.4); }
 .trip-notes-textarea:hover { border-color: rgba(20,20,20,.35); }
-.trip-notes-textarea:focus-visible { outline: none; border-color: var(--sage); }
+.trip-notes-textarea:focus-visible { outline: none; border-color: var(--sage); box-shadow: 0 0 0 1px var(--sage); }
 
 .trip-price { text-align: center; }
 .trip-price-label { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--stone-text); margin: 0; }

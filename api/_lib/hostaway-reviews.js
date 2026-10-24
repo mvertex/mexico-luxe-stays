@@ -93,7 +93,8 @@ async function getListingTestimonials(listingId) {
       const month = (r.departureDate || reviewDate(r)).slice(0, 7);
       const context = [r.channelName, month].filter(Boolean).join(" · ");
       return {
-        name: shortName(r.guestName || r.reviewerName) || "Verified guest",
+        // null → the page shows "Verified guest" in its own language.
+        name: shortName(r.guestName || r.reviewerName),
         rating: toStars(r, isTenPoint),
         quote: { en: text, es: text },
         context: { en: context, es: context },

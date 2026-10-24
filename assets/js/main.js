@@ -1863,7 +1863,7 @@
                 ${ratingHtml(r.rating)}
                 <p class="testimonial-quote">${escapeText(pick(r.quote))}</p>
                 <footer class="testimonial-attr">
-                  <div class="name">${escapeText(r.name)}</div>
+                  <div class="name">${escapeText(r.name || t("testimonials.verifiedGuest"))}</div>
                   <div class="villa">${escapeText(pick(r.context))}</div>
                 </footer>
               </blockquote>`;
@@ -2389,15 +2389,19 @@
           }
 
           const row = (label, value, cls = "") => `<div class="villa-book-row${cls}"><dt>${label}</dt><dd>${value}</dd></div>`;
+          // Fee names come from Hostaway's listing setup: text, never markup.
+          const escapeText = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => (
+            { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+          ));
           let rows = "";
           if (q) {
             rows = row(`${money(Math.round((q.accommodation / q.nights) * 100) / 100)} × ${nightsLabel(q.nights)}`, money(q.accommodation))
               + (q.cleaning !== null ? row(t("detail.book.cleaning"), money(q.cleaning)) : "")
-              + q.fees.map((f) => row(f.title, money(f.amount))).join("")
-              + q.discounts.map((f) => row(f.title, `−${money(Math.abs(f.amount))}`)).join("")
+              + q.fees.map((f) => row(escapeText(f.title), money(f.amount))).join("")
+              + q.discounts.map((f) => row(escapeText(f.title), `−${money(Math.abs(f.amount))}`)).join("")
               + (q.taxes !== null ? row(t("detail.book.taxes"), money(q.taxes)) : "")
               + row(t("detail.book.total"), money(q.total), " villa-book-row--total")
-              + q.notIncluded.map((f) => row(`${f.title} <span class="is-pending">${t("detail.book.notIncluded")}</span>`, money(f.amount), " villa-book-row--aside")).join("");
+              + q.notIncluded.map((f) => row(`${escapeText(f.title)} <span class="is-pending">${t("detail.book.notIncluded")}</span>`, money(f.amount), " villa-book-row--aside")).join("");
           } else if (quote.status === "loading") {
             rows = `<p class="villa-book-status">${t("detail.book.quoteLoading")}</p>`;
           } else if (quote.status === "error") {
@@ -3689,26 +3693,6 @@
         .finally(() => { submitBtn.disabled = false; submitBtn.setAttribute("aria-busy", "false"); });
     });
   }
-
-  /* ---------- Villa detail: booking CTA lead form ---------- */
-  /* No backend wired yet — submit opens WhatsApp with a prefilled message,
-     same pattern as the main contact form. Swap for a POST to your CRM /
-     Hostaway inquiry API once connected. */
-  document.querySelectorAll("[data-booking-cta-form]").forEach((form) => {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const f = new FormData(form);
-      const villaName = form.dataset.villaName || "";
-      const lines = [
-        `Hello Mexico Luxe Stays — I'd like to request information${villaName ? ` about ${villaName}` : ""}.`,
-        `Name: ${f.get("name")}`,
-        `Mobile: ${f.get("phone")}`
-      ];
-      window.open("https://wa.me/529848079475?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener,noreferrer");
-      const status = form.querySelector("[data-form-status]");
-      if (status) status.textContent = t("detail.bookingCta.status");
-    });
-  });
 
   initReveal();
 })();

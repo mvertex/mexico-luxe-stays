@@ -37,6 +37,8 @@ export default function middleware(request) {
 
   const villa = VILLAS.find((v) => v.match.test(url.hostname));
   if (villa) {
+    // Other spellings of the villa's domain (villaaqua.com.mx…) → its one address.
+    if (url.hostname !== villa.host) return redirect(`https://${villa.host}${path}${url.search}`);
     if (enPath === "/") {
       url.pathname = (es ? "/es/villas/" : "/villas/") + villa.page + ".html";
       return new Response(null, { headers: { "x-middleware-rewrite": url.toString() } });

@@ -10,7 +10,7 @@ Este documento sustituye a [AUDITORIA.md](AUDITORIA.md) (16 de octubre). Resume 
 
 La web está publicada y verificada. Sin errores en el navegador, en móvil y escritorio, en las páginas EN y ES. Lighthouse da 100 en accesibilidad, buenas prácticas y SEO, y 88–100 en rendimiento.
 
-**Lo único abierto con impacto:** el checkout de Hostaway se está mudando a `reservas.mexicoluxestays.com` y **Hostaway todavía no ha emitido el certificado SSL**. Mientras tanto, "Book Now" envía una **solicitud de reserva** en lugar de llevar al pago. Ver la sección 3.
+**Lo único abierto con impacto:** "Book Now" envía una **solicitud de reserva** en lugar de llevar al pago. El SSL de `reservas.mexicoluxestays.com` ya está emitido (24 de octubre), pero el pago directo no se activa hasta que las políticas de cancelación del checkout de Hostaway coincidan con las de la web (pendiente 4). Ver la sección 3.
 
 ---
 
@@ -31,6 +31,8 @@ node serve.mjs                        # http://localhost:3000 (solo estáticos)
 ---
 
 ## 3. URGENTE: terminar el dominio del checkout
+
+> **Actualización 24 de octubre:** el certificado SSL ya está emitido (Let's Encrypt) y el checkout carga en las cuatro villas, en EN y ES. Antes de seguir los pasos de "Cuando el SSL funcione", corregir las políticas de cancelación en Hostaway (sección 4, pendiente 4): hoy el checkout muestra "92% refund up to 60 days / 42% up to 30 days" (Villa Aqua: 92% / 30 días, 50% / 15 días), que contradice los Términos de la web.
 
 **Qué se hizo el 23 de octubre:**
 
@@ -63,10 +65,10 @@ Su guía también sugiere despublicar y volver a publicar la booking website.
    const MLS_BOOKING_ENGINE_URL = "https://reservas.mexicoluxestays.com/";
    ```
 
-2. Sube `villas-data.js?v=36` → `?v=37` en todos los `.html` de la raíz y de `villas/`. Los JS se cachean un año como *immutable*, así que sin subir el número el navegador seguiría usando la versión vieja.
+2. Sube `villas-data.js?v=37` → `?v=38` en todos los `.html` de la raíz y de `villas/`. Los JS se cachean un año como *immutable*, así que sin subir el número el navegador seguiría usando la versión vieja.
 
    ```bash
-   sed -i '' 's/villas-data\.js?v=36/villas-data.js?v=37/g' *.html villas/*.html   # macOS
+   sed -i '' 's/villas-data\.js?v=37/villas-data.js?v=38/g' *.html villas/*.html   # macOS
    ```
 
 3. `git commit` (el hook regenera `es/`) y `git push origin main`.
