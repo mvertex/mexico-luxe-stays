@@ -181,6 +181,8 @@ const MLS_VILLAS = [
     serviceImagePositions: { chef: "center 22%" },
     gallery: [
       { key: "outdoor", images: [
+        { src: "/assets/img/villas/villa-aqua-outdoor-59.webp",
+          alt: "The curved glass towers rising above the free-form pool", altEs: "Las torres curvas de cristal sobre la alberca de forma libre" },
         { src: "/assets/img/villas/villa-aqua-outdoor-55.webp",
           alt: "Bird's-eye view of the villa bordering the golf course fairways", altEs: "Vista cenital de la villa junto al campo de golf" },
         { src: "/assets/img/villas/villa-aqua-outdoor-56.webp",
@@ -189,8 +191,6 @@ const MLS_VILLAS = [
           alt: "Overhead view of the pool curving around the villa, edged by jungle", altEs: "Vista cenital de la alberca rodeando la villa, junto a la selva" },
         { src: "/assets/img/villas/villa-aqua-outdoor-58.webp",
           alt: "Aerial view of the villa's white towers, solar roof and free-form pool among the trees", altEs: "Vista aérea de las torres blancas de la villa, su techo solar y la alberca de forma libre entre los árboles" },
-        { src: "/assets/img/villas/villa-aqua-outdoor-59.webp",
-          alt: "The curved glass towers rising above the free-form pool", altEs: "Las torres curvas de cristal sobre la alberca de forma libre" },
         { src: "/assets/img/villas/villa-aqua-outdoor-60.webp",
           alt: "The glass facade reflected in the still pool", altEs: "La fachada de cristal reflejada en la alberca" },
         { src: "/assets/img/villas/villa-aqua-outdoor-01.webp",
@@ -422,7 +422,7 @@ const MLS_VILLAS = [
       },
       {
         q: { en: "What payment methods do you accept, and what is the cancellation policy?", es: "¿Qué métodos de pago aceptan y cuál es la política de cancelación?" },
-        a: { en: "We accept wire transfer or credit card, in USD or MXN. Online payments are made by card; to pay by wire transfer, contact our team and we'll arrange it. Payment is made in two parts: 50% one day after booking and the remaining 50% 45 days before arrival; bookings made less than 45 days before arrival are paid in full at booking. The cancellation policy is shown before you pay, on the checkout page or in the booking confirmation from our team, and it is the one that applies to your reservation.", es: "Aceptamos transferencia bancaria o tarjeta de crédito, en USD o MXN. El pago en línea es con tarjeta; si prefieres pagar por transferencia, contacta a nuestro equipo y lo coordinamos. El pago se hace en dos partes: 50% un día después de reservar y el 50% restante 45 días antes de la llegada; las reservas hechas con menos de 45 días de anticipación se pagan completas al reservar. La política de cancelación se muestra antes de pagar, en la página de pago o en la confirmación de reserva de nuestro equipo, y es la que aplica a tu reservación." }
+        a: { en: "We accept wire transfer or credit card, in USD or MXN. Online payments are made by card; to pay by wire transfer, contact our team and we'll arrange it. The amount and dates of each payment are shown before you pay, and they are the ones that apply to your reservation. The cancellation policy is shown before you pay, on the checkout page or in the booking confirmation from our team, and it is the one that applies to your reservation.", es: "Aceptamos transferencia bancaria o tarjeta de crédito, en USD o MXN. El pago en línea es con tarjeta; si prefieres pagar por transferencia, contacta a nuestro equipo y lo coordinamos. El monto y las fechas de cada cobro se muestran antes de pagar, y son los que aplican a tu reservación. La política de cancelación se muestra antes de pagar, en la página de pago o en la confirmación de reserva de nuestro equipo, y es la que aplica a tu reservación." }
       },
       {
         q: { en: "What is the bedroom and bed configuration?", es: "¿Cuál es la configuración de recámaras y camas?" },
@@ -700,13 +700,12 @@ const MLS_VILLAS = [
       },
       {
         q: { en: "What is the cancellation policy, and how is payment made?", es: "¿Cuál es la política de cancelación y cómo se paga?" },
-        a: { en: "The cancellation policy is shown before you pay, on the checkout page or in the booking confirmation from our team, and it is the one that applies to your reservation. All cancellation requests must be submitted in writing. Payment is made in two parts: 50% one day after booking and the remaining 50% 45 days before arrival; bookings made less than 45 days before arrival are paid in full at booking. We accept wire transfer or credit card, in USD or MXN. Online payments are made by card; to pay by wire transfer, contact our team and we'll arrange it.", es: "La política de cancelación se muestra antes de pagar, en la página de pago o en la confirmación de reserva de nuestro equipo, y es la que aplica a tu reservación. Toda solicitud de cancelación debe hacerse por escrito. El pago se hace en dos partes: 50% un día después de reservar y el 50% restante 45 días antes de la llegada; las reservas hechas con menos de 45 días de anticipación se pagan completas al reservar. Aceptamos transferencia bancaria o tarjeta de crédito, en USD o MXN. El pago en línea es con tarjeta; si prefieres pagar por transferencia, contacta a nuestro equipo y lo coordinamos." }
+        a: { en: "The cancellation policy is shown before you pay, on the checkout page or in the booking confirmation from our team, and it is the one that applies to your reservation. All cancellation requests must be submitted in writing. The amount and dates of each payment are shown before you pay, and they are the ones that apply to your reservation. We accept wire transfer or credit card, in USD or MXN. Online payments are made by card; to pay by wire transfer, contact our team and we'll arrange it.", es: "La política de cancelación se muestra antes de pagar, en la página de pago o en la confirmación de reserva de nuestro equipo, y es la que aplica a tu reservación. Toda solicitud de cancelación debe hacerse por escrito. El monto y las fechas de cada cobro se muestran antes de pagar, y son los que aplican a tu reservación. Aceptamos transferencia bancaria o tarjeta de crédito, en USD o MXN. El pago en línea es con tarjeta; si prefieres pagar por transferencia, contacta a nuestro equipo y lo coordinamos." }
       }
     ]
   },
   {
     slug: "casa-corazon",
-    inquireOnly: true, // no online booking: the trip form offers Inquire only
     name: "Casa Corazon",
     destination: "playa-del-carmen",
     destinationLabel: "Playa del Carmen",
@@ -1140,7 +1139,6 @@ const MLS_VILLAS = [
   },
   {
     slug: "casa-de-las-estrellas",
-    inquireOnly: true, // no online booking: the trip form offers Inquire only
     name: "Casa de las Estrellas",
     destination: "playa-del-carmen",
     destinationLabel: "Playa del Carmen",
