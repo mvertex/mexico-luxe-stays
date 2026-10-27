@@ -717,6 +717,8 @@ const MLS_VILLAS = [
     guests: 22,
     bedrooms: 11,
     hostawayListingId: 144272,
+    // Questions only: no Book Now / checkout, the form opens on Inquire.
+    inquireOnly: true,
     // Live from Hostaway (hostaway-sync.js): lowest bookable nightly rate,
     // per-date minimum stay and booked nights. Empty until it lands, so
     // the site never shows a made-up price or booking.
@@ -1150,6 +1152,8 @@ const MLS_VILLAS = [
     guests: 10,
     bedrooms: 4,
     hostawayListingId: 456289,
+    // Questions only: no Book Now / checkout, the form opens on Inquire.
+    inquireOnly: true,
     // Live from Hostaway (hostaway-sync.js): lowest bookable nightly rate,
     // per-date minimum stay and booked nights. Empty until it lands, so
     // the site never shows a made-up price or booking.
