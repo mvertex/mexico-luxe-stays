@@ -44,6 +44,29 @@ const plainRanges = (ranges) => ranges.map(({ start, end }) => ({ start, end }))
 
 const isOpen = (d) => d.status === "available" && d.isAvailable !== 0;
 
+/* The Booking Engine's own public calendar also closes the first days
+   by each listing's advance notice, which the Calendar API above doesn't.
+   Without this the site offers e.g. a check-in today that the checkout
+   then drops, leaving its total spinning on "Select dates". Optional: if
+   it fails, availability ships from the Calendar API alone. */
+const BOOKING_ENGINE_CALENDAR_URL = "https://booking-engine.hostaway.com/bookingEngines/reservas.mexicoluxestays.com/listings";
+const BOOKING_ENGINE_TIMEOUT_MS = 4000;
+async function getBookingEngineClosedDates(listingId, today) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), BOOKING_ENGINE_TIMEOUT_MS);
+  try {
+    const res = await fetch(`${BOOKING_ENGINE_CALENDAR_URL}/${listingId}/calendar?startingDate=${today}`, { signal: controller.signal });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const days = Object.values((await res.json()).result || {});
+    return new Set(days.filter((d) => !isOpen(d)).map((d) => d.date));
+  } catch (err) {
+    console.error(`[villa-live-data] booking engine calendar for ${listingId} skipped:`, err.message);
+    return new Set();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 /* "From" price: the lowest nightly rate on any bookable night in the next
    12 months (not an average, which overstated the entry price). */
 function toPriceFromPerNight(calendarDays) {
@@ -102,12 +125,13 @@ module.exports = async (req, res) => {
       console.error(`[villa-live-data] reviews for ${listingId} skipped:`, err.message);
       return null;
     }).finally(() => clearTimeout(budgetTimer));
-    const [calendarRes, reviewsResult] = await Promise.all([
+    const [calendarRes, reviewsResult, engineClosed] = await Promise.all([
       hostawayGet(`/listings/${listingId}/calendar`, { startDate: today, endDate }),
       reviewsWithinBudget,
+      getBookingEngineClosedDates(listingId, today),
     ]);
 
-    const calendarDays = calendarRes.result || [];
+    const calendarDays = (calendarRes.result || []).map((d) => (engineClosed.has(d.date) && isOpen(d) ? { ...d, isAvailable: 0 } : d));
     const { minStay, minStayRanges } = toMinStay(calendarDays);
     const payload = {
       availability: {
