@@ -2368,6 +2368,12 @@ body.sa-modal-open { overflow: hidden; }
 .trip-price-value [data-trip-price-value] { text-decoration: underline; text-decoration-color: var(--sage); text-underline-offset: 4px; }
 .trip-price-unit { font-family: var(--font-sans); font-size: .82rem; font-weight: 400; color: var(--stone-text); }
 .trip-price-note { font-family: var(--font-sans); font-size: .78rem; line-height: 1.5; color: var(--stone-text); max-width: 34ch; margin: .5rem auto 0; }
+.trip-minstay-alert {
+  border: 1px solid var(--error); border-left-width: 4px; border-radius: 4px;
+  background: rgba(156,75,62,.07); padding: .9rem 1rem; text-align: left;
+}
+.trip-minstay-title { margin: 0; font-size: .95rem; font-weight: 600; color: var(--error); }
+.trip-minstay-body { margin: .3rem 0 0; font-size: .85rem; line-height: 1.5; color: var(--ink); }
 
 .trip-consent-field {
   max-width: 320px; margin: 1.1rem auto 0; width: 100%; text-align: left;

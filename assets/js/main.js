@@ -3080,6 +3080,7 @@
     const priceLabelEl = contactForm.querySelector(".trip-price-label");
     const priceUnitEl = contactForm.querySelector(".trip-price-unit");
     const priceNoteEl = contactForm.querySelector(".trip-price-note");
+    const minStayAlertEl = contactForm.querySelector("[data-trip-minstay]");
     const tripQuote = { key: "", status: "idle", data: null };
     const setPriceText = (el, key, text) => {
       if (!el) return;
@@ -3094,6 +3095,27 @@
       const checkout = f.get("checkout") || "";
       const guests = (Number(f.get("adults")) || 1) + (Number(f.get("children")) || 0);
       const nights = checkin && checkout ? Math.round((new Date(`${checkout}T00:00`) - new Date(`${checkin}T00:00`)) / 864e5) : 0;
+
+      /* Dates under the arrival day's minimum stay can't be booked: say so
+         in place of the price, instead of quoting nights that Book Now
+         will then refuse. */
+      const minStay = villa && nights > 0 ? contactMinStayFor(dateFields.checkin.selected) : 0;
+      const tooShort = nights > 0 && nights < minStay;
+      if (minStayAlertEl) {
+        minStayAlertEl.hidden = !tooShort;
+        [priceLabelEl, priceValueEl.parentElement, priceNoteEl].forEach((el) => { if (el) el.hidden = tooShort; });
+      }
+      if (tooShort) {
+        const earliest = addDaysTo(dateFields.checkin.selected, minStay);
+        const lang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
+        minStayAlertEl.querySelector("[data-trip-minstay-title]").textContent = t("contact.form.minStayTitle").replace("{n}", minStay);
+        minStayAlertEl.querySelector("[data-trip-minstay-body]").textContent = t("contact.form.minStayBody")
+          .replace("{nights}", nights)
+          .replace("{date}", earliest.toLocaleDateString(lang === "es" ? "es-MX" : "en-US", { month: "short", day: "numeric", year: "numeric" }));
+        tripQuote.key = "";
+        return;
+      }
+
       const key = villa?.hostawayListingId && nights > 0 ? `${villa.hostawayListingId}_${checkin}_${checkout}_${guests}` : "";
 
       if (key && key !== tripQuote.key) {
