@@ -3105,7 +3105,8 @@
       const tooShort = nights > 0 && nights < minStay;
       if (minStayAlertEl) {
         minStayAlertEl.hidden = !tooShort;
-        [priceLabelEl, priceValueEl.parentElement, priceNoteEl].forEach((el) => { if (el) el.hidden = tooShort; });
+        // Villa pages add a second note (cancellation policy): hide it too.
+        [priceLabelEl, priceValueEl.parentElement, ...contactForm.querySelectorAll(".trip-price-note")].forEach((el) => { el.hidden = tooShort; });
       }
       if (tooShort) {
         const earliest = addDaysTo(dateFields.checkin.selected, minStay);
