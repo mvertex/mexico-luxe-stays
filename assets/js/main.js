@@ -2714,12 +2714,14 @@
       capacityNoticeEl.hidden = false;
     };
     /* Adults + children combined can't exceed the selected villa's real
-       guest capacity (villa.guests). Infants aren't counted (lap/crib,
-       standard hospitality practice). If a villa switch shrinks capacity
-       below the current total, children are trimmed first, then adults. */
+       guest capacity (villa.guests) when booking. Infants aren't counted
+       (lap/crib, standard hospitality practice). If a villa switch shrinks
+       capacity below the current total, children are trimmed first, then
+       adults. An inquiry can ask for a larger group: the team may still
+       make it work or offer an alternative. */
     const syncGuestCapacity = () => {
       if (!adultsStepper || !childrenStepper) return;
-      const cap = currentVillaGuests;
+      const cap = contactForm.dataset.tripMode === "inquire" ? Infinity : currentVillaGuests;
       const adultsMin = Number(adultsStepper.dataset.min || 1);
       let adults = Number(adultsStepper.dataset.value || adultsMin);
       let children = Number(childrenStepper.dataset.value || 0);
@@ -3109,7 +3111,7 @@
         const earliest = addDaysTo(dateFields.checkin.selected, minStay);
         const lang = typeof window.mlsCurrentLang === "function" ? window.mlsCurrentLang() : "en";
         minStayAlertEl.querySelector("[data-trip-minstay-title]").textContent = t("contact.form.minStayTitle").replace("{n}", minStay);
-        minStayAlertEl.querySelector("[data-trip-minstay-body]").textContent = t("contact.form.minStayBody")
+        minStayAlertEl.querySelector("[data-trip-minstay-body]").textContent = t(contactForm.dataset.tripMode === "inquire" ? "contact.form.minStayBodyInquire" : "contact.form.minStayBody")
           .replace("{nights}", nights)
           .replace("{date}", earliest.toLocaleDateString(lang === "es" ? "es-MX" : "en-US", { month: "short", day: "numeric", year: "numeric" }));
         tripQuote.key = "";
@@ -3263,6 +3265,8 @@
       contactForm.dataset.tripMode = mode;
       modeBtns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tripModeBtn === mode)));
       [bookStatusEl, inquireStatusEl].forEach((el) => { if (el) el.textContent = ""; });
+      syncGuestCapacity();
+      renderTripPrice();
     };
     modeBtns.forEach((b) => b.addEventListener("click", () => setMode(b.dataset.tripModeBtn)));
     /* Inquire only — no Book/Inquire choice — when there's no checkout, or
@@ -3496,7 +3500,10 @@
         (hasCheckin ? dateFields.checkout : dateFields.checkin)?.trigger.click();
         return;
       }
-      if (hasCheckin && hasCheckout) {
+      /* Only a booking must meet the minimum stay: an inquiry for fewer
+         nights still goes through, so the team can make an exception or
+         suggest other dates. */
+      if (intent === "book" && hasCheckin && hasCheckout) {
         const minStay = contactMinStayFor(dateFields.checkin.selected);
         const nights = Math.round((dateFields.checkout.selected - dateFields.checkin.selected) / 864e5);
         if (nights < minStay) {

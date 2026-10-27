@@ -48,6 +48,7 @@ const GENERAL_MESSAGE_VILLA = "villa-aqua";
 const CONTACT = { whatsapp: "+52 984 807 9475", email: "info@mexicoluxestays.com" };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+// Longest stay that can be booked; a question may ask about any length.
 const MAX_NIGHTS = 90;
 
 /* Basic abuse limits (api/_lib/rate-limit.js): 5 submissions per IP every
@@ -133,7 +134,7 @@ function validate(body) {
     if (!validIsoDate(data.checkin) || !validIsoDate(data.checkout)) return { error: "dates" };
     if (data.checkin < isoToday()) return { error: "dates" };
     const nights = nightsBetween(data.checkin, data.checkout);
-    if (nights < 1 || nights > MAX_NIGHTS) return { error: "dates" };
+    if (nights < 1 || (intent === "book" && nights > MAX_NIGHTS)) return { error: "dates" };
     data.nights = nights;
     data.hasDates = true;
   }
@@ -234,7 +235,8 @@ module.exports = async (req, res) => {
   let arrivalDate = data.hasDates ? data.checkin : null;
   let departureDate = data.hasDates ? data.checkout : null;
   let placeholderDates = !data.hasDates;
-  let askedDatesTaken = false;
+  let askedDatesNote = null;
+  let overCapacity = null;
   const dedupeKey = [data.email, data.villa.listingMapId, data.hasDates ? `${data.checkin}/${data.checkout}` : "nodates", data.intent].join("|");
   const seenAt = recentSubmissions.get(dedupeKey);
   if (seenAt && Date.now() - seenAt < DEDUPE_WINDOW_MS) {
@@ -243,20 +245,37 @@ module.exports = async (req, res) => {
   }
 
   try {
+    /* A booking must fit the villa; a question may ask for a bigger group
+       (the team can still make it work or offer an alternative). Hostaway
+       gets a party within capacity and the host note has the real numbers. */
     const capacity = await listingCapacity(data.villa);
-    if (data.adults + data.children > capacity) return fail(res, 400, "capacity", { maxGuests: capacity });
+    if (data.adults + data.children > capacity) {
+      if (data.intent === "book") return fail(res, 400, "capacity", { maxGuests: capacity });
+      overCapacity = { adults: data.adults, children: data.children, capacity };
+    }
 
     if (data.intent === "book") {
       const availability = await checkAvailability(data.villa.listingMapId, data.checkin, data.checkout, data.nights);
       if (!availability.ok) return fail(res, 409, availability.code, availability.minNights ? { minNights: availability.minNights } : {});
     } else if (data.hasDates) {
-      /* A question about nights that are already booked would be refused by
-         Hostaway; send it anyway on placeholder nights, noting the dates asked. */
-      const availability = await checkAvailability(data.villa.listingMapId, data.checkin, data.checkout, data.nights)
-        .catch(() => ({ ok: true }));
-      if (!availability.ok && availability.code === "unavailable") {
+      /* A question about nights that are already booked, or that break the
+         minimum stay or arrival/departure rules, could be refused by
+         Hostaway; send it anyway on placeholder nights, noting the dates
+         asked and why, so the team can make an exception or suggest others. */
+      const availability = data.nights > MAX_NIGHTS
+        ? { ok: false, code: "too_long" }
+        : await checkAvailability(data.villa.listingMapId, data.checkin, data.checkout, data.nights)
+          .catch(() => ({ ok: true }));
+      if (!availability.ok) {
         placeholderDates = true;
-        askedDatesTaken = true;
+        const why = {
+          unavailable: "not available in the calendar",
+          min_stay: `${data.nights} night(s), under the ${availability.minNights}-night minimum stay`,
+          closed_arrival: "check-in day is closed to arrival",
+          closed_departure: "check-out day is closed to departure",
+          too_long: `${data.nights} nights, over the ${MAX_NIGHTS}-night maximum for an online booking`,
+        }[availability.code] || "not bookable as asked";
+        askedDatesNote = `Dates asked about: ${data.checkin} to ${data.checkout} — ${why}, so the dates shown are placeholders.`;
       }
     }
 
@@ -282,7 +301,8 @@ module.exports = async (req, res) => {
       data.subject ? `Subject: ${data.subject}` : null,
       data.intent === "book" ? "Status: inquiry — not confirmed, calendar not blocked. Approve or decline in Hostaway." : "Question only — no stay requested.",
       data.bedrooms ? `Bedrooms requested: ${data.bedrooms}` : null,
-      askedDatesTaken ? `Dates asked about: ${data.checkin} to ${data.checkout} — not available in the calendar, so the dates shown are placeholders.` : null,
+      askedDatesNote,
+      overCapacity ? `Guests asked about: ${overCapacity.adults} adult(s) + ${overCapacity.children} child(ren) — over the villa's capacity of ${overCapacity.capacity}; the guest count shown is capped.` : null,
       !data.hasDates ? "No dates given (dates shown are placeholders)." : null,
     ].filter(Boolean).join("\n");
 
@@ -296,9 +316,9 @@ module.exports = async (req, res) => {
       guestEmail: data.email,
       ...(data.phone ? { phone: data.phone } : {}),
       guestLocale: data.lang,
-      numberOfGuests: data.adults + data.children,
-      adults: data.adults,
-      children: data.children,
+      numberOfGuests: overCapacity ? capacity : data.adults + data.children,
+      adults: overCapacity ? Math.min(data.adults, capacity) : data.adults,
+      children: overCapacity ? Math.max(0, capacity - Math.min(data.adults, capacity)) : data.children,
       infants: data.infants,
       arrivalDate,
       departureDate,
