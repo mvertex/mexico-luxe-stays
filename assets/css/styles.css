@@ -2252,12 +2252,13 @@ body.sa-modal-open { overflow: hidden; }
 .trip-date-pill {
   width: 100%; display: flex; align-items: center; justify-content: space-between;
   gap: .6rem; font: inherit; color: var(--ink); background: var(--cream);
-  border: 1px solid rgba(20,20,20,.22); border-radius: 999px; padding: .9rem 1.3rem;
+  border: 1px solid rgba(20,20,20,.22); border-radius: 999px; padding: .9rem 1.1rem;
   cursor: pointer; transition: border-color .2s ease;
 }
 .trip-date-pill:hover { border-color: var(--sage); }
 .trip-date-pill[aria-expanded="true"] { border-color: var(--sage); }
-.trip-date-text { font-size: .92rem; color: var(--ink); }
+/* One line even when the pill is narrow ("Check-out" would break at the hyphen). */
+.trip-date-text { font-size: .92rem; color: var(--ink); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .trip-date-icon { width: 18px; height: 18px; color: var(--stone-text); flex: none; }
 
 /* ---------- Custom calendar popover (replaces the native date picker for a
