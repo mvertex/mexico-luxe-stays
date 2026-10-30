@@ -20,6 +20,12 @@ const VILLAS = [
 const MAIN_HOST = "www.mexicoluxestays.com";
 const MAIN_HOSTS = [MAIN_HOST, "mexicoluxestays.com"];
 
+/* Hostaway Booking Engine (MLS_BOOKING_ENGINE_URL in assets/js/villas-data.js)
+   and the paths its widgets link to: /checkout/{id}, /listings…, with or
+   without a language (/en/, /es/). The site has no pages there. */
+const BOOKING_ENGINE = "https://reservas.mexicoluxestays.com";
+const BOOKING_ENGINE_PATH = /^\/(?:[a-z]{2}\/)?(?:checkout|listings)(?:\/|$)/;
+
 export const config = { matcher: ["/((?!api/|assets/|es/assets/).*)"] };
 
 const isPage = (path) => path.endsWith("/") || path.endsWith(".html") || !path.split("/").pop().includes(".");
@@ -30,6 +36,11 @@ export default function middleware(request) {
   const url = new URL(request.url);
   const path = url.pathname;
   if (!isPage(path)) return;
+
+  /* Booking Engine links built on a villa domain from before it pointed here
+     (e.g. kasakava.com's Hostaway widget: www.kasakefi.mx/checkout/305921)
+     go on to the Booking Engine with their dates and guests. */
+  if (BOOKING_ENGINE_PATH.test(path)) return redirect(`${BOOKING_ENGINE}${path}${url.search}`);
 
   const es = /^\/es(\/|$)/.test(path);
   const enPath = es ? path.slice(3) || "/" : path;
