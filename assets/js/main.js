@@ -1153,14 +1153,18 @@
     mlsWireRowCarousels(destinationGrid);
   }
 
-  /* ---------- Map pin click target: every brand-pin marker on the site opens
-     Google Maps in a new tab, rather than an in-page popup. Each villa's own
-     Google Maps place (googleMapsUrl in villas-data.js) is used when set, so
-     guests land on that villa's real listing with its name and info; falls
-     back to a coordinate search if a villa has no place link yet. ---------- */
-  function mlsGoogleMapsUrl(villa) {
-    if (villa.googleMapsUrl) return villa.googleMapsUrl;
-    return `https://www.google.com/maps/search/?api=1&query=${villa.lat},${villa.lng}`;
+  /* ---------- Map pin click targets: pins keep guests on the site. A
+     villa's Google Maps place lists other booking sites (Vrbo, Wander…), so
+     pins never open it: they go to the villa's page, and the only way out
+     is "Get directions", a route to the bare coordinates. ---------- */
+  function mlsDirectionsUrl(villa) {
+    return `https://www.google.com/maps/dir/?api=1&destination=${villa.lat},${villa.lng}`;
+  }
+  /* Absolute, so it works from any page or villa domain (middleware.js
+     sends /villas/… on to a villa's own domain). */
+  function mlsVillaPageUrl(villa) {
+    const es = typeof window.mlsCurrentLang === "function" && window.mlsCurrentLang() === "es";
+    return `${es ? "/es" : ""}/villas/${villa.slug}.html`;
   }
 
   /* ---------- Destination villa map: pins from villas-data.js, lazy-loaded Leaflet
@@ -1193,7 +1197,7 @@
       mapMarkers = mapVillas.map((villa) => {
         const marker = L.marker([villa.lat, villa.lng], { icon: mlsBrandPinIcon(villa), title: villa.name })
           .addTo(leafletMap);
-        marker.on("click", () => window.open(mlsGoogleMapsUrl(villa), "_blank", "noopener,noreferrer"));
+        marker.on("click", () => { window.location.href = mlsVillaPageUrl(villa); });
         return marker;
       });
     }
@@ -1305,7 +1309,23 @@
             title: v.name,
             zIndexOffset: v.slug === villa.slug ? 1000 : 0
           }).addTo(map);
-          marker.on("click", () => window.open(mlsGoogleMapsUrl(v), "_blank", "noopener,noreferrer"));
+          /* This villa's pin: a card to book here or get directions; a
+             sibling's pin: that villa's page. */
+          if (v.slug !== villa.slug) {
+            marker.on("click", () => { window.location.href = mlsVillaPageUrl(v); });
+            return;
+          }
+          marker.on("click", () => {
+            L.popup({ className: "mls-map-popup", offset: [0, -66], closeButton: true, autoPanPadding: [24, 24] })
+              .setLatLng([v.lat, v.lng])
+              .setContent(`
+                <p class="mls-map-popup-name">${v.name}</p>
+                <div class="mls-map-popup-actions">
+                  <a class="mls-map-popup-book" href="#book">${t("detail.book.cta")}</a>
+                  <a class="mls-map-popup-directions" href="${mlsDirectionsUrl(v)}" target="_blank" rel="noopener noreferrer">${t("map.directions")}</a>
+                </div>`)
+              .openOn(map);
+          });
         });
 
         if (destVillas.length > 1) {

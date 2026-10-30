@@ -613,7 +613,8 @@ const MLS_I18N = {
     "a11y.overview.casa-de-las-estrellas": "Casa de las Estrellas overview",
     "a11y.where.casa-de-las-estrellas": "Where Casa de las Estrellas is located",
     "a11y.faqAbout.casa-de-las-estrellas": "Frequently asked questions about Casa de las Estrellas",
-    "a11y.mapOf.casa-de-las-estrellas": "Map showing Casa de las Estrellas' location"
+    "a11y.mapOf.casa-de-las-estrellas": "Map showing Casa de las Estrellas' location",
+    "map.directions": "Get directions"
   },
 
   es: {
@@ -1220,7 +1221,8 @@ const MLS_I18N = {
     "a11y.overview.casa-de-las-estrellas": "Resumen de Casa de las Estrellas",
     "a11y.where.casa-de-las-estrellas": "Dónde se encuentra Casa de las Estrellas",
     "a11y.faqAbout.casa-de-las-estrellas": "Preguntas frecuentes sobre Casa de las Estrellas",
-    "a11y.mapOf.casa-de-las-estrellas": "Mapa con la ubicación de Casa de las Estrellas"
+    "a11y.mapOf.casa-de-las-estrellas": "Mapa con la ubicación de Casa de las Estrellas",
+    "map.directions": "Cómo llegar"
   }
 };
 

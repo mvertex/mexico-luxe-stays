@@ -870,6 +870,20 @@ button { font: inherit; cursor: pointer; }
   border: 5px solid transparent; border-top-color: var(--green);
   transform: translateX(-50%);
 }
+/* Card on this villa's pin (property page): book here or get directions. */
+.mls-map-popup .leaflet-popup-content-wrapper {
+  border-radius: var(--radius); background: var(--cream);
+  box-shadow: 0 14px 30px -12px rgba(20, 26, 19, .45);
+}
+.mls-map-popup .leaflet-popup-content { margin: 1rem 1.15rem .95rem; font-family: var(--font-sans); }
+.mls-map-popup .leaflet-popup-tip { background: var(--cream); }
+.mls-map-popup-name { margin: 0 1rem .7rem 0; font: 600 1.3rem/1.15 var(--font-display); color: var(--ink); }
+.mls-map-popup-actions { display: flex; align-items: center; gap: .9rem; white-space: nowrap; }
+.mls-map-popup .mls-map-popup-book {
+  padding: .5rem 1rem; border-radius: 999px; background: var(--green); color: #fff;
+  font-size: .8rem; font-weight: 600; letter-spacing: .02em; text-decoration: none;
+}
+.mls-map-popup .mls-map-popup-directions { color: var(--green); font-size: .8rem; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
 .is-spotlit .mls-map-pin--current .mls-map-pin-dot { animation: mls-pin-drop .7s var(--ease-out, ease-out) both; }
 .is-spotlit .mls-map-pin--current .mls-map-pin-dot::before { animation: mls-pin-pulse 1.6s ease-out .5s 3; }
 .is-spotlit .mls-map-pin-label { animation: mls-pin-label-in .5s ease-out .45s both; }
