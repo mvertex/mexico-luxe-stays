@@ -732,26 +732,6 @@
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-rooms-13.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-rooms-14.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-rooms-15.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-01.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-02.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-03.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-04.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-05.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-09.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-10.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-11.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-12.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-06.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-07.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-08.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-01.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-02.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-03.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-04.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-05.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-06.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-07.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-08.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-01.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-02.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-03.webp</image:loc></image:image>
@@ -765,6 +745,26 @@
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-11.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-12.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-13.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-01.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-02.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-03.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-04.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-05.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-09.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-10.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-11.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-12.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-06.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-07.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-08.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-05.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-06.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-07.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-08.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-01.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-02.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-03.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-04.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-14.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-15.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-16.webp</image:loc></image:image>
@@ -804,26 +804,6 @@
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-rooms-13.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-rooms-14.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-rooms-15.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-01.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-02.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-03.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-04.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-05.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-09.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-10.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-11.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-12.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-06.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-07.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-08.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-01.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-02.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-03.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-04.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-05.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-06.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-07.webp</image:loc></image:image>
-    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-08.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-01.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-02.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-03.webp</image:loc></image:image>
@@ -837,6 +817,26 @@
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-11.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-12.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-13.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-01.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-02.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-03.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-04.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-05.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-09.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-10.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-11.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-12.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-06.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-07.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-kitchen-08.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-05.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-06.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-07.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-08.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-01.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-02.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-03.webp</image:loc></image:image>
+    <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-living-04.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-14.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-15.webp</image:loc></image:image>
     <image:image><image:loc>https://www.mexicoluxestays.com/assets/img/villas/kasa-kefi-interiors-16.webp</image:loc></image:image>

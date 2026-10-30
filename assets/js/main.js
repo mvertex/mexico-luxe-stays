@@ -282,7 +282,8 @@
       document.body.style.overflow = "";
       rpLastFocused?.focus();
     };
-    /* `rooms` is one cover image per bedroom: [{ src, alt }, ...]. */
+    /* `rooms` is one cover image per bedroom: [{ src, alt, label? }, ...];
+       without a label the card reads "Bedroom N". */
     mlsOpenRoomPicker = (rooms, onPick, trigger) => {
       if (!rooms || !rooms.length) return;
       rpLastFocused = trigger || null;
@@ -292,7 +293,7 @@
             <img src="${room.src}"${mlsImgAttrs(room.src)} alt="${room.alt}" loading="lazy">
           </span>
           <span class="room-picker-item-body">
-            <span class="room-picker-item-label">${t("detail.gallery.roomLabel").replace("{n}", i + 1)}</span>
+            <span class="room-picker-item-label">${room.label || t("detail.gallery.roomLabel").replace("{n}", i + 1)}</span>
           </span>
         </button>`).join("");
       listEl.querySelectorAll(".room-picker-item").forEach((btn) => {
@@ -2049,7 +2050,10 @@
                   const idxList = cat.roomImages?.[r];
                   return idxList && idxList.length ? idxList.map((imgIndex) => cat.images[imgIndex]) : cat.images;
                 });
-                const openPicker = () => mlsOpenRoomPicker(roomImageSets.map((set) => pickImg(set[0])), (roomIndex) => {
+                /* Named bedrooms (cat.roomNames, e.g. Kasa Kefi's Studio)
+                   replace the generic "Bedroom N" on the picker cards. */
+                const roomName = (r) => cat.roomNames?.[r] && ((lang === "es" && cat.roomNames[r].es) || cat.roomNames[r].en);
+                const openPicker = () => mlsOpenRoomPicker(roomImageSets.map((set, r) => ({ ...pickImg(set[0]), label: roomName(r) })), (roomIndex) => {
                   if (typeof mlsOpenLightbox === "function") mlsOpenLightbox(roomImageSets[roomIndex].map(pickImg), 0, openPicker);
                 }, btn);
                 openPicker();
