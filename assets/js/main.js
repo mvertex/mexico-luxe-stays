@@ -2735,17 +2735,22 @@
       setStepperValue(childrenStepper, children);
       updateTripCapacityNotice();
     };
+    /* Bedrooms follow adults first, then the price is redrawn: the quote
+       depends on both (see tripPricedGuests). */
+    const onTripStepperChange = (stepper) => {
+      if (stepper === adultsStepper || stepper === childrenStepper) syncGuestCapacity();
+      if (stepper === adultsStepper) syncBedroomsFromAdults();
+      if (stepper === adultsStepper || stepper === childrenStepper || stepper === bedroomsStepper) renderTripPrice();
+    };
     contactForm.querySelectorAll("[data-trip-stepper]").forEach((stepper) => {
       setStepperValue(stepper, Number(stepper.dataset.value || 0));
       stepper.querySelector("[data-stepper-dec]")?.addEventListener("click", () => {
         setStepperValue(stepper, Number(stepper.dataset.value) - 1);
-        if (stepper === adultsStepper || stepper === childrenStepper) { syncGuestCapacity(); renderTripPrice(); }
-        if (stepper === adultsStepper) syncBedroomsFromAdults();
+        onTripStepperChange(stepper);
       });
       stepper.querySelector("[data-stepper-inc]")?.addEventListener("click", () => {
         setStepperValue(stepper, Number(stepper.dataset.value) + 1);
-        if (stepper === adultsStepper || stepper === childrenStepper) { syncGuestCapacity(); renderTripPrice(); }
-        if (stepper === adultsStepper) syncBedroomsFromAdults();
+        onTripStepperChange(stepper);
       });
     });
     syncGuestCapacity();
@@ -3089,13 +3094,22 @@
       if (text === undefined) { el.setAttribute("data-i18n", key); el.textContent = t(key); }
       else { el.removeAttribute("data-i18n"); el.textContent = text; }
     };
+    /* Rooms are priced at double occupancy even with one guest in them:
+       5 adults in 5 bedrooms pay as 10 guests. Hostaway only prices by
+       guest count, so the quote and the checkout get max(adults + children,
+       2 × bedrooms), never above the villa's capacity. */
+    const tripPricedGuests = (f, villa) => {
+      const guests = (Number(f.get("adults")) || 1) + (Number(f.get("children")) || 0);
+      const roomGuests = 2 * (Number(f.get("bedrooms")) || 0);
+      return Math.min(Math.max(guests, roomGuests), villa?.guests || Infinity);
+    };
     function renderTripPrice() {
       if (!priceValueEl) return;
       const villa = chosenTripVilla();
       const f = new FormData(contactForm);
       const checkin = f.get("checkin") || "";
       const checkout = f.get("checkout") || "";
-      const guests = (Number(f.get("adults")) || 1) + (Number(f.get("children")) || 0);
+      const guests = tripPricedGuests(f, villa);
       const nights = checkin && checkout ? Math.round((new Date(`${checkout}T00:00`) - new Date(`${checkin}T00:00`)) / 864e5) : 0;
 
       /* Dates under the arrival day's minimum stay can't be booked: say so
@@ -3516,7 +3530,7 @@
       if (toCheckout) {
         const f = new FormData(contactForm);
         const villa = MLS_VILLAS.find((v) => v.slug === f.get("villa"));
-        const guests = (Number(f.get("adults")) || 1) + (Number(f.get("children")) || 0);
+        const guests = tripPricedGuests(f, villa);
         const engineUrl = mlsBookingEngineUrl(villa, f.get("checkin"), f.get("checkout"), guests);
         // Same tab, like the villa pages' Book now.
         if (engineUrl) {
