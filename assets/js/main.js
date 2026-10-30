@@ -1156,9 +1156,12 @@
   /* ---------- Map pin click targets: pins keep guests on the site. A
      villa's Google Maps place lists other booking sites (Vrbo, Wander…), so
      pins never open it: they go to the villa's page, and the only way out
-     is "Get directions", a route to the bare coordinates. ---------- */
+     is "Get directions": a pin on the bare coordinates. Not a directions
+     (/dir/) link: Google snaps its destination to the nearest place — the
+     villa's own listing, or another rental's — while a coordinate search
+     stays a plain pin, also after tapping its Directions button. ---------- */
   function mlsDirectionsUrl(villa) {
-    return `https://www.google.com/maps/dir/?api=1&destination=${villa.lat},${villa.lng}`;
+    return `https://www.google.com/maps/search/?api=1&query=${villa.lat},${villa.lng}`;
   }
   /* Absolute, so it works from any page or villa domain (middleware.js
      sends /villas/… on to a villa's own domain). */
