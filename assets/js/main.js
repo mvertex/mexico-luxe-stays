@@ -1814,14 +1814,14 @@
              "go explore the area" — see startSaRotation below for how the
              rotation itself is driven. */
           const SA_SHARED_IMAGES = {
-            concierge: "/assets/img/services/concierge-bell.webp",
+            concierge: "/assets/img/services/concierge-welcome.webp",
             transfer: "/assets/img/services/transfer-suv.webp",
             spa: "/assets/img/services/spa-massage.webp"
           };
           const SA_EXCURSION_PHOTOS = [
-            "/assets/img/services/excursions/cenote.webp",
-            "/assets/img/services/excursions/snorkel.webp",
-            "/assets/img/services/excursions/zipline.webp"
+            "/assets/img/services/excursions/turtle-snorkel.webp",
+            "/assets/img/services/excursions/cenote-jungle.webp",
+            "/assets/img/services/excursions/yacht-caribbean.webp"
           ];
           const serviceImg = (id) => SA_SHARED_IMAGES[id] || (villa.serviceImages && villa.serviceImages[id]) || villaImgPath;
           const serviceImgPos = (id) => (villa.serviceImagePositions && villa.serviceImagePositions[id]) || "";

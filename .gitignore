@@ -7,6 +7,9 @@ Villa Aqua - Propuesta de fotos/
 # Owner's original Casa de las Estrellas photos (CDLE PICS HR 2025); the site
 # uses the optimized WebP copies (casa-de-las-estrellas-terrace-01.webp…).
 CDLE PICS HR 2025/
+# Owner's service and destination photos; the site uses the optimized WebP
+# copies in assets/img/services/.
+/ included services y extra cost/
 
 # Tooling-specific local state (Claude Code / agents), not part of the site
 .claude/
