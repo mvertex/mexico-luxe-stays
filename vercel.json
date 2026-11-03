@@ -315,7 +315,7 @@
       "permanent": true
     },
     {
-      "source": "/blogs/:path*",
+      "source": "/blogs/(.*)",
       "destination": "/",
       "permanent": true
     },
