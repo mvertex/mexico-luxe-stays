@@ -195,6 +195,26 @@
       "permanent": true
     },
     {
+      "source": "/:slug(.*-456289)",
+      "destination": "/villas/casa-de-las-estrellas.html",
+      "permanent": true
+    },
+    {
+      "source": "/:slug(.*-145234)",
+      "destination": "https://www.villaaqua.com/",
+      "permanent": true
+    },
+    {
+      "source": "/:slug(.*-305921)",
+      "destination": "https://www.kasakefi.mx/",
+      "permanent": true
+    },
+    {
+      "source": "/:slug(.*-144272)",
+      "destination": "https://www.casacorazonpdc.com/",
+      "permanent": true
+    },
+    {
       "source": "/about-us",
       "destination": "/about.html",
       "permanent": true
@@ -291,6 +311,11 @@
     },
     {
       "source": "/blogs",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/blogs/:path*",
       "destination": "/",
       "permanent": true
     },
