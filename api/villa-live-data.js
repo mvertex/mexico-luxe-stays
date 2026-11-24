@@ -106,10 +106,18 @@ module.exports = async (req, res) => {
     return;
   }
 
+  /* Two years out, like the Booking Engine's own calendar. With only one
+     year, dates past it reached the site with no data, so they showed as
+     open with the default minimum stay (e.g. 3 nights over Thanksgiving
+     2027, where Hostaway asks 5) and the checkout then refused the stay. */
+  const isoYearsOut = (years) => {
+    const d = new Date();
+    d.setFullYear(d.getFullYear() + years);
+    return d.toISOString().slice(0, 10);
+  };
   const today = new Date().toISOString().slice(0, 10);
-  const oneYearOut = new Date();
-  oneYearOut.setFullYear(oneYearOut.getFullYear() + 1);
-  const endDate = oneYearOut.toISOString().slice(0, 10);
+  const endDate = isoYearsOut(2);
+  const priceWindowEnd = isoYearsOut(1);
 
   try {
     // Reviews are optional: if they fail or outrun their time budget,
@@ -141,7 +149,7 @@ module.exports = async (req, res) => {
         closedOnArrival: plainRanges(toRanges(calendarDays, (d) => Boolean(d.closedOnArrival))),
         closedOnDeparture: plainRanges(toRanges(calendarDays, (d) => Boolean(d.closedOnDeparture))),
       },
-      priceFromPerNight: toPriceFromPerNight(calendarDays),
+      priceFromPerNight: toPriceFromPerNight(calendarDays.filter((d) => d.date <= priceWindowEnd)),
       testimonials: reviewsResult ? reviewsResult.testimonials : null,
       reviewsMeta: reviewsResult ? reviewsResult.meta : null,
     };
