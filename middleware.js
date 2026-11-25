@@ -13,7 +13,7 @@
 const VILLAS = [
   { page: "casa-corazon", host: "www.casacorazonpdc.com", match: /^(www\.)?casacorazonpdc\.com$/, live: true },
   { page: "kasa-kefi", host: "www.kasakefi.mx", match: /^(www\.)?kasakefi\.mx$/, live: true },
-  { page: "villa-aqua", host: "www.villaaqua.com", match: /^(www\.)?villaaqua\.com(\.mx)?$/, live: true },
+  { page: "villa-aqua", host: "www.villaaqua.com", match: /^(www\.)?villaaqua\.com(\.mx)?$/, spanishMatch: /^(www\.)?villaaqua\.com\.mx$/, live: true },
 ];
 
 /* Main site. */
@@ -48,8 +48,13 @@ export default function middleware(request) {
 
   const villa = VILLAS.find((v) => v.match.test(url.hostname));
   if (villa) {
-    // Other spellings of the villa's domain (villaaqua.com.mx…) → its one address.
-    if (url.hostname !== villa.host) return redirect(`https://${villa.host}${path}${url.search}`);
+    // Other spellings of the villa's domain → its one address. Hosts in
+    // `spanishMatch` (villaaqua.com.mx) are the Spanish domain: they go to the
+    // /es/ version of the same path.
+    if (url.hostname !== villa.host) {
+      const toSpanish = villa.spanishMatch && villa.spanishMatch.test(url.hostname) && !es;
+      return redirect(`https://${villa.host}${toSpanish ? "/es" + path : path}${url.search}`);
+    }
     if (enPath === "/") {
       url.pathname = (es ? "/es/villas/" : "/villas/") + villa.page + ".html";
       return new Response(null, { headers: { "x-middleware-rewrite": url.toString() } });
